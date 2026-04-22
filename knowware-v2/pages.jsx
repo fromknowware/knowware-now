@@ -694,6 +694,7 @@ function Read() {
         display: 'grid', gridTemplateColumns: gridCols,
         minHeight: 'calc(100vh - 240px)',
         borderBottom: '1px solid var(--rule)',
+        overflow: 'hidden',
       }}>
         {/* Left rail — TOC (tablet + desktop) */}
         {!mob && (
@@ -741,6 +742,7 @@ function Read() {
         <article data-kw-read style={{
           padding: mob ? '28px 16px' : tab ? '32px 32px' : '40px 48px',
           maxWidth: 'var(--read-col, 760px)',
+          minWidth: 0, overflow: 'hidden',
         }}>
           <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
             marginBottom: 8 }}>{s.part} · ch{s.n}</div>
@@ -834,6 +836,18 @@ function Read() {
   );
 }
 
+function DropCap({ children }) {
+  const mob = useBP() === 'mobile';
+  return (
+    <span style={{
+      fontSize: mob ? 52 : 68,
+      float: 'left', lineHeight: 0.85,
+      paddingRight: 8, paddingTop: mob ? 6 : 4,
+      fontWeight: 500, letterSpacing: '-0.05em',
+    }}>{children}</span>
+  );
+}
+
 function ChapterTeaser({ chapter, cited, openNote, setOpenNote }) {
   const t = (window.TEASERS && window.TEASERS[chapter]) || null;
   if (!t) return (
@@ -850,10 +864,8 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote }) {
         letterSpacing: '0.02em', marginBottom: 14 }}>
         § {t.opener.toUpperCase()}
       </div>
-      <p style={{ fontSize: 17, lineHeight: 1.65, margin: 0 }}>
-        <span style={{ fontSize: 68, float: 'left', lineHeight: 0.85,
-          paddingRight: 10, paddingTop: 4, fontWeight: 500,
-          letterSpacing: '-0.05em' }}>{first}</span>
+      <p style={{ fontSize: 17, lineHeight: 1.65, margin: 0, overflow: 'hidden' }}>
+        <DropCap>{first}</DropCap>
         {rest}{' '}
         <NoteRef n={1} active={openNote === 1} onClick={() => setOpenNote(openNote === 1 ? null : 1)} />
       </p>
