@@ -516,10 +516,9 @@ function TablePage({ setPage, onOpenDossier }) {
           </>
         ) : view === 'graph' ? (
           <GraphView
-            selected={selected} onSelect={(n) => {
-              setSelected(selected === n ? null : n);
-              if (n && onOpenDossier) onOpenDossier(n);
-            }}
+            selected={selected}
+            onSelect={(n) => setSelected(selected === n ? null : n)}
+            onOpenDossier={onOpenDossier}
             onHover={setHover}
           />
         ) : (
@@ -534,7 +533,7 @@ function TablePage({ setPage, onOpenDossier }) {
 // Nodes = 81 voices sized by degree. Edges = shared MO classifiers.
 // Thread weight & color scale with shared classifier count (1→faint, 4+→prime).
 // Physics: springs + repulsion + per-node lava-lamp drift (matches iamkhayyam/knowware).
-function GraphView({ selected, onSelect, onHover }) {
+function GraphView({ selected, onSelect, onOpenDossier, onHover }) {
   // Physics constants
   const SPRING_LEN = 90, SPRING_K = 0.022;
   const REPULSION = 3200, REP_CUT = 340;
@@ -807,10 +806,21 @@ function GraphView({ selected, onSelect, onHover }) {
                 paddingBottom: 8, marginBottom: 10 }}>OPERATIVE FILE</div>
               <div style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.015em',
                 lineHeight: 1.2, marginBottom: 3 }}>{focusVoice.name}</div>
-              <div className="mono" style={{ fontSize: 10, color: 'var(--sub)', marginBottom: 8 }}>
+              <div className="mono" style={{ fontSize: 10, color: 'var(--sub)', marginBottom: 10 }}>
                 {focusVoice.tier === 'A' ? 'ACADEMIC' : focusVoice.tier === 'P' ? 'PRACTITIONER' : 'VISIONARY'}
                 {' · '}{(voiceClassMap[focusN] || []).length} classifiers
               </div>
+              {onOpenDossier && (
+                <button onClick={() => onOpenDossier(focusN)}
+                  className="mono" style={{
+                    display: 'block', width: '100%', textAlign: 'left',
+                    background: 'var(--ink)', color: 'var(--paper)',
+                    border: 'none', padding: '8px 10px', cursor: 'pointer',
+                    fontSize: 10, letterSpacing: '0.02em', marginBottom: 12,
+                  }}>
+                  Open profile →
+                </button>
+              )}
               <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
                 paddingBottom: 8, borderBottom: '1px solid var(--rule)', marginBottom: 4 }}>
                 {neighbours.length} PRIME {neighbours.length === 1 ? 'PAIR' : 'PAIRS'}
@@ -821,15 +831,18 @@ function GraphView({ selected, onSelect, onHover }) {
                   if (!nv) return null;
                   const tc = weight >= 4 ? 'rgba(235,0,0,0.78)' : weight === 3 ? 'rgba(225,0,0,0.58)' : weight === 2 ? 'rgba(210,0,0,0.46)' : 'rgba(180,0,0,0.45)';
                   return (
-                    <div key={n} style={{ borderTop: '1px solid var(--rule)',
-                      padding: '7px 0', cursor: 'pointer' }}
-                      onClick={() => { setPinned(n); onSelect && onSelect(n); }}>
+                    <div key={n} style={{ borderTop: '1px solid var(--rule)', padding: '7px 0' }}>
                       <div style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
                         <span style={{ width: 6, height: 6, borderRadius: '50%',
                           background: tc, display: 'inline-block', marginTop: 4, flexShrink: 0 }} />
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontSize: 12, fontWeight: 500,
-                            letterSpacing: '-0.01em', color: 'var(--ink)' }}>{nv.name}</div>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div
+                            onClick={() => onOpenDossier && onOpenDossier(n)}
+                            style={{ fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
+                              color: 'var(--ink)', cursor: onOpenDossier ? 'pointer' : 'default',
+                              textDecoration: 'none' }}>
+                            {nv.name}
+                          </div>
                           <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
                             marginTop: 2, lineHeight: 1.3 }}>
                             {shared.slice(0, 2).join(' · ')}{shared.length > 2 ? ` +${shared.length - 2}` : ''}
