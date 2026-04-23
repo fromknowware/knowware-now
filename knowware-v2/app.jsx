@@ -24,18 +24,34 @@ function App() {
   const [page, setPage] = React.useState(() => {
     try { return localStorage.getItem('kw.page') || 'cover'; } catch (e) { return 'cover'; }
   });
+  const [dossierN, setDossierN] = React.useState(null);
+
   React.useEffect(() => {
     try { localStorage.setItem('kw.page', page); } catch (e) {}
     window.scrollTo({ top: 0 });
   }, [page]);
 
+  const openDossier = (n) => {
+    setDossierN(n);
+    if (n) setPage('table');
+  };
+
   return (
     <BreakpointContext.Provider value={bp}>
-      <window.Shell page={page} setPage={setPage}>
-        {page === 'cover' && <window.Cover setPage={setPage} />}
-        {page === 'table' && <window.TablePage setPage={setPage} />}
-        {page === 'read'  && <window.Read />}
-        {page === 'join'  && <window.Join />}
+      <window.Shell page={page} setPage={(p) => { setPage(p); setDossierN(null); }}>
+        {dossierN ? (
+          <window.PersonDossier
+            personN={dossierN}
+            onClose={(next) => { if (next) setDossierN(next); else setDossierN(null); }}
+          />
+        ) : (
+          <>
+            {page === 'cover' && <window.Cover setPage={setPage} />}
+            {page === 'table' && <window.TablePage setPage={setPage} onOpenDossier={openDossier} />}
+            {page === 'read'  && <window.Read />}
+            {page === 'join'  && <window.Join />}
+          </>
+        )}
       </window.Shell>
       <window.TweaksPanel />
     </BreakpointContext.Provider>
