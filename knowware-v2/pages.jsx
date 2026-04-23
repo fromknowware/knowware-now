@@ -530,70 +530,99 @@ function TablePage({ setPage, onOpenDossier }) {
   );
 }
 
-// ─── Graph view ────────────────────────────────────────
-// Force-directed canvas graph. Nodes = 81 voices, edges = co-citation in
-// the same chapter teaser. Hover/click lights the red thread.
+// ─── Graph view — Prime Pairs (MO classifier co-membership) ──
+// Nodes = 81 voices sized by degree. Edges = shared MO classifiers.
+// Thread weight & color scale with shared classifier count (1→faint, 4+→prime).
+// Physics: springs + repulsion + per-node lava-lamp drift (matches iamkhayyam/knowware).
 function GraphView({ selected, onSelect, onHover }) {
-  const canvasRef = React.useRef(null);
-  const simRef    = React.useRef(null);
-  const rafRef    = React.useRef(null);
-  const [active, setActive]     = React.useState(null); // hovered node n
-  const [pinned, setPinned]     = React.useState(selected);
-  const [dims,   setDims]       = React.useState({ w: 900, h: 600 });
+  // Physics constants
+  const SPRING_LEN = 90, SPRING_K = 0.022;
+  const REPULSION = 3200, REP_CUT = 340;
+  const GRAVITY = 0.010;
+  const DAMPING = 0.88, MAX_VEL = 18;
+  const DRIFT_F = 0.18, DRIFT_SPD = 0.0028;
+  const canvasRef    = React.useRef(null);
+  const simRef       = React.useRef(null);
+  const rafRef       = React.useRef(null);
   const containerRef = React.useRef(null);
 
-  // Build edge list from TEASERS co-citations
-  const edges = React.useMemo(() => {
-    const list = [];
-    if (!window.TEASERS) return list;
-    Object.values(window.TEASERS).forEach(t => {
-      if (!t.cites) return;
-      const ns = t.cites.map(c => c.n).filter(n => n >= 1 && n <= 81);
-      for (let i = 0; i < ns.length; i++)
-        for (let j = i + 1; j < ns.length; j++)
-          list.push([ns[i], ns[j]]);
+  const [dims,   setDims]   = React.useState({ w: 860, h: 520 });
+  const [pinned, setPinned] = React.useState(selected);
+  const [active, setActive] = React.useState(null);
+
+  // Build prime pairs from MO classifiers
+  const { edges, adjMap, voiceClassMap } = React.useMemo(() => {
+    // Map each interview voice to its classifiers via VOICES.knownFor
+    const voiceClassMap = {};
+    (window.INTERVIEWS || []).forEach(iv => {
+      const vd = (window.VOICES || []).find(v => {
+        const vn = v.name.toLowerCase(), ivn = iv.name.toLowerCase();
+        return vn === ivn || vn.includes(ivn) || ivn.includes(vn)
+          || vn.split(' ').pop() === ivn.split(' ').pop();
+      });
+      voiceClassMap[iv.n] = vd ? window.classifiersForVoice(vd.knownFor || []) : [];
     });
-    // deduplicate
-    const seen = new Set();
-    return list.filter(([a,b]) => {
-      const k = `${Math.min(a,b)}-${Math.max(a,b)}`;
-      if (seen.has(k)) return false;
-      seen.add(k); return true;
-    });
+
+    // Prime pairs: any two voices sharing ≥1 classifier
+    const ivs = window.INTERVIEWS || [];
+    const edges = [];
+    const adjMap = {};
+    for (let i = 0; i < ivs.length; i++) {
+      for (let j = i + 1; j < ivs.length; j++) {
+        const ac = voiceClassMap[ivs[i].n] || [];
+        const bc = voiceClassMap[ivs[j].n] || [];
+        const shared = ac.filter(c => bc.includes(c));
+        if (!shared.length) continue;
+        const edge = { a: ivs[i].n, b: ivs[j].n, shared, weight: shared.length };
+        edges.push(edge);
+        if (!adjMap[ivs[i].n]) adjMap[ivs[i].n] = [];
+        if (!adjMap[ivs[j].n]) adjMap[ivs[j].n] = [];
+        adjMap[ivs[i].n].push({ n: ivs[j].n, shared, weight: shared.length });
+        adjMap[ivs[j].n].push({ n: ivs[i].n, shared, weight: shared.length });
+      }
+    }
+    // Sort adjacency by weight desc
+    Object.values(adjMap).forEach(arr => arr.sort((a, b) => b.weight - a.weight));
+    return { edges, adjMap, voiceClassMap };
   }, []);
 
-  // adjacency for red thread
-  const adjMap = React.useMemo(() => {
-    const m = {};
-    edges.forEach(([a,b]) => {
-      if (!m[a]) m[a] = [];
-      if (!m[b]) m[b] = [];
-      m[a].push(b); m[b].push(a);
-    });
-    return m;
+  // Node radius by degree
+  const degreeMap = React.useMemo(() => {
+    const d = {};
+    edges.forEach(({ a, b }) => { d[a] = (d[a] || 0) + 1; d[b] = (d[b] || 0) + 1; });
+    return d;
   }, [edges]);
+  const maxDeg = Math.max(1, ...Object.values(degreeMap));
 
-  const focusN = pinned || active;
+  // Sync with parent
+  React.useEffect(() => { setPinned(selected); }, [selected]);
+
+  const focusN     = pinned ?? active;
   const neighbours = focusN ? (adjMap[focusN] || []) : [];
 
-  // Initialise sim nodes
+  // Init physics nodes
   React.useEffect(() => {
     const { w, h } = dims;
-    const nodes = window.INTERVIEWS.map(v => ({
-      n: v.n, v,
-      x: w/2 + (Math.random()-0.5)*w*0.6,
-      y: h/2 + (Math.random()-0.5)*h*0.5,
-      vx: 0, vy: 0,
-    }));
+    const nodes = (window.INTERVIEWS || []).map(iv => {
+      const deg = degreeMap[iv.n] || 0;
+      return {
+        n: iv.n, v: iv,
+        r: 8 + (deg / maxDeg) * 13,        // 8–21px
+        x: w / 2 + (Math.random() - 0.5) * w * 0.55,
+        y: h / 2 + (Math.random() - 0.5) * h * 0.45,
+        vx: 0, vy: 0,
+        driftAngle: Math.random() * Math.PI * 2,
+      };
+    });
     simRef.current = { nodes };
-  }, [dims]);
+  }, [dims, degreeMap, maxDeg]);
 
   // Resize observer
   React.useEffect(() => {
     if (!containerRef.current) return;
     const ro = new ResizeObserver(entries => {
       const { width } = entries[0].contentRect;
-      setDims({ w: width, h: Math.round(width * 0.62) });
+      setDims({ w: Math.floor(width), h: Math.round(width * 0.60) });
     });
     ro.observe(containerRef.current);
     return () => ro.disconnect();
@@ -606,50 +635,51 @@ function GraphView({ selected, onSelect, onHover }) {
     const ctx = canvas.getContext('2d');
     const { w, h } = dims;
     const nodes = simRef.current.nodes;
-
-    // Rebuild position arrays for lookup
     const posById = {};
     nodes.forEach(n => { posById[n.n] = n; });
 
-    const R = 14;
-    let frame = 0;
+    const threadColor = wt => wt >= 4 ? 'rgba(235,0,0,0.78)' : wt === 3 ? 'rgba(225,0,0,0.58)' : wt === 2 ? 'rgba(210,0,0,0.36)' : 'rgba(180,0,0,0.20)';
+    const threadWidth = wt => wt >= 4 ? 2.8 : wt === 3 ? 2.1 : wt === 2 ? 1.4 : 0.8;
 
     const tick = () => {
-      frame++;
-      // Physics — only run for first 300 frames then slow down
-      const alpha = frame < 300 ? 0.4 : frame < 600 ? 0.1 : 0.02;
+      // 1. Springs
+      edges.forEach(({ a, b }) => {
+        const na = posById[a], nb = posById[b];
+        if (!na || !nb) return;
+        const dx = nb.x - na.x, dy = nb.y - na.y;
+        const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
+        const force = SPRING_K * (dist - SPRING_LEN);
+        na.vx += (dx / dist) * force; na.vy += (dy / dist) * force;
+        nb.vx -= (dx / dist) * force; nb.vy -= (dy / dist) * force;
+      });
 
-      // Repulsion
+      // 2. Repulsion (cutoff for performance)
       for (let i = 0; i < nodes.length; i++) {
-        for (let j = i+1; j < nodes.length; j++) {
-          const a = nodes[i], b = nodes[j];
-          const dx = b.x-a.x, dy = b.y-a.y;
-          const dist = Math.max(Math.sqrt(dx*dx+dy*dy), 1);
-          const force = (1200 / (dist * dist)) * alpha;
-          const fx = (dx/dist)*force, fy = (dy/dist)*force;
-          a.vx -= fx; a.vy -= fy;
-          b.vx += fx; b.vy += fy;
+        for (let j = i + 1; j < nodes.length; j++) {
+          const na = nodes[i], nb = nodes[j];
+          const dx = nb.x - na.x, dy = nb.y - na.y;
+          const dist2 = dx * dx + dy * dy;
+          if (dist2 > REP_CUT * REP_CUT) continue;
+          const dist = Math.max(Math.sqrt(dist2), 1);
+          const force = REPULSION / (dist * dist);
+          na.vx -= (dx / dist) * force; na.vy -= (dy / dist) * force;
+          nb.vx += (dx / dist) * force; nb.vy += (dy / dist) * force;
         }
       }
-      // Attraction along edges
-      edges.forEach(([an, bn]) => {
-        const a = posById[an], b = posById[bn];
-        if (!a || !b) return;
-        const dx = b.x-a.x, dy = b.y-a.y;
-        const dist = Math.max(Math.sqrt(dx*dx+dy*dy), 1);
-        const ideal = 120;
-        const force = ((dist-ideal)/dist) * 0.04 * alpha;
-        a.vx += dx*force; a.vy += dy*force;
-        b.vx -= dx*force; b.vy -= dy*force;
-      });
-      // Centre gravity
+
+      // 3. Gravity + drift + integrate
       nodes.forEach(n => {
-        n.vx += (w/2 - n.x) * 0.002 * alpha;
-        n.vy += (h/2 - n.y) * 0.002 * alpha;
-        n.vx *= 0.85; n.vy *= 0.85;
+        n.vx += (w / 2 - n.x) * GRAVITY;
+        n.vy += (h / 2 - n.y) * GRAVITY;
+        n.driftAngle += DRIFT_SPD;
+        n.vx += Math.cos(n.driftAngle) * DRIFT_F;
+        n.vy += Math.sin(n.driftAngle) * DRIFT_F;
+        n.vx *= DAMPING; n.vy *= DAMPING;
+        const speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+        if (speed > MAX_VEL) { n.vx *= MAX_VEL / speed; n.vy *= MAX_VEL / speed; }
         n.x += n.vx; n.y += n.vy;
-        n.x = Math.max(R+5, Math.min(w-R-5, n.x));
-        n.y = Math.max(R+5, Math.min(h-R-5, n.y));
+        n.x = Math.max(n.r + 4, Math.min(w - n.r - 4, n.x));
+        n.y = Math.max(n.r + 4, Math.min(h - n.r - 4, n.y));
       });
 
       // Draw
@@ -658,18 +688,26 @@ function GraphView({ selected, onSelect, onHover }) {
       ctx.fillRect(0, 0, w, h);
 
       const focus = focusN;
-      const nbrs  = new Set(focus ? (adjMap[focus] || []) : []);
+      const nbrs  = new Set(focus ? (adjMap[focus] || []).map(x => x.n) : []);
 
       // Edges
-      edges.forEach(([an, bn]) => {
-        const a = posById[an], b = posById[bn];
-        if (!a || !b) return;
-        const isRed = focus && (an === focus || bn === focus);
+      edges.forEach(({ a, b, weight }) => {
+        const na = posById[a], nb = posById[b];
+        if (!na || !nb) return;
+        const isRed = focus && (a === focus || b === focus);
         ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.strokeStyle = isRed ? 'rgba(220,40,40,0.85)' : 'rgba(0,0,0,0.06)';
-        ctx.lineWidth   = isRed ? 1.8 : 0.8;
+        ctx.moveTo(na.x, na.y);
+        ctx.lineTo(nb.x, nb.y);
+        if (isRed) {
+          ctx.strokeStyle = threadColor(weight);
+          ctx.lineWidth   = threadWidth(weight) * 1.5;
+        } else if (focus) {
+          ctx.strokeStyle = 'rgba(0,0,0,0.025)';
+          ctx.lineWidth   = 0.5;
+        } else {
+          ctx.strokeStyle = threadColor(weight);
+          ctx.lineWidth   = threadWidth(weight);
+        }
         ctx.stroke();
       });
 
@@ -678,30 +716,27 @@ function GraphView({ selected, onSelect, onHover }) {
         const isFocus = n.n === focus;
         const isNbr   = nbrs.has(n.n);
         const isDim   = focus && !isFocus && !isNbr;
-        const tier    = n.v.tier;
-        const col = tier === 'A'
-          ? (isDim ? 'rgba(160,180,230,0.25)' : isFocus ? '#2244bb' : isNbr ? 'rgba(100,140,220,0.9)' : 'rgba(100,140,220,0.7)')
-          : tier === 'P'
-          ? (isDim ? 'rgba(230,180,150,0.25)' : isFocus ? '#bb4422' : isNbr ? 'rgba(210,110,70,0.9)' : 'rgba(210,110,70,0.7)')
-          : (isDim ? 'rgba(150,210,170,0.25)' : isFocus ? '#226644' : isNbr ? 'rgba(80,170,110,0.9)' : 'rgba(80,170,110,0.7)');
+        const tier = n.v.tier;
+        const [r, g, b] = tier === 'A' ? [100,140,220] : tier === 'P' ? [210,110,70] : [80,170,110];
+        const alpha = isDim ? 0.10 : isFocus ? 1.0 : isNbr ? 0.90 : 0.72;
 
         ctx.beginPath();
-        ctx.arc(n.x, n.y, isFocus ? R+4 : isNbr ? R+1 : R-2, 0, Math.PI*2);
-        ctx.fillStyle = col;
+        ctx.arc(n.x, n.y, isFocus ? n.r + 3 : isNbr ? n.r + 1 : n.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
         ctx.fill();
+
         if (isFocus) {
-          ctx.strokeStyle = 'rgba(220,40,40,0.9)';
-          ctx.lineWidth = 2;
-          ctx.stroke();
+          ctx.strokeStyle = '#e60000'; ctx.lineWidth = 2; ctx.stroke();
+        } else if (isNbr && !isDim) {
+          ctx.strokeStyle = `rgba(${r},${g},${b},0.9)`; ctx.lineWidth = 1.5; ctx.stroke();
         }
 
-        // Label for focused + neighbours
-        if (isFocus || isNbr || !focus) {
-          const label = n.v.name.split(' ').pop(); // last name
-          ctx.fillStyle = isDim ? 'rgba(0,0,0,0.15)' : isFocus ? '#cc2222' : 'rgba(0,0,0,0.65)';
-          ctx.font = isFocus ? `600 11px "JetBrains Mono", monospace` : `10px "JetBrains Mono", monospace`;
+        if (!isDim) {
+          const label = n.v.name.split(' ').pop();
+          ctx.fillStyle = isFocus ? '#e60000' : 'rgba(0,0,0,0.6)';
+          ctx.font = `${isFocus ? '600 ' : ''}9px "JetBrains Mono",monospace`;
           ctx.textAlign = 'center';
-          ctx.fillText(label, n.x, n.y + R + 12);
+          ctx.fillText(label, n.x, n.y + n.r + 11);
         }
       });
 
@@ -712,67 +747,49 @@ function GraphView({ selected, onSelect, onHover }) {
     return () => cancelAnimationFrame(rafRef.current);
   }, [dims, edges, adjMap, focusN]);
 
-  // Mouse events on canvas
+  // Mouse
   const handleMouse = React.useCallback((e, click) => {
     const canvas = canvasRef.current;
     if (!canvas || !simRef.current) return;
     const rect = canvas.getBoundingClientRect();
     const mx = (e.clientX - rect.left) * (dims.w / rect.width);
     const my = (e.clientY - rect.top)  * (dims.h / rect.height);
-    const R = 18;
     let hit = null;
     simRef.current.nodes.forEach(n => {
-      const dx = n.x-mx, dy = n.y-my;
-      if (Math.sqrt(dx*dx+dy*dy) < R) hit = n.n;
+      const dx = n.x - mx, dy = n.y - my;
+      if (Math.sqrt(dx * dx + dy * dy) < n.r + 5) hit = n.n;
     });
     if (click) {
       const next = hit === pinned ? null : hit;
-      setPinned(next);
-      onSelect && onSelect(next);
+      setPinned(next); onSelect && onSelect(next);
     } else {
-      setActive(hit);
-      onHover && onHover(hit);
+      setActive(hit); onHover && onHover(hit);
     }
     if (canvas) canvas.style.cursor = hit ? 'pointer' : 'default';
   }, [dims, pinned, onSelect, onHover]);
 
-  // focusN for rendering — keep in sync with parent selected
-  React.useEffect(() => { setPinned(selected); }, [selected]);
-
-  const focusVoice = focusN ? window.INTERVIEWS[focusN-1] : null;
-  const nbList = neighbours.map(n => window.INTERVIEWS[n-1]).filter(Boolean);
+  const focusVoice = focusN ? (window.INTERVIEWS || [])[focusN - 1] : null;
 
   return (
     <div>
       {/* Legend */}
       <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
-        marginBottom: 12, display: 'flex', gap: 20, alignItems: 'center',
-        flexWrap: 'wrap' }}>
-        <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          <span style={{ width: 10, height: 10, borderRadius: '50%',
-            background: 'rgba(100,140,220,0.7)', display: 'inline-block' }} />
-          ACADEMIC
-        </span>
-        <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          <span style={{ width: 10, height: 10, borderRadius: '50%',
-            background: 'rgba(210,110,70,0.7)', display: 'inline-block' }} />
-          PRACTITIONER
-        </span>
-        <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          <span style={{ width: 10, height: 10, borderRadius: '50%',
-            background: 'rgba(80,170,110,0.7)', display: 'inline-block' }} />
-          VISIONARY
-        </span>
+        marginBottom: 12, display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
+        {[['A','rgba(100,140,220,0.7)','ACADEMIC'],['P','rgba(210,110,70,0.7)','PRACTITIONER'],['V','rgba(80,170,110,0.7)','VISIONARY']].map(([t, col, label]) => (
+          <span key={t} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <span style={{ width: 9, height: 9, borderRadius: '50%', background: col, display: 'inline-block' }} />
+            {label}
+          </span>
+        ))}
         <span style={{ marginLeft: 'auto', color: 'var(--sub2)' }}>
-          Click a node to follow the red thread ·{' '}
-          {pinned ? `${neighbours.length} connections from ${window.INTERVIEWS[pinned-1]?.name.split(' ').pop()}` : 'hover to preview'}
+          {edges.length} prime pairs ·{' '}
+          {focusN ? `${neighbours.length} connections from ${focusVoice?.name.split(' ').pop()}` : 'click to open file'}
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 0,
-        border: '1px solid var(--rule)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 0, border: '1px solid var(--rule)' }}>
         {/* Canvas */}
-        <div ref={containerRef} style={{ background: '#fafaf9', position: 'relative' }}>
+        <div ref={containerRef} style={{ background: '#fafaf9', minHeight: 400 }}>
           <canvas ref={canvasRef} width={dims.w} height={dims.h}
             style={{ width: '100%', height: 'auto', display: 'block' }}
             onMouseMove={e => handleMouse(e, false)}
@@ -780,81 +797,70 @@ function GraphView({ selected, onSelect, onHover }) {
             onClick={e => handleMouse(e, true)} />
         </div>
 
-        {/* Right panel — connections */}
+        {/* Sidebar */}
         <div style={{ borderLeft: '1px solid var(--rule)', background: 'var(--paper)',
-          padding: 20, minHeight: 400 }}>
+          padding: '16px 18px', minHeight: 400, overflowY: 'auto', maxHeight: 600 }}>
           {focusVoice ? (
             <>
+              <div className="mono" style={{ fontSize: 9, letterSpacing: '0.04em',
+                color: 'var(--sub)', borderBottom: '1px solid var(--rule)',
+                paddingBottom: 8, marginBottom: 10 }}>OPERATIVE FILE</div>
+              <div style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.015em',
+                lineHeight: 1.2, marginBottom: 3 }}>{focusVoice.name}</div>
+              <div className="mono" style={{ fontSize: 10, color: 'var(--sub)', marginBottom: 8 }}>
+                {focusVoice.tier === 'A' ? 'ACADEMIC' : focusVoice.tier === 'P' ? 'PRACTITIONER' : 'VISIONARY'}
+                {' · '}{(voiceClassMap[focusN] || []).length} classifiers
+              </div>
               <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-                letterSpacing: '0.04em', marginBottom: 12,
-                borderBottom: '1px solid var(--rule)', paddingBottom: 10 }}>
-                OVERACTIVE FILE
+                paddingBottom: 8, borderBottom: '1px solid var(--rule)', marginBottom: 4 }}>
+                {neighbours.length} PRIME {neighbours.length === 1 ? 'PAIR' : 'PAIRS'}
               </div>
-              <div style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.015em',
-                lineHeight: 1.2, marginBottom: 4 }}>{focusVoice.name}</div>
-              <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
-                marginBottom: 16, lineHeight: 1.4 }}>
-                {focusVoice.tier === 'A' ? 'ACADEMIC' : focusVoice.tier === 'P' ? 'PRACTITIONER' : 'VISIONARY'} · ch{focusVoice.ch}
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--sub)',
-                marginBottom: 16 }}>{focusVoice.affiliation}</div>
-
-              <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-                letterSpacing: '0.04em', marginBottom: 10 }}>
-                {nbList.length} CONNECTIONS
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {nbList.map(v => (
-                  <div key={v.n} style={{
-                    borderTop: '1px solid var(--rule)', padding: '9px 0',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => { setPinned(v.n); onSelect && onSelect(v.n); }}>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-                      <span className="mono" style={{
-                        fontSize: 9, color: 'var(--paper)',
-                        background: 'var(--accent)', padding: '2px 5px',
-                        flexShrink: 0 }}>
-                        {String(v.n).padStart(2, '0')}
-                      </span>
-                      <span style={{ fontSize: 13, fontWeight: 500,
-                        letterSpacing: '-0.01em', lineHeight: 1.2, color: 'var(--ink)' }}>
-                        {v.name}
-                      </span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {neighbours.map(({ n, shared, weight }) => {
+                  const nv = (window.INTERVIEWS || [])[n - 1];
+                  if (!nv) return null;
+                  const tc = weight >= 4 ? 'rgba(235,0,0,0.78)' : weight === 3 ? 'rgba(225,0,0,0.58)' : weight === 2 ? 'rgba(210,0,0,0.46)' : 'rgba(180,0,0,0.45)';
+                  return (
+                    <div key={n} style={{ borderTop: '1px solid var(--rule)',
+                      padding: '7px 0', cursor: 'pointer' }}
+                      onClick={() => { setPinned(n); onSelect && onSelect(n); }}>
+                      <div style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%',
+                          background: tc, display: 'inline-block', marginTop: 4, flexShrink: 0 }} />
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 12, fontWeight: 500,
+                            letterSpacing: '-0.01em', color: 'var(--ink)' }}>{nv.name}</div>
+                          <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
+                            marginTop: 2, lineHeight: 1.3 }}>
+                            {shared.slice(0, 2).join(' · ')}{shared.length > 2 ? ` +${shared.length - 2}` : ''}
+                          </div>
+                        </div>
+                        <span className="mono" style={{ marginLeft: 'auto', fontSize: 9,
+                          color: 'var(--accent)', flexShrink: 0 }}>{weight}×</span>
+                      </div>
                     </div>
-                    <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-                      marginTop: 3, paddingLeft: 33 }}>
-                      {v.tier === 'A' ? 'ACADEMIC' : v.tier === 'P' ? 'PRACTITIONER' : 'VISIONARY'} · ch{v.ch}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </>
           ) : (
             <div>
-              <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-                letterSpacing: '0.04em', marginBottom: 16 }}>OVERACTIVE FILE</div>
+              <div className="mono" style={{ fontSize: 9, letterSpacing: '0.04em',
+                color: 'var(--sub)', marginBottom: 14 }}>OPERATIVE FILE</div>
               <div style={{ fontSize: 14, color: 'var(--sub)', lineHeight: 1.6 }}>
                 Click any node to follow<br/>the red thread.
               </div>
-              <div style={{ marginTop: 20, fontSize: 12, color: 'var(--sub2)',
-                lineHeight: 1.5 }}>
-                Connections are drawn from<br/>co-citation across the 9<br/>chapter teasers.
+              <div style={{ marginTop: 14, fontSize: 11, color: 'var(--sub2)', lineHeight: 1.6 }}>
+                Edges connect voices sharing MO classifiers.<br/>Thread weight = shared count.
               </div>
-              <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column',
-                gap: 6 }}>
-                {['A','P','V'].map(tier => {
-                  const cnt = window.INTERVIEWS.filter(v => v.tier === tier).length;
-                  const t = tier === 'A' ? 'ACADEMIC' : tier === 'P' ? 'PRACTITIONER' : 'VISIONARY';
-                  return (
-                    <div key={tier} className="mono" style={{ fontSize: 10,
-                      color: 'var(--sub)', display: 'flex',
-                      justifyContent: 'space-between' }}>
-                      <span>{t}</span>
-                      <span>{cnt} voices</span>
-                    </div>
-                  );
-                })}
+              <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {[['4+','rgba(235,0,0,0.78)',2.8],['3','rgba(225,0,0,0.58)',2.1],['2','rgba(210,0,0,0.36)',1.4],['1','rgba(180,0,0,0.35)',0.8]].map(([label, col, w]) => (
+                  <div key={label} className="mono" style={{ fontSize: 9, display: 'flex',
+                    gap: 8, alignItems: 'center', color: 'var(--sub)' }}>
+                    <span style={{ width: 24, height: Math.max(1, w), background: col, display: 'inline-block' }} />
+                    {label} shared
+                  </div>
+                ))}
               </div>
             </div>
           )}
