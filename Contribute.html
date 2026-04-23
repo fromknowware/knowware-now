@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Claim your spot in Volume I — Knowware</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf9;
+    --paper: #ffffff;
+    --ink: #0a0a0a;
+    --sub: #6b6b6b;
+    --sub2: #9a9a97;
+    --rule: #e5e5e4;
+    --accent: oklch(0.55 0.15 250);
+    --accent-soft: oklch(0.96 0.02 250);
+    --tier-a: oklch(0.88 0.09 260);
+    --tier-p: oklch(0.88 0.09 35);
+    --tier-v: oklch(0.88 0.09 140);
+    --tier-a-ink: oklch(0.35 0.10 260);
+    --tier-p-ink: oklch(0.40 0.12 35);
+    --tier-v-ink: oklch(0.35 0.10 140);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga";
+  }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .serif { font-family: "Source Serif 4", Georgia, serif; }
+  a { color: inherit; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--bg); border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 16px; align-items: center; padding: 14px 32px;
+  }
+  header.top a.back {
+    text-decoration: none; font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: var(--sub);
+  }
+  header.top a.back:hover { color: var(--ink); }
+  header.top .brand {
+    font-size: 15px; font-weight: 600; letter-spacing: -0.015em;
+  }
+  header.top .meta {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: var(--sub);
+  }
+
+  .hero {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .hero-inner {
+    padding: 80px 32px 64px; max-width: 1280px; margin: 0 auto; width: 100%;
+  }
+  .kicker {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.06em; color: var(--sub);
+    display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .kicker .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    margin-right: 8px; vertical-align: middle;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  h1.hed {
+    font-size: clamp(56px, 9vw, 148px);
+    font-weight: 500; letter-spacing: -0.045em; line-height: 0.9;
+    margin: 0 0 32px; max-width: 13ch;
+  }
+  h1.hed em {
+    font-style: normal; color: var(--accent);
+  }
+  .sub {
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.45; letter-spacing: -0.015em;
+    color: var(--sub); max-width: 62ch; margin: 0 0 40px;
+  }
+
+  .cta-row {
+    display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+    margin-bottom: 56px;
+  }
+  .btn {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px; letter-spacing: -0.005em;
+    text-decoration: none; padding: 14px 22px; border: 1px solid var(--ink);
+    display: inline-flex; align-items: center; gap: 10px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn.ghost { background: var(--paper); color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); }
+  .btn .arrow { font-size: 15px; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--rule);
+    padding-top: 24px; margin-top: 24px;
+  }
+  .stat { padding-right: 24px; }
+  .stat .n {
+    font-size: 56px; font-weight: 500; letter-spacing: -0.04em;
+    line-height: 0.95; margin-bottom: 6px;
+  }
+  .stat .n em {
+    font-style: normal; font-size: 0.5em; color: var(--sub2);
+    vertical-align: super; margin-left: 4px;
+  }
+  .stat .l {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: var(--sub); letter-spacing: -0.005em;
+    line-height: 1.4;
+  }
+
+  /* Window */
+  .window {
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .window-inner {
+    padding: 56px 32px; max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 360px 1fr; gap: 48px;
+  }
+  .window h2 {
+    font-size: 36px; letter-spacing: -0.025em; font-weight: 500;
+    line-height: 1.1; margin: 0 0 16px;
+  }
+  .window .lead {
+    font-size: 17px; line-height: 1.55; letter-spacing: -0.01em;
+    color: var(--sub); margin: 0;
+  }
+
+  /* Timeline */
+  .timeline { display: grid; gap: 0; }
+  .tl-row {
+    display: grid; grid-template-columns: 180px 1fr; gap: 24px;
+    padding: 22px 0; border-top: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .tl-row:last-child { border-bottom: 1px solid var(--rule); }
+  .tl-row .when {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: var(--accent); letter-spacing: 0.02em;
+  }
+  .tl-row .when.done { color: var(--sub2); text-decoration: line-through; }
+  .tl-row .title {
+    font-size: 20px; letter-spacing: -0.015em; font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .tl-row .title.done { color: var(--sub2); text-decoration: line-through; }
+  .tl-row .body {
+    font-size: 14px; line-height: 1.5; color: var(--sub);
+  }
+
+  /* Paths */
+  .paths { padding: 56px 32px; max-width: 1280px; margin: 0 auto; }
+  .paths-head {
+    display: grid; grid-template-columns: 360px 1fr; gap: 48px;
+    margin-bottom: 40px;
+  }
+  .paths-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border: 1px solid var(--ink);
+  }
+  .path {
+    padding: 24px 22px; border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 14px; min-height: 340px;
+    background: var(--paper);
+  }
+  .path:last-child { border-right: none; }
+  .path .letter {
+    font-size: 64px; font-weight: 500; letter-spacing: -0.04em;
+    line-height: 1; color: var(--accent);
+  }
+  .path .name {
+    font-size: 18px; letter-spacing: -0.015em; font-weight: 500;
+    line-height: 1.2;
+  }
+  .path .dur {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px; color: var(--sub); letter-spacing: 0.02em;
+  }
+  .path .desc {
+    font-size: 13px; line-height: 1.5; color: var(--sub); flex: 1;
+  }
+  .path .pick {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; border-top: 1px solid var(--rule);
+    padding-top: 12px; color: var(--ink);
+  }
+  .path.featured {
+    background: var(--ink); color: var(--paper);
+  }
+  .path.featured .letter,
+  .path.featured .dur { color: oklch(0.75 0.08 250); }
+  .path.featured .desc { color: oklch(0.82 0.02 250); }
+  .path.featured .pick { color: var(--paper); border-top-color: oklch(0.35 0.05 250); }
+
+  /* Form */
+  .form-wrap {
+    border-top: 1px solid var(--ink);
+    background: var(--bg);
+  }
+  .form-inner {
+    padding: 64px 32px; max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 8fr 4fr; gap: 64px;
+  }
+  .form h2 {
+    font-size: 56px; letter-spacing: -0.035em; font-weight: 500;
+    line-height: 0.95; margin: 0 0 16px; max-width: 14ch;
+  }
+  .form h2 em { font-style: normal; color: var(--accent); }
+  .form .intro {
+    font-size: 17px; line-height: 1.55; color: var(--sub);
+    margin: 0 0 36px; max-width: 56ch;
+  }
+
+  .path-pick {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    margin-bottom: 32px;
+  }
+  .pp {
+    background: var(--paper); border: 1px solid var(--ink);
+    padding: 16px 14px; cursor: pointer; font-family: inherit;
+    text-align: left; transition: all 0.1s;
+  }
+  .pp.on { background: var(--ink); color: var(--paper); }
+  .pp .k {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px; opacity: 0.7; display: block; margin-bottom: 4px;
+  }
+  .pp .n {
+    font-size: 15px; letter-spacing: -0.01em; line-height: 1.2;
+  }
+
+  .fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 24px; }
+  .fld { display: flex; flex-direction: column; gap: 6px; }
+  .fld.full { grid-column: 1 / -1; }
+  .fld label {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px; color: var(--sub); letter-spacing: 0.02em;
+  }
+  .fld input, .fld textarea, .fld select {
+    border: none; border-bottom: 1px solid var(--ink);
+    background: transparent; padding: 8px 0; font-size: 15px;
+    font-family: inherit; outline: none; resize: vertical;
+  }
+  .fld input:focus, .fld textarea:focus, .fld select:focus {
+    border-bottom-color: var(--accent);
+  }
+  .fld .hint { font-size: 11px; color: var(--sub2); margin-top: 2px; }
+
+  .submit-row {
+    margin-top: 40px; display: flex; gap: 16px; align-items: center;
+  }
+  .legal {
+    font-size: 11px; color: var(--sub); line-height: 1.5;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    max-width: 40ch;
+  }
+
+  /* Ticket preview */
+  .ticket {
+    position: sticky; top: 80px; align-self: start;
+    background: var(--ink); color: var(--paper);
+    padding: 28px 24px; font-family: inherit;
+    height: fit-content;
+  }
+  .ticket .tag {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px; color: oklch(0.65 0.1 250);
+    letter-spacing: 0.05em; margin-bottom: 18px;
+    display: flex; justify-content: space-between;
+  }
+  .ticket .num {
+    font-size: 44px; font-weight: 500; letter-spacing: -0.03em;
+    line-height: 1; margin-bottom: 6px;
+  }
+  .ticket .caption {
+    font-size: 13px; color: oklch(0.82 0.02 250); line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .ticket ul {
+    list-style: none; padding: 0; margin: 0;
+    border-top: 1px solid oklch(0.35 0.05 250);
+  }
+  .ticket li {
+    padding: 10px 0; border-bottom: 1px solid oklch(0.25 0.04 250);
+    display: grid; grid-template-columns: 70px 1fr; gap: 10px;
+    align-items: baseline;
+  }
+  .ticket li .k {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px; color: oklch(0.65 0.1 250);
+  }
+  .ticket li .v {
+    font-size: 13px; line-height: 1.4; color: var(--paper);
+  }
+
+  /* Voices strip */
+  .voices {
+    border-top: 1px solid var(--rule); padding: 56px 32px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .voices h3 {
+    font-size: 28px; letter-spacing: -0.02em; font-weight: 500;
+    margin: 0 0 8px;
+  }
+  .voices .sub2 {
+    font-size: 14px; color: var(--sub); margin-bottom: 28px;
+  }
+  .voice-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: 4px;
+  }
+  .chip {
+    aspect-ratio: 3/4; padding: 6px 8px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    font-size: 22px; font-weight: 500; letter-spacing: -0.03em;
+    line-height: 1; color: var(--ink);
+  }
+  .chip .cn {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 8px; font-weight: 400; opacity: 0.7; letter-spacing: 0;
+  }
+  .chip .ct {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 8px; font-weight: 400; opacity: 0.7; text-align: right;
+  }
+
+  /* FAQ */
+  .faq { padding: 56px 32px; max-width: 1280px; margin: 0 auto; }
+  .faq h2 {
+    font-size: 44px; letter-spacing: -0.03em; font-weight: 500;
+    margin: 0 0 36px;
+  }
+  details {
+    border-top: 1px solid var(--rule);
+    padding: 20px 0;
+  }
+  details:last-of-type { border-bottom: 1px solid var(--rule); }
+  details summary {
+    cursor: pointer; font-size: 20px; letter-spacing: -0.015em;
+    font-weight: 500; list-style: none;
+    display: grid; grid-template-columns: 1fr 20px; gap: 12px;
+    align-items: baseline;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after {
+    content: '+'; font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 22px; color: var(--sub); transition: transform 0.15s;
+  }
+  details[open] summary::after { content: '−'; }
+  details .a {
+    font-size: 15px; line-height: 1.6; color: var(--sub);
+    margin-top: 14px; max-width: 68ch;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--ink); color: var(--paper);
+    padding: 48px 32px;
+  }
+  footer .inner {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px;
+    align-items: end;
+  }
+  footer .big {
+    font-size: 48px; letter-spacing: -0.03em; font-weight: 500;
+    line-height: 1.05; max-width: 18ch;
+  }
+  footer .meta {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: oklch(0.65 0.1 250); letter-spacing: 0.02em;
+    text-align: right; line-height: 1.6;
+  }
+
+  @media (max-width: 900px) {
+    .window-inner,
+    .paths-head,
+    .form-inner { grid-template-columns: 1fr; gap: 24px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .paths-grid { grid-template-columns: 1fr; }
+    .path { border-right: none; border-bottom: 1px solid var(--rule); }
+    .path-pick { grid-template-columns: repeat(2, 1fr); }
+    .fields { grid-template-columns: 1fr; }
+    .tl-row { grid-template-columns: 1fr; gap: 6px; }
+    footer .inner { grid-template-columns: 1fr; align-items: start; }
+    footer .meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <span class="brand">Knowware<span style="color: var(--sub2)">®</span></span>
+    <span class="meta" style="margin-left: 14px">systems-of-intelligence · v1.0 · mmxxvi</span>
+  </div>
+  <span class="meta">VOLUME I · SPOTS OPEN</span>
+  <a href="Knowware v2.html" class="back">← back to the book</a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="kicker">
+      <span><span class="dot"></span>LANDING · V1.0 · CONTRIBUTE</span>
+      <span>WINDOW CLOSES · SOLSTICE 26</span>
+      <span>EDITION 01 · MMXXVI</span>
+    </div>
+
+    <h1 class="hed">Read the whole book. <em>Shape it.</em></h1>
+
+    <p class="sub">
+      <span class="serif" style="font-size: 1.05em">Systems of Intelligence</span> is an eighty-one-voice investigation
+      of the three-body problem at the heart of the AI era: how hardware,
+      software, and <em style="color: var(--ink); font-style: normal; font-weight: 500">knowware</em> coordinate. Volume I closes at the end of
+      the year. Before it does, we are opening the manuscript to a small
+      reading room of contributors.
+    </p>
+
+    <div class="cta-row">
+      <a href="#pick" class="btn primary">
+        Claim your spot <span class="arrow">→</span>
+      </a>
+      <a href="Knowware v2.html" class="btn ghost">
+        Preview the chapters <span class="arrow">↗</span>
+      </a>
+      <span class="mono" style="font-size: 11px; color: var(--sub); margin-left: 8px">
+        ~4 minutes · no account required
+      </span>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="n">81<em>/81</em></div>
+        <div class="l">Voices assembled for Volume I.<br>None left to add — only to read.</div>
+      </div>
+      <div class="stat">
+        <div class="n">09</div>
+        <div class="l">Chapters drafted.<br>Each with a causal diagram + ~40 pages of prose.</div>
+      </div>
+      <div class="stat">
+        <div class="n">127</div>
+        <div class="l">Manuscript-editor spots available.<br>Roughly 14 per chapter.</div>
+      </div>
+      <div class="stat">
+        <div class="n">0</div>
+        <div class="l">Algorithms.<br>You will hear from us in letters, by hand.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What you actually get -->
+<section class="window">
+  <div class="window-inner">
+    <div>
+      <div class="mono" style="font-size: 11px; color: var(--sub); margin-bottom: 12px">01 · WHAT YOU GET</div>
+      <h2>A reading room, not a newsletter.</h2>
+      <p class="lead">
+        No feed. No drip. A passcode, a chapter, and a week to sit with it
+        before the next one arrives.
+      </p>
+    </div>
+    <div class="timeline">
+      <div class="tl-row">
+        <span class="when">DAY 0</span>
+        <div>
+          <div class="title">A welcome letter — literal paper, optional.</div>
+          <div class="body">Addressed. Hand-signed. You pick the address in the form below. Or opt out; email works too.</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <span class="when">DAY 3</span>
+        <div>
+          <div class="title">Reading passcode + Chapter 01 (full draft).</div>
+          <div class="body">~38 pages. Causal diagrams in place. Nine voices cited. Due back in two weeks with line-level notes.</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <span class="when">WEEKS 2–16</span>
+        <div>
+          <div class="title">One chapter at a time — at your pace.</div>
+          <div class="body">Read what you have time for. Skip what you don't. Nothing is timed. Nothing is quizzed.</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <span class="when">SOLSTICE 26</span>
+        <div>
+          <div class="title">Final call: your notes fold into the print edition.</div>
+          <div class="body">Accepted edits are visible in the next draft. Contributors are named in the colophon of Volume I.</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <span class="when done">LATER</span>
+        <div>
+          <div class="title done">A newsletter.</div>
+          <div class="body">We are not going to do this. If we did, we would tell you first.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Four paths -->
+<section class="paths" id="pick">
+  <div class="paths-head">
+    <div>
+      <div class="mono" style="font-size: 11px; color: var(--sub); margin-bottom: 12px">02 · FOUR PATHS</div>
+      <h2 style="font-size: 36px; letter-spacing: -0.025em; font-weight: 500; line-height: 1.1; margin: 0 0 16px">
+        Four ways to be inside the book.
+      </h2>
+    </div>
+    <p class="lead" style="padding-top: 28px">
+      Pick the one that fits. You can change later. Editing the manuscript
+      is the deepest — and the only one that unlocks the complete draft.
+    </p>
+  </div>
+
+  <div class="paths-grid">
+    <div class="path">
+      <div class="letter">A</div>
+      <div>
+        <div class="name">Sit for an interview</div>
+        <div class="dur" style="margin-top: 4px">60 MIN · VOLUME II</div>
+      </div>
+      <div class="desc">
+        Recorded conversation, transcribed and edited, with final approval
+        before print. For the 82nd voice onward. Volume I closed at
+        eighty-one.
+      </div>
+      <div class="pick">→ routes to Volume II intake</div>
+    </div>
+
+    <div class="path">
+      <div class="letter">B</div>
+      <div>
+        <div class="name">Annotate the manuscript</div>
+        <div class="dur" style="margin-top: 4px">~30 MIN · MARGIN NOTES</div>
+      </div>
+      <div class="desc">
+        Mark up a chapter. Your notes become part of the public margin in
+        the next edition. Lightest commitment, widest reach.
+      </div>
+      <div class="pick">→ 1 chapter, your choice</div>
+    </div>
+
+    <div class="path">
+      <div class="letter">C</div>
+      <div>
+        <div class="name">Join the correspondence</div>
+        <div class="dur" style="margin-top: 4px">MONTHLY · NO FEED</div>
+      </div>
+      <div class="desc">
+        One letter a month — no algorithm, no pushes. Unsubscribe any time.
+        Good if you want to orbit the work without committing to edit it.
+      </div>
+      <div class="pick">→ quietest option</div>
+    </div>
+
+    <div class="path featured">
+      <div class="letter">D</div>
+      <div>
+        <div class="name">Edit a chapter — unlock full text</div>
+        <div class="dur" style="margin-top: 4px">4–6 HRS · NAMED IN PRINT</div>
+      </div>
+      <div class="desc">
+        Volunteer as a manuscript editor. Receive the full draft of one
+        chapter, return line-level notes, and be named in the
+        acknowledgments of Volume I. This is the one most people want.
+      </div>
+      <div class="pick">→ RECOMMENDED · 14 spots left per chapter</div>
+    </div>
+  </div>
+</section>
+
+<!-- Cited voices strip -->
+<section class="voices">
+  <h3>You will be reading alongside these eighty-one.</h3>
+  <div class="sub2">
+    <span class="mono">27·A</span> Academics · 
+    <span class="mono">27·P</span> Practitioners · 
+    <span class="mono">27·V</span> Visionaries.
+    <a href="Knowware v2.html" style="color: var(--accent); margin-left: 10px">See the full table →</a>
+  </div>
+  <div class="voice-wall" id="voice-wall"></div>
+</section>
+
+<!-- The form -->
+<div class="form-wrap">
+  <div class="form-inner">
+    <form class="form" id="claim-form" onsubmit="event.preventDefault(); claim();">
+      <div class="mono" style="font-size: 11px; color: var(--sub); margin-bottom: 12px">03 · CLAIM</div>
+      <h2>Claim your spot.<br><em>One form, four minutes.</em></h2>
+      <p class="intro">
+        No payment, no account. Just tell us which path you're picking and
+        where to send the passcode. We reply within fourteen days — by hand,
+        in the order forms arrive.
+      </p>
+
+      <div class="path-pick" role="radiogroup" aria-label="Path">
+        <button type="button" class="pp" data-k="A"><span class="k">PATH A</span><span class="n">Interview</span></button>
+        <button type="button" class="pp" data-k="B"><span class="k">PATH B</span><span class="n">Annotate</span></button>
+        <button type="button" class="pp" data-k="C"><span class="k">PATH C</span><span class="n">Letters</span></button>
+        <button type="button" class="pp on" data-k="D"><span class="k">PATH D</span><span class="n">Edit a ch.</span></button>
+      </div>
+
+      <div class="fields">
+        <div class="fld">
+          <label>NAME</label>
+          <input id="f-name" placeholder="As it should appear in the acknowledgments" />
+        </div>
+        <div class="fld">
+          <label>BEST WAY TO REACH YOU</label>
+          <input id="f-reach" placeholder="email or postal address" />
+        </div>
+        <div class="fld">
+          <label>WHAT YOU DO</label>
+          <input id="f-work" placeholder="One line. Lab, company, craft." />
+        </div>
+        <div class="fld">
+          <label>CHAPTER YOU'D LIKE (path D)</label>
+          <select id="f-ch">
+            <option value="">— surprise me —</option>
+            <option value="01">Ch 01 · The Coordination Intelligence Revolution</option>
+            <option value="02">Ch 02 · The Dawn of Systems Intelligence</option>
+            <option value="03">Ch 03 · Architecture of Systems Intelligence</option>
+            <option value="04">Ch 04 · Systems Intelligence in Action</option>
+            <option value="05">Ch 05 · Human–Systems Intelligence Interaction</option>
+            <option value="06">Ch 06 · Consciousness as Pattern Recognition</option>
+            <option value="07">Ch 07 · Engineering Reality</option>
+            <option value="08">Ch 08 · Beyond Human Intelligence</option>
+            <option value="09">Ch 09 · No Way? Know-How</option>
+          </select>
+        </div>
+        <div class="fld full">
+          <label>WHY THIS BOOK, RIGHT NOW (OPTIONAL)</label>
+          <textarea id="f-why" rows="3" placeholder="Three sentences max. We read every one."></textarea>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn primary">Send my claim <span class="arrow">→</span></button>
+        <span class="legal">
+          No tracking, no analytics, no mailing list cross-sells.<br>
+          Unsubscribe replies to any letter.
+        </span>
+      </div>
+    </form>
+
+    <aside class="ticket">
+      <div class="tag">
+        <span>TICKET · PREVIEW</span>
+        <span id="t-pct">0%</span>
+      </div>
+      <div class="num" id="t-num">— —</div>
+      <div class="caption" id="t-caption">
+        Your claim ticket begins writing itself as you fill in the form.
+      </div>
+      <ul>
+        <li><span class="k">PATH</span><span class="v" id="t-path">D · Edit a chapter</span></li>
+        <li><span class="k">NAME</span><span class="v" id="t-name">—</span></li>
+        <li><span class="k">REACH</span><span class="v" id="t-reach">—</span></li>
+        <li><span class="k">WORK</span><span class="v" id="t-work">—</span></li>
+        <li><span class="k">CH</span><span class="v" id="t-ch">— assigned by editor —</span></li>
+        <li><span class="k">REPLY</span><span class="v">Within 14 days, by hand</span></li>
+      </ul>
+    </aside>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="mono" style="font-size: 11px; color: var(--sub); margin-bottom: 12px">04 · QUESTIONS</div>
+  <h2>Three that come up most.</h2>
+  <details>
+    <summary>Why is Volume I capped at 81 voices?</summary>
+    <div class="a">
+      Eighty-one is 9×9 — nine chapters, nine voices apiece. It is enough
+      to be a genuine investigation and small enough to be a genuine book.
+      Volume II, if it happens, will be its own 81.
+    </div>
+  </details>
+  <details>
+    <summary>What does "named in the acknowledgments" actually mean?</summary>
+    <div class="a">
+      If you volunteer as a manuscript editor (Path D) and return
+      line-level notes on your chapter, your name appears in the Volume I
+      colophon. No tiers, no ranks — one list, one typeface, one size.
+    </div>
+  </details>
+  <details>
+    <summary>Is any of this behind a paywall?</summary>
+    <div class="a">
+      No. Volume I will be sold in print when it ships, but every form of
+      contribution listed here is free. We ask for your time, not your
+      money — and only the time you offer.
+    </div>
+  </details>
+</section>
+
+<footer>
+  <div class="inner">
+    <div class="big">
+      Write us a letter.<br>An email is also a letter.
+    </div>
+    <div class="meta">
+      hello@knowware.press<br>
+      P.O. Box 81, Brooklyn NY<br>
+      · · ·<br>
+      MMXXVI · EDITION 01<br>
+      NO ALGORITHMS WERE HARMED
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // ─── Voice wall ───────────────────────────────────────
+  // Mini 81-cell grid, tinted by tier. Same colors as the book.
+  const TIERS = {
+    A: { v: 'oklch(0.88 0.09 260)', i: 'oklch(0.35 0.10 260)', name: 'A' },
+    P: { v: 'oklch(0.88 0.09 35)',  i: 'oklch(0.40 0.12 35)',  name: 'P' },
+    V: { v: 'oklch(0.88 0.09 140)', i: 'oklch(0.35 0.10 140)', name: 'V' },
+  };
+  // Sequence: each chapter gives 3A 3P 3V (27+27+27).
+  const NAMES = [
+    'PP','NKH','DM','SB','KK','YM','TM','PD','DS',
+    'JP','CS','AT','HN','NSA','PL','MG','HM','RL',
+    'YL','RF','JG','DA','DH','CD','IMG','FC','RK',
+    'CR','ET','AL','DD','LR','QH','SR','CM','NT',
+    'MN','AP','SV','TO','TH','JW','BCI','THH','DH',
+    'SR','TG','KC','NW','MM','IQT','RP','AD','RS',
+    'JP','SL','CH','JD','LS','WW','NO','DP','FFL',
+    'MT','NB','JT','SS','DC','AS','LC','TN','SR',
+    'DA','KR','FC','EM','FH','PS','CE','ST','MK',
+  ];
+  const wall = document.getElementById('voice-wall');
+  for (let i = 0; i < 81; i++) {
+    const ch = String(Math.floor(i / 9) + 1).padStart(2, '0');
+    const tierIdx = Math.floor((i % 9) / 3);
+    const tier = ['A','P','V'][tierIdx];
+    const t = TIERS[tier];
+    const el = document.createElement('div');
+    el.className = 'chip';
+    el.style.background = t.v;
+    el.style.border = '1px solid ' + t.i;
+    el.innerHTML = `
+      <span class="cn">№${String(i + 1).padStart(2, '0')}</span>
+      <span style="align-self: center; text-align: center; width: 100%">${NAMES[i]}</span>
+      <span class="ct" style="color: ${t.i}">ch${ch}·${tier}</span>`;
+    wall.appendChild(el);
+  }
+
+  // ─── Form ticket preview ──────────────────────────────
+  const pathNames = {
+    A: 'A · Sit for an interview',
+    B: 'B · Annotate the manuscript',
+    C: 'C · Join the correspondence',
+    D: 'D · Edit a chapter',
+  };
+  let picked = 'D';
+  const btns = [...document.querySelectorAll('.pp')];
+  btns.forEach(b => b.addEventListener('click', () => {
+    btns.forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    picked = b.dataset.k;
+    document.getElementById('t-path').textContent = pathNames[picked];
+    paintTicket();
+  }));
+
+  const f = {
+    name: document.getElementById('f-name'),
+    reach: document.getElementById('f-reach'),
+    work: document.getElementById('f-work'),
+    ch: document.getElementById('f-ch'),
+  };
+  const t = {
+    name: document.getElementById('t-name'),
+    reach: document.getElementById('t-reach'),
+    work: document.getElementById('t-work'),
+    ch: document.getElementById('t-ch'),
+    num: document.getElementById('t-num'),
+    pct: document.getElementById('t-pct'),
+    caption: document.getElementById('t-caption'),
+  };
+
+  function paintTicket() {
+    t.name.textContent = f.name.value || '—';
+    t.reach.textContent = f.reach.value || '—';
+    t.work.textContent = f.work.value || '—';
+    const chV = f.ch.value;
+    t.ch.textContent = chV ? ('Chapter ' + chV) : '— editor\u2019s pick —';
+
+    const seed = (f.name.value + f.reach.value).length;
+    const num = seed ? (1000 + (seed * 37 % 899)) : '— —';
+    t.num.textContent = '№ ' + (num === '— —' ? num : String(num).padStart(4, '0'));
+
+    const filled = [picked, f.name.value, f.reach.value, f.work.value].filter(x => x && x !== '').length;
+    const pct = Math.round((filled / 4) * 100);
+    t.pct.textContent = pct + '%';
+
+    if (pct === 100) {
+      t.caption.textContent = 'Ready. Your ticket is complete. Press \u201cSend my claim\u201d to submit.';
+    } else if (pct >= 50) {
+      t.caption.textContent = 'Halfway there. Fill in the rest and your ticket is good to go.';
+    } else {
+      t.caption.textContent = 'Your claim ticket begins writing itself as you fill in the form.';
+    }
+  }
+  [f.name, f.reach, f.work, f.ch].forEach(el => el.addEventListener('input', paintTicket));
+  paintTicket();
+
+  window.claim = function () {
+    const missing = [];
+    if (!f.name.value) missing.push('name');
+    if (!f.reach.value) missing.push('reach');
+    if (missing.length) {
+      alert('Almost there — need your ' + missing.join(' and ') + ' before we can send a ticket.');
+      return;
+    }
+    const msg = document.createElement('div');
+    msg.style.cssText = 'position: fixed; inset: 0; background: rgba(10,10,10,0.92); z-index: 100; display: grid; place-items: center; padding: 32px;';
+    msg.innerHTML = `
+      <div style="background: var(--paper); max-width: 520px; padding: 40px 36px; border: 1px solid var(--ink)">
+        <div class="mono" style="font-size: 11px; color: var(--accent); margin-bottom: 16px">CLAIM RECEIVED · ${t.num.textContent}</div>
+        <div style="font-size: 28px; letter-spacing: -0.025em; font-weight: 500; line-height: 1.2; margin-bottom: 16px">
+          Thank you. A letter is on its way.
+        </div>
+        <div style="font-size: 14px; line-height: 1.55; color: var(--sub); margin-bottom: 24px">
+          We reply within fourteen days, by hand, in the order claims arrive.
+          If you picked path D, the passcode and the first chapter arrive together.
+        </div>
+        <button onclick="this.closest('div[style*=fixed]').remove()" class="btn ghost">
+          close ×
+        </button>
+      </div>`;
+    document.body.appendChild(msg);
+  };
+})();
+</script>
+
+</body>
+</html>
