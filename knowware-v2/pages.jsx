@@ -515,12 +515,7 @@ function TablePage({ setPage, onOpenDossier }) {
             </div>
           </>
         ) : view === 'graph' ? (
-          <GraphView
-            selected={selected}
-            onSelect={(n) => setSelected(selected === n ? null : n)}
-            onOpenDossier={onOpenDossier}
-            onHover={setHover}
-          />
+          <GraphView onOpenDossier={onOpenDossier} />
         ) : (
           <MOTable onOpenDossier={onOpenDossier} />
         )}
@@ -529,360 +524,432 @@ function TablePage({ setPage, onOpenDossier }) {
   );
 }
 
-// ─── Graph view — Prime Pairs (MO classifier co-membership) ──
-// Nodes = 81 voices sized by degree. Edges = shared MO classifiers.
-// Thread weight & color scale with shared classifier count (1→faint, 4+→prime).
-// Physics: springs + repulsion + per-node lava-lamp drift (matches iamkhayyam/knowware).
-function GraphView({ selected, onSelect, onOpenDossier, onHover }) {
-  // Physics constants
-  const SPRING_LEN = 90, SPRING_K = 0.022;
-  const REPULSION = 3200, REP_CUT = 340;
-  const GRAVITY = 0.010;
-  const DAMPING = 0.88, MAX_VEL = 18;
-  const DRIFT_F = 0.18, DRIFT_SPD = 0.0028;
+// ─── Graph view ────────────────────────────────────────
+// Force-directed canvas graph. Nodes = 81 voices, edges = co-citation in
+// the same chapter teaser. Click nodes to build a multi-selection; sidebar
+// shows the union of connections. Open profile from sidebar only.
+function GraphView({ onOpenDossier }) {
   const canvasRef    = React.useRef(null);
   const simRef       = React.useRef(null);
   const rafRef       = React.useRef(null);
   const containerRef = React.useRef(null);
+  const frameRef     = React.useRef(0);
 
-  const [dims,   setDims]   = React.useState({ w: 860, h: 520 });
-  const [pinned, setPinned] = React.useState(selected);
-  const [active, setActive] = React.useState(null);
+  // Refs read every frame — mutating these does NOT restart the loop
+  const pinnedRef  = React.useRef(new Set()); // selected node numbers
+  const hoveredRef = React.useRef(null);
+  const dimsRef    = React.useRef({ w: 900, h: 560 });
 
-  // Build prime pairs from MO classifiers
-  const { edges, adjMap, voiceClassMap } = React.useMemo(() => {
-    // Map each interview voice to its classifiers via VOICES.knownFor
-    const voiceClassMap = {};
-    (window.INTERVIEWS || []).forEach(iv => {
-      const vd = (window.VOICES || []).find(v => {
-        const vn = v.name.toLowerCase(), ivn = iv.name.toLowerCase();
-        return vn === ivn || vn.includes(ivn) || ivn.includes(vn)
-          || vn.split(' ').pop() === ivn.split(' ').pop();
+  // React state drives sidebar only
+  const [pinnedSet, setPinnedSet] = React.useState(new Set());
+  const [hoveredN,  setHoveredN]  = React.useState(null);
+  const [dims, setDims] = React.useState({ w: 900, h: 560 });
+
+  // Build edges & adjacency — memoized once
+  // Co-citation: voices sharing the same chapter are co-cited.
+  // Falls back to teaser cites if present, otherwise uses chapter co-membership.
+  const { edges, adjMap } = React.useMemo(() => {
+    const list = [];
+    // Try TEASERS.cites first
+    let hasCites = false;
+    if (window.TEASERS) {
+      Object.values(window.TEASERS).forEach(t => {
+        if (!t.cites) return;
+        hasCites = true;
+        const ns = t.cites.map(c => c.n).filter(n => n >= 1 && n <= 81);
+        for (let i = 0; i < ns.length; i++)
+          for (let j = i + 1; j < ns.length; j++)
+            list.push([ns[i], ns[j]]);
       });
-      voiceClassMap[iv.n] = vd ? window.classifiersForVoice(vd.knownFor || []) : [];
-    });
-
-    // Prime pairs: any two voices sharing ≥1 classifier
-    const ivs = window.INTERVIEWS || [];
-    const edges = [];
-    const adjMap = {};
-    for (let i = 0; i < ivs.length; i++) {
-      for (let j = i + 1; j < ivs.length; j++) {
-        const ac = voiceClassMap[ivs[i].n] || [];
-        const bc = voiceClassMap[ivs[j].n] || [];
-        const shared = ac.filter(c => bc.includes(c));
-        if (!shared.length) continue;
-        const edge = { a: ivs[i].n, b: ivs[j].n, shared, weight: shared.length };
-        edges.push(edge);
-        if (!adjMap[ivs[i].n]) adjMap[ivs[i].n] = [];
-        if (!adjMap[ivs[j].n]) adjMap[ivs[j].n] = [];
-        adjMap[ivs[i].n].push({ n: ivs[j].n, shared, weight: shared.length });
-        adjMap[ivs[j].n].push({ n: ivs[i].n, shared, weight: shared.length });
-      }
     }
-    // Sort adjacency by weight desc
-    Object.values(adjMap).forEach(arr => arr.sort((a, b) => b.weight - a.weight));
-    return { edges, adjMap, voiceClassMap };
+    // Fallback: co-membership in the same chapter
+    if (!hasCites && window.INTERVIEWS) {
+      const byChapter = {};
+      window.INTERVIEWS.forEach(iv => {
+        if (!byChapter[iv.ch]) byChapter[iv.ch] = [];
+        byChapter[iv.ch].push(iv.n);
+      });
+      Object.values(byChapter).forEach(ns => {
+        for (let i = 0; i < ns.length; i++)
+          for (let j = i + 1; j < ns.length; j++)
+            list.push([ns[i], ns[j]]);
+      });
+    }
+    const seen = new Set();
+    const edges = list.filter(([a, b]) => {
+      const k = `${Math.min(a,b)}-${Math.max(a,b)}`;
+      if (seen.has(k)) return false;
+      seen.add(k); return true;
+    });
+    const adjMap = {};
+    edges.forEach(([a, b]) => {
+      if (!adjMap[a]) adjMap[a] = [];
+      if (!adjMap[b]) adjMap[b] = [];
+      adjMap[a].push(b); adjMap[b].push(a);
+    });
+    return { edges, adjMap };
   }, []);
 
-  // Node radius by degree
-  const degreeMap = React.useMemo(() => {
-    const d = {};
-    edges.forEach(({ a, b }) => { d[a] = (d[a] || 0) + 1; d[b] = (d[b] || 0) + 1; });
-    return d;
-  }, [edges]);
-  const maxDeg = Math.max(1, ...Object.values(degreeMap));
+  // Store edges/adj in refs so the loop can read without deps
+  const edgesRef  = React.useRef(edges);
+  const adjRef    = React.useRef(adjMap);
+  React.useEffect(() => { edgesRef.current = edges; adjRef.current = adjMap; }, [edges, adjMap]);
 
-  // Sync with parent
-  React.useEffect(() => { setPinned(selected); }, [selected]);
-
-  const focusN     = pinned ?? active;
-  const neighbours = focusN ? (adjMap[focusN] || []) : [];
-
-  // Init physics nodes
+  // Init sim — runs once. Resize only rescales canvas, no re-init.
   React.useEffect(() => {
-    const { w, h } = dims;
-    const nodes = (window.INTERVIEWS || []).map(iv => {
-      const deg = degreeMap[iv.n] || 0;
-      return {
-        n: iv.n, v: iv,
-        r: 8 + (deg / maxDeg) * 13,        // 8–21px
-        x: w / 2 + (Math.random() - 0.5) * w * 0.55,
-        y: h / 2 + (Math.random() - 0.5) * h * 0.45,
-        vx: 0, vy: 0,
-        driftAngle: Math.random() * Math.PI * 2,
-      };
-    });
-    simRef.current = { nodes };
-  }, [dims, degreeMap, maxDeg]);
+    const { w, h } = dimsRef.current;
+    const nodes = window.INTERVIEWS.map(v => ({
+      n: v.n, v,
+      x: w/2 + (Math.random()-0.5)*w*0.55,
+      y: h/2 + (Math.random()-0.5)*h*0.45,
+      vx: 0, vy: 0,
+    }));
+    const posById = {};
+    nodes.forEach(n => { posById[n.n] = n; });
+    simRef.current = { nodes, posById };
+    frameRef.current = 0;
+  }, []); // intentionally once
 
-  // Resize observer
+  // Resize observer — updates dimsRef + state, rescales canvas without re-init
   React.useEffect(() => {
     if (!containerRef.current) return;
     const ro = new ResizeObserver(entries => {
       const { width } = entries[0].contentRect;
-      setDims({ w: Math.floor(width), h: Math.round(width * 0.60) });
+      const h = Math.round(width * 0.58);
+      dimsRef.current = { w: width, h };
+      setDims({ w: width, h });
     });
     ro.observe(containerRef.current);
     return () => ro.disconnect();
   }, []);
 
-  // Animation loop
+  // ── Main animation loop — runs once, NEVER restarts ──────────────
   React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !simRef.current) return;
-    const ctx = canvas.getContext('2d');
-    const { w, h } = dims;
-    const nodes = simRef.current.nodes;
-    const posById = {};
-    nodes.forEach(n => { posById[n.n] = n; });
-
-    const threadColor = wt => wt >= 4 ? 'rgba(235,0,0,0.78)' : wt === 3 ? 'rgba(225,0,0,0.58)' : wt === 2 ? 'rgba(210,0,0,0.36)' : 'rgba(180,0,0,0.20)';
-    const threadWidth = wt => wt >= 4 ? 2.8 : wt === 3 ? 2.1 : wt === 2 ? 1.4 : 0.8;
+    let cancelled = false;
+    const R = 13;
 
     const tick = () => {
-      // 1. Springs
-      edges.forEach(({ a, b }) => {
-        const na = posById[a], nb = posById[b];
-        if (!na || !nb) return;
-        const dx = nb.x - na.x, dy = nb.y - na.y;
-        const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
-        const force = SPRING_K * (dist - SPRING_LEN);
-        na.vx += (dx / dist) * force; na.vy += (dy / dist) * force;
-        nb.vx -= (dx / dist) * force; nb.vy -= (dy / dist) * force;
-      });
+      if (cancelled) return;
+      rafRef.current = requestAnimationFrame(tick);
 
-      // 2. Repulsion (cutoff for performance)
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const na = nodes[i], nb = nodes[j];
-          const dx = nb.x - na.x, dy = nb.y - na.y;
-          const dist2 = dx * dx + dy * dy;
-          if (dist2 > REP_CUT * REP_CUT) continue;
-          const dist = Math.max(Math.sqrt(dist2), 1);
-          const force = REPULSION / (dist * dist);
-          na.vx -= (dx / dist) * force; na.vy -= (dy / dist) * force;
-          nb.vx += (dx / dist) * force; nb.vy += (dy / dist) * force;
+      const sim = simRef.current;
+      const canvas = canvasRef.current;
+      if (!sim || !canvas) return;
+
+      const { w, h } = dimsRef.current;
+      const { nodes, posById } = sim;
+      const frame = ++frameRef.current;
+
+      // ── Physics (decays to zero after ~600 frames) ──
+      if (frame <= 600) {
+        const alpha = frame < 150 ? 1
+                    : frame < 350 ? 0.35
+                    : frame < 500 ? 0.08
+                    : 0.02;
+        const edges = edgesRef.current;
+
+        // Repulsion
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j];
+            const dx = b.x - a.x, dy = b.y - a.y;
+            const dist2 = dx*dx + dy*dy || 1;
+            const dist  = Math.sqrt(dist2);
+            const force = (1400 / dist2) * alpha;
+            const fx = (dx/dist)*force, fy = (dy/dist)*force;
+            a.vx -= fx; a.vy -= fy;
+            b.vx += fx; b.vy += fy;
+          }
         }
+        // Spring attraction along edges
+        edges.forEach(([an, bn]) => {
+          const a = posById[an], b = posById[bn];
+          if (!a || !b) return;
+          const dx = b.x-a.x, dy = b.y-a.y;
+          const dist = Math.max(Math.sqrt(dx*dx+dy*dy), 1);
+          const force = ((dist-110)/dist) * 0.035 * alpha;
+          a.vx += dx*force; a.vy += dy*force;
+          b.vx -= dx*force; b.vy -= dy*force;
+        });
+        // Centre gravity
+        nodes.forEach(n => {
+          n.vx += (w/2 - n.x) * 0.003 * alpha;
+          n.vy += (h/2 - n.y) * 0.003 * alpha;
+          n.vx *= 0.82; n.vy *= 0.82;
+          n.x  = Math.max(R+6, Math.min(w-R-6, n.x + n.vx));
+          n.y  = Math.max(R+6, Math.min(h-R-6, n.y + n.vy));
+        });
       }
 
-      // 3. Gravity + drift + integrate
-      nodes.forEach(n => {
-        n.vx += (w / 2 - n.x) * GRAVITY;
-        n.vy += (h / 2 - n.y) * GRAVITY;
-        n.driftAngle += DRIFT_SPD;
-        n.vx += Math.cos(n.driftAngle) * DRIFT_F;
-        n.vy += Math.sin(n.driftAngle) * DRIFT_F;
-        n.vx *= DAMPING; n.vy *= DAMPING;
-        const speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
-        if (speed > MAX_VEL) { n.vx *= MAX_VEL / speed; n.vy *= MAX_VEL / speed; }
-        n.x += n.vx; n.y += n.vy;
-        n.x = Math.max(n.r + 4, Math.min(w - n.r - 4, n.x));
-        n.y = Math.max(n.r + 4, Math.min(h - n.r - 4, n.y));
-      });
+      // ── Draw ──────────────────────────────────────────
+      const pinneds = pinnedRef.current;
+      const hovered = hoveredRef.current;
+      const adj     = adjRef.current;
 
-      // Draw
+      const focusNs = new Set([...pinneds, ...(hovered ? [hovered] : [])]);
+      const nbrs = new Set();
+      focusNs.forEach(fn => { (adj[fn] || []).forEach(n => nbrs.add(n)); });
+      focusNs.forEach(fn => nbrs.delete(fn));
+
+      const hasFocus = focusNs.size > 0;
+
+      if (canvas.width !== Math.round(w)) canvas.width = Math.round(w);
+      if (canvas.height !== Math.round(h)) canvas.height = Math.round(h);
+
+      const ctx = canvas.getContext('2d');
+      const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#fafaf9';
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#fafaf9';
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
-      const focus = focusN;
-      const nbrs  = new Set(focus ? (adjMap[focus] || []).map(x => x.n) : []);
-
       // Edges
-      edges.forEach(({ a, b, weight }) => {
-        const na = posById[a], nb = posById[b];
-        if (!na || !nb) return;
-        const isRed = focus && (a === focus || b === focus);
+      edgesRef.current.forEach(([an, bn]) => {
+        const a = posById[an], b = posById[bn];
+        if (!a || !b) return;
+        const aPinned = pinneds.has(an) || an === hovered;
+        const bPinned = pinneds.has(bn) || bn === hovered;
+        const isActive = aPinned || bPinned;
         ctx.beginPath();
-        ctx.moveTo(na.x, na.y);
-        ctx.lineTo(nb.x, nb.y);
-        if (isRed) {
-          ctx.strokeStyle = threadColor(weight);
-          ctx.lineWidth   = threadWidth(weight) * 1.5;
-        } else if (focus) {
-          ctx.strokeStyle = 'rgba(0,0,0,0.025)';
-          ctx.lineWidth   = 0.5;
-        } else {
-          ctx.strokeStyle = threadColor(weight);
-          ctx.lineWidth   = threadWidth(weight);
-        }
+        ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = isActive ? 'rgba(210,35,35,0.75)' : 'rgba(0,0,0,0.055)';
+        ctx.lineWidth   = isActive ? 1.5 : 0.7;
         ctx.stroke();
       });
 
       // Nodes
       nodes.forEach(n => {
-        const isFocus = n.n === focus;
-        const isNbr   = nbrs.has(n.n);
-        const isDim   = focus && !isFocus && !isNbr;
-        const tier = n.v.tier;
-        const [r, g, b] = tier === 'A' ? [100,140,220] : tier === 'P' ? [210,110,70] : [80,170,110];
-        const alpha = isDim ? 0.10 : isFocus ? 1.0 : isNbr ? 0.90 : 0.72;
+        const isPinned  = pinneds.has(n.n);
+        const isHovered = n.n === hovered;
+        const isNbr     = nbrs.has(n.n);
+        const isDim     = hasFocus && !isPinned && !isHovered && !isNbr;
+        const tier      = n.v.tier;
+
+        const baseA = tier === 'A' ? [100,140,220] : tier === 'P' ? [210,110,70] : [80,170,110];
+        const [r,g,b] = baseA;
+
+        const fill = isDim
+          ? `rgba(${r},${g},${b},0.12)`
+          : (isPinned || isHovered)
+          ? `rgb(${Math.round(r*0.6)},${Math.round(g*0.6)},${Math.round(b*0.6)})`
+          : isNbr
+          ? `rgba(${r},${g},${b},0.88)`
+          : `rgba(${r},${g},${b},0.65)`;
+
+        const radius = isPinned ? R+5 : isHovered ? R+3 : isNbr ? R+1 : R-2;
 
         ctx.beginPath();
-        ctx.arc(n.x, n.y, isFocus ? n.r + 3 : isNbr ? n.r + 1 : n.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+        ctx.arc(n.x, n.y, radius, 0, Math.PI*2);
+        ctx.fillStyle = fill;
         ctx.fill();
 
-        if (isFocus) {
-          ctx.strokeStyle = '#e60000'; ctx.lineWidth = 2; ctx.stroke();
-        } else if (isNbr && !isDim) {
-          ctx.strokeStyle = `rgba(${r},${g},${b},0.9)`; ctx.lineWidth = 1.5; ctx.stroke();
+        if (isPinned) {
+          ctx.strokeStyle = 'rgba(200,30,30,0.85)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        } else if (isHovered) {
+          ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
         }
 
-        if (!isDim) {
+        const showLabel = isPinned || isHovered || isNbr || !hasFocus;
+        if (showLabel && !isDim) {
           const label = n.v.name.split(' ').pop();
-          ctx.fillStyle = isFocus ? '#e60000' : 'rgba(0,0,0,0.6)';
-          ctx.font = `${isFocus ? '600 ' : ''}9px "JetBrains Mono",monospace`;
+          ctx.fillStyle = (isPinned || isHovered) ? 'rgba(180,20,20,0.9)' : 'rgba(0,0,0,0.6)';
+          ctx.font = (isPinned || isHovered)
+            ? '600 10px "JetBrains Mono", monospace'
+            : '9px "JetBrains Mono", monospace';
           ctx.textAlign = 'center';
-          ctx.fillText(label, n.x, n.y + n.r + 11);
+          ctx.fillText(label, n.x, n.y + radius + 11);
         }
       });
-
-      rafRef.current = requestAnimationFrame(tick);
     };
 
     rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [dims, edges, adjMap, focusN]);
+    return () => { cancelled = true; cancelAnimationFrame(rafRef.current); };
+  }, []);
 
-  // Mouse
+  // Mouse hit test
   const handleMouse = React.useCallback((e, click) => {
     const canvas = canvasRef.current;
     if (!canvas || !simRef.current) return;
     const rect = canvas.getBoundingClientRect();
-    const mx = (e.clientX - rect.left) * (dims.w / rect.width);
-    const my = (e.clientY - rect.top)  * (dims.h / rect.height);
+    const { w, h } = dimsRef.current;
+    const mx = (e.clientX - rect.left) * (w / rect.width);
+    const my = (e.clientY - rect.top)  * (h / rect.height);
+    const HIT_R = 20;
     let hit = null;
     simRef.current.nodes.forEach(n => {
-      const dx = n.x - mx, dy = n.y - my;
-      if (Math.sqrt(dx * dx + dy * dy) < n.r + 5) hit = n.n;
+      const dx = n.x-mx, dy = n.y-my;
+      if (dx*dx+dy*dy < HIT_R*HIT_R) hit = n.n;
     });
+
     if (click) {
-      const next = hit === pinned ? null : hit;
-      setPinned(next); onSelect && onSelect(next);
+      if (hit !== null) {
+        const next = new Set(pinnedRef.current);
+        if (next.has(hit)) next.delete(hit); else next.add(hit);
+        pinnedRef.current = next;
+        setPinnedSet(new Set(next));
+      }
     } else {
-      setActive(hit); onHover && onHover(hit);
+      hoveredRef.current = hit;
+      setHoveredN(hit);
     }
     if (canvas) canvas.style.cursor = hit ? 'pointer' : 'default';
-  }, [dims, pinned, onSelect, onHover]);
+  }, []);
 
-  const focusVoice = focusN ? (window.INTERVIEWS || [])[focusN - 1] : null;
+  // Sidebar data
+  const pinnedVoices = [...pinnedSet].map(n => window.INTERVIEWS[n-1]).filter(Boolean);
+  const connectedNs  = new Set();
+  pinnedSet.forEach(fn => { (adjMap[fn] || []).forEach(n => { if (!pinnedSet.has(n)) connectedNs.add(n); }); });
+  if (hoveredN && !pinnedSet.has(hoveredN)) {
+    (adjMap[hoveredN] || []).forEach(n => { if (!pinnedSet.has(n)) connectedNs.add(n); });
+  }
+  const connectedVoices = [...connectedNs].map(n => window.INTERVIEWS[n-1]).filter(Boolean)
+    .sort((a,b) => a.n - b.n);
+
+  const anyFocus = pinnedSet.size > 0 || hoveredN;
+  const hoverVoice = hoveredN ? window.INTERVIEWS[hoveredN-1] : null;
+  const tierLabel = t => t === 'A' ? 'ACADEMIC' : t === 'P' ? 'PRACTITIONER' : 'VISIONARY';
 
   return (
     <div>
-      {/* Legend */}
+      {/* Legend + hint */}
       <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
         marginBottom: 12, display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-        {[['A','rgba(100,140,220,0.7)','ACADEMIC'],['P','rgba(210,110,70,0.7)','PRACTITIONER'],['V','rgba(80,170,110,0.7)','VISIONARY']].map(([t, col, label]) => (
+        {[['A','rgba(100,140,220,0.7)','ACADEMIC'],['P','rgba(210,110,70,0.7)','PRACTITIONER'],['V','rgba(80,170,110,0.7)','VISIONARY']].map(([t,c,l]) => (
           <span key={t} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-            <span style={{ width: 9, height: 9, borderRadius: '50%', background: col, display: 'inline-block' }} />
-            {label}
+            <span style={{ width: 9, height: 9, borderRadius: '50%', background: c, display: 'inline-block' }} />
+            {l}
           </span>
         ))}
         <span style={{ marginLeft: 'auto', color: 'var(--sub2)' }}>
-          {edges.length} prime pairs ·{' '}
-          {focusN ? `${neighbours.length} connections from ${focusVoice?.name.split(' ').pop()}` : 'click to open file'}
+          {pinnedSet.size > 0
+            ? `${pinnedSet.size} selected · ${connectedNs.size} connections · click graph to add/remove`
+            : 'Click nodes to select · build connections in sidebar'}
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 0, border: '1px solid var(--rule)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', border: '1px solid var(--rule)' }}>
         {/* Canvas */}
-        <div ref={containerRef} style={{ background: '#fafaf9', minHeight: 400 }}>
+        <div ref={containerRef} style={{ background: 'var(--bg)', position: 'relative', borderRight: '1px solid var(--rule)' }}>
           <canvas ref={canvasRef} width={dims.w} height={dims.h}
             style={{ width: '100%', height: 'auto', display: 'block' }}
             onMouseMove={e => handleMouse(e, false)}
-            onMouseLeave={() => { setActive(null); onHover && onHover(null); }}
+            onMouseLeave={() => { hoveredRef.current = null; setHoveredN(null); }}
             onClick={e => handleMouse(e, true)} />
         </div>
 
-        {/* Sidebar */}
-        <div style={{ borderLeft: '1px solid var(--rule)', background: 'var(--paper)',
-          padding: '16px 18px', minHeight: 400, overflowY: 'auto', maxHeight: 600 }}>
-          {focusVoice ? (
-            <>
-              <div className="mono" style={{ fontSize: 9, letterSpacing: '0.04em',
-                color: 'var(--sub)', borderBottom: '1px solid var(--rule)',
-                paddingBottom: 8, marginBottom: 10 }}>OPERATIVE FILE</div>
-              <div style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.015em',
-                lineHeight: 1.2, marginBottom: 3 }}>{focusVoice.name}</div>
-              <div className="mono" style={{ fontSize: 10, color: 'var(--sub)', marginBottom: 10 }}>
-                {focusVoice.tier === 'A' ? 'ACADEMIC' : focusVoice.tier === 'P' ? 'PRACTITIONER' : 'VISIONARY'}
-                {' · '}{(voiceClassMap[focusN] || []).length} classifiers
-              </div>
-              {onOpenDossier && (
-                <button onClick={() => onOpenDossier(focusN)}
-                  className="mono" style={{
-                    display: 'block', width: '100%', textAlign: 'left',
-                    background: 'var(--ink)', color: 'var(--paper)',
-                    border: 'none', padding: '8px 10px', cursor: 'pointer',
-                    fontSize: 10, letterSpacing: '0.02em', marginBottom: 12,
-                  }}>
-                  Open profile →
-                </button>
-              )}
-              <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-                paddingBottom: 8, borderBottom: '1px solid var(--rule)', marginBottom: 4 }}>
-                {neighbours.length} PRIME {neighbours.length === 1 ? 'PAIR' : 'PAIRS'}
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {neighbours.map(({ n, shared, weight }) => {
-                  const nv = (window.INTERVIEWS || [])[n - 1];
-                  if (!nv) return null;
-                  const tc = weight >= 4 ? 'rgba(235,0,0,0.78)' : weight === 3 ? 'rgba(225,0,0,0.58)' : weight === 2 ? 'rgba(210,0,0,0.46)' : 'rgba(180,0,0,0.45)';
-                  return (
-                    <div key={n} style={{ borderTop: '1px solid var(--rule)', padding: '7px 0' }}>
-                      <div style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%',
-                          background: tc, display: 'inline-block', marginTop: 4, flexShrink: 0 }} />
-                        <div style={{ minWidth: 0, flex: 1 }}>
-                          <div
-                            onClick={() => onOpenDossier && onOpenDossier(n)}
-                            style={{ fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
-                              color: 'var(--ink)', cursor: onOpenDossier ? 'pointer' : 'default',
-                              textDecoration: 'none' }}>
-                            {nv.name}
-                          </div>
-                          <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-                            marginTop: 2, lineHeight: 1.3 }}>
-                            {shared.slice(0, 2).join(' · ')}{shared.length > 2 ? ` +${shared.length - 2}` : ''}
-                          </div>
-                        </div>
-                        <span className="mono" style={{ marginLeft: 'auto', fontSize: 9,
-                          color: 'var(--accent)', flexShrink: 0 }}>{weight}×</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ) : (
-            <div>
-              <div className="mono" style={{ fontSize: 9, letterSpacing: '0.04em',
-                color: 'var(--sub)', marginBottom: 14 }}>OPERATIVE FILE</div>
-              <div style={{ fontSize: 14, color: 'var(--sub)', lineHeight: 1.6 }}>
-                Click any node to follow<br/>the red thread.
-              </div>
-              <div style={{ marginTop: 14, fontSize: 11, color: 'var(--sub2)', lineHeight: 1.6 }}>
-                Edges connect voices sharing MO classifiers.<br/>Thread weight = shared count.
-              </div>
-              <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {[['4+','rgba(235,0,0,0.78)',2.8],['3','rgba(225,0,0,0.58)',2.1],['2','rgba(210,0,0,0.36)',1.4],['1','rgba(180,0,0,0.35)',0.8]].map(([label, col, w]) => (
-                  <div key={label} className="mono" style={{ fontSize: 9, display: 'flex',
-                    gap: 8, alignItems: 'center', color: 'var(--sub)' }}>
-                    <span style={{ width: 24, height: Math.max(1, w), background: col, display: 'inline-block' }} />
-                    {label} shared
-                  </div>
-                ))}
-              </div>
+        {/* Right panel */}
+        <div style={{ background: 'var(--paper)', display: 'flex', flexDirection: 'column',
+          minHeight: 400, overflow: 'hidden' }}>
+
+          {/* Selected section */}
+          <div style={{ borderBottom: '1px solid var(--rule)', padding: '14px 16px' }}>
+            <div className="mono" style={{ fontSize: 9, letterSpacing: '0.06em',
+              color: 'var(--sub)', marginBottom: pinnedVoices.length ? 10 : 0 }}>
+              SELECTED · {pinnedVoices.length}
             </div>
-          )}
+            {pinnedVoices.length === 0 && (
+              <div style={{ fontSize: 12, color: 'var(--sub2)', lineHeight: 1.6, marginTop: 6 }}>
+                {hoverVoice
+                  ? <><strong style={{ color: 'var(--ink)', fontSize: 13 }}>{hoverVoice.name}</strong><br/>
+                      <span className="mono" style={{ fontSize: 9, color: 'var(--sub)' }}>{tierLabel(hoverVoice.tier)} · ch{hoverVoice.ch}</span><br/>
+                      <span style={{ color: 'var(--sub2)', fontSize: 11 }}>Click to select</span></>
+                  : 'Click any node in the graph to select it.'}
+              </div>
+            )}
+            {pinnedVoices.map(v => (
+              <div key={v.n} style={{ display: 'flex', alignItems: 'center', gap: 8,
+                marginBottom: 6, justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', minWidth: 0 }}>
+                  <span className="mono" style={{ fontSize: 8, color: 'var(--paper)',
+                    background: 'rgba(200,30,30,0.85)', padding: '2px 4px', flexShrink: 0 }}>
+                    {String(v.n).padStart(2,'0')}
+                  </span>
+                  <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {v.name}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+                  <button onClick={() => onOpenDossier && onOpenDossier(v.n)}
+                    className="mono" style={{ fontSize: 8, padding: '3px 6px',
+                      background: 'var(--ink)', color: 'var(--paper)',
+                      border: 'none', cursor: 'pointer', letterSpacing: '0.04em' }}>
+                    PROFILE
+                  </button>
+                  <button onClick={() => {
+                      const next = new Set(pinnedRef.current);
+                      next.delete(v.n);
+                      pinnedRef.current = next;
+                      setPinnedSet(new Set(next));
+                    }}
+                    className="mono" style={{ fontSize: 8, padding: '3px 5px',
+                      background: 'transparent', color: 'var(--sub)',
+                      border: '1px solid var(--rule)', cursor: 'pointer' }}>
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Connections section */}
+          <div style={{ flex: 1, overflow: 'auto', padding: '14px 16px' }}>
+            <div className="mono" style={{ fontSize: 9, letterSpacing: '0.06em',
+              color: 'var(--sub)', marginBottom: 10 }}>
+              {anyFocus ? `CONNECTIONS · ${connectedVoices.length}` : 'CONNECTIONS'}
+            </div>
+            {!anyFocus && (
+              <div style={{ fontSize: 11, color: 'var(--sub2)', lineHeight: 1.6 }}>
+                Select a node to see who they're co-cited with across the 9 chapters.
+              </div>
+            )}
+            {connectedVoices.map(v => (
+              <div key={v.n} style={{ borderTop: '1px solid var(--rule)',
+                padding: '8px 0', display: 'flex', alignItems: 'center',
+                gap: 8, justifyContent: 'space-between' }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ display: 'flex', gap: 7, alignItems: 'baseline' }}>
+                    <span className="mono" style={{ fontSize: 8, color: 'var(--sub)', flexShrink: 0 }}>
+                      {String(v.n).padStart(2,'0')}
+                    </span>
+                    <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.2 }}>
+                      {v.name}
+                    </span>
+                  </div>
+                  <div className="mono" style={{ fontSize: 9, color: 'var(--sub)', marginTop: 2 }}>
+                    {tierLabel(v.tier)} · ch{v.ch}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+                  <button onClick={() => {
+                      const next = new Set(pinnedRef.current);
+                      next.add(v.n);
+                      pinnedRef.current = next;
+                      setPinnedSet(new Set(next));
+                    }}
+                    className="mono" style={{ fontSize: 8, padding: '3px 5px',
+                      background: 'transparent', color: 'var(--sub)',
+                      border: '1px solid var(--rule)', cursor: 'pointer', letterSpacing: '0.04em' }}>
+                    +
+                  </button>
+                  <button onClick={() => onOpenDossier && onOpenDossier(v.n)}
+                    className="mono" style={{ fontSize: 8, padding: '3px 6px',
+                      background: 'var(--ink)', color: 'var(--paper)',
+                      border: 'none', cursor: 'pointer', letterSpacing: '0.04em' }}>
+                    PROFILE
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
 // ─── Table of M.O. ────────────────────────────────────
 // 26 classifiers × voice slots. Toggle: ALL CLASSIFIERS / PRIME PAIRS.
 function MOTable({ onOpenDossier }) {
