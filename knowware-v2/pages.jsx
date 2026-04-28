@@ -425,7 +425,7 @@ function Cover({ setPage }) {
 function TablePage({ setPage, onOpenDossier }) {
   const bp = useBP();
   const mob = bp === 'mobile';
-  const [layout, setLayout] = React.useState('pt3');
+  const [layout, setLayout] = React.useState('w27');
   const [view, setView] = React.useState('graph'); // 'table' | 'graph' | 'mo'
   const [hover, setHover] = React.useState(null);
   const [selected, setSelected] = React.useState(null);
@@ -434,8 +434,8 @@ function TablePage({ setPage, onOpenDossier }) {
   const showN = hover || selected;
   const shown = showN ? window.INTERVIEWS[showN - 1] : null;
 
-  // Visible layouts — exclude ch9
-  const visibleLayouts = Object.entries(window.LAYOUTS).filter(([k]) => k !== 'ch9');
+  // Only show 27×3 (default) and 9×9
+  const visibleLayouts = Object.entries(window.LAYOUTS).filter(([k]) => k === 'w27' || k === 'sq9');
 
   return (
     <div>
