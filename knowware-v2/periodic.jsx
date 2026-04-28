@@ -46,16 +46,21 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
   }
 
   const gap = compact ? 2 : 3;
-  const pad = compact ? 4 : 8;
+  const pad = compact ? 4 : 6;
+
+  // Per-layout cell sizing — 27-col needs narrower cells
+  const minCellW = L.cols >= 20 ? 36 : L.cols >= 9 ? 68 : 100;
+  const cellH    = L.cols >= 20 ? 72 : L.cols >= 9 ? 80 : 90;
+  const minW     = L.cols * minCellW + (L.cols - 1) * gap;
 
   return (
+    <div style={{ overflowX: 'auto', overflowY: 'visible', width: '100%' }}>
     <div style={{
       display: 'grid',
-      gridTemplateColumns: `repeat(${L.cols}, 1fr)`,
-      gridTemplateRows: `repeat(${L.rows}, 1fr)`,
+      gridTemplateColumns: `repeat(${L.cols}, minmax(${minCellW}px, 1fr))`,
+      gridTemplateRows: `repeat(${L.rows}, ${cellH}px)`,
       gap,
-      aspectRatio: `${L.cols} / ${L.rows}`,
-      width: '100%',
+      minWidth: minW,
     }}>
       {cells.map(({ v, col, row }) => {
         const isHover = hover === v.n;
@@ -93,7 +98,7 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
               <span>{v.group.key}</span>
             </span>
             <span style={{
-              fontSize: compact ? 14 : 22, fontWeight: 500,
+              fontSize: compact ? 14 : L.cols >= 20 ? 16 : 22, fontWeight: 500,
               letterSpacing: '-0.03em', lineHeight: 1,
               alignSelf: 'center',
             }}>{v.sym}</span>
@@ -107,6 +112,7 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
           </button>
         );
       })}
+    </div>
     </div>
   );
 }
