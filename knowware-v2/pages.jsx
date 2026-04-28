@@ -650,18 +650,35 @@ function GraphView({ onOpenDossier }) {
                   : 0.04;
       const edges = edgesRef.current;
 
-      // Repulsion — stronger to push chapter clusters apart
+      // Repulsion — velocity-based long-range push + hard collision resolve
+      const MIN_DIST = R * 2 + 6; // never closer than this (px)
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const a = nodes[i], b = nodes[j];
           const dx = b.x - a.x, dy = b.y - a.y;
-          const dist2 = dx*dx + dy*dy || 1;
-          if (dist2 > 360*360) continue; // skip far pairs
+          const dist2 = dx*dx + dy*dy || 0.01;
           const dist  = Math.sqrt(dist2);
-          const force = (3200 / dist2) * Math.max(alpha, 0.04);
-          const fx = (dx/dist)*force, fy = (dy/dist)*force;
-          a.vx -= fx; a.vy -= fy;
-          b.vx += fx; b.vy += fy;
+          // Long-range repulsion (cutoff 360px)
+          if (dist < 360) {
+            const force = (3200 / dist2) * Math.max(alpha, 0.04);
+            const fx = (dx/dist)*force, fy = (dy/dist)*force;
+            a.vx -= fx; a.vy -= fy;
+            b.vx += fx; b.vy += fy;
+          }
+          // Hard collision — positional correction so nodes never overlap
+          if (dist < MIN_DIST) {
+            const overlap = (MIN_DIST - dist) / 2;
+            const nx = dx / dist, ny = dy / dist;
+            a.x -= nx * overlap; a.y -= ny * overlap;
+            b.x += nx * overlap; b.y += ny * overlap;
+            // Cancel inward velocity components
+            const relVx = b.vx - a.vx, relVy = b.vy - a.vy;
+            const dot = relVx*nx + relVy*ny;
+            if (dot < 0) {
+              a.vx += dot * nx * 0.5; a.vy += dot * ny * 0.5;
+              b.vx -= dot * nx * 0.5; b.vy -= dot * ny * 0.5;
+            }
+          }
         }
       }
       // Spring attraction — longer rest length keeps clusters spread
