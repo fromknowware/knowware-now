@@ -3,6 +3,7 @@
 // Data comes from VOICES (voices.jsx) cross-referenced with INTERVIEWS (data.jsx).
 
 const { useState, useEffect, useRef } = React;
+const useBP = () => React.useContext(window.BreakpointContext);
 
 function PersonDossier({ personN, onClose }) {
   const iv  = window.INTERVIEWS.find(v => v.n === personN);
@@ -21,6 +22,9 @@ function PersonDossier({ personN, onClose }) {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [personN]);
+
+  const bp = useBP();
+  const mob = bp === 'mobile';
 
   if (!iv) return null;
 
@@ -55,62 +59,66 @@ function PersonDossier({ personN, onClose }) {
       <div style={{
         position: 'sticky', top: 48, zIndex: 20,
         background: 'var(--bg)', borderBottom: '1px solid var(--rule)',
-        padding: '10px 24px', display: 'grid',
-        gridTemplateColumns: '1fr auto auto', gap: 16, alignItems: 'center',
+        padding: mob ? '8px 16px' : '10px 24px', display: 'grid',
+        gridTemplateColumns: '1fr auto auto', gap: mob ? 8 : 16, alignItems: 'center',
       }}>
         <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
-          letterSpacing: '0.04em' }}>
-          DOSSIER · № {String(personN).padStart(2, '0')} OF 81 · {tierLabel.toUpperCase()} · ch{iv.ch}
+          letterSpacing: '0.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {mob
+            ? `№ ${String(personN).padStart(2, '0')} · ${tierLabel.toUpperCase()}`
+            : `DOSSIER · № ${String(personN).padStart(2, '0')} OF 81 · ${tierLabel.toUpperCase()} · ch${iv.ch}`}
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 6 }}>
           {prev && (
             <button onClick={() => onClose(prev)} className="mono" style={{
               background: 'none', border: '1px solid var(--rule)',
-              padding: '6px 10px', cursor: 'pointer', fontSize: 10, color: 'var(--sub)',
-            }}>← № {String(prev).padStart(2, '0')}</button>
+              padding: '6px 8px', cursor: 'pointer', fontSize: 10, color: 'var(--sub)',
+            }}>←</button>
           )}
           {next && (
             <button onClick={() => onClose(next)} className="mono" style={{
               background: 'none', border: '1px solid var(--rule)',
-              padding: '6px 10px', cursor: 'pointer', fontSize: 10, color: 'var(--sub)',
-            }}>№ {String(next).padStart(2, '0')} →</button>
+              padding: '6px 8px', cursor: 'pointer', fontSize: 10, color: 'var(--sub)',
+            }}>→</button>
           )}
         </div>
         <button onClick={() => onClose(null)} className="mono" style={{
           background: 'var(--ink)', color: 'var(--paper)',
-          border: 'none', padding: '7px 12px', cursor: 'pointer',
+          border: 'none', padding: mob ? '7px 10px' : '7px 12px', cursor: 'pointer',
           fontSize: 10, letterSpacing: '0.04em',
-        }}>← BACK TO THE 81</button>
+        }}>{mob ? '← 81' : '← BACK TO THE 81'}</button>
       </div>
 
       {/* ── Identity card ─────────────────────────────────── */}
       <div style={{
-        display: 'grid', gridTemplateColumns: '200px 1fr',
-        borderBottom: '1px solid var(--ink)', minHeight: 220,
+        display: 'grid', gridTemplateColumns: mob ? '1fr' : '200px 1fr',
+        borderBottom: '1px solid var(--ink)', minHeight: mob ? 0 : 220,
       }}>
         {/* Monogram panel */}
         <div style={{
-          borderRight: '1px solid var(--ink)',
+          borderRight: mob ? 'none' : '1px solid var(--ink)',
+          borderBottom: mob ? '1px solid var(--ink)' : 'none',
           background: `var(${iv.group.varCSS})`,
-          display: 'flex', flexDirection: 'column',
-          justifyContent: 'space-between', padding: 20,
+          display: 'flex', flexDirection: mob ? 'row' : 'column',
+          justifyContent: 'space-between', alignItems: mob ? 'center' : 'stretch',
+          padding: mob ? '14px 16px' : 20,
         }}>
           <div className="mono" style={{ fontSize: 9,
             color: `var(${iv.group.ink})`, letterSpacing: '0.05em' }}>
             {String(personN).padStart(2, '0')} · {iv.tier}
           </div>
           <div style={{
-            fontSize: 88, fontWeight: 600, letterSpacing: '-0.06em',
+            fontSize: mob ? 52 : 88, fontWeight: 600, letterSpacing: '-0.06em',
             lineHeight: 1, color: 'rgba(0,0,0,0.15)', textAlign: 'center',
             userSelect: 'none',
           }}>{sym}</div>
           <div className="mono" style={{ fontSize: 8,
-            color: `var(${iv.group.ink})`, textAlign: 'center',
+            color: `var(${iv.group.ink})`, textAlign: mob ? 'right' : 'center',
             letterSpacing: '0.06em' }}>{tierLabel.toUpperCase()}</div>
         </div>
 
         {/* Name + meta */}
-        <div style={{ padding: '32px 40px', display: 'flex',
+        <div style={{ padding: mob ? '20px 16px' : '32px 40px', display: 'flex',
           flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             {alias && (
@@ -121,15 +129,15 @@ function PersonDossier({ personN, onClose }) {
             )}
             <h1 style={{
               fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-              fontSize: 'clamp(32px, 5vw, 64px)', 
+              fontSize: mob ? 'clamp(28px, 8vw, 48px)' : 'clamp(32px, 5vw, 64px)',
               fontWeight: 500, letterSpacing: '-0.025em', lineHeight: 1.0,
               margin: 0,
             }}>{name}</h1>
           </div>
 
           <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 16, marginTop: 24, paddingTop: 24,
+            display: 'grid', gridTemplateColumns: mob ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+            gap: mob ? 12 : 16, marginTop: mob ? 16 : 24, paddingTop: mob ? 16 : 24,
             borderTop: '1px solid var(--rule)',
           }}>
             {[
@@ -156,7 +164,7 @@ function PersonDossier({ personN, onClose }) {
       {coldOpen && (
         <div style={{
           borderBottom: '1px solid var(--ink)',
-          padding: '48px 40px',
+          padding: mob ? '28px 16px' : '48px 40px',
         }}>
           <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
             letterSpacing: '0.06em', marginBottom: 20 }}>COLD OPEN</div>
@@ -174,10 +182,10 @@ function PersonDossier({ personN, onClose }) {
 
       {/* ── Bio + right panel ─────────────────────────────── */}
       <div style={{
-        display: 'grid', gridTemplateColumns: '1fr 320px',
+        display: 'grid', gridTemplateColumns: mob ? '1fr' : '1fr 320px',
         borderBottom: '1px solid var(--rule)',
       }}>
-        <div style={{ padding: '40px', borderRight: '1px solid var(--rule)' }}>
+        <div style={{ padding: mob ? '24px 16px' : '40px', borderRight: mob ? 'none' : '1px solid var(--rule)', borderBottom: mob ? '1px solid var(--rule)' : 'none' }}>
           {/* Overview */}
           {bio && (
             <>
@@ -205,7 +213,7 @@ function PersonDossier({ personN, onClose }) {
         </div>
 
         {/* Right column */}
-        <div style={{ padding: '32px 28px', background: 'var(--paper)',
+        <div style={{ padding: mob ? '20px 16px' : '32px 28px', background: 'var(--paper)',
           display: 'flex', flexDirection: 'column', gap: 24 }}>
 
           {/* Awards */}
@@ -282,7 +290,7 @@ function PersonDossier({ personN, onClose }) {
       {/* ── Methods & Frameworks ──────────────────────────── */}
       {knownFor.length > 0 && (
         <div style={{
-          padding: '40px', borderBottom: '1px solid var(--rule)',
+          padding: mob ? '24px 16px' : '40px', borderBottom: '1px solid var(--rule)',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between',
             alignItems: 'baseline', marginBottom: 20 }}>
@@ -323,7 +331,7 @@ function PersonDossier({ personN, onClose }) {
       {/* ── Evidence archive — works ──────────────────────── */}
       {works.length > 0 && (
         <div style={{
-          padding: '40px', borderBottom: '1px solid var(--rule)',
+          padding: mob ? '24px 16px' : '40px', borderBottom: '1px solid var(--rule)',
         }}>
           <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
             letterSpacing: '0.06em', marginBottom: 6 }}>KNOWWARE SERIES —</div>
@@ -359,13 +367,13 @@ function PersonDossier({ personN, onClose }) {
         {prev ? (
           <button onClick={() => onClose(prev)} style={{
             background: 'none', border: 'none', borderRight: '1px solid var(--ink)',
-            padding: '24px 32px', cursor: 'pointer', textAlign: 'left',
+            padding: mob ? '16px' : '24px 32px', cursor: 'pointer', textAlign: 'left',
             fontFamily: 'inherit',
           }}>
             <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-              marginBottom: 6 }}>← PREVIOUS DOSSIER</div>
-            <div style={{ fontSize: 15, fontWeight: 500,
-              letterSpacing: '-0.01em' }}>
+              marginBottom: 6 }}>← PREVIOUS</div>
+            <div style={{ fontSize: mob ? 13 : 15, fontWeight: 500,
+              letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {window.INTERVIEWS[prev - 1]?.name}
             </div>
           </button>
@@ -373,14 +381,14 @@ function PersonDossier({ personN, onClose }) {
 
         {next ? (
           <button onClick={() => onClose(next)} style={{
-            background: 'none', border: 'none', padding: '24px 32px',
+            background: 'none', border: 'none', padding: mob ? '16px' : '24px 32px',
             cursor: 'pointer', textAlign: 'right', fontFamily: 'inherit',
             width: '100%',
           }}>
             <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
-              marginBottom: 6 }}>NEXT DOSSIER →</div>
-            <div style={{ fontSize: 15, fontWeight: 500,
-              letterSpacing: '-0.01em' }}>
+              marginBottom: 6 }}>NEXT →</div>
+            <div style={{ fontSize: mob ? 13 : 15, fontWeight: 500,
+              letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {window.INTERVIEWS[next - 1]?.name}
             </div>
           </button>

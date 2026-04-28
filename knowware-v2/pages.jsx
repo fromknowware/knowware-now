@@ -67,9 +67,10 @@ function Foot() {
 }
 
 function Grid({ children, style }) {
+  const mob = useBP() === 'mobile';
   return <div style={{
-    display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)',
-    gap: 16, padding: '0 32px', ...style,
+    display: 'grid', gridTemplateColumns: mob ? '1fr' : 'repeat(12, 1fr)',
+    gap: mob ? 12 : 16, padding: mob ? '0 16px' : '0 32px', ...style,
   }}>{children}</div>;
 }
 
@@ -78,6 +79,62 @@ function Label({ children, style }) {
     fontSize: 11, color: 'var(--sub)', paddingTop: 6,
     letterSpacing: '-0.005em', ...style,
   }}>{children}</div>;
+}
+
+function MobileSpine({ setPage }) {
+  const barPcts = window.SECTIONS.map((_, i) => 45 + ((i * 37) % 55));
+  const maxPct  = Math.max(...barPcts);
+  const [visible, setVisible] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+    }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref}>
+      <div style={{ border: '1px solid var(--rule)', background: 'var(--paper)' }}>
+        {window.SECTIONS.map((s, i) => (
+          <button key={s.n} onClick={() => setPage('read')} style={{
+            width: '100%', background: 'none', border: 'none',
+            borderBottom: '1px solid var(--rule)',
+            padding: '10px 14px', cursor: 'pointer',
+            display: 'grid', gridTemplateColumns: '32px 1fr auto',
+            alignItems: 'center', gap: 10, fontFamily: 'inherit', textAlign: 'left',
+          }}>
+            <span className="mono" style={{ fontSize: 9, color: 'var(--sub)' }}>ch{s.n}</span>
+            <span style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              <span style={{ fontSize: 13, letterSpacing: '-0.01em', color: 'var(--ink)', lineHeight: 1.2 }}>{s.title}</span>
+              <span style={{
+                display: 'block', height: 2,
+                background: 'var(--accent)',
+                width: visible ? `${(barPcts[i] / maxPct) * 100}%` : '0%',
+                transition: `width 0.55s cubic-bezier(0.4,0,0.2,1) ${i * 55}ms`,
+              }} />
+            </span>
+            <span className="mono" style={{ fontSize: 9, color: 'var(--sub2)' }}>↗</span>
+          </button>
+        ))}
+      </div>
+      <div style={{ position: 'relative', marginTop: 8, paddingBottom: 14 }}>
+        <div style={{ height: 1, background: 'var(--rule)', width: '100%' }} />
+        <div style={{ height: 4, width: 1, background: 'var(--rule)', position: 'absolute', top: 0, left: 0 }} />
+        <div style={{ height: 4, width: 1, background: 'var(--rule)', position: 'absolute', top: 0, right: 0 }} />
+        <div className="mono" style={{ display: 'flex', justifyContent: 'space-between',
+          fontSize: 9, color: 'var(--sub2)', marginTop: 4 }}>
+          <span>0 pp</span>
+          <span>Fig. 02 — relative page count</span>
+          <span>~350 pp</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ─── Cover (v2) ────────────────────────────────────────
@@ -123,6 +180,14 @@ function Cover({ setPage }) {
       }}>
         <div style={{ padding: '48px 24px 32px',
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <p style={{
+            margin: 0,
+            fontSize: mob ? 15 : 17, lineHeight: 1.25,
+            letterSpacing: '-0.02em', fontStyle: 'italic',
+            color: 'var(--sub)',
+          }}>
+            You already know this.<br />You just haven't had a name for it.
+          </p>
           <div className="mono" style={{ fontSize: 11, color: 'var(--sub)' }}>
             KNOWWARE / SYSTEMS OF INTELLIGENCE
           </div>
@@ -161,14 +226,20 @@ function Cover({ setPage }) {
           }}>
             81
           </div>
-          <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
-            display: 'flex', justifyContent: 'space-between' }}>
-            <span>ACROSS 3 TIERS · 9 CHAPTERS</span>
-            <button onClick={() => setPage('table')} style={{
-              background: 'var(--ink)', color: 'var(--paper)',
-              border: 'none', padding: '6px 10px', fontFamily: 'inherit',
-              fontSize: 11, cursor: 'pointer',
-            }}>See all →</button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
+              fontStyle: 'italic', letterSpacing: '-0.005em' }}>
+              These interviews never happened.
+            </div>
+            <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>ACROSS 3 TIERS · 9 CHAPTERS</span>
+              <button onClick={() => setPage('table')} style={{
+                background: 'var(--ink)', color: 'var(--paper)',
+                border: 'none', padding: '6px 10px', fontFamily: 'inherit',
+                fontSize: 11, cursor: 'pointer',
+              }}>See all →</button>
+            </div>
           </div>
         </div>
       </div>
@@ -264,68 +335,75 @@ function Cover({ setPage }) {
       {/* The Spine — compact TOC shown as a book spine */}
       <Grid style={{ marginTop: 64 }}>
         <Label style={{ gridColumn: '1 / span 3' }}>01 · The spine</Label>
-        <div style={{ gridColumn: '4 / span 9' }}>
-          <div style={{ display: 'flex', alignItems: 'end',
-            justifyContent: 'space-between', marginBottom: 14 }}>
-            <h2 style={{ fontSize: 40, fontWeight: 500,
+        <div style={{ gridColumn: mob ? '1' : '4 / span 9' }}>
+          <div style={{ display: 'flex', alignItems: mob ? 'flex-start' : 'end',
+            flexDirection: mob ? 'column' : 'row',
+            justifyContent: 'space-between', gap: mob ? 10 : 0, marginBottom: 14 }}>
+            <h2 style={{ fontSize: mob ? 'clamp(22px, 6vw, 32px)' : 40, fontWeight: 500,
               letterSpacing: '-0.03em', margin: 0, lineHeight: 1 }}>
               Nine chapters, one capstone.
             </h2>
             <button onClick={() => setPage('read')} className="mono" style={{
               background: 'none', border: '1px solid var(--ink)',
-              padding: '6px 10px', cursor: 'pointer', fontSize: 11,
+              padding: '6px 10px', cursor: 'pointer', fontSize: 11, flexShrink: 0,
             }}>Read manuscript ↗</button>
           </div>
-          <div style={{
-            display: 'grid', gridTemplateColumns: `repeat(${window.SECTIONS.length}, 1fr)`,
-            gap: 2, alignItems: 'end', height: 260,
-            background: 'var(--paper)', border: '1px solid var(--rule)',
-            padding: 12,
-          }}>
-            {window.SECTIONS.map((s, i) => {
-              const h = 45 + ((i * 37) % 55);
-              return (
-                <button key={s.n} onClick={() => setPage('read')}
-                  style={{
-                    background: 'var(--ink)', border: 'none', cursor: 'pointer',
-                    height: `${h}%`, display: 'flex', flexDirection: 'column',
-                    justifyContent: 'space-between', padding: 8,
-                    color: 'var(--paper)', alignItems: 'flex-start',
-                    fontFamily: 'inherit', transition: 'background .15s',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--accent)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'var(--ink)'}>
-                  <span className="mono" style={{ fontSize: 10 }}>ch{s.n}</span>
-                  <span style={{ fontSize: 11, writingMode: 'vertical-rl',
-                    transform: 'rotate(180deg)', letterSpacing: '-0.005em',
-                    whiteSpace: 'nowrap', overflow: 'hidden',
-                    textOverflow: 'ellipsis', maxHeight: '100%' }}>
-                    {s.title}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
-            marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-            <span>Fig. 02 — Page-count by section.</span>
-            <span>Click any spine to open.</span>
-          </div>
+
+          {mob ? <MobileSpine setPage={setPage} /> : (
+            /* Desktop: bar chart spine */
+            <>
+              <div style={{
+                display: 'grid', gridTemplateColumns: `repeat(${window.SECTIONS.length}, 1fr)`,
+                gap: 2, alignItems: 'end', height: 260,
+                background: 'var(--paper)', border: '1px solid var(--rule)',
+                padding: 12,
+              }}>
+                {window.SECTIONS.map((s, i) => {
+                  const h = 45 + ((i * 37) % 55);
+                  return (
+                    <button key={s.n} onClick={() => setPage('read')}
+                      style={{
+                        background: 'var(--ink)', border: 'none', cursor: 'pointer',
+                        height: `${h}%`, display: 'flex', flexDirection: 'column',
+                        justifyContent: 'space-between', padding: 8,
+                        color: 'var(--paper)', alignItems: 'flex-start',
+                        fontFamily: 'inherit', transition: 'background .15s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--accent)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'var(--ink)'}>
+                      <span className="mono" style={{ fontSize: 10 }}>ch{s.n}</span>
+                      <span style={{ fontSize: 11, writingMode: 'vertical-rl',
+                        transform: 'rotate(180deg)', letterSpacing: '-0.005em',
+                        whiteSpace: 'nowrap', overflow: 'hidden',
+                        textOverflow: 'ellipsis', maxHeight: '100%' }}>
+                        {s.title}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
+                marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
+                <span>Fig. 02 — Page-count by section.</span>
+                <span>Click any spine to open.</span>
+              </div>
+            </>
+          )}
         </div>
       </Grid>
 
       {/* Thesis — full bleed band */}
       <div style={{
         marginTop: 64, background: 'var(--ink)', color: 'var(--paper)',
-        padding: '64px 24px',
+        padding: mob ? '40px 16px' : '64px 24px',
       }}>
         <div style={{ display: 'grid',
-          gridTemplateColumns: 'repeat(12, 1fr)', gap: 16,
+          gridTemplateColumns: mob ? '1fr' : 'repeat(12, 1fr)', gap: 16,
           maxWidth: '100%' }}>
-          <Label style={{ gridColumn: '1 / span 3',
+          <Label style={{ gridColumn: mob ? '1' : '1 / span 3',
             color: 'var(--accent-soft)' }}>02 · Thesis</Label>
-          <div style={{ gridColumn: '4 / span 9', fontSize: 36,
-            lineHeight: 1.15, letterSpacing: '-0.025em' }}>
+          <div style={{ gridColumn: mob ? '1' : '4 / span 9', fontSize: mob ? 22 : 36,
+            lineHeight: 1.2, letterSpacing: '-0.02em' }}>
             The tools we use to think are no longer{' '}
             <span style={{ color: 'var(--accent-soft)',
               borderBottom: '2px solid var(--accent-soft)' }}>separate</span>{' '}
@@ -338,10 +416,10 @@ function Cover({ setPage }) {
 
       {/* Structure — horizontal stat bar */}
       <Grid style={{ marginTop: 64 }}>
-        <Label style={{ gridColumn: '1 / span 3' }}>03 · Structure</Label>
-        <div style={{ gridColumn: '4 / span 9' }}>
+        <Label style={{ gridColumn: mob ? '1' : '1 / span 3' }}>03 · Structure</Label>
+        <div style={{ gridColumn: mob ? '1' : '4 / span 9' }}>
           <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)',
+            display: 'grid', gridTemplateColumns: mob ? 'repeat(3, 1fr)' : 'repeat(6, 1fr)',
             borderTop: '2px solid var(--ink)',
             borderBottom: '2px solid var(--ink)',
           }}>
@@ -354,8 +432,9 @@ function Cover({ setPage }) {
               ['03', 'Years'],
             ].map(([n, l], i) => (
               <div key={l} style={{
-                borderRight: i < 5 ? '1px solid var(--rule)' : 'none',
-                padding: '24px 14px 18px',
+                borderRight: mob ? (i % 3 < 2 ? '1px solid var(--rule)' : 'none') : (i < 5 ? '1px solid var(--rule)' : 'none'),
+                borderBottom: mob && i < 3 ? '1px solid var(--rule)' : 'none',
+                padding: mob ? '16px 10px 12px' : '24px 14px 18px',
                 display: 'flex', flexDirection: 'column', gap: 10,
                 minWidth: 0, overflow: 'hidden',
               }}>
@@ -372,17 +451,17 @@ function Cover({ setPage }) {
 
       {/* Early readers — staggered pull quotes */}
       <Grid style={{ marginTop: 64 }}>
-        <Label style={{ gridColumn: '1 / span 3' }}>04 · Early readers</Label>
-        <div style={{ gridColumn: '4 / span 9',
-          display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)',
-          gap: 16, rowGap: 40 }}>
+        <Label style={{ gridColumn: mob ? '1' : '1 / span 3' }}>04 · Early readers</Label>
+        <div style={{ gridColumn: mob ? '1' : '4 / span 9',
+          display: 'grid', gridTemplateColumns: mob ? '1fr' : 'repeat(12, 1fr)',
+          gap: 16, rowGap: mob ? 24 : 40 }}>
           {[
             ['A book that reads you while you read it.', 'N. Mehta', 'researcher', 1, 6],
             ['The most serious attempt to map the new terrain I have seen.', 'L. Okafor', 'economist', 7, 6],
             ['Essential, and a little frightening.', 'Y. Park', 'editor', 3, 7],
           ].map(([q, a, r, start, span], i) => (
             <blockquote key={a} style={{
-              gridColumn: `${start} / span ${span}`,
+              gridColumn: mob ? '1' : `${start} / span ${span}`,
               margin: 0,
               borderTop: '1px solid var(--ink)', paddingTop: 14,
             }}>
@@ -398,14 +477,14 @@ function Cover({ setPage }) {
       </Grid>
 
       {/* CTA strip */}
-      <div style={{ marginTop: 64, padding: '0 24px' }}>
+      <div style={{ marginTop: 64, padding: mob ? '0 16px' : '0 24px' }}>
         <div style={{
-          display: 'grid', gridTemplateColumns: '1fr auto',
-          alignItems: 'center', gap: 24,
+          display: 'grid', gridTemplateColumns: mob ? '1fr' : '1fr auto',
+          alignItems: 'center', gap: mob ? 16 : 24,
           border: '1px solid var(--ink)',
-          padding: '28px 32px', background: 'var(--accent-soft)',
+          padding: mob ? '20px 16px' : '28px 32px', background: 'var(--accent-soft)',
         }}>
-          <div style={{ fontSize: 28, letterSpacing: '-0.02em',
+          <div style={{ fontSize: mob ? 20 : 28, letterSpacing: '-0.02em',
             lineHeight: 1.15, fontWeight: 500 }}>
             Pre-order before Autumn and your name enters the colophon.
           </div>
@@ -421,11 +500,277 @@ function Cover({ setPage }) {
   );
 }
 
+// ─── Cast / Manifest view ──────────────────────────────
+const CAST = [
+  {n:1,t:"The Coordination Intelligence Revolution",voices:[
+    {i:"01",nm:"Dr. Paul Pangaro",r:"Cybernetician, Conversation Theory",s:"alive",tri:"A",f:"old"},
+    {i:"02",nm:"Dr. N. Katherine Hayles",r:"Literary Scholar, Posthuman Cognition",s:"alive",tri:"A",f:"old"},
+    {i:"03",nm:"Donella Meadows",r:"Thinking in Systems",s:"passed",tri:"A",tg:"legacy",f:"missing"},
+    {i:"04",nm:"Stewart Brand",r:"Whole Earth Catalog",s:"alive",tri:"P",f:"old"},
+    {i:"05",nm:"Kevin Kelly",r:"Wired, What Technology Wants",s:"alive",tri:"P",tg:"new",f:"missing"},
+    {i:"06",nm:"Yann Minh",r:"Digital Shamanism",s:"alive",tri:"P",f:"old"},
+    {i:"07",nm:"Terence McKenna",r:"Ethnobotanist, Philosopher",s:"passed",tri:"V",tg:"legacy",f:"old"},
+    {i:"08",nm:"Lakota Elder Phillip Deere",r:"Star Knowledge",s:"passed",tri:"V",tg:"legacy",f:"old"},
+    {i:"09",nm:"Daniel Schmachtenberger",r:"Consilience Project",s:"alive",tri:"V",tg:"new",f:"missing"},
+  ]},
+  {n:2,t:"The Dawn of Systems Intelligence",voices:[
+    {i:"10",nm:"Dr. Judea Pearl",r:"Causal Inference",s:"alive",tri:"A",f:"old"},
+    {i:"11",nm:"Claude Shannon",r:"Information Theory",s:"passed",tri:"A",tg:"legacy",f:"new"},
+    {i:"12",nm:"Alan Turing",r:"Computing Machinery & Intelligence",s:"passed",tri:"A",tg:"legacy",f:"missing"},
+    {i:"13",nm:"Dr. Hartmut Neven",r:"Google Quantum AI",s:"alive",tri:"P",f:"old"},
+    {i:"14",nm:"Former NSA Tech Director",r:"Signals Intelligence",s:"anon",tri:"P",f:"old"},
+    {i:"15",nm:"Palmer Luckey",r:"Oculus, Anduril",s:"alive",tri:"P",f:"old"},
+    {i:"16",nm:"Mo Gawdat",r:"Google X — saw AI dawn from inside",s:"alive",tri:"V",tg:"new",f:"new"},
+    {i:"17",nm:"Hunbatz Men",r:"Maya Elder",s:"alive",tri:"V",f:"old"},
+    {i:"18",nm:"Prof. Ruqian Lu",r:"Named knowware (2005)",s:"alive",tri:"V",tg:"origin",f:"new"},
+  ]},
+  {n:3,t:"Architecture of Systems Intelligence",voices:[
+    {i:"19",nm:"Yann LeCun",r:"Chief AI Scientist, Meta",s:"alive",tri:"A",f:"old"},
+    {i:"20",nm:"Richard Feynman",r:"Theoretical Physicist",s:"passed",tri:"A",tg:"legacy",f:"new"},
+    {i:"21",nm:"James Gosling",r:"Creator of Java",s:"alive",tri:"A",tg:"new",f:"missing"},
+    {i:"22",nm:"Dario Amodei",r:"CEO, Anthropic",s:"alive",tri:"P",f:"old"},
+    {i:"23",nm:"Demis Hassabis",r:"CEO, Google DeepMind",s:"alive",tri:"P",f:"old"},
+    {i:"24",nm:"Clément Delangue",r:"CEO, Hugging Face",s:"alive",tri:"P",tg:"new",f:"old"},
+    {i:"25",nm:"Iain McGilchrist",r:"The Master and His Emissary",s:"alive",tri:"V",tg:"new",f:"missing"},
+    {i:"26",nm:"Fritjof Capra",r:"Web of Life, Systems Thinking",s:"alive",tri:"V",tg:"new",f:"missing"},
+    {i:"27",nm:"Ray Kurzweil",r:"Singularity, Law of Accelerating Returns",s:"alive",tri:"V",tg:"new",f:"old"},
+  ]},
+  {n:4,t:"Systems Intelligence in Action",voices:[
+    {i:"28",nm:"Dr. Carlo Ratti",r:"MIT Senseable City Lab",s:"alive",tri:"A",f:"old"},
+    {i:"29",nm:"Dr. Eric Topol",r:"Digital Medicine",s:"alive",tri:"A",f:"old"},
+    {i:"30",nm:"Andrew Lo",r:"Finance Professor, MIT",s:"alive",tri:"A",f:"old"},
+    {i:"31",nm:"Dan Doctoroff",r:"Former CEO Sidewalk Labs",s:"alive",tri:"P",f:"old"},
+    {i:"32",nm:"Linda Raschke",r:"Professional Trader",s:"alive",tri:"P",f:"old"},
+    {i:"33",nm:"Anonymous Quant Trader",r:"Systematic Trading",s:"anon",tri:"P",f:"old"},
+    {i:"34",nm:"Sarah Rossbach",r:"Feng Shui Scholar",s:"alive",tri:"V",f:"old"},
+    {i:"35",nm:"Caroline Myss",r:"Medical Intuitive",s:"alive",tri:"V",f:"old"},
+    {i:"36",nm:"Nassim Taleb",r:"Antifragility — coordination resilience",s:"alive",tri:"V",tg:"new",f:"missing"},
+  ]},
+  {n:5,t:"Human-Systems Intelligence Interaction",voices:[
+    {i:"37",nm:"Dr. Miguel Nicolelis",r:"Neuroscientist, BCI",s:"alive",tri:"A",f:"old"},
+    {i:"38",nm:"Dr. Alex Pentland",r:"Social Physics",s:"alive",tri:"A",f:"old"},
+    {i:"39",nm:"Dr. Shannon Vallor",r:"AI Ethicist",s:"alive",tri:"A",f:"old"},
+    {i:"40",nm:"Dr. Thomas Oxley",r:"CEO, Synchron",s:"alive",tri:"P",f:"old"},
+    {i:"41",nm:"Tristan Harris",r:"Center for Humane Tech",s:"alive",tri:"P",f:"old"},
+    {i:"42",nm:"Jimmy Wales",r:"Founder, Wikipedia",s:"alive",tri:"P",f:"old"},
+    {i:"43",nm:"Anonymous BCI User",r:"Living the Hybrid Reality",s:"anon",tri:"V",f:"old"},
+    {i:"44",nm:"Thich Nhat Hanh Foundation",r:"Interbeing",s:"passed",tri:"V",tg:"legacy",f:"old"},
+    {i:"45",nm:"Donna Haraway",r:"Cyborg Manifesto",s:"alive",tri:"V",tg:"new",f:"missing"},
+  ]},
+  {n:6,t:"Consciousness as Pattern Recognition",voices:[
+    {i:"46",nm:"Stuart Russell",r:"AI Safety, UC Berkeley",s:"alive",tri:"A",f:"old"},
+    {i:"47",nm:"Timnit Gebru",r:"AI Justice, DAIR",s:"alive",tri:"A",f:"old"},
+    {i:"48",nm:"Kate Crawford",r:"AI Now Institute",s:"alive",tri:"A",f:"old"},
+    {i:"49",nm:"Norbert Wiener",r:"Father of Cybernetics",s:"passed",tri:"P",tg:"legacy",f:"new"},
+    {i:"50",nm:"Margaret Mitchell",r:"Hugging Face Ethics",s:"alive",tri:"P",tg:"new",f:"missing"},
+    {i:"51",nm:"Anonymous In-Q-Tel PM",r:"Intel community ↔ tech",s:"anon",tri:"P",tg:"new",f:"new"},
+    {i:"52",nm:"Roger Penrose",r:"Consciousness & Quantum",s:"alive",tri:"V",tg:"new",f:"missing"},
+    {i:"53",nm:"Antonio Damasio",r:"Somatic Markers",s:"alive",tri:"V",tg:"new",f:"missing"},
+    {i:"54",nm:"Rupert Sheldrake",r:"Morphic Resonance",s:"alive",tri:"V",tg:"new",f:"missing"},
+  ]},
+  {n:7,t:"Engineering Reality",voices:[
+    {i:"55",nm:"Dr. John Preskill",r:"Quantum Computing",s:"alive",tri:"A",f:"old"},
+    {i:"56",nm:"Dr. Seth Lloyd",r:"Quantum Biology",s:"alive",tri:"A",f:"old"},
+    {i:"57",nm:"Chip Huyen",r:"Production ML",s:"alive",tri:"A",f:"old"},
+    {i:"58",nm:"Jeff Dean",r:"Google Infrastructure",s:"alive",tri:"P",f:"old"},
+    {i:"59",nm:"Dr. Lisa Su",r:"Chair & CEO, AMD",s:"alive",tri:"P",tg:"new",f:"new"},
+    {i:"60",nm:"Wendell Weeks",r:"CEO, Corning",s:"alive",tri:"P",tg:"new",f:"new"},
+    {i:"61",nm:"Neri Oxman",r:"Material Ecology",s:"alive",tri:"V",f:"old"},
+    {i:"62",nm:"Anon DARPA Program Manager",r:"Breakthrough tech coordination",s:"anon",tri:"V",tg:"new",f:"new"},
+    {i:"63",nm:"Dr. Fei-Fei Li",r:"Stanford, Human-Centered AI",s:"alive",tri:"V",tg:"new",f:"old"},
+  ]},
+  {n:8,t:"Beyond Human Intelligence",voices:[
+    {i:"64",nm:"Dr. Max Tegmark",r:"MIT, Future of Life",s:"alive",tri:"A",f:"old"},
+    {i:"65",nm:"Dr. Nick Bostrom",r:"Oxford, FHI",s:"alive",tri:"A",f:"old"},
+    {i:"66",nm:"Dr. Jill Tarter",r:"SETI Institute",s:"alive",tri:"A",f:"old"},
+    {i:"67",nm:"Dr. Sara Seager",r:"Exoplanet Research",s:"alive",tri:"P",f:"old"},
+    {i:"68",nm:"Dr. David Chalmers",r:"Philosophy of Mind",s:"alive",tri:"P",f:"old"},
+    {i:"69",nm:"Anil Seth",r:"Being You — consciousness as controlled hallucination",s:"alive",tri:"P",tg:"new",f:"missing"},
+    {i:"70",nm:"Liu Cixin",r:"Dark Forest",s:"alive",tri:"V",f:"old"},
+    {i:"71",nm:"Dr. Thomas Nagel",r:"What Is It Like To Be",s:"alive",tri:"V",f:"old"},
+    {i:"72",nm:"Srinivasa Ramanujan",r:"Mathematician, 1887–1920",s:"passed",tri:"V",tg:"legacy",f:"new"},
+  ]},
+  {n:9,t:"No Way Know-How",voices:[
+    {i:"73",nm:"David Autor",r:"Labor Economics",s:"alive",tri:"A",f:"old"},
+    {i:"74",nm:"Kate Raworth",r:"Doughnut Economics",s:"alive",tri:"A",f:"old"},
+    {i:"75",nm:"François Chollet",r:"Keras, ARC Prize",s:"alive",tri:"A",f:"old"},
+    {i:"76",nm:"Emad Mostaque",r:"Founder, Stability AI",s:"alive",tri:"P",f:"old"},
+    {i:"77",nm:"Dr. Fiona Hill",r:"Brookings, Former NSC",s:"alive",tri:"P",tg:"new",f:"new"},
+    {i:"78",nm:"Peter Senge",r:"The Fifth Discipline, Systems Learning",s:"alive",tri:"P",tg:"new",f:"missing"},
+    {i:"79",nm:"Charles Eisenstein",r:"Sacred Economics",s:"alive",tri:"V",f:"old"},
+    {i:"80",nm:"Sherry Turkle",r:"Technology & Connection",s:"alive",tri:"V",f:"old"},
+    {i:"81",nm:"Anon CIA/KGB MK-Ultra",r:"Coordination failure from inside",s:"anon",tri:"V",tg:"new",f:"new"},
+  ]},
+];
+
+function CastView() {
+  const mob = useBP() === 'mobile';
+
+  const allVoices = CAST.flatMap(c => c.voices);
+  const legacy = allVoices.filter(v => v.tg === 'legacy').length;
+  const anon   = allVoices.filter(v => v.s === 'anon').length;
+  const origin = allVoices.filter(v => v.tg === 'origin').length;
+  const old_   = allVoices.filter(v => v.f === 'old').length;
+  const newAll = allVoices.filter(v => v.f !== 'old').length;
+
+  const statusDot = s =>
+    s === 'alive'  ? '#1D9E75' :
+    s === 'passed' ? 'var(--sub2)' : 'oklch(0.60 0.15 270)';
+
+  const tierBg = t =>
+    t === 'A' ? 'var(--tier-a)' : t === 'P' ? 'var(--tier-p)' : 'var(--tier-v)';
+  const tierInk = t =>
+    t === 'A' ? 'var(--tier-a-ink)' : t === 'P' ? 'var(--tier-p-ink)' : 'var(--tier-v-ink)';
+
+  const fileBadge = f => {
+    if (f === 'old')     return { bg: 'var(--tier-v)',   ink: 'var(--tier-v-ink)', label: 'FILED' };
+    if (f === 'new')     return { bg: 'var(--tier-a)',   ink: 'var(--tier-a-ink)', label: 'NEW'   };
+    if (f === 'missing') return { bg: 'var(--tier-a)',   ink: 'var(--tier-a-ink)', label: 'NEW'   };
+    return null;
+  };
+
+  const tagBadge = tg => {
+    if (tg === 'legacy') return { bg: 'var(--sub2)', ink: 'var(--paper)', label: 'LEGACY' };
+    if (tg === 'origin') return { bg: 'var(--accent)', ink: '#fff', label: 'ORIGIN' };
+    if (tg === 'new')    return null;
+    return null;
+  };
+
+  return (
+    <div style={{ paddingBottom: 80 }}>
+
+      {/* Explainer header */}
+      <div style={{
+        padding: mob ? '20px 16px 24px' : '28px 24px 32px',
+        background: 'var(--ink)', color: 'var(--paper)',
+        borderBottom: '1px solid var(--rule)',
+      }}>
+        <p style={{
+          margin: '0 0 20px',
+          fontSize: mob ? 14 : 15, lineHeight: 1.6,
+          letterSpacing: '-0.01em', color: 'oklch(0.75 0.04 250)',
+          maxWidth: 640,
+        }}>
+          None of these interviews happened. Every insight is real.
+          All 81 voices are synthesised from published work, lectures, papers, and primary sources.
+          Nine are legacy guests — historical figures whose ideas outlasted their presence.
+          The pattern is real even when the room never existed.
+        </p>
+        {/* Stats row */}
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          {[
+            ['81', 'total voices'],
+            [String(old_), 'old'],
+            [String(newAll), 'new'],
+            [String(legacy), 'legacy guests'],
+            [String(anon), 'anonymous'],
+            [String(origin), 'named the field'],
+          ].map(([v, l]) => (
+            <div key={l} style={{
+              borderLeft: '2px solid var(--accent)', paddingLeft: 10,
+            }}>
+              <div className="mono" style={{ fontSize: mob ? 18 : 22, fontWeight: 500, lineHeight: 1 }}>{v}</div>
+              <div className="mono" style={{ fontSize: 9, color: 'var(--sub)', marginTop: 3, letterSpacing: '0.04em' }}>{l.toUpperCase()}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div style={{
+        padding: mob ? '10px 16px' : '10px 24px',
+        borderBottom: '1px solid var(--rule)',
+        display: 'flex', gap: mob ? 12 : 20, flexWrap: 'wrap', alignItems: 'center',
+      }}>
+        {[
+          { el: <span style={{ width:8, height:8, borderRadius:'50%', background:'#1D9E75', display:'inline-block' }} />, label: 'With us' },
+          { el: <span style={{ width:8, height:8, borderRadius:'50%', background:'var(--sub2)', display:'inline-block' }} />, label: 'Beyond' },
+          { el: <span style={{ width:8, height:8, borderRadius:'50%', background:'oklch(0.60 0.15 270)', display:'inline-block' }} />, label: 'Anonymous' },
+          { el: <span style={{ background:'var(--sub2)', color:'var(--paper)', fontSize:8, padding:'1px 5px', fontFamily:'var(--mono)', fontWeight:500 }}>LEGACY</span>, label: 'Channeling frequencies' },
+          { el: <span style={{ background:'var(--accent)', color:'#fff', fontSize:8, padding:'1px 5px', fontFamily:'var(--mono)', fontWeight:500 }}>ORIGIN</span>, label: 'Named the field' },
+        ].map(({ el, label }) => (
+          <div key={label} className="mono" style={{ display:'flex', alignItems:'center', gap:6, fontSize:10, color:'var(--sub)' }}>
+            {el} {label}
+          </div>
+        ))}
+      </div>
+
+      {/* Chapter sections */}
+      <div style={{ padding: mob ? '0 0 40px' : '0 0 40px' }}>
+        {CAST.map(ch => (
+          <div key={ch.n} style={{ borderBottom: '1px solid var(--rule)' }}>
+            {/* Chapter header */}
+            <div className="mono" style={{
+              padding: mob ? '8px 16px' : '8px 24px',
+              fontSize: 10, color: 'var(--sub)',
+              display: 'flex', justifyContent: 'space-between',
+              borderBottom: '1px solid var(--rule)',
+              background: 'var(--paper)',
+              position: 'sticky', top: 48, zIndex: 5,
+            }}>
+              <span style={{ letterSpacing: '0.04em' }}>CH.{String(ch.n).padStart(2,'0')} — {ch.t.toUpperCase()}</span>
+              <span>{ch.voices.length} VOICES</span>
+            </div>
+
+            {/* Voice rows */}
+            {ch.voices.map(v => {
+              const fb = fileBadge(v.f);
+              const tb = tagBadge(v.tg);
+              return (
+                <div key={v.i} style={{
+                  display: 'grid',
+                  gridTemplateColumns: mob
+                    ? '16px 28px 28px 1fr auto'
+                    : '16px 32px 32px 1fr 1fr auto',
+                  alignItems: 'center', gap: mob ? 8 : 12,
+                  padding: mob ? '9px 16px' : '9px 24px',
+                  borderBottom: '1px solid var(--rule)',
+                  opacity: v.f === 'missing' ? 0.65 : 1,
+                }}>
+                  {/* Status dot */}
+                  <span style={{ width:8, height:8, borderRadius:'50%', background: statusDot(v.s), display:'inline-block', flexShrink:0 }} />
+                  {/* Number */}
+                  <span className="mono" style={{ fontSize:10, color:'var(--sub2)' }}>{v.i}</span>
+                  {/* Tier */}
+                  <span style={{
+                    fontSize:9, fontFamily:'"JetBrains Mono",ui-monospace,monospace',
+                    fontWeight:500, padding:'1px 4px',
+                    background: tierBg(v.tri), color: tierInk(v.tri),
+                  }}>{v.tri}</span>
+                  {/* Name + legacy badge */}
+                  <div style={{ display:'flex', alignItems:'center', gap:6, minWidth:0 }}>
+                    <span style={{ fontSize: mob ? 13 : 14, fontWeight:500, letterSpacing:'-0.01em',
+                      overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{v.nm}</span>
+                    {tb && (
+                      <span className="mono" style={{ fontSize:8, padding:'1px 5px', fontWeight:500,
+                        background:tb.bg, color:tb.ink, flexShrink:0 }}>{tb.label}</span>
+                    )}
+                  </div>
+                  {/* Role — desktop only */}
+                  {!mob && (
+                    <span className="mono" style={{ fontSize:11, color:'var(--sub)',
+                      overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{v.r}</span>
+                  )}
+                  {/* File badge */}
+                  {fb && (
+                    <span className="mono" style={{ fontSize:8, padding:'2px 6px', fontWeight:500,
+                      background:fb.bg, color:fb.ink, whiteSpace:'nowrap', flexShrink:0 }}>{fb.label}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── The Table page ────────────────────────────────────
 function TablePage({ setPage, onOpenDossier }) {
   const bp = useBP();
   const mob = bp === 'mobile';
-  const [layout, setLayout] = React.useState('w27');
+  const layout = bp === 'desktop' ? 'w27' : 'sq9';
   const [view, setView] = React.useState('graph'); // 'table' | 'graph' | 'mo'
   const [hover, setHover] = React.useState(null);
   const [selected, setSelected] = React.useState(null);
@@ -434,15 +779,12 @@ function TablePage({ setPage, onOpenDossier }) {
   const showN = hover || selected;
   const shown = showN ? window.INTERVIEWS[showN - 1] : null;
 
-  // Only show 27×3 (default) and 9×9
-  const visibleLayouts = Object.entries(window.LAYOUTS).filter(([k]) => k === 'w27' || k === 'sq9');
-
   return (
     <div>
       <div style={{ padding: mob ? '12px 16px 32px' : '20px 24px 48px' }}>
         {/* Header: title left, view toggle right */}
         <div style={{ display: 'flex', justifyContent: 'space-between',
-          alignItems: mob ? 'flex-start' : 'flex-start', flexDirection: mob ? 'column' : 'row',
+          alignItems: 'flex-start', flexDirection: mob ? 'column' : 'row',
           gap: mob ? 12 : 0, marginBottom: 20 }}>
           <div>
             <Label style={{ paddingTop: 0 }}>02 · The 81</Label>
@@ -451,32 +793,16 @@ function TablePage({ setPage, onOpenDossier }) {
               Eighty-one voices,<br/>three tiers, nine chapters.
             </h2>
           </div>
-          {/* View toggle + submenu stacked on the right */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
-            <div style={{ display: 'flex', gap: 0, border: '1px solid var(--ink)' }}>
-              {[['table','ELEMENTS'],['graph','GRAPH'],['mo','M.O.']].map(([k,l]) => (
-                <button key={k} onClick={() => setView(k)} className="mono" style={{
-                  background: view === k ? 'var(--ink)' : 'var(--paper)',
-                  color: view === k ? 'var(--paper)' : 'var(--ink)',
-                  border: 'none',
-                  borderRight: k !== 'mo' ? '1px solid var(--ink)' : 'none',
-                  padding: '7px 12px', cursor: 'pointer', fontSize: 11,
-                }}>{l}</button>
-              ))}
-            </div>
-            {/* Layout submenu — only when ELEMENTS is active */}
-            {view === 'table' && (
-              <div style={{ display: 'flex', gap: 0, border: '1px solid var(--rule)' }}>
-                {visibleLayouts.map(([k, L], i) => (
-                  <button key={k} onClick={() => setLayout(k)} className="mono" style={{
-                    background: layout === k ? 'var(--ink)' : 'transparent',
-                    color: layout === k ? 'var(--paper)' : 'var(--ink)',
-                    border: 'none', borderRight: i < visibleLayouts.length - 1 ? '1px solid var(--rule)' : 'none',
-                    padding: '5px 10px', cursor: 'pointer', fontSize: 10,
-                  }}>{L.label}</button>
-                ))}
-              </div>
-            )}
+          <div style={{ display: 'flex', gap: 0, border: '1px solid var(--ink)' }}>
+            {[['table','ELEMENTS'],['graph','GRAPH'],['mo','M.O.'],['cast','CAST']].map(([k,l]) => (
+              <button key={k} onClick={() => setView(k)} className="mono" style={{
+                background: view === k ? 'var(--ink)' : 'var(--paper)',
+                color: view === k ? 'var(--paper)' : 'var(--ink)',
+                border: 'none',
+                borderRight: k !== 'cast' ? '1px solid var(--ink)' : 'none',
+                padding: '7px 12px', cursor: 'pointer', fontSize: 11,
+              }}>{l}</button>
+            ))}
           </div>
         </div>
 
@@ -518,8 +844,10 @@ function TablePage({ setPage, onOpenDossier }) {
           </>
         ) : view === 'graph' ? (
           <GraphView onOpenDossier={onOpenDossier} />
-        ) : (
+        ) : view === 'mo' ? (
           <MOTable onOpenDossier={onOpenDossier} />
+        ) : (
+          <CastView />
         )}
       </div>
     </div>
@@ -531,11 +859,13 @@ function TablePage({ setPage, onOpenDossier }) {
 // the same chapter teaser. Click nodes to build a multi-selection; sidebar
 // shows the union of connections. Open profile from sidebar only.
 function GraphView({ onOpenDossier }) {
+  const mob = useBP() === 'mobile';
   const canvasRef    = React.useRef(null);
   const simRef       = React.useRef(null);
   const rafRef       = React.useRef(null);
   const containerRef = React.useRef(null);
   const frameRef     = React.useRef(0);
+  const simReadyRef  = React.useRef(false);
 
   // Refs read every frame — mutating these does NOT restart the loop
   const pinnedRef  = React.useRef(new Set()); // selected node numbers
@@ -597,30 +927,29 @@ function GraphView({ onOpenDossier }) {
   const adjRef    = React.useRef(adjMap);
   React.useEffect(() => { edgesRef.current = edges; adjRef.current = adjMap; }, [edges, adjMap]);
 
-  // Init sim — runs once. Each node gets a unique drift phase for lava-lamp motion.
-  React.useEffect(() => {
-    const { w, h } = dimsRef.current;
-    const nodes = window.INTERVIEWS.map((v, i) => ({
-      n: v.n, v,
-      x: w/2 + (Math.random()-0.5)*w*0.55,
-      y: h/2 + (Math.random()-0.5)*h*0.45,
-      vx: 0, vy: 0,
-      phase: (i / 81) * Math.PI * 2,   // unique lava-lamp phase
-    }));
-    const posById = {};
-    nodes.forEach(n => { posById[n.n] = n; });
-    simRef.current = { nodes, posById };
-    frameRef.current = 0;
-  }, []); // intentionally once
-
-  // Resize observer — updates dimsRef + state, rescales canvas without re-init
+  // Resize observer — on first fire, seeds the sim with real dimensions.
+  // Subsequent fires just rescale the canvas without re-seeding.
   React.useEffect(() => {
     if (!containerRef.current) return;
     const ro = new ResizeObserver(entries => {
       const { width } = entries[0].contentRect;
-      const h = Math.round(width * 0.58);
+      const h = Math.round(width * 0.7);
       dimsRef.current = { w: width, h };
       setDims({ w: width, h });
+      if (!simReadyRef.current) {
+        simReadyRef.current = true;
+        const nodes = window.INTERVIEWS.map((v, i) => ({
+          n: v.n, v,
+          x: width/2 + (Math.random()-0.5)*width*0.55,
+          y: h/2     + (Math.random()-0.5)*h*0.45,
+          vx: 0, vy: 0,
+          phase: (i / 81) * Math.PI * 2,
+        }));
+        const posById = {};
+        nodes.forEach(n => { posById[n.n] = n; });
+        simRef.current = { nodes, posById };
+        frameRef.current = 0;
+      }
     });
     ro.observe(containerRef.current);
     return () => ro.disconnect();
@@ -701,7 +1030,7 @@ function GraphView({ onOpenDossier }) {
         const spd = Math.sqrt(n.vx*n.vx + n.vy*n.vy);
         if (spd > 12) { n.vx *= 12/spd; n.vy *= 12/spd; }
         n.x  = Math.max(R+8, Math.min(w-R-8, n.x + n.vx));
-        n.y  = Math.max(R+8, Math.min(h-R-8, n.y + n.vy));
+        n.y  = Math.max(R+8, Math.min(h-R-26, n.y + n.vy));
       });
 
       // ── Draw ──────────────────────────────────────────
@@ -821,6 +1150,13 @@ function GraphView({ onOpenDossier }) {
     if (canvas) canvas.style.cursor = hit ? 'pointer' : 'default';
   }, []);
 
+  const handleTouch = React.useCallback((e, type) => {
+    const touch = e.touches[0] || e.changedTouches[0];
+    if (!touch) return;
+    e.preventDefault();
+    handleMouse({ clientX: touch.clientX, clientY: touch.clientY }, type === 'end');
+  }, [handleMouse]);
+
   // Sidebar data
   const pinnedVoices = [...pinnedSet].map(n => window.INTERVIEWS[n-1]).filter(Boolean);
   const connectedNs  = new Set();
@@ -853,19 +1189,21 @@ function GraphView({ onOpenDossier }) {
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', border: '1px solid var(--rule)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mob ? '1fr' : '1fr 280px', border: '1px solid var(--rule)' }}>
         {/* Canvas */}
-        <div ref={containerRef} style={{ background: 'var(--bg)', position: 'relative', borderRight: '1px solid var(--rule)' }}>
+        <div ref={containerRef} style={{ background: 'var(--bg)', position: 'relative', borderRight: mob ? 'none' : '1px solid var(--rule)', borderBottom: mob ? '1px solid var(--rule)' : 'none' }}>
           <canvas ref={canvasRef} width={dims.w} height={dims.h}
-            style={{ width: '100%', height: 'auto', display: 'block' }}
+            style={{ width: '100%', height: 'auto', display: 'block', touchAction: 'none' }}
             onMouseMove={e => handleMouse(e, false)}
             onMouseLeave={() => { hoveredRef.current = null; setHoveredN(null); }}
-            onClick={e => handleMouse(e, true)} />
+            onClick={e => handleMouse(e, true)}
+            onTouchMove={e => handleTouch(e, 'move')}
+            onTouchEnd={e => handleTouch(e, 'end')} />
         </div>
 
         {/* Right panel */}
         <div style={{ background: 'var(--paper)', display: 'flex', flexDirection: 'column',
-          minHeight: 400, overflow: 'hidden' }}>
+          minHeight: mob ? 0 : 400, overflow: 'hidden' }}>
 
           {/* Selected section */}
           <div style={{ borderBottom: '1px solid var(--rule)', padding: '14px 16px' }}>
@@ -976,6 +1314,7 @@ function GraphView({ onOpenDossier }) {
 // ─── Table of M.O. ────────────────────────────────────
 // 26 classifiers × voice slots. Toggle: ALL CLASSIFIERS / PRIME PAIRS.
 function MOTable({ onOpenDossier }) {
+  const mob = useBP() === 'mobile';
   const [mode, setMode] = React.useState('all');   // 'all' | 'prime'
   const [expandedC, setExpanded] = React.useState(null);
 
@@ -1014,7 +1353,10 @@ function MOTable({ onOpenDossier }) {
       {/* Header bar */}
       <div style={{
         display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', padding: '14px 0', marginBottom: 16,
+        alignItems: mob ? 'flex-start' : 'center',
+        flexDirection: mob ? 'column' : 'row',
+        gap: mob ? 10 : 0,
+        padding: '14px 0', marginBottom: 16,
         borderBottom: '1px solid var(--ink)',
       }}>
         <div>
@@ -1023,12 +1365,12 @@ function MOTable({ onOpenDossier }) {
             TABLE OF M.O.
           </span>
           <span className="mono" style={{ fontSize: 10, color: 'var(--sub)',
-            marginLeft: 16 }}>
-            {classifiers.length} CLASSIFIERS · {totalSlots} OPERATIVE SLOTS
+            marginLeft: mob ? 10 : 16 }}>
+            {classifiers.length} CL · {totalSlots} SLOTS
           </span>
         </div>
         <div style={{ display: 'flex', gap: 0, border: '1px solid var(--ink)' }}>
-          {[['all', 'ALL CLASSIFIERS'], ['prime', 'PRIME PAIRS']].map(([k, l]) => (
+          {[['all', mob ? 'ALL' : 'ALL CLASSIFIERS'], ['prime', mob ? 'PRIME' : 'PRIME PAIRS']].map(([k, l]) => (
             <button key={k} onClick={() => setMode(k)} className="mono" style={{
               background: mode === k ? 'var(--ink)' : 'transparent',
               color: mode === k ? 'var(--paper)' : 'var(--ink)',
@@ -1049,49 +1391,80 @@ function MOTable({ onOpenDossier }) {
               <div key={name} style={{ borderBottom: '1px solid var(--rule)' }}>
                 <div
                   onClick={() => setExpanded(isOpen ? null : name)}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '20px 1fr auto auto',
-                    gap: 16, padding: '12px 0', alignItems: 'center',
-                    cursor: 'pointer',
-                  }}
+                  style={{ padding: mob ? '10px 0' : '12px 0', cursor: 'pointer' }}
                 >
-                  <span className="mono" style={{ fontSize: 9,
-                    color: 'var(--sub2)' }}>—</span>
-                  <span style={{ fontSize: 14, letterSpacing: '-0.01em',
-                    fontWeight: isOpen ? 500 : 400 }}>{name}</span>
-                  {/* Voice number tags */}
-                  <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap',
-                    justifyContent: 'flex-end', maxWidth: 400 }}>
-                    {ns.slice(0, 8).map(n => {
-                      const iv = window.INTERVIEWS[n - 1];
-                      return (
-                        <button key={n}
-                          onClick={e => { e.stopPropagation(); onOpenDossier && onOpenDossier(n); }}
-                          className="mono" style={{
-                            background: 'none',
-                            border: `1px solid var(${iv.group.ink})`,
-                            color: `var(${iv.group.ink})`,
-                            padding: '2px 5px', fontSize: 9, cursor: 'pointer',
-                            letterSpacing: '-0.005em', whiteSpace: 'nowrap',
-                          }}>
-                          {String(n).padStart(2,'0')}·{iv.tier}
-                        </button>
-                      );
-                    })}
-                    {ns.length > 8 && (
+                  {mob ? (
+                    /* Mobile: left col (name + chips), badge vertically centred on right */
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <span style={{ fontSize: 14, letterSpacing: '-0.01em',
+                          fontWeight: isOpen ? 500 : 400, lineHeight: 1.2,
+                          display: 'block', marginBottom: 7 }}>{name}</span>
+                        <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                          {ns.map(n => {
+                            const iv = window.INTERVIEWS[n - 1];
+                            return (
+                              <button key={n}
+                                onClick={e => { e.stopPropagation(); onOpenDossier && onOpenDossier(n); }}
+                                className="mono" style={{
+                                  background: 'none',
+                                  border: `1px solid var(${iv.group.ink})`,
+                                  color: `var(${iv.group.ink})`,
+                                  padding: '2px 5px', fontSize: 9, cursor: 'pointer',
+                                  letterSpacing: '-0.005em', whiteSpace: 'nowrap',
+                                }}>
+                                {String(n).padStart(2,'0')}·{iv.tier}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                       <span className="mono" style={{
-                        fontSize: 9, color: 'var(--paper)',
-                        background: 'var(--accent)', padding: '2px 6px',
-                        fontWeight: 600,
-                      }}>+{ns.length - 8}</span>
-                    )}
-                  </div>
-                  <span className="mono" style={{
-                    fontSize: 11, color: 'var(--paper)',
-                    background: count >= 8 ? 'var(--accent)' : 'var(--sub)',
-                    padding: '3px 8px', minWidth: 28, textAlign: 'center',
-                  }}>+{count}</span>
+                        fontSize: 11, color: 'var(--paper)', flexShrink: 0,
+                        background: count >= 8 ? 'var(--accent)' : 'var(--sub)',
+                        padding: '3px 8px', minWidth: 28, textAlign: 'center',
+                      }}>+{count}</span>
+                    </div>
+                  ) : (
+                    <div style={{
+                      display: 'grid', gridTemplateColumns: '20px 1fr auto auto',
+                      gap: 16, alignItems: 'center',
+                    }}>
+                      <span className="mono" style={{ fontSize: 9, color: 'var(--sub2)' }}>—</span>
+                      <span style={{ fontSize: 14, letterSpacing: '-0.01em',
+                        fontWeight: isOpen ? 500 : 400 }}>{name}</span>
+                      <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap',
+                        justifyContent: 'flex-end', maxWidth: 400 }}>
+                        {ns.slice(0, 8).map(n => {
+                          const iv = window.INTERVIEWS[n - 1];
+                          return (
+                            <button key={n}
+                              onClick={e => { e.stopPropagation(); onOpenDossier && onOpenDossier(n); }}
+                              className="mono" style={{
+                                background: 'none',
+                                border: `1px solid var(${iv.group.ink})`,
+                                color: `var(${iv.group.ink})`,
+                                padding: '2px 5px', fontSize: 9, cursor: 'pointer',
+                                letterSpacing: '-0.005em', whiteSpace: 'nowrap',
+                              }}>
+                              {String(n).padStart(2,'0')}·{iv.tier}
+                            </button>
+                          );
+                        })}
+                        {ns.length > 8 && (
+                          <span className="mono" style={{
+                            fontSize: 9, color: 'var(--paper)',
+                            background: 'var(--accent)', padding: '2px 6px', fontWeight: 600,
+                          }}>+{ns.length - 8}</span>
+                        )}
+                      </div>
+                      <span className="mono" style={{
+                        fontSize: 11, color: 'var(--paper)',
+                        background: count >= 8 ? 'var(--accent)' : 'var(--sub)',
+                        padding: '3px 8px', minWidth: 28, textAlign: 'center',
+                      }}>+{count}</span>
+                    </div>
+                  )}
                 </div>
                 {/* Expanded: show all voices with names */}
                 {isOpen && (
@@ -1162,49 +1535,51 @@ function MOTable({ onOpenDossier }) {
               const b = window.INTERVIEWS[p.b - 1];
               return (
                 <div key={i} style={{
-                  display: 'grid', gridTemplateColumns: '32px 1fr auto 1fr auto',
-                  gap: 12, padding: '12px 0',
+                  display: 'grid', gridTemplateColumns: mob ? '1fr auto 1fr' : '32px 1fr auto 1fr auto',
+                  gap: mob ? 8 : 12, padding: '12px 0',
                   borderBottom: '1px solid var(--rule)',
                   alignItems: 'center',
                 }}>
-                  <span className="mono" style={{ fontSize: 10,
-                    color: 'var(--sub2)' }}>{String(i + 1).padStart(2,'0')}</span>
+                  {!mob && <span className="mono" style={{ fontSize: 10,
+                    color: 'var(--sub2)' }}>{String(i + 1).padStart(2,'0')}</span>}
                   <button onClick={() => onOpenDossier && onOpenDossier(p.a)}
                     style={{ background: `var(${a.group.varCSS})`,
                       border: `1px solid var(${a.group.ink})`,
-                      padding: '8px 12px', cursor: 'pointer',
-                      textAlign: 'left', fontFamily: 'inherit' }}>
+                      padding: mob ? '6px 8px' : '8px 12px', cursor: 'pointer',
+                      textAlign: 'left', fontFamily: 'inherit', minWidth: 0 }}>
                     <div className="mono" style={{ fontSize: 9,
                       color: `var(${a.group.ink})` }}>
                       {String(p.a).padStart(2,'0')}·{a.tier}
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 500,
-                      letterSpacing: '-0.01em', marginTop: 2 }}>{a.name}</div>
-                    <div className="mono" style={{ fontSize: 9,
-                      color: 'var(--sub)', marginTop: 2 }}>{a.affiliation}</div>
+                    <div style={{ fontSize: mob ? 11 : 13, fontWeight: 500,
+                      letterSpacing: '-0.01em', marginTop: 2,
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.name}</div>
+                    {!mob && <div className="mono" style={{ fontSize: 9,
+                      color: 'var(--sub)', marginTop: 2 }}>{a.affiliation}</div>}
                   </button>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 18, color: 'var(--accent)' }}>⟷</div>
+                  <div style={{ textAlign: 'center', flexShrink: 0 }}>
+                    <div style={{ fontSize: mob ? 14 : 18, color: 'var(--accent)' }}>⟷</div>
                     <div className="mono" style={{ fontSize: 9,
                       color: 'var(--accent)', marginTop: 2 }}>
-                      {p.shared.length} shared
+                      {p.shared.length}
                     </div>
                   </div>
                   <button onClick={() => onOpenDossier && onOpenDossier(p.b)}
                     style={{ background: `var(${b.group.varCSS})`,
                       border: `1px solid var(${b.group.ink})`,
-                      padding: '8px 12px', cursor: 'pointer',
-                      textAlign: 'left', fontFamily: 'inherit' }}>
+                      padding: mob ? '6px 8px' : '8px 12px', cursor: 'pointer',
+                      textAlign: 'left', fontFamily: 'inherit', minWidth: 0 }}>
                     <div className="mono" style={{ fontSize: 9,
                       color: `var(${b.group.ink})` }}>
                       {String(p.b).padStart(2,'0')}·{b.tier}
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 500,
-                      letterSpacing: '-0.01em', marginTop: 2 }}>{b.name}</div>
-                    <div className="mono" style={{ fontSize: 9,
-                      color: 'var(--sub)', marginTop: 2 }}>{b.affiliation}</div>
+                    <div style={{ fontSize: mob ? 11 : 13, fontWeight: 500,
+                      letterSpacing: '-0.01em', marginTop: 2,
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.name}</div>
+                    {!mob && <div className="mono" style={{ fontSize: 9,
+                      color: 'var(--sub)', marginTop: 2 }}>{b.affiliation}</div>}
                   </button>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4,
+                  {!mob && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4,
                     maxWidth: 200, justifyContent: 'flex-end' }}>
                     {p.shared.slice(0, 3).map((c, ci) => (
                       <span key={ci} className="mono" style={{
@@ -1217,7 +1592,7 @@ function MOTable({ onOpenDossier }) {
                       <span className="mono" style={{ fontSize: 8,
                         color: 'var(--accent)' }}>+{p.shared.length - 3}</span>
                     )}
-                  </div>
+                  </div>}
                 </div>
               );
             })}
@@ -1229,18 +1604,17 @@ function MOTable({ onOpenDossier }) {
 }
 
 function EmptyStrip() {
+  const mob = useBP() === 'mobile';
   return (
     <div style={{ display: 'grid',
-      gridTemplateColumns: '200px 1fr auto', gap: 20, alignItems: 'center',
-      width: '100%', padding: '16px 20px' }}>
-      <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
-        letterSpacing: '-0.005em' }}>HOVER TO PREVIEW</div>
-      <div style={{ fontSize: 14, color: 'var(--sub)', lineHeight: 1.4 }}>
-        Each cell is one of the eighty-one interviews. Colour marks the
-        tier — blue for academics, terracotta for practitioners, sage for
-        visionaries. Columns are the nine chapters.
+      gridTemplateColumns: mob ? '1fr auto' : '200px 1fr auto', gap: mob ? 12 : 20, alignItems: 'center',
+      width: '100%', padding: mob ? '12px 16px' : '16px 20px' }}>
+      {!mob && <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
+        letterSpacing: '-0.005em' }}>HOVER TO PREVIEW</div>}
+      <div style={{ fontSize: 13, color: 'var(--sub)', lineHeight: 1.4 }}>
+        {mob ? 'Tap any cell to open a dossier.' : 'Each cell is one of the eighty-one interviews. Colour marks the tier — blue for academics, terracotta for practitioners, sage for visionaries.'}
       </div>
-      <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)' }}>
+      <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)', flexShrink: 0 }}>
         81 · 09 · 03
       </div>
     </div>
@@ -1295,6 +1669,7 @@ function VoiceStrip({ v }) {
 }
 
 function HorizontalLegend({ active, setActive }) {
+  const mob = useBP() === 'mobile';
   return (
     <div style={{
       display: 'grid',
@@ -1309,28 +1684,29 @@ function HorizontalLegend({ active, setActive }) {
           <button key={g.id}
             onMouseEnter={() => setActive(g.id)}
             onMouseLeave={() => setActive(null)}
+            onClick={() => setActive(isActive ? null : g.id)}
             style={{
               background: isActive ? `var(${g.varCSS})` : 'var(--paper)',
               borderRight: i < window.GROUPS.length - 1 ? '1px solid var(--rule)' : 'none',
               borderTop: `4px solid var(${g.varCSS})`,
               borderBottom: 'none', borderLeft: 'none',
-              padding: '14px 18px 12px', cursor: 'pointer', textAlign: 'left',
+              padding: mob ? '10px 10px 8px' : '14px 18px 12px', cursor: 'pointer', textAlign: 'left',
               fontFamily: 'inherit', display: 'flex', flexDirection: 'column',
-              gap: 6, transition: 'background .15s', minWidth: 0,
+              gap: mob ? 4 : 6, transition: 'background .15s', minWidth: 0,
             }}>
-            <div className="mono" style={{ fontSize: 11,
+            <div className="mono" style={{ fontSize: mob ? 9 : 11,
               color: `var(${g.ink})`, letterSpacing: '-0.005em',
               display: 'flex', justifyContent: 'space-between' }}>
               <span>Tier {g.key}</span>
-              <span style={{ color: 'var(--sub)' }}>{String(count).padStart(2, '0')} voices</span>
+              <span style={{ color: 'var(--sub)' }}>{String(count).padStart(2, '0')}</span>
             </div>
-            <div style={{ fontSize: 18, letterSpacing: '-0.015em',
+            <div style={{ fontSize: mob ? 14 : 18, letterSpacing: '-0.015em',
               color: 'var(--ink)', fontWeight: 500 }}>
               {g.name}
             </div>
-            <div style={{ fontSize: 12, color: 'var(--sub)', lineHeight: 1.4 }}>
+            {!mob && <div style={{ fontSize: 12, color: 'var(--sub)', lineHeight: 1.4 }}>
               {g.blurb}
-            </div>
+            </div>}
           </button>
         );
       })}
@@ -1366,7 +1742,7 @@ function VoiceCard({ v }) {
 // ─── Read (v2) ─────────────────────────────────────────
 // Two-column with live section rail, running page number, inline footnotes,
 // marginal citations pulling from the 81.
-function Read() {
+function Read({ onOpenReader }) {
   const bp = useBP();
   const mob = bp === 'mobile';
   const tab = bp === 'tablet';
@@ -1406,6 +1782,25 @@ function Read() {
           textAlign: 'right' }}>
           pp. {pageBase}–{pageBase + 27}
         </div>
+      </div>
+
+      {/* Manuscript thesis band */}
+      <div style={{
+        padding: mob ? '28px 16px' : '36px 48px',
+        background: 'var(--ink)', color: 'var(--paper)',
+        borderBottom: '1px solid var(--rule)',
+      }}>
+        <p style={{
+          margin: 0,
+          fontSize: mob ? 'clamp(22px, 6vw, 30px)' : 'clamp(28px, 3vw, 42px)',
+          lineHeight: 1.1, letterSpacing: '-0.03em', fontWeight: 500,
+        }}>
+          The universe runs on three.
+          <br />
+          <span style={{ fontWeight: 400, color: 'var(--sub)' }}>
+            You've been working with two.
+          </span>
+        </p>
       </div>
 
       {/* Mobile chapter picker */}
@@ -1503,36 +1898,135 @@ function Read() {
 
           <div style={{ borderTop: '1px solid var(--ink)', paddingTop: 28 }}>
             <ChapterTeaser chapter={s.n} cited={cited[0]}
-              openNote={openNote} setOpenNote={setOpenNote} />
+              openNote={openNote} setOpenNote={setOpenNote}
+              onOpenReader={onOpenReader} />
           </div>
           </div>
 
-          {/* Paginator */}
-          <div style={{ marginTop: 48, display: 'flex',
-            justifyContent: 'space-between', borderTop: '1px solid var(--rule)',
-            paddingTop: 16 }}>
-            <button onClick={() => setActive(Math.max(0, active - 1))}
-              disabled={active === 0}
-              className="mono" style={{
-              border: '1px solid var(--ink)', background: 'var(--paper)',
-              padding: '8px 12px', fontSize: 11,
-              cursor: active === 0 ? 'default' : 'pointer',
-              opacity: active === 0 ? 0.3 : 1,
-            }}>← §{window.SECTIONS[Math.max(0, active - 1)].n} {window.SECTIONS[Math.max(0, active - 1)].title}</button>
-            <button onClick={() => setActive(Math.min(window.SECTIONS.length - 1, active + 1))}
-              disabled={active === window.SECTIONS.length - 1}
-              className="mono" style={{
-              border: '1px solid var(--ink)', background: 'var(--ink)',
-              color: 'var(--paper)', padding: '8px 12px', fontSize: 11,
-              cursor: active === window.SECTIONS.length - 1 ? 'default' : 'pointer',
-              opacity: active === window.SECTIONS.length - 1 ? 0.3 : 1,
-            }}>§{window.SECTIONS[Math.min(window.SECTIONS.length - 1, active + 1)].n} {window.SECTIONS[Math.min(window.SECTIONS.length - 1, active + 1)].title} →</button>
-          </div>
         </article>
 
         {/* RIGHT RAIL — collapsible drawer */}
         <ReaderDrawer chapter={s.n} cited={cited} />
       </div>
+
+      {/* ── Full-width synthesis band ── */}
+      {(() => {
+        const prev = active > 0 ? window.SECTIONS[active - 1] : null;
+        const next = active < window.SECTIONS.length - 1 ? window.SECTIONS[active + 1] : null;
+        const interviewCount = window.INTERVIEWS.filter(v => v.ch === s.n).length;
+        return (
+          <>
+            {/* Dark synthesis block */}
+            <div style={{
+              padding: mob ? '32px 20px' : '56px 64px',
+              background: 'var(--ink)', color: 'var(--paper)',
+            }}>
+              <div className="mono" style={{ fontSize: 10, color: 'var(--accent)',
+                letterSpacing: '0.08em', marginBottom: 20 }}>
+                THE SYNTHESIS
+              </div>
+              <p style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                fontSize: mob ? 22 : 30, lineHeight: 1.3,
+                letterSpacing: '-0.02em', margin: '0 0 36px',
+                fontStyle: 'italic', maxWidth: '32ch',
+              }}>
+                "Binary logic was always an approximation. Reality coordinates."
+              </p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                <a href="Contribute.html" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                  background: 'var(--accent)', color: '#fff',
+                  padding: mob ? '11px 16px' : '13px 20px', textDecoration: 'none',
+                  fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                  fontSize: 11, letterSpacing: '0.04em',
+                }}>→ READ FULL CHAPTER</a>
+                <button onClick={() => onOpenReader && onOpenReader(s.n)} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: 'none', color: 'var(--paper)',
+                  padding: mob ? '11px 14px' : '13px 16px', cursor: 'pointer',
+                  fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                  fontSize: 11, border: '1px solid rgba(240,240,234,0.25)',
+                  letterSpacing: '0.02em',
+                }}>↗ {interviewCount} INTERVIEWS</button>
+                <a href="Contribute.html" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: 'none', color: 'var(--paper)', textDecoration: 'none',
+                  padding: mob ? '11px 14px' : '13px 16px',
+                  fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                  fontSize: 11, border: '1px solid rgba(240,240,234,0.25)',
+                  letterSpacing: '0.02em',
+                }}>↗ CONTRIBUTE</a>
+              </div>
+            </div>
+
+            {/* Prev / Next chapter navigation */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: prev && next ? '1fr 1fr' : '1fr',
+              borderBottom: '1px solid var(--rule)',
+            }}>
+              {prev && (
+                <button onClick={() => { setActive(active - 1); window.scrollTo({ top: 0 }); }}
+                  style={{
+                    background: 'none', border: 'none',
+                    borderRight: next ? '1px solid var(--rule)' : 'none',
+                    borderTop: '1px solid var(--rule)',
+                    padding: mob ? 20 : 32, cursor: 'pointer',
+                    textAlign: 'left', fontFamily: 'inherit',
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-soft)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'none'}
+                >
+                  <div className="mono" style={{ fontSize: 9, color: 'var(--sub2)',
+                    letterSpacing: '0.06em', marginBottom: 12 }}>← PREVIOUS CHAPTER</div>
+                  <div className="mono" style={{ fontSize: 10, color: 'var(--accent)',
+                    marginBottom: 8 }}>CH. {prev.n}</div>
+                  <div style={{ fontSize: mob ? 18 : 22, fontWeight: 400,
+                    letterSpacing: '-0.025em', lineHeight: 1.2,
+                    fontStyle: 'italic', color: 'var(--ink)' }}>{prev.title}</div>
+                </button>
+              )}
+              {next && (
+                <button onClick={() => { setActive(active + 1); window.scrollTo({ top: 0 }); }}
+                  style={{
+                    background: 'none', border: 'none',
+                    borderTop: '1px solid var(--rule)',
+                    padding: mob ? 20 : 32, cursor: 'pointer',
+                    textAlign: 'right', fontFamily: 'inherit',
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-soft)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'none'}
+                >
+                  <div className="mono" style={{ fontSize: 9, color: 'var(--sub2)',
+                    letterSpacing: '0.06em', marginBottom: 12 }}>NEXT CHAPTER →</div>
+                  <div className="mono" style={{ fontSize: 10, color: 'var(--accent)',
+                    marginBottom: 8 }}>CH. {next.n}</div>
+                  <div style={{ fontSize: mob ? 18 : 22, fontWeight: 400,
+                    letterSpacing: '-0.025em', lineHeight: 1.2,
+                    fontStyle: 'italic', color: 'var(--ink)' }}>{next.title}</div>
+                </button>
+              )}
+            </div>
+
+            {/* Chapter footer */}
+            <div style={{
+              padding: mob ? '12px 20px' : '14px 32px',
+              borderBottom: '1px solid var(--rule)',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            }}>
+              <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="mono" style={{ background: 'none', border: 'none',
+                cursor: 'pointer', fontSize: 10, color: 'var(--sub2)',
+                letterSpacing: '0.04em', padding: 0 }}>← RETURN TO TOP</button>
+              <span className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
+                letterSpacing: '0.04em' }}>END OF CHAPTER · CH{s.n}</span>
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }
@@ -1540,7 +2034,7 @@ function Read() {
 // Chapter teaser — editorial style drawn from the reference designs.
 // Ghost chapter number · serif italic pull quote · "coordinates" dark section
 // · three-tier voice columns · closing quote · CTA.
-function ChapterTeaser({ chapter, cited, openNote, setOpenNote }) {
+function ChapterTeaser({ chapter, cited, openNote, setOpenNote, onOpenReader }) {
   const mob = useBP() === 'mobile';
   const t = (window.TEASERS && window.TEASERS[chapter]) || null;
   if (!t) {
@@ -1642,7 +2136,7 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote }) {
             letterSpacing: '0.04em', marginBottom: 20 }}>
             THREE TRIADS · THREE PERSPECTIVES
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          <div style={{ display: 'grid', gridTemplateColumns: mob ? '1fr' : 'repeat(3, 1fr)',
             gap: 0, borderTop: '1px solid var(--rule)' }}>
             {[
               { tier: 'A', label: 'ACADEMIC',     items: tierA },
@@ -1650,9 +2144,11 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote }) {
               { tier: 'V', label: 'VISIONARY',    items: tierV },
             ].map(({ tier, label, items }, ci) => (
               <div key={tier} style={{
-                borderRight: ci < 2 ? '1px solid var(--rule)' : 'none',
-                paddingRight: ci < 2 ? 20 : 0,
-                paddingLeft: ci > 0 ? 20 : 0,
+                borderRight: mob ? 'none' : (ci < 2 ? '1px solid var(--rule)' : 'none'),
+                borderTop: mob && ci > 0 ? '1px solid var(--rule)' : 'none',
+                paddingRight: mob ? 0 : (ci < 2 ? 20 : 0),
+                paddingLeft: mob ? 0 : (ci > 0 ? 20 : 0),
+                paddingTop: mob && ci > 0 ? 20 : 0,
               }}>
                 <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
                   borderBottom: '1px solid var(--rule)', paddingBottom: 8,
@@ -1692,52 +2188,6 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote }) {
         </section>
       )}
 
-      {/* ── Closing CTA ── */}
-      <div style={{ marginTop: 40, borderTop: '1px solid var(--ink)',
-        paddingTop: 28 }}>
-        <p style={{
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-          fontSize: 26, lineHeight: 1.3,
-          letterSpacing: '-0.01em', margin: '0 0 28px',
-          color: 'var(--ink)', maxWidth: '36ch',
-        }}>
-          "Binary logic was always an approximation. Reality coordinates."
-        </p>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap',
-          alignItems: 'center' }}>
-          <a href="Contribute.html" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 10,
-            background: 'var(--accent)', color: 'var(--paper)',
-            padding: '13px 20px', textDecoration: 'none',
-            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 11, letterSpacing: '0.02em', border: 'none',
-          }}>
-            → READ FULL CHAPTER
-          </a>
-          <a href="Knowware v2.html" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'none', color: 'var(--ink)',
-            padding: '13px 16px', textDecoration: 'none',
-            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 11, border: '1px solid var(--rule)',
-          }}>
-            ↗ Interviews
-          </a>
-          <a href="Contribute.html" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'none', color: 'var(--ink)',
-            padding: '13px 16px', textDecoration: 'none',
-            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 11, border: '1px solid var(--rule)',
-          }}>
-            ↗ Contribute
-          </a>
-        </div>
-        <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
-          marginTop: 14 }}>
-          TEASER ENDS · {chapter === 'X' ? '~5,000' : '~5,000–8,000'} WORDS REMAIN IN THIS CHAPTER
-        </div>
-      </div>
     </div>
   );
 }

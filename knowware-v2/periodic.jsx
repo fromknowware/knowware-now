@@ -21,6 +21,7 @@ function periodicCoords() {
 }
 
 function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highlightGroup, compact }) {
+  const mob = React.useContext(window.BreakpointContext) === 'mobile';
   const L = LAYOUTS[layoutKey];
 
   // Build cell list
@@ -29,7 +30,6 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
     const coords = periodicCoords();
     cells = coords.map(c => ({ ...c, v: window.INTERVIEWS[c.n - 1] }));
   } else if (L.mode === 'chapter') {
-    // 9 columns = chapters 01..09, rows = interviews within each chapter
     cells = [];
     window.CHAPTERS.filter(c => c.n !== 'X').forEach((ch, gi) => {
       const members = window.INTERVIEWS.filter(x => x.ch === ch.n);
@@ -45,19 +45,23 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
     }));
   }
 
-  const gap = compact ? 2 : 3;
-  const pad = compact ? 4 : 6;
+  const gap     = mob ? 2 : compact ? 2 : 3;
+  const pad     = mob ? '4px 3px 5px' : compact ? 4 : 6;
 
-  // Per-layout cell sizing — 27-col needs narrower cells
-  const minCellW = L.cols >= 20 ? 36 : L.cols >= 9 ? 68 : 100;
-  const cellH    = L.cols >= 20 ? 72 : L.cols >= 9 ? 80 : 90;
-  const minW     = L.cols * minCellW + (L.cols - 1) * gap;
+  // Mobile: cells fill viewport naturally; desktop: enforce min widths
+  const minCellW = mob ? 0 : L.cols >= 20 ? 36 : L.cols >= 9 ? 68 : 100;
+  const cellH    = mob ? 52 : L.cols >= 20 ? 72 : L.cols >= 9 ? 80 : 90;
+  const minW     = mob ? 0  : L.cols * minCellW + (L.cols - 1) * gap;
+
+  const colTemplate = mob
+    ? `repeat(${L.cols}, 1fr)`
+    : `repeat(${L.cols}, minmax(${minCellW}px, 1fr))`;
 
   return (
-    <div style={{ overflowX: 'auto', overflowY: 'visible', width: '100%' }}>
+    <div style={{ overflowX: mob ? 'hidden' : 'auto', overflowY: 'visible', width: '100%' }}>
     <div style={{
       display: 'grid',
-      gridTemplateColumns: `repeat(${L.cols}, minmax(${minCellW}px, 1fr))`,
+      gridTemplateColumns: colTemplate,
       gridTemplateRows: `repeat(${L.rows}, ${cellH}px)`,
       gap,
       minWidth: minW,
@@ -77,38 +81,56 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
               background: `var(${v.group.varCSS})`,
               color: `var(${v.group.ink})`,
               border: isSel ? '2px solid var(--ink)' : `1px solid var(${v.group.ink})`,
-              outline: isHover ? '2px solid var(--ink)' : 'none',
+              outline: isHover && !mob ? '2px solid var(--ink)' : 'none',
               outlineOffset: isHover ? 1 : 0,
               padding: pad, cursor: 'pointer',
               display: 'flex', flexDirection: 'column',
-              justifyContent: 'space-between', alignItems: 'stretch',
-              textAlign: 'left', opacity: isDim ? 0.2 : 1,
+              justifyContent: mob ? 'center' : 'space-between',
+              alignItems: mob ? 'center' : 'stretch',
+              textAlign: mob ? 'center' : 'left',
+              opacity: isDim ? 0.2 : 1,
               transition: 'opacity .2s, outline-color .1s, transform .1s',
               position: 'relative', minWidth: 0, minHeight: 0,
-              transform: isHover ? 'scale(1.04)' : 'scale(1)',
+              transform: isHover && !mob ? 'scale(1.04)' : 'scale(1)',
               zIndex: isHover ? 2 : 1,
+              gap: mob ? 2 : 0,
             }}>
-            <span className="mono" style={{
-              fontSize: compact ? 8 : 9,
-              letterSpacing: '-0.01em',
-              display: 'flex', justifyContent: 'space-between',
-              opacity: 0.8,
-            }}>
-              <span>{String(v.n).padStart(2, '0')}</span>
-              <span>{v.group.key}</span>
-            </span>
-            <span style={{
-              fontSize: compact ? 14 : L.cols >= 20 ? 16 : 22, fontWeight: 500,
-              letterSpacing: '-0.03em', lineHeight: 1,
-              alignSelf: 'center',
-            }}>{v.sym}</span>
-            <span className="mono" style={{
-              fontSize: compact ? 7 : 8,
-              letterSpacing: '-0.005em',
-              opacity: 0.75,
-              textAlign: 'center',
-              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-            }}>{v.minutes}m</span>
+            {mob ? (
+              <>
+                <span className="mono" style={{
+                  fontSize: 7, opacity: 0.65, letterSpacing: '0.02em',
+                  lineHeight: 1,
+                }}>{String(v.n).padStart(2, '0')}</span>
+                <span style={{
+                  fontSize: 17, fontWeight: 600,
+                  letterSpacing: '-0.04em', lineHeight: 1,
+                }}>{v.sym}</span>
+              </>
+            ) : (
+              <>
+                <span className="mono" style={{
+                  fontSize: compact ? 8 : 9,
+                  letterSpacing: '-0.01em',
+                  display: 'flex', justifyContent: 'space-between',
+                  opacity: 0.8,
+                }}>
+                  <span>{String(v.n).padStart(2, '0')}</span>
+                  <span>{v.group.key}</span>
+                </span>
+                <span style={{
+                  fontSize: compact ? 14 : L.cols >= 20 ? 16 : 22, fontWeight: 500,
+                  letterSpacing: '-0.03em', lineHeight: 1,
+                  alignSelf: 'center',
+                }}>{v.sym}</span>
+                <span className="mono" style={{
+                  fontSize: compact ? 7 : 8,
+                  letterSpacing: '-0.005em',
+                  opacity: 0.75,
+                  textAlign: 'center',
+                  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                }}>{v.minutes}m</span>
+              </>
+            )}
           </button>
         );
       })}
