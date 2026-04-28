@@ -2125,9 +2125,6 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote, onOpenReader }) 
         </div>
       )}
 
-      {/* ── WHAT THIS CHAPTER COORDINATES — dark causal section ── */}
-      {t.diagram && <CoordinatesSection diagram={t.diagram} />}
-
       {/* ── THREE TRIADS — voice columns ── */}
       {citeList.length > 0 && (
         <section style={{ marginTop: 0, borderTop: '1px solid var(--rule)',
@@ -2187,6 +2184,9 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote, onOpenReader }) 
           </div>
         </section>
       )}
+
+      {/* ── WHAT THIS CHAPTER COORDINATES — dark causal section ── */}
+      {t.diagram && <CoordinatesSection diagram={t.diagram} />}
 
     </div>
   );
