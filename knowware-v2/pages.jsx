@@ -715,8 +715,8 @@ function CastView() {
             <div style={{
               display: 'grid',
               gridTemplateColumns: mob
-                ? 'auto 16px 1fr auto'
-                : '8px 16px 1fr auto',
+                ? '8px 16px 1fr auto'
+                : '8px 16px 1fr 220px auto',
             }}>
               {ch.voices.map(v => {
                 const tb = tagBadge(v.tg);
@@ -728,35 +728,30 @@ function CastView() {
                 };
                 return (
                   <React.Fragment key={v.i}>
-                    {/* Tier — full-height bar on desktop, letter badge on mobile */}
-                    {mob
-                      ? <span className="mono" style={{ ...cell, fontSize:9, fontWeight:600,
-                          padding:'0 8px 0 16px',
-                          background: tierBg(v.tri), color: tierInk(v.tri),
-                          letterSpacing:'0.04em' }}>{v.tri}</span>
-                      : <span style={{ ...dim, borderBottom:'1px solid var(--rule)',
-                          alignSelf:'stretch', background: tierBg(v.tri) }} />
-                    }
+                    {/* Tier — color sliver on both breakpoints */}
+                    <span style={{ ...dim, borderBottom:'1px solid var(--rule)',
+                      alignSelf:'stretch', background: tierBg(v.tri) }} />
                     {/* Status dot */}
                     <span style={{ ...cell, justifyContent:'center' }}>
                       <span style={{ width:8, height:8, borderRadius:'50%',
                         background: statusDot(v.s), display:'inline-block', flexShrink:0 }} />
                     </span>
-                    {/* Number + name + role subtitle + legacy badge */}
-                    <div style={{ ...cell, flexDirection:'column', alignItems:'flex-start',
-                      gap:2, padding: mob ? '9px 8px' : '9px 12px', minWidth:0 }}>
-                      <div style={{ display:'flex', alignItems:'center', gap:8, width:'100%' }}>
-                        <span className="mono" style={{ fontSize:10, color:'var(--sub2)', flexShrink:0 }}>{v.i}</span>
-                        <span style={{ fontSize: mob ? 13 : 14, fontWeight:500, letterSpacing:'-0.01em' }}>{v.nm}</span>
-                        {tb && <span className="mono" style={{ fontSize:8, padding:'1px 5px', fontWeight:500,
-                          background:tb.bg, color:tb.ink, flexShrink:0 }}>{tb.label}</span>}
-                      </div>
-                      <span className="mono" style={{ fontSize:10, color:'var(--sub)', paddingLeft:22,
-                        lineHeight:1.4 }}>{v.r}</span>
+                    {/* Number + name + legacy badge */}
+                    <div style={{ ...cell, gap:8, padding: mob ? '9px 8px' : '9px 12px', minWidth:0 }}>
+                      <span className="mono" style={{ fontSize:10, color:'var(--sub2)', flexShrink:0 }}>{v.i}</span>
+                      <span style={{ fontSize: mob ? 13 : 14, fontWeight:500, letterSpacing:'-0.01em',
+                        overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{v.nm}</span>
+                      {tb && <span className="mono" style={{ fontSize:8, padding:'1px 5px', fontWeight:500,
+                        background:tb.bg, color:tb.ink, flexShrink:0 }}>{tb.label}</span>}
                     </div>
+                    {/* Role — desktop only, wraps instead of truncating */}
+                    {!mob && (
+                      <span className="mono" style={{ ...cell, fontSize:11, color:'var(--sub)',
+                        padding:'9px 12px', lineHeight:1.45, alignItems:'center' }}>{v.r}</span>
+                    )}
                     {/* Tier classification */}
                     <span className="mono" style={{ ...cell, fontSize:9, fontWeight:600,
-                      padding: mob ? '0 16px 0 8px' : '0 16px',
+                      padding: mob ? '0 12px 0 8px' : '0 16px',
                       background: tierBg(v.tri), color: tierInk(v.tri),
                       whiteSpace:'nowrap', letterSpacing:'0.04em', justifyContent:'center' }}>
                       {mob ? v.tri : (v.tri === 'A' ? 'Academic' : v.tri === 'P' ? 'Practitioner' : 'Visionary')}
