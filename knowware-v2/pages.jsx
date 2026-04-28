@@ -1739,6 +1739,19 @@ function VoiceCard({ v }) {
   );
 }
 
+const SCENE_META = {
+  '01': { date: 'JUNE 2014',   year: '2014', sources: ['FACEBOOK', 'CORNELL', 'UCSF'] },
+  '02': { date: '2007–2015',   year: '2007', sources: ['NETFLIX', 'AMAZON', 'TOYOTA'] },
+  '03': { date: '2014',        year: '2014', sources: ['IAAC', 'BARCELONA'] },
+  '04': { date: '1998–2007',   year: '1998', sources: ['BOGOTÁ', 'MOCKUS'] },
+  '05': { date: '2020',        year: '2020', sources: ['BATTELLE', 'OHIO STATE', 'NIH'] },
+  '06': { date: 'OCT 2018',    year: '2018', sources: ['UBER', 'TEMPE AZ', 'NTSB'] },
+  '07': { date: '2019',        year: '2019', sources: ['AUTODESK', 'AIRBUS'] },
+  '08': { date: 'UNIVERSAL',   year: '∞',    sources: ['NEWTON', 'LAPLACE', 'POINCARÉ'] },
+  '09': { date: '2016–2018',   year: '2016', sources: ['STANFORD', 'RADIOLOGY AI'] },
+  'X':  { date: 'NOW',         year: 'NOW',  sources: ['KNOWWARE'] },
+};
+
 // ─── Read (v2) ─────────────────────────────────────────
 // Two-column with live section rail, running page number, inline footnotes,
 // marginal citations pulling from the 81.
@@ -1873,36 +1886,18 @@ function Read({ onOpenReader }) {
 
         {/* CENTER — reading column */}
         <article data-kw-read style={{
-          padding: mob ? '28px 16px' : tab ? '32px 32px' : '40px 48px',
+          padding: 0,
           maxWidth: 'var(--read-col, 760px)',
           minWidth: 0, position: 'relative', overflow: 'hidden',
         }}>
-          {/* Ghost chapter number */}
-          <div aria-hidden="true" style={{
-            position: 'absolute', top: -20, right: -10,
-            fontSize: 280, fontWeight: 600, lineHeight: 1,
-            letterSpacing: '-0.06em', color: 'var(--rule)',
-            pointerEvents: 'none', userSelect: 'none', zIndex: 0,
-            fontVariantNumeric: 'tabular-nums',
-          }}>{s.n}</div>
-          <div style={{ position: 'relative', zIndex: 1 }}>
-          <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
-            marginBottom: 12 }}>{s.part} · ch{s.n}</div>
-          <h2 style={{
-            fontSize: 56, fontWeight: 500, letterSpacing: '-0.03em',
-            lineHeight: 1, margin: '0 0 12px',
-            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-            }}>{s.title}</h2>
-          <div className="mono" style={{ fontSize: 13, color: 'var(--sub)',
-            letterSpacing: '-0.005em', marginBottom: 28 }}>{s.sub}</div>
-
-          <div style={{ borderTop: '1px solid var(--ink)', paddingTop: 28 }}>
-            <ChapterTeaser chapter={s.n} cited={cited[0]}
-              openNote={openNote} setOpenNote={setOpenNote}
-              onOpenReader={onOpenReader} />
-          </div>
-          </div>
-
+          <ChapterTeaser
+            chapter={s.n}
+            section={s}
+            cited={cited[0]}
+            openNote={openNote}
+            setOpenNote={setOpenNote}
+            onOpenReader={onOpenReader}
+          />
         </article>
 
         {/* RIGHT RAIL — collapsible drawer */}
@@ -2057,17 +2052,19 @@ function Read({ onOpenReader }) {
 // Chapter teaser — editorial style drawn from the reference designs.
 // Ghost chapter number · serif italic pull quote · "coordinates" dark section
 // · three-tier voice columns · closing quote · CTA.
-function ChapterTeaser({ chapter, cited, openNote, setOpenNote, onOpenReader }) {
+function ChapterTeaser({ chapter, section, cited, openNote, setOpenNote, onOpenReader }) {
   const mob = useBP() === 'mobile';
+  const tab = useBP() === 'tablet';
   const t = (window.TEASERS && window.TEASERS[chapter]) || null;
+  const scene = SCENE_META[chapter] || {};
+  const pad = mob ? '28px 20px' : tab ? '32px 32px' : '40px 48px';
+
   if (!t) {
-    return <p style={{ fontSize: 17, lineHeight: 1.65, margin: 0, color: 'var(--sub)' }}>
+    return <p style={{ padding: pad, fontSize: 17, lineHeight: 1.65, color: 'var(--sub)' }}>
       Teaser coming soon. This chapter is still being edited.
     </p>;
   }
   const [p1, p2] = t.paras;
-  const first = p1.charAt(0);
-  const rest  = p1.slice(1);
 
   // Use ALL 9 chapter voices, augmented with citation notes where available
   const citeLookup = {};
@@ -2080,78 +2077,137 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote, onOpenReader }) 
   const tierP = citeList.filter(v => v.tier === 'P');
   const tierV = citeList.filter(v => v.tier === 'V');
 
-  // Pick a closing pull-quote sentence from p2 (last sentence)
-  const sentences = p2.split(/(?<=[.!?])\s+/);
-  const pullQuote = sentences[sentences.length - 1] || sentences[0];
-
   return (
     <div>
-      {/* §opener slug */}
-      <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
-        letterSpacing: '0.05em', marginBottom: 18 }}>
-        § {t.opener.toUpperCase()}
-      </div>
 
-      {/* Opening paragraphs with drop cap */}
-      <p style={{ fontSize: 17, lineHeight: 1.68, margin: 0,
-        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}>
-        <span style={{ fontSize: mob ? 52 : 72, float: 'left', lineHeight: 0.82,
-          paddingRight: 8, paddingTop: mob ? 8 : 6, fontWeight: 600,
-          letterSpacing: '-0.05em', fontFamily: 'inherit' }}>{first}</span>
-        {rest}{' '}
-        <NoteRef n={1} active={openNote === 1}
-          onClick={() => setOpenNote(openNote === 1 ? null : 1)} />
-      </p>
-      <p style={{ fontSize: 17, lineHeight: 1.68, marginTop: 20,
-        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}>
-        {p2}{' '}
-        <NoteRef n={2} active={openNote === 2}
-          onClick={() => setOpenNote(openNote === 2 ? null : 2)} />
-      </p>
-
-      {/* Serif pull quote — accent left border */}
-      <blockquote style={{
-        margin: '36px 0 0', padding: '18px 24px',
-        borderLeft: '3px solid var(--accent)',
-        background: 'var(--accent-soft)',
-      }}>
-        <p style={{
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-          fontSize: 22, lineHeight: 1.38,
-          letterSpacing: '-0.01em', margin: 0, color: 'var(--ink)',
-        }}>
-          "{pullQuote}"
-        </p>
-        {cited && (
+      {/* ── ZONE 1 — Chapter header ── */}
+      <div style={{ padding: pad, borderBottom: '2px solid var(--ink)' }}>
+        {section && (
           <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
-            marginTop: 10 }}>
-            — context: {cited.name.toUpperCase()} · {cited.affiliation.toUpperCase()}
+            letterSpacing: '0.06em', marginBottom: 16 }}>
+            {section.part} · ch{chapter}
           </div>
         )}
-      </blockquote>
+        {section && (
+          <h2 style={{
+            fontSize: mob ? 36 : tab ? 44 : 56, fontWeight: 500,
+            letterSpacing: '-0.03em', lineHeight: 1.0, margin: '0 0 14px',
+            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          }}>{section.title}</h2>
+        )}
+        {section && (
+          <div className="mono" style={{
+            fontSize: 11, color: 'var(--sub)', letterSpacing: '0.06em',
+            marginBottom: 32,
+          }}>{section.sub.toUpperCase()}</div>
+        )}
 
-      {/* Open note */}
-      {openNote && (
-        <div style={{ marginTop: 20,
-          background: 'var(--paper)', border: '1px solid var(--rule)',
-          padding: '12px 16px', fontSize: 13, lineHeight: 1.5,
-          color: 'var(--sub)', display: 'flex', gap: 12 }}>
-          <span className="mono" style={{ fontSize: 10, color: 'var(--accent)' }}>[{openNote}]</span>
-          <span>
-            {openNote === 1
-              ? `Opening anecdote for Chapter ${chapter}. Source notes and full citations live in the manuscript's back matter.`
-              : `Full-chapter draft available to manuscript editors. Sign up on the Contribute page to receive the reading passcode.`}
-          </span>
-          <button onClick={() => setOpenNote(null)} className="mono" style={{
-            marginLeft: 'auto', background: 'none', border: 'none',
-            color: 'var(--sub)', cursor: 'pointer', fontSize: 11 }}>close ✕</button>
+        {/* Summary blockquote */}
+        <blockquote style={{
+          margin: '0 0 36px', padding: '0 0 0 20px',
+          borderLeft: '3px solid var(--accent)',
+        }}>
+          <p style={{
+            fontStyle: 'italic',
+            fontSize: mob ? 17 : 20, lineHeight: 1.5,
+            letterSpacing: '-0.01em', margin: 0, color: 'var(--ink)',
+            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          }}>{p1}</p>
+        </blockquote>
+
+        {/* Stats row */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mob ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: 24, paddingTop: 28, borderTop: '1px solid var(--rule)',
+        }}>
+          {[
+            { label: 'VOICES',        value: '9' },
+            { label: 'TRIADS',        value: '3' },
+            { label: 'AVG. INTERVIEW',value: '42+ min' },
+            { label: 'CHAPTER SLUG',  value: `ch${chapter}` },
+          ].map(({ label, value }) => (
+            <div key={label}>
+              <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
+                letterSpacing: '0.07em', marginBottom: 8 }}>{label}</div>
+              <div style={{ fontSize: mob ? 20 : 26, fontWeight: 500,
+                letterSpacing: '-0.02em', lineHeight: 1,
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+              }}>{value}</div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
+
+      {/* ── ZONE 2 — Opening Scene ── */}
+      <div style={{
+        position: 'relative', overflow: 'hidden',
+        padding: mob ? '40px 20px' : tab ? '48px 32px' : '52px 48px',
+        background: 'var(--bg)', borderBottom: '1px solid var(--rule)',
+      }}>
+        {/* Ghost year */}
+        <div aria-hidden="true" style={{
+          position: 'absolute', right: mob ? -10 : -20, top: mob ? -10 : -20,
+          fontSize: mob ? 160 : 240, fontWeight: 700, lineHeight: 1,
+          letterSpacing: '-0.06em', color: 'var(--rule)',
+          pointerEvents: 'none', userSelect: 'none',
+          fontVariantNumeric: 'tabular-nums',
+        }}>{scene.year || chapter}</div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mob ? '1fr' : '140px 1fr',
+          gap: mob ? 24 : 48,
+          position: 'relative', zIndex: 1,
+        }}>
+          {/* Left — scene label */}
+          <div>
+            <div className="mono" style={{ fontSize: 9, color: 'var(--accent)',
+              letterSpacing: '0.1em', marginBottom: 14 }}>OPENING SCENE —</div>
+            <div className="mono" style={{ fontSize: 13, fontWeight: 500,
+              letterSpacing: '-0.005em', marginBottom: 12 }}>{scene.date}</div>
+            {(scene.sources || []).map(src => (
+              <div key={src} className="mono" style={{ fontSize: 10,
+                color: 'var(--sub)', marginBottom: 4 }}>{src}</div>
+            ))}
+          </div>
+
+          {/* Right — scene content */}
+          <div>
+            <h3 style={{
+              fontSize: mob ? 26 : tab ? 32 : 40, fontWeight: 500,
+              letterSpacing: '-0.025em', lineHeight: 1.05,
+              margin: '0 0 22px', fontStyle: 'italic',
+              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+            }}>{t.opener}</h3>
+            <p style={{ fontSize: 17, lineHeight: 1.68, margin: '0 0 20px',
+              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}>
+              {p2}{' '}
+              <NoteRef n={1} active={openNote === 1}
+                onClick={() => setOpenNote(openNote === 1 ? null : 1)} />
+            </p>
+          </div>
+        </div>
+
+        {/* Open note */}
+        {openNote && (
+          <div style={{ marginTop: 20, position: 'relative', zIndex: 1,
+            background: 'var(--paper)', border: '1px solid var(--rule)',
+            padding: '12px 16px', fontSize: 13, lineHeight: 1.5,
+            color: 'var(--sub)', display: 'flex', gap: 12 }}>
+            <span className="mono" style={{ fontSize: 10, color: 'var(--accent)' }}>[{openNote}]</span>
+            <span>Opening anecdote for Chapter {chapter}. Source notes and full citations live in the manuscript's back matter.</span>
+            <button onClick={() => setOpenNote(null)} className="mono" style={{
+              marginLeft: 'auto', background: 'none', border: 'none',
+              color: 'var(--sub)', cursor: 'pointer', fontSize: 11 }}>close ✕</button>
+          </div>
+        )}
+      </div>
 
       {/* ── THREE TRIADS — voice columns ── */}
       {citeList.length > 0 && (
-        <section style={{ marginTop: 0, borderTop: '1px solid var(--rule)',
-          padding: '28px 0 0' }}>
+        <section style={{ padding: mob ? '28px 20px 40px' : tab ? '28px 32px 40px' : '28px 48px 40px',
+          borderBottom: '1px solid var(--rule)' }}>
           <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
             letterSpacing: '0.04em', marginBottom: 20 }}>
             THREE TRIADS · THREE PERSPECTIVES
