@@ -1739,6 +1739,59 @@ function VoiceCard({ v }) {
   );
 }
 
+const CHAPTER_STATS = {
+  '01': [
+    { label: 'USERS OBSERVED',    value: '689,003' },
+    { label: 'INSTITUTIONS',      value: '3'       },
+    { label: 'YEAR',              value: '2014'    },
+  ],
+  '02': [
+    { label: 'BODIES COORDINATED', value: '3'      },
+    { label: 'MARKET POSITION',    value: '#1'     },
+    { label: 'YEAR',               value: '2007'   },
+  ],
+  '03': [
+    { label: 'LIVING BUILDING',   value: '1'       },
+    { label: 'SENSOR TYPES',      value: '3'       },
+    { label: 'YEAR',              value: '2014'    },
+  ],
+  '04': [
+    { label: 'HOMICIDE REDUCTION', value: '70%'   },
+    { label: 'CITY POPULATION',   value: '6M'      },
+    { label: 'YEAR',              value: '1998'    },
+  ],
+  '05': [
+    { label: 'RESTORED MOVEMENT', value: '1 HAND' },
+    { label: 'SIGNAL LATENCY',    value: '<100ms'  },
+    { label: 'YEAR',              value: '2020'    },
+  ],
+  '06': [
+    { label: 'SECONDS DELAYED',   value: '6'       },
+    { label: 'CLASSIFICATIONS',   value: '4'       },
+    { label: 'YEAR',              value: '2018'    },
+  ],
+  '07': [
+    { label: 'WEIGHT REDUCTION',  value: '45%'     },
+    { label: 'DESIGN ITERATIONS', value: '1,000+'  },
+    { label: 'YEAR',              value: '2019'    },
+  ],
+  '08': [
+    { label: 'BODIES IN ORBIT',   value: '3'       },
+    { label: 'FORECAST HORIZON',  value: '100 yrs' },
+    { label: 'SCALE',             value: '∞'       },
+  ],
+  '09': [
+    { label: 'AI ACCURACY',       value: '95%'     },
+    { label: 'YEARS TO DESKILL',  value: '2'       },
+    { label: 'YEAR',              value: '2016'    },
+  ],
+  'X': [
+    { label: 'VOICES',            value: '81'      },
+    { label: 'CHAPTERS',          value: '9'       },
+    { label: 'PATTERN',           value: '1'       },
+  ],
+};
+
 const SCENE_META = {
   '01': { date: 'JUNE 2014',   year: '2014', sources: ['FACEBOOK', 'CORNELL', 'UCSF'] },
   '02': { date: '2007–2015',   year: '2007', sources: ['NETFLIX', 'AMAZON', 'TOYOTA'] },
@@ -2115,18 +2168,13 @@ function ChapterTeaser({ chapter, section, cited, openNote, setOpenNote, onOpenR
           }}>{p1}</p>
         </blockquote>
 
-        {/* Stats row */}
+        {/* Stats row — 3 chapter-specific facts + identifier */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: mob ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
           gap: 24, paddingTop: 28, borderTop: '1px solid var(--rule)',
         }}>
-          {[
-            { label: 'VOICES',        value: '9' },
-            { label: 'TRIADS',        value: '3' },
-            { label: 'AVG. INTERVIEW',value: '42+ min' },
-            { label: 'CHAPTER SLUG',  value: `ch${chapter}` },
-          ].map(({ label, value }) => (
+          {(CHAPTER_STATS[chapter] || []).map(({ label, value }) => (
             <div key={label}>
               <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
                 letterSpacing: '0.07em', marginBottom: 8 }}>{label}</div>
@@ -2136,6 +2184,15 @@ function ChapterTeaser({ chapter, section, cited, openNote, setOpenNote, onOpenR
               }}>{value}</div>
             </div>
           ))}
+          <div>
+            <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
+              letterSpacing: '0.07em', marginBottom: 8 }}>CHAPTER</div>
+            <div style={{ fontSize: mob ? 20 : 26, fontWeight: 500,
+              letterSpacing: '-0.02em', lineHeight: 1,
+              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+              color: 'var(--accent)',
+            }}>ch{chapter}</div>
+          </div>
         </div>
       </div>
 
