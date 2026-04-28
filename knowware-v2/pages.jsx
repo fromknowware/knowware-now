@@ -440,9 +440,9 @@ function TablePage({ setPage, onOpenDossier }) {
   return (
     <div>
       <div style={{ padding: mob ? '12px 16px 32px' : '20px 24px 48px' }}>
-        {/* Header: label + view + layout toggles — same position for all three views */}
+        {/* Header: title left, view toggle right */}
         <div style={{ display: 'flex', justifyContent: 'space-between',
-          alignItems: mob ? 'flex-start' : 'center', flexDirection: mob ? 'column' : 'row',
+          alignItems: mob ? 'flex-start' : 'flex-start', flexDirection: mob ? 'column' : 'row',
           gap: mob ? 12 : 0, marginBottom: 20 }}>
           <div>
             <Label style={{ paddingTop: 0 }}>02 · The 81</Label>
@@ -451,8 +451,8 @@ function TablePage({ setPage, onOpenDossier }) {
               Eighty-one voices,<br/>three tiers, nine chapters.
             </h2>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-            {/* View toggle */}
+          {/* View toggle + submenu stacked on the right */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
             <div style={{ display: 'flex', gap: 0, border: '1px solid var(--ink)' }}>
               {[['table','ELEMENTS'],['graph','GRAPH'],['mo','M.O.']].map(([k,l]) => (
                 <button key={k} onClick={() => setView(k)} className="mono" style={{
@@ -464,7 +464,7 @@ function TablePage({ setPage, onOpenDossier }) {
                 }}>{l}</button>
               ))}
             </div>
-            {/* Layout toggle (table only) */}
+            {/* Layout submenu — only when ELEMENTS is active */}
             {view === 'table' && (
               <div style={{ display: 'flex', gap: 0, border: '1px solid var(--rule)' }}>
                 {visibleLayouts.map(([k, L], i) => (
@@ -472,7 +472,7 @@ function TablePage({ setPage, onOpenDossier }) {
                     background: layout === k ? 'var(--ink)' : 'transparent',
                     color: layout === k ? 'var(--paper)' : 'var(--ink)',
                     border: 'none', borderRight: i < visibleLayouts.length - 1 ? '1px solid var(--rule)' : 'none',
-                    padding: '7px 10px', cursor: 'pointer', fontSize: 10,
+                    padding: '5px 10px', cursor: 'pointer', fontSize: 10,
                   }}>{L.label}</button>
                 ))}
               </div>
