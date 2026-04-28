@@ -603,7 +603,7 @@ const CAST = [
   ]},
 ];
 
-function CastView() {
+function CastView({ onOpenDossier }) {
   const mob = useBP() === 'mobile';
 
   const allVoices = CAST.flatMap(c => c.voices);
@@ -716,38 +716,39 @@ function CastView() {
               display: 'grid',
               gridTemplateColumns: mob
                 ? '8px 16px 1fr auto'
-                : '8px 16px 1fr 220px auto',
+                : '8px 16px calc(50% - 24px) 1fr auto',
             }}>
               {ch.voices.map(v => {
                 const tb = tagBadge(v.tg);
-                const dim = { opacity: v.f === 'missing' ? 0.65 : 1 };
+                const missing = v.f === 'missing';
                 const cell = {
                   borderBottom: '1px solid var(--rule)',
                   display: 'flex', alignItems: 'center',
-                  ...dim,
                 };
                 return (
                   <React.Fragment key={v.i}>
-                    {/* Tier — color sliver on both breakpoints */}
-                    <span style={{ ...dim, borderBottom:'1px solid var(--rule)',
+                    {/* Tier — color sliver */}
+                    <span style={{ borderBottom:'1px solid var(--rule)',
                       alignSelf:'stretch', background: tierBg(v.tri) }} />
                     {/* Status dot */}
-                    <span style={{ ...cell, justifyContent:'center' }}>
+                    <span style={{ ...cell, justifyContent:'center', opacity: missing ? 0.45 : 1 }}>
                       <span style={{ width:8, height:8, borderRadius:'50%',
                         background: statusDot(v.s), display:'inline-block', flexShrink:0 }} />
                     </span>
-                    {/* Number + name + legacy badge */}
-                    <div style={{ ...cell, gap:8, padding: mob ? '9px 8px' : '9px 12px', minWidth:0 }}>
+                    {/* Number + name + legacy badge — always full opacity, clickable */}
+                    <div style={{ ...cell, gap:8, padding: mob ? '9px 8px' : '9px 12px', minWidth:0,
+                      cursor: onOpenDossier ? 'pointer' : 'default' }}
+                      onClick={() => onOpenDossier && onOpenDossier(parseInt(v.i, 10))}>
                       <span className="mono" style={{ fontSize:10, color:'var(--sub2)', flexShrink:0 }}>{v.i}</span>
                       <span style={{ fontSize: mob ? 13 : 14, fontWeight:500, letterSpacing:'-0.01em',
                         overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{v.nm}</span>
                       {tb && <span className="mono" style={{ fontSize:8, padding:'1px 5px', fontWeight:500,
                         background:tb.bg, color:tb.ink, flexShrink:0 }}>{tb.label}</span>}
                     </div>
-                    {/* Role — desktop only, wraps instead of truncating */}
+                    {/* Role — desktop only, starts at 50% of viewport */}
                     {!mob && (
                       <span className="mono" style={{ ...cell, fontSize:11, color:'var(--sub)',
-                        padding:'9px 12px', lineHeight:1.45, alignItems:'center' }}>{v.r}</span>
+                        padding:'9px 12px', lineHeight:1.45, opacity: missing ? 0.5 : 1 }}>{v.r}</span>
                     )}
                     {/* Tier classification */}
                     <span className="mono" style={{ ...cell, fontSize:9, fontWeight:600,
@@ -848,7 +849,7 @@ function TablePage({ setPage, onOpenDossier }) {
         ) : view === 'mo' ? (
           <MOTable onOpenDossier={onOpenDossier} />
         ) : (
-          <CastView />
+          <CastView onOpenDossier={onOpenDossier} />
         )}
       </div>
     </div>
