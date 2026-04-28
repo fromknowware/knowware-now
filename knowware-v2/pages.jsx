@@ -720,8 +720,8 @@ function CastView() {
                 <div key={v.i} style={{
                   display: 'grid',
                   gridTemplateColumns: mob
-                    ? '8px 16px 1fr auto'
-                    : '8px 16px 1fr 1fr auto',
+                    ? '8px 16px 1fr auto auto'
+                    : '8px 16px 1fr 1fr auto auto',
                   alignItems: 'center', gap: mob ? 10 : 14,
                   padding: mob ? '9px 16px' : '9px 24px',
                   borderBottom: '1px solid var(--rule)',
@@ -751,6 +751,14 @@ function CastView() {
                     <span className="mono" style={{ fontSize:8, padding:'2px 6px', fontWeight:500,
                       background:fb.bg, color:fb.ink, whiteSpace:'nowrap', flexShrink:0 }}>{fb.label}</span>
                   )}
+                  {/* Tier classification */}
+                  <span className="mono" style={{
+                    fontSize: 9, padding: '3px 7px', fontWeight: 600,
+                    background: tierBg(v.tri), color: tierInk(v.tri),
+                    whiteSpace: 'nowrap', flexShrink: 0, letterSpacing: '0.04em',
+                  }}>
+                    {v.tri === 'A' ? 'Academic' : v.tri === 'P' ? 'Practitioner' : 'Visionary'}
+                  </span>
                 </div>
               );
             })}
