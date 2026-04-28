@@ -709,7 +709,6 @@ function CastView() {
               position: 'sticky', top: 48, zIndex: 5,
             }}>
               <span style={{ letterSpacing: '0.04em' }}>CH.{String(ch.n).padStart(2,'0')} — {ch.t.toUpperCase()}</span>
-              <span>{ch.voices.length} VOICES</span>
             </div>
 
             {/* Voice rows */}
@@ -720,15 +719,19 @@ function CastView() {
                 <div key={v.i} style={{
                   display: 'grid',
                   gridTemplateColumns: mob
-                    ? '8px 16px 1fr auto'
+                    ? 'auto 16px 1fr auto'
                     : '8px 16px 1fr 1fr auto',
                   alignItems: 'center', gap: mob ? 10 : 14,
                   padding: mob ? '9px 16px' : '9px 24px',
                   borderBottom: '1px solid var(--rule)',
                   opacity: v.f === 'missing' ? 0.65 : 1,
                 }}>
-                  {/* Tier color block */}
-                  <span style={{ width:8, alignSelf:'stretch', background: tierBg(v.tri), flexShrink:0 }} />
+                  {/* Tier — color bar on desktop, letter badge on mobile */}
+                  {mob
+                    ? <span className="mono" style={{ fontSize:9, fontWeight:600, padding:'2px 5px',
+                        background: tierBg(v.tri), color: tierInk(v.tri), flexShrink:0 }}>{v.tri}</span>
+                    : <span style={{ width:8, alignSelf:'stretch', background: tierBg(v.tri), flexShrink:0 }} />
+                  }
                   {/* Status dot */}
                   <span style={{ width:8, height:8, borderRadius:'50%', background: statusDot(v.s), display:'inline-block', flexShrink:0 }} />
                   {/* Number + name + legacy badge */}
