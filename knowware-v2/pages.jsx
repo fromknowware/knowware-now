@@ -1914,12 +1914,21 @@ function Read({ onOpenReader }) {
         const prev = active > 0 ? window.SECTIONS[active - 1] : null;
         const next = active < window.SECTIONS.length - 1 ? window.SECTIONS[active + 1] : null;
         const interviewCount = window.INTERVIEWS.filter(v => v.ch === s.n).length;
+        const diagram = window.TEASERS && window.TEASERS[s.n] && window.TEASERS[s.n].diagram;
         return (
           <>
-            {/* Dark synthesis block */}
+            {/* Dark synthesis block — diagram + synthesis share one ink background */}
+            <div style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
+            {diagram && (
+              <CoordinatesSection
+                diagram={diagram}
+                noBg
+                style={{ padding: mob ? '32px 20px 28px' : '48px 64px 40px' }}
+              />
+            )}
             <div style={{
-              padding: mob ? '32px 20px' : '56px 64px',
-              background: 'var(--ink)', color: 'var(--paper)',
+              padding: mob ? '28px 20px 32px' : '40px 64px 56px',
+              borderTop: diagram ? '1px solid oklch(0.22 0.04 250)' : 'none',
             }}>
               <div className="mono" style={{ fontSize: 10, color: 'var(--accent)',
                 letterSpacing: '0.08em', marginBottom: 20 }}>
@@ -1959,6 +1968,7 @@ function Read({ onOpenReader }) {
                 }}>↗ CONTRIBUTE</a>
               </div>
             </div>
+            </div>{/* /outer dark wrapper */}
 
             {/* Prev / Next chapter navigation */}
             <div style={{
@@ -2185,22 +2195,23 @@ function ChapterTeaser({ chapter, cited, openNote, setOpenNote, onOpenReader }) 
         </section>
       )}
 
-      {/* ── WHAT THIS CHAPTER COORDINATES — dark causal section ── */}
-      {t.diagram && <CoordinatesSection diagram={t.diagram} />}
-
     </div>
   );
 }
 
 // ─── What this chapter coordinates ────────────────────
 // Dark section: causal nodes as labeled boxes in a row with arrows.
-function CoordinatesSection({ diagram }) {
+function CoordinatesSection({ diagram, noBg, style: styleProp }) {
   const visible = diagram.nodes.filter(n => !n.latent);
   const latent  = diagram.nodes.filter(n => n.latent);
 
   return (
-    <section style={{ margin: '36px -48px 36px', padding: '28px 48px',
-      background: 'var(--ink)', color: 'var(--paper)' }}>
+    <section style={{
+      margin: '36px -48px 36px', padding: '28px 48px',
+      background: 'var(--ink)', color: 'var(--paper)',
+      ...(noBg ? { background: 'none', margin: 0 } : {}),
+      ...styleProp,
+    }}>
       <div className="mono" style={{ fontSize: 10, color: 'oklch(0.65 0.1 250)',
         letterSpacing: '0.06em', marginBottom: 20,
         display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
