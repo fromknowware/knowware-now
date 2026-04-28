@@ -1911,10 +1911,23 @@ function Read({ onOpenReader }) {
 
       {/* ── Full-width synthesis band ── */}
       {(() => {
+        const SYNTHESIS_QUOTES = {
+          '01': "Intelligence doesn't live in humans or machines. It emerges in the coordination between them.",
+          '02': "Binary logic was always an approximation. Reality coordinates.",
+          '03': "The architecture of intelligence is the architecture of life.",
+          '04': "Three-body coordination is not just how systems work, but how they heal.",
+          '05': "The boundary between human and machine is already dissolving. The question is how to coordinate the crossing.",
+          '06': "Awareness is not a luxury upgrade bolted onto intelligence. It is the coordination layer without which perception and processing cycle in the dark.",
+          '07': "Three-body coordination doesn't just improve engineering — it transcends the design space itself.",
+          '08': "Scale coordination to the cosmos and new bodies of intelligence appear.",
+          '09': "Optimizing capability without coordinating with context is the pattern of civilizational failure.",
+          'X':  "Nine chapters. Eighty-one voices. One pattern — now visible.",
+        };
         const prev = active > 0 ? window.SECTIONS[active - 1] : null;
         const next = active < window.SECTIONS.length - 1 ? window.SECTIONS[active + 1] : null;
         const interviewCount = window.INTERVIEWS.filter(v => v.ch === s.n).length;
         const diagram = window.TEASERS && window.TEASERS[s.n] && window.TEASERS[s.n].diagram;
+        const synthQuote = SYNTHESIS_QUOTES[s.n] || '';
         return (
           <>
             {/* Dark synthesis block — diagram + synthesis share one ink background */}
@@ -1940,7 +1953,7 @@ function Read({ onOpenReader }) {
                 letterSpacing: '-0.02em', margin: '0 0 36px',
                 fontStyle: 'italic', maxWidth: '32ch',
               }}>
-                "Binary logic was always an approximation. Reality coordinates."
+                "{synthQuote}"
               </p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                 <a href="Contribute.html" style={{
