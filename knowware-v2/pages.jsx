@@ -439,22 +439,8 @@ function TablePage({ setPage, onOpenDossier }) {
 
   return (
     <div>
-      {/* Sticky detail strip — locked to top of viewport on hover */}
-      {view === 'table' && (
-        <div style={{
-          position: 'sticky', top: 48, zIndex: 9,
-          borderBottom: '1px solid var(--rule)',
-          minHeight: 88, display: 'flex', alignItems: 'stretch',
-          background: shown ? `var(${shown.group.varCSS})` : 'var(--bg)',
-          transition: 'background .15s',
-          boxShadow: shown ? '0 2px 12px rgba(0,0,0,0.07)' : 'none',
-        }}>
-          {shown ? <VoiceStrip v={shown} /> : <EmptyStrip />}
-        </div>
-      )}
-
       <div style={{ padding: mob ? '12px 16px 32px' : '20px 24px 48px' }}>
-        {/* Header: label + view + layout toggles */}
+        {/* Header: label + view + layout toggles — same position for all three views */}
         <div style={{ display: 'flex', justifyContent: 'space-between',
           alignItems: mob ? 'flex-start' : 'center', flexDirection: mob ? 'column' : 'row',
           gap: mob ? 12 : 0, marginBottom: 20 }}>
@@ -496,6 +482,20 @@ function TablePage({ setPage, onOpenDossier }) {
 
         {view === 'table' ? (
           <>
+            {/* Hover-to-preview strip — below title, above table, sticky on scroll */}
+            <div style={{
+              position: 'sticky', top: 48, zIndex: 9,
+              borderTop: '1px solid var(--rule)',
+              borderBottom: '1px solid var(--rule)',
+              marginLeft: mob ? -16 : -24, marginRight: mob ? -16 : -24,
+              marginBottom: 0,
+              minHeight: 88, display: 'flex', alignItems: 'stretch',
+              background: shown ? `var(${shown.group.varCSS})` : 'var(--bg)',
+              transition: 'background .15s',
+              boxShadow: shown ? '0 2px 12px rgba(0,0,0,0.07)' : 'none',
+            }}>
+              {shown ? <VoiceStrip v={shown} /> : <EmptyStrip />}
+            </div>
             <HorizontalLegend active={highlightGroup} setActive={setHighlightGroup} />
             <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)',
               borderTop: 'none', padding: 16 }}>
