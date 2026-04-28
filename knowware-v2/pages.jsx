@@ -643,37 +643,31 @@ function GraphView({ onOpenDossier }) {
       const { nodes, posById } = sim;
       const frame = ++frameRef.current;
 
-      // ── Physics — runs every frame, never stops ──────
+      // ── Physics — original design constants + drift + collision ──────
       const t = frame * 0.0028; // time for drift
-      // Settling alpha: strong early, fades to a gentle residual
-      const alpha = frame < 120 ? 1
-                  : frame < 300 ? 0.4
-                  : frame < 500 ? 0.12
-                  : 0.04;
+      // Alpha: matches design file exactly — strong settle, then very low residual
+      const alpha = frame < 300 ? 0.4 : frame < 600 ? 0.1 : 0.02;
       const edges = edgesRef.current;
 
-      // Repulsion — velocity-based long-range push + hard collision resolve
-      const MIN_DIST = R * 2 + 6; // never closer than this (px)
+      // Repulsion + hard collision (never overlap)
+      const MIN_DIST = R * 2 + 6;
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const a = nodes[i], b = nodes[j];
           const dx = b.x - a.x, dy = b.y - a.y;
           const dist2 = dx*dx + dy*dy || 0.01;
           const dist  = Math.sqrt(dist2);
-          // Long-range repulsion (cutoff 360px)
-          if (dist < 360) {
-            const force = (3200 / dist2) * Math.max(alpha, 0.04);
-            const fx = (dx/dist)*force, fy = (dy/dist)*force;
-            a.vx -= fx; a.vy -= fy;
-            b.vx += fx; b.vy += fy;
-          }
+          // Long-range repulsion — design original: 1200/dist²
+          const force = (1200 / dist2) * alpha;
+          const fx = (dx/dist)*force, fy = (dy/dist)*force;
+          a.vx -= fx; a.vy -= fy;
+          b.vx += fx; b.vy += fy;
           // Hard collision — positional correction so nodes never overlap
           if (dist < MIN_DIST) {
             const overlap = (MIN_DIST - dist) / 2;
             const nx = dx / dist, ny = dy / dist;
             a.x -= nx * overlap; a.y -= ny * overlap;
             b.x += nx * overlap; b.y += ny * overlap;
-            // Cancel inward velocity components
             const relVx = b.vx - a.vx, relVy = b.vy - a.vy;
             const dot = relVx*nx + relVy*ny;
             if (dot < 0) {
@@ -683,29 +677,29 @@ function GraphView({ onOpenDossier }) {
           }
         }
       }
-      // Spring attraction — longer rest length keeps clusters spread
+      // Spring attraction — design original: ideal 120px, strength 0.04
       edges.forEach(([an, bn]) => {
         const a = posById[an], b = posById[bn];
         if (!a || !b) return;
         const dx = b.x-a.x, dy = b.y-a.y;
         const dist = Math.max(Math.sqrt(dx*dx+dy*dy), 1);
-        const force = ((dist - 90) / dist) * 0.022 * Math.max(alpha, 0.04);
+        const force = ((dist - 120) / dist) * 0.04 * alpha;
         a.vx += dx*force; a.vy += dy*force;
         b.vx -= dx*force; b.vy -= dy*force;
       });
 
       nodes.forEach(n => {
-        // Centre gravity
-        n.vx += (w/2 - n.x) * 0.008 * Math.max(alpha, 0.04);
-        n.vy += (h*0.44 - n.y) * 0.008 * Math.max(alpha, 0.04);
-        // Perpetual lava-lamp drift — each node has a unique phase
-        const driftStr = frame > 120 ? 0.20 : 0;
+        // Centre gravity — design original: 0.002
+        n.vx += (w/2 - n.x) * 0.002 * alpha;
+        n.vy += (h/2 - n.y) * 0.002 * alpha;
+        // Perpetual lava-lamp drift — unique per node, always alive
+        const driftStr = frame > 300 ? 0.15 : 0;
         n.vx += Math.cos(t + n.phase) * driftStr;
         n.vy += Math.sin(t + n.phase * 1.3) * driftStr;
-        // Dampen & clamp
-        n.vx *= 0.88; n.vy *= 0.88;
+        // Damping — design original: 0.85
+        n.vx *= 0.85; n.vy *= 0.85;
         const spd = Math.sqrt(n.vx*n.vx + n.vy*n.vy);
-        if (spd > 18) { n.vx *= 18/spd; n.vy *= 18/spd; }
+        if (spd > 12) { n.vx *= 12/spd; n.vy *= 12/spd; }
         n.x  = Math.max(R+8, Math.min(w-R-8, n.x + n.vx));
         n.y  = Math.max(R+8, Math.min(h-R-8, n.y + n.vy));
       });
