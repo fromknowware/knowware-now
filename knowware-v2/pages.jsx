@@ -23,11 +23,11 @@ function Shell({ page, setPage, children }) {
         <div style={{ display: 'flex', gap: 14, alignItems: 'baseline' }}>
           <button onClick={() => setPage('cover')} style={{
             background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-            fontFamily: 'inherit', fontSize: 15, fontWeight: 600,
+            fontFamily: 'inherit', fontSize: 17, fontWeight: 600,
             letterSpacing: '-0.015em', color: 'var(--ink)',
           }}>Knowware<span style={{ color: 'var(--sub2)' }}>®</span></button>
           {!mob && (
-            <span className="mono" style={{ fontSize: 11, color: 'var(--sub)' }}>
+            <span className="mono" style={{ fontSize: 12, color: 'var(--sub)' }}>
               systems-of-intelligence · v1.0 · mmxxvi
             </span>
           )}
@@ -38,10 +38,10 @@ function Shell({ page, setPage, children }) {
               background: page === k ? 'var(--ink)' : 'transparent',
               color: page === k ? 'var(--paper)' : 'var(--ink)',
               border: 'none', padding: mob ? '7px 10px' : '7px 12px', cursor: 'pointer',
-              fontFamily: 'inherit', fontSize: 13, letterSpacing: '-0.01em',
+              fontFamily: 'inherit', fontSize: mob ? 13 : 15, letterSpacing: '-0.01em',
               display: 'flex', gap: mob ? 0 : 8, alignItems: 'baseline',
             }}>
-              <span className="mono" style={{ fontSize: 10, opacity: 0.6 }}>{n}</span>
+              <span className="mono" style={{ fontSize: mob ? 10 : 11, opacity: 0.6 }}>{n}</span>
               {!mob && <span>{l}</span>}
             </button>
           ))}
@@ -70,13 +70,13 @@ function Grid({ children, style }) {
   const mob = useBP() === 'mobile';
   return <div style={{
     display: 'grid', gridTemplateColumns: mob ? '1fr' : 'repeat(12, 1fr)',
-    gap: mob ? 12 : 16, padding: mob ? '0 16px' : '0 32px', ...style,
+    gap: mob ? 12 : 20, padding: mob ? '0 16px' : '0 48px', ...style,
   }}>{children}</div>;
 }
 
 function Label({ children, style }) {
   return <div className="mono" style={{
-    fontSize: 11, color: 'var(--sub)', paddingTop: 6,
+    fontSize: 13, color: 'var(--sub)', paddingTop: 6,
     letterSpacing: '-0.005em', ...style,
   }}>{children}</div>;
 }
@@ -315,7 +315,7 @@ function Cover({ setPage }) {
       ) : (
         <Grid style={{ marginTop: 36 }}>
           <Label style={{ gridColumn: '1 / span 3' }}>Abstract</Label>
-          <p style={{ gridColumn: '4 / span 6', fontSize: 24, lineHeight: 1.3,
+          <p style={{ gridColumn: '4 / span 6', fontSize: 26, lineHeight: 1.35,
             margin: 0, letterSpacing: '-0.018em' }}>
             A field guide for anyone who must survive what is coming — and the
             tools, markets, and institutions they'll have to think with. Built
@@ -402,7 +402,7 @@ function Cover({ setPage }) {
           maxWidth: '100%' }}>
           <Label style={{ gridColumn: mob ? '1' : '1 / span 3',
             color: 'var(--accent-soft)' }}>02 · Thesis</Label>
-          <div style={{ gridColumn: mob ? '1' : '4 / span 9', fontSize: mob ? 22 : 36,
+          <div style={{ gridColumn: mob ? '1' : '4 / span 9', fontSize: mob ? 22 : 40,
             lineHeight: 1.2, letterSpacing: '-0.02em' }}>
             The tools we use to think are no longer{' '}
             <span style={{ color: 'var(--accent-soft)',
