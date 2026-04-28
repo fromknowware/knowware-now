@@ -595,14 +595,15 @@ function GraphView({ onOpenDossier }) {
   const adjRef    = React.useRef(adjMap);
   React.useEffect(() => { edgesRef.current = edges; adjRef.current = adjMap; }, [edges, adjMap]);
 
-  // Init sim — runs once. Resize only rescales canvas, no re-init.
+  // Init sim — runs once. Each node gets a unique drift phase for lava-lamp motion.
   React.useEffect(() => {
     const { w, h } = dimsRef.current;
-    const nodes = window.INTERVIEWS.map(v => ({
+    const nodes = window.INTERVIEWS.map((v, i) => ({
       n: v.n, v,
       x: w/2 + (Math.random()-0.5)*w*0.55,
       y: h/2 + (Math.random()-0.5)*h*0.45,
       vx: 0, vy: 0,
+      phase: (i / 81) * Math.PI * 2,   // unique lava-lamp phase
     }));
     const posById = {};
     nodes.forEach(n => { posById[n.n] = n; });
@@ -640,46 +641,55 @@ function GraphView({ onOpenDossier }) {
       const { nodes, posById } = sim;
       const frame = ++frameRef.current;
 
-      // ── Physics (decays to zero after ~600 frames) ──
-      if (frame <= 600) {
-        const alpha = frame < 150 ? 1
-                    : frame < 350 ? 0.35
-                    : frame < 500 ? 0.08
-                    : 0.02;
-        const edges = edgesRef.current;
+      // ── Physics — runs every frame, never stops ──────
+      const t = frame * 0.0028; // time for drift
+      // Settling alpha: strong early, fades to a gentle residual
+      const alpha = frame < 120 ? 1
+                  : frame < 300 ? 0.4
+                  : frame < 500 ? 0.12
+                  : 0.04;
+      const edges = edgesRef.current;
 
-        // Repulsion
-        for (let i = 0; i < nodes.length; i++) {
-          for (let j = i + 1; j < nodes.length; j++) {
-            const a = nodes[i], b = nodes[j];
-            const dx = b.x - a.x, dy = b.y - a.y;
-            const dist2 = dx*dx + dy*dy || 1;
-            const dist  = Math.sqrt(dist2);
-            const force = (1400 / dist2) * alpha;
-            const fx = (dx/dist)*force, fy = (dy/dist)*force;
-            a.vx -= fx; a.vy -= fy;
-            b.vx += fx; b.vy += fy;
-          }
+      // Repulsion — stronger to push chapter clusters apart
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const dx = b.x - a.x, dy = b.y - a.y;
+          const dist2 = dx*dx + dy*dy || 1;
+          if (dist2 > 360*360) continue; // skip far pairs
+          const dist  = Math.sqrt(dist2);
+          const force = (3200 / dist2) * Math.max(alpha, 0.04);
+          const fx = (dx/dist)*force, fy = (dy/dist)*force;
+          a.vx -= fx; a.vy -= fy;
+          b.vx += fx; b.vy += fy;
         }
-        // Spring attraction along edges
-        edges.forEach(([an, bn]) => {
-          const a = posById[an], b = posById[bn];
-          if (!a || !b) return;
-          const dx = b.x-a.x, dy = b.y-a.y;
-          const dist = Math.max(Math.sqrt(dx*dx+dy*dy), 1);
-          const force = ((dist-110)/dist) * 0.035 * alpha;
-          a.vx += dx*force; a.vy += dy*force;
-          b.vx -= dx*force; b.vy -= dy*force;
-        });
-        // Centre gravity
-        nodes.forEach(n => {
-          n.vx += (w/2 - n.x) * 0.003 * alpha;
-          n.vy += (h/2 - n.y) * 0.003 * alpha;
-          n.vx *= 0.82; n.vy *= 0.82;
-          n.x  = Math.max(R+6, Math.min(w-R-6, n.x + n.vx));
-          n.y  = Math.max(R+6, Math.min(h-R-6, n.y + n.vy));
-        });
       }
+      // Spring attraction — longer rest length keeps clusters spread
+      edges.forEach(([an, bn]) => {
+        const a = posById[an], b = posById[bn];
+        if (!a || !b) return;
+        const dx = b.x-a.x, dy = b.y-a.y;
+        const dist = Math.max(Math.sqrt(dx*dx+dy*dy), 1);
+        const force = ((dist - 90) / dist) * 0.022 * Math.max(alpha, 0.04);
+        a.vx += dx*force; a.vy += dy*force;
+        b.vx -= dx*force; b.vy -= dy*force;
+      });
+
+      nodes.forEach(n => {
+        // Centre gravity
+        n.vx += (w/2 - n.x) * 0.008 * Math.max(alpha, 0.04);
+        n.vy += (h*0.44 - n.y) * 0.008 * Math.max(alpha, 0.04);
+        // Perpetual lava-lamp drift — each node has a unique phase
+        const driftStr = frame > 120 ? 0.20 : 0;
+        n.vx += Math.cos(t + n.phase) * driftStr;
+        n.vy += Math.sin(t + n.phase * 1.3) * driftStr;
+        // Dampen & clamp
+        n.vx *= 0.88; n.vy *= 0.88;
+        const spd = Math.sqrt(n.vx*n.vx + n.vy*n.vy);
+        if (spd > 18) { n.vx *= 18/spd; n.vy *= 18/spd; }
+        n.x  = Math.max(R+8, Math.min(w-R-8, n.x + n.vx));
+        n.y  = Math.max(R+8, Math.min(h-R-8, n.y + n.vy));
+      });
 
       // ── Draw ──────────────────────────────────────────
       const pinneds = pinnedRef.current;
