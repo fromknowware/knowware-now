@@ -425,12 +425,36 @@ function Cover({ setPage }) {
 function TablePage({ setPage, onOpenDossier }) {
   const bp = useBP();
   const mob = bp === 'mobile';
-  const [view, setView] = React.useState('graph'); // 'graph' | 'mo'
+  const [layout, setLayout] = React.useState('pt3');
+  const [view, setView] = React.useState('graph'); // 'table' | 'graph' | 'mo'
+  const [hover, setHover] = React.useState(null);
+  const [selected, setSelected] = React.useState(null);
+  const [highlightGroup, setHighlightGroup] = React.useState(null);
+
+  const showN = hover || selected;
+  const shown = showN ? window.INTERVIEWS[showN - 1] : null;
+
+  // Visible layouts — exclude ch9
+  const visibleLayouts = Object.entries(window.LAYOUTS).filter(([k]) => k !== 'ch9');
 
   return (
     <div>
+      {/* Sticky detail strip — locked to top of viewport on hover */}
+      {view === 'table' && (
+        <div style={{
+          position: 'sticky', top: 48, zIndex: 9,
+          borderBottom: '1px solid var(--rule)',
+          minHeight: 88, display: 'flex', alignItems: 'stretch',
+          background: shown ? `var(${shown.group.varCSS})` : 'var(--bg)',
+          transition: 'background .15s',
+          boxShadow: shown ? '0 2px 12px rgba(0,0,0,0.07)' : 'none',
+        }}>
+          {shown ? <VoiceStrip v={shown} /> : <EmptyStrip />}
+        </div>
+      )}
+
       <div style={{ padding: mob ? '12px 16px 32px' : '20px 24px 48px' }}>
-        {/* Header: label + view toggle */}
+        {/* Header: label + view + layout toggles */}
         <div style={{ display: 'flex', justifyContent: 'space-between',
           alignItems: mob ? 'flex-start' : 'center', flexDirection: mob ? 'column' : 'row',
           gap: mob ? 12 : 0, marginBottom: 20 }}>
@@ -442,8 +466,9 @@ function TablePage({ setPage, onOpenDossier }) {
             </h2>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            {/* View toggle */}
             <div style={{ display: 'flex', gap: 0, border: '1px solid var(--ink)' }}>
-              {[['graph','GRAPH'],['mo','M.O.']].map(([k,l]) => (
+              {[['table','ELEMENTS'],['graph','GRAPH'],['mo','M.O.']].map(([k,l]) => (
                 <button key={k} onClick={() => setView(k)} className="mono" style={{
                   background: view === k ? 'var(--ink)' : 'var(--paper)',
                   color: view === k ? 'var(--paper)' : 'var(--ink)',
@@ -453,10 +478,45 @@ function TablePage({ setPage, onOpenDossier }) {
                 }}>{l}</button>
               ))}
             </div>
+            {/* Layout toggle (table only) */}
+            {view === 'table' && (
+              <div style={{ display: 'flex', gap: 0, border: '1px solid var(--rule)' }}>
+                {visibleLayouts.map(([k, L], i) => (
+                  <button key={k} onClick={() => setLayout(k)} className="mono" style={{
+                    background: layout === k ? 'var(--ink)' : 'transparent',
+                    color: layout === k ? 'var(--paper)' : 'var(--ink)',
+                    border: 'none', borderRight: i < visibleLayouts.length - 1 ? '1px solid var(--rule)' : 'none',
+                    padding: '7px 10px', cursor: 'pointer', fontSize: 10,
+                  }}>{L.label}</button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {view === 'graph' ? (
+        {view === 'table' ? (
+          <>
+            <HorizontalLegend active={highlightGroup} setActive={setHighlightGroup} />
+            <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)',
+              borderTop: 'none', padding: 16 }}>
+              <PeriodicTable
+                layoutKey={layout}
+                hover={hover} onHover={setHover}
+                selected={selected}
+                onSelect={(n) => {
+                  setSelected(selected === n ? null : n);
+                  if (n && onOpenDossier) onOpenDossier(n);
+                }}
+                highlightGroup={highlightGroup}
+              />
+            </div>
+            <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
+              marginTop: 10, display: 'flex', justifyContent: 'space-between' }}>
+              <span>Hover a cell for detail · Hover a tier to isolate · Click to pin</span>
+              <span>{selected ? `pinned № ${String(selected).padStart(2, '0')}` : '—'}</span>
+            </div>
+          </>
+        ) : view === 'graph' ? (
           <GraphView onOpenDossier={onOpenDossier} />
         ) : (
           <MOTable onOpenDossier={onOpenDossier} />
