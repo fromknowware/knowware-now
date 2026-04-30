@@ -834,7 +834,7 @@ proofBtn.addEventListener("click", () => {
 // Override at runtime: localStorage.setItem("soi-github-pat", "ghp_...")
 const SYNC_REPO = "fromknowware/knowware-now";
 const SYNC_PATH = "annotations/annotations.json";
-const SYNC_PAT  = ""; // ← paste PAT here, or set via localStorage("soi-github-pat")
+const SYNC_PAT  = "__SYNC_PAT__"; // injected at deploy time via GitHub Actions secret
 const PAGES_ANN = "https://fromknowware.github.io/knowware-now/annotations/annotations.json";
 const ANN_KEY   = "soi-annotations";
 
