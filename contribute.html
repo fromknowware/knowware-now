@@ -847,9 +847,13 @@
         </div>
         <div style="font-size: 14px; line-height: 1.55; color: var(--sub); margin-bottom: 24px">
           We reply within fourteen days, by hand, in the order claims arrive.
-          If you picked path D, the passcode and the first chapter arrive together.
+          Your passcode and first chapter arrive together — enter the reading room below when it does.
         </div>
-        <button onclick="this.closest('div[style*=fixed]').remove()" class="btn ghost">
+        <a href="reading-room.html" style="display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); text-decoration: none; margin-bottom: 12px; transition: all 0.15s" onmouseover="this.style.background='oklch(0.55 0.15 250)';this.style.borderColor='oklch(0.55 0.15 250)'" onmouseout="this.style.background='var(--ink)';this.style.borderColor='var(--ink)'">
+          Enter the reading room →
+        </a>
+        <br>
+        <button onclick="this.closest('div[style*=fixed]').remove()" class="btn ghost" style="margin-top: 8px">
           close ×
         </button>
       </div>`;

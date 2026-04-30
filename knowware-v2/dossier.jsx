@@ -265,7 +265,7 @@ function PersonDossier({ personN, onClose }) {
 
           {/* CTA */}
           <div style={{ marginTop: 'auto' }}>
-            <a href="Contribute.html" style={{
+            <a href="contribute.html" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               background: 'var(--accent)', color: 'var(--paper)',
               padding: '14px 16px', textDecoration: 'none',
@@ -274,7 +274,7 @@ function PersonDossier({ personN, onClose }) {
             }}>
               READ FULL INTERVIEW <span>→</span>
             </a>
-            <a href="Contribute.html" style={{
+            <a href="contribute.html" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               background: 'var(--ink)', color: 'var(--paper)',
               padding: '12px 16px', textDecoration: 'none',

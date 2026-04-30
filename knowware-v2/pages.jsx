@@ -2006,7 +2006,7 @@ function Read({ onOpenReader }) {
                 "{synthQuote}"
               </p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-                <a href="Contribute.html" style={{
+                <a href="contribute.html" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 10,
                   background: 'var(--accent)', color: '#fff',
                   padding: mob ? '11px 16px' : '13px 20px', textDecoration: 'none',
@@ -2021,7 +2021,7 @@ function Read({ onOpenReader }) {
                   fontSize: 11, border: '1px solid rgba(240,240,234,0.25)',
                   letterSpacing: '0.02em',
                 }}>↗ {interviewCount} INTERVIEWS</button>
-                <a href="Contribute.html" style={{
+                <a href="contribute.html" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   background: 'none', color: 'var(--paper)', textDecoration: 'none',
                   padding: mob ? '11px 14px' : '13px 16px',
@@ -2594,7 +2594,7 @@ function ReaderDrawer({ chapter, cited }) {
           <div className="mono" style={{ fontSize: 9, color: 'var(--sub2)',
             marginTop: 10, lineHeight: 1.5 }}>
             Unlock after claiming a chapter spot.
-            <a href="Contribute.html" style={{ display: 'block', marginTop: 6,
+            <a href="contribute.html" style={{ display: 'block', marginTop: 6,
               color: 'var(--accent)', textDecoration: 'none' }}>Claim spot →</a>
           </div>
         </div>
@@ -2790,7 +2790,7 @@ function Join() {
             is being opened before the manuscript goes to print. Edit a chapter,
             annotate the margin, or just receive the correspondence.
           </p>
-          <a href="Contribute.html" style={{
+          <a href="contribute.html" style={{
             marginTop: 32, display: 'inline-flex', alignItems: 'center',
             gap: 12, background: 'var(--ink)', color: 'var(--paper)',
             padding: '16px 24px', fontFamily: '"JetBrains Mono", ui-monospace, monospace',
