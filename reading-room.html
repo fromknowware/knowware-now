@@ -829,9 +829,15 @@ proofBtn.addEventListener("click", () => {
 })();
 
 // ── Annotation system ─────────────────────────────────────────────────
-const GITHUB_REPO = "fromknowware/systems-intelligence";
-const PAGES_BASE  = `https://fromknowware.github.io/systems-intelligence`;
-const ANN_KEY     = "soi-annotations";
+// Annotations sync to annotations/annotations.json in the knowware-now repo.
+// Set SYNC_PAT to a fine-grained PAT with Contents:write on fromknowware/knowware-now.
+// Override at runtime: localStorage.setItem("soi-github-pat", "ghp_...")
+const SYNC_REPO = "fromknowware/knowware-now";
+const SYNC_PATH = "annotations/annotations.json";
+const SYNC_PAT  = ""; // ← paste PAT here, or set via localStorage("soi-github-pat")
+const PAGES_ANN = "https://fromknowware.github.io/knowware-now/annotations/annotations.json";
+const ANN_KEY   = "soi-annotations";
+
 const annPopup    = document.getElementById("ann-popup");
 const annModal    = document.getElementById("ann-modal");
 const annPanel    = document.getElementById("ann-panel");
@@ -841,57 +847,105 @@ let currentAnnotations = [];
 let pendingQuote = "";
 let viewingAnnId = null;
 
+function getPAT() { return localStorage.getItem("soi-github-pat") || SYNC_PAT; }
+
 function getAllAnnotations() {
   try { return JSON.parse(localStorage.getItem(ANN_KEY) || "{}"); } catch(e) { return {}; }
 }
 function getAnnotations(path) {
   return (getAllAnnotations()[path] || []).filter(a => !a.resolved);
 }
+
+// Encode/decode handles non-ASCII characters in annotation text
+function b64encode(str) { return btoa(unescape(encodeURIComponent(str))); }
+function b64decode(str) { return decodeURIComponent(escape(atob(str.replace(/\n/g, "")))); }
+
+// Read → merge local → write back. Retries once on SHA conflict (409).
+async function syncToGitHub(retrying = false) {
+  const pat = getPAT();
+  if (!pat) return;
+  const headers = { Authorization: `token ${pat}`, Accept: "application/vnd.github.v3+json", "Content-Type": "application/json" };
+  try {
+    // Read current remote file
+    const getRes = await fetch(`https://api.github.com/repos/${SYNC_REPO}/contents/${SYNC_PATH}`, { headers });
+    let sha = null, remote = {};
+    if (getRes.ok) {
+      const data = await getRes.json();
+      sha = data.sha;
+      try { remote = JSON.parse(b64decode(data.content)); } catch(e) {}
+    } else if (getRes.status !== 404) return; // unexpected error
+
+    // Merge: remote is source of truth; add any local entries not yet there
+    const local = getAllAnnotations();
+    for (const [path, anns] of Object.entries(local)) {
+      const remoteAnns = remote[path] || [];
+      const remoteIds  = new Set(remoteAnns.map(a => a.id));
+      for (const a of anns) {
+        if (!remoteIds.has(a.id)) { remoteAnns.push(a); remoteIds.add(a.id); }
+        else if (a.resolved) {
+          const idx = remoteAnns.findIndex(r => r.id === a.id);
+          if (idx !== -1) remoteAnns[idx] = a;
+        }
+      }
+      remote[path] = remoteAnns;
+    }
+
+    // Write back
+    const body = { message: "sync annotations", content: b64encode(JSON.stringify(remote, null, 2)) };
+    if (sha) body.sha = sha;
+    const putRes = await fetch(`https://api.github.com/repos/${SYNC_REPO}/contents/${SYNC_PATH}`, {
+      method: "PUT", headers, body: JSON.stringify(body)
+    });
+
+    // 409 = SHA conflict (another writer landed first) — retry once
+    if (putRes.status === 409 && !retrying) {
+      await new Promise(r => setTimeout(r, 800 + Math.random() * 400));
+      return syncToGitHub(true);
+    }
+  } catch(e) { /* silent — offline or PAT not set */ }
+}
+
+// Pull remote annotations into localStorage on startup
+async function fetchRemoteAnnotations() {
+  try {
+    const res = await fetch(`${PAGES_ANN}?t=${Date.now()}`);
+    if (!res.ok) return;
+    const remote = await res.json();
+    const local = getAllAnnotations();
+    let changed = false;
+    for (const [path, anns] of Object.entries(remote)) {
+      const localAnns = local[path] || [];
+      const localIds  = new Set(localAnns.map(a => a.id));
+      for (const a of anns) {
+        if (!localIds.has(a.id)) { localAnns.push(a); changed = true; }
+        else if (a.resolved) {
+          const idx = localAnns.findIndex(l => l.id === a.id);
+          if (idx !== -1 && !localAnns[idx].resolved) { localAnns[idx] = a; changed = true; }
+        }
+      }
+      local[path] = localAnns;
+    }
+    if (changed) localStorage.setItem(ANN_KEY, JSON.stringify(local));
+  } catch(e) { /* silent — file may not exist yet */ }
+}
+
 function addAnnotation(path, ann) {
   const all = getAllAnnotations();
   (all[path] = all[path] || []).push(ann);
   localStorage.setItem(ANN_KEY, JSON.stringify(all));
-  dispatchToGitHub({action: "add", sectionPath: path, annotation: ann});
+  syncToGitHub();
 }
 function resolveAnnotation(path, annId) {
   const all = getAllAnnotations();
   (all[path] || []).forEach(a => { if (a.id === annId) a.resolved = true; });
   localStorage.setItem(ANN_KEY, JSON.stringify(all));
-  dispatchToGitHub({action: "resolve", sectionPath: path, annId: annId});
+  syncToGitHub();
 }
 function deleteAnnotation(path, annId) {
   const all = getAllAnnotations();
   all[path] = (all[path] || []).filter(a => a.id !== annId);
   localStorage.setItem(ANN_KEY, JSON.stringify(all));
-}
-
-async function fetchRemoteAnnotations() {
-  try {
-    const res = await fetch(`${PAGES_BASE}/_meta/annotations.json?t=${Date.now()}`);
-    if (!res.ok) return;
-    const remote = await res.json();
-    const local = getAllAnnotations();
-    let merged = false;
-    for (const [path, anns] of Object.entries(remote)) {
-      const localAnns = local[path] || [];
-      const localIds = new Set(localAnns.map(a => a.id));
-      for (const a of anns) {
-        if (!localIds.has(a.id)) { localAnns.push(a); merged = true; }
-      }
-      local[path] = localAnns;
-    }
-    if (merged) localStorage.setItem(ANN_KEY, JSON.stringify(local));
-  } catch(e) { /* silent — file may not exist yet */ }
-}
-
-function dispatchToGitHub(payload) {
-  const pat = localStorage.getItem("soi-github-pat");
-  if (!pat) return;
-  fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
-    method: "POST",
-    headers: {"Authorization": `token ${pat}`, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json"},
-    body: JSON.stringify({event_type: "annotation", client_payload: payload})
-  }).catch(() => {});
+  syncToGitHub();
 }
 
 function applyHighlights(container, idx) {
