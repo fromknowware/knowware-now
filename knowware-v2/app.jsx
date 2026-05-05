@@ -19,23 +19,104 @@ function useBreakpoint() {
   return bp;
 }
 
+// ─── Hash routing ───────────────────────────────────────
+// URL scheme:
+//   #cover                  → cover page
+//   #table                  → The 81, graph view (default)
+//   #table/elements         → The 81, elements view
+//   #table/graph            → The 81, graph view
+//   #table/mo               → The 81, M.O. view
+//   #table/cast             → The 81, cast view
+//   #profile/N              → person dossier (N = 1–81)
+//   #read                   → read page
+//   #read/ch/N              → chapter N interview list
+//   #read/interview/N       → interview N markdown reader
+//   #join                   → join page
+
+const TABLE_VIEWS = ['elements', 'graph', 'mo', 'cast'];
+
+function parseHash() {
+  const h = (window.location.hash || '').slice(1) || 'cover';
+  const parts = h.split('/');
+  const key = parts[0] || 'cover';
+
+  if (key === 'profile' && parts[1]) {
+    const n = parseInt(parts[1]);
+    if (n >= 1 && n <= 81) return { page: 'table', tableView: 'graph', dossierN: n, reader: null };
+  }
+  if (key === 'table') {
+    const view = TABLE_VIEWS.includes(parts[1]) ? parts[1] : 'graph';
+    return { page: 'table', tableView: view, dossierN: null, reader: null };
+  }
+  if (key === 'read') {
+    if (parts[1] === 'ch' && parts[2]) {
+      const ch = parseInt(parts[2]);
+      if (ch >= 1 && ch <= 9) return { page: 'read', tableView: 'graph', dossierN: null, reader: { mode: 'chapter', ch } };
+    }
+    if (parts[1] === 'interview' && parts[2]) {
+      const n = parseInt(parts[2]);
+      const voice = window.INTERVIEWS?.find(v => v.n === n);
+      const url = voice ? window.interviewUrl(n) : null;
+      if (voice && url) return { page: 'read', tableView: 'graph', dossierN: null, reader: { mode: 'interview', url, voice, ch: voice.ch } };
+    }
+    return { page: 'read', tableView: 'graph', dossierN: null, reader: null };
+  }
+  if (key === 'join') return { page: 'join', tableView: 'graph', dossierN: null, reader: null };
+  return { page: 'cover', tableView: 'graph', dossierN: null, reader: null };
+}
+
+function profileSlug(n) {
+  const v = window.INTERVIEWS?.find(iv => iv.n === n);
+  if (!v) return String(n);
+  return `${n}-${v.slug.replace(/_/g, '-')}`;
+}
+
+function stateToHash(page, tableView, dossierN, reader) {
+  if (reader?.mode === 'interview' && reader.voice?.n) return `#read/interview/${profileSlug(reader.voice.n)}`;
+  if (reader?.mode === 'chapter' && reader.ch) return `#read/ch/${reader.ch}`;
+  if (dossierN) return `#profile/${profileSlug(dossierN)}`;
+  if (page === 'table') return tableView && tableView !== 'graph' ? `#table/${tableView}` : '#table';
+  if (page === 'read') return '#read';
+  if (page === 'join') return '#join';
+  return '#cover';
+}
+
 function App() {
   const bp = useBreakpoint();
-  const [page, setPage] = React.useState(() => {
-    try { return localStorage.getItem('kw.page') || 'cover'; } catch (e) { return 'cover'; }
-  });
-  const [dossierN,    setDossierN]    = React.useState(null);
+  const init = React.useMemo(parseHash, []);
+  const [page,      setPage]      = React.useState(init.page);
+  const [tableView, setTableView] = React.useState(init.tableView);
+  const [dossierN,  setDossierN]  = React.useState(init.dossierN);
   // reader: null | { mode:'chapter', ch } | { mode:'interview', url, voice, ch }
-  const [reader, setReader] = React.useState(null);
+  const [reader,    setReader]    = React.useState(init.reader);
 
+  const skipHashChange = React.useRef(false);
+
+  // State → hash sync
   React.useEffect(() => {
-    try { localStorage.setItem('kw.page', page); } catch (e) {}
+    const hash = stateToHash(page, tableView, dossierN, reader);
+    if (window.location.hash !== hash) {
+      skipHashChange.current = true;
+      window.location.hash = hash;
+    }
     window.scrollTo({ top: 0 });
-  }, [page]);
+  }, [page, tableView, dossierN, reader]);
 
+  // Hash → state (browser back/forward)
   React.useEffect(() => {
-    if (reader) window.scrollTo({ top: 0 });
-  }, [reader]);
+    function onHashChange() {
+      if (skipHashChange.current) { skipHashChange.current = false; return; }
+      const s = parseHash();
+      setPage(s.page);
+      setTableView(s.tableView);
+      setDossierN(s.dossierN);
+      setReader(s.reader);
+    }
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  const navTo = (p) => { setPage(p); setDossierN(null); setReader(null); };
 
   const openDossier = (n) => {
     setDossierN(n);
@@ -45,7 +126,7 @@ function App() {
   const openChapterInterviews = (ch) => setReader({ mode: 'chapter', ch });
   const openInterview = (url, voice, ch) => setReader({ mode: 'interview', url, voice, ch });
   const closeReader = () => setReader(null);
-  const backToChapter = () => setReader(r => r && r.ch ? { mode: 'chapter', ch: r.ch } : null);
+  const backToChapter = () => setReader(r => r?.ch ? { mode: 'chapter', ch: r.ch } : null);
 
   const nextInterview = React.useCallback(() => {
     if (!reader || reader.mode !== 'interview') return;
@@ -65,7 +146,7 @@ function App() {
 
   return (
     <BreakpointContext.Provider value={bp}>
-      <window.Shell page={page} setPage={(p) => { setPage(p); setDossierN(null); setReader(null); }}>
+      <window.Shell page={page} setPage={navTo}>
         {reader ? (
           reader.mode === 'chapter' ? (
             <window.ChapterInterviews
@@ -89,7 +170,7 @@ function App() {
         ) : (
           <>
             {page === 'cover' && <window.Cover setPage={setPage} />}
-            {page === 'table' && <window.TablePage setPage={setPage} onOpenDossier={openDossier} />}
+            {page === 'table' && <window.TablePage setPage={setPage} onOpenDossier={openDossier} view={tableView} setView={setTableView} />}
             {page === 'read'  && <window.Read onOpenReader={openChapterInterviews} />}
             {page === 'join'  && <window.Join />}
           </>

@@ -769,11 +769,10 @@ function CastView({ onOpenDossier }) {
 }
 
 // ─── The Table page ────────────────────────────────────
-function TablePage({ setPage, onOpenDossier }) {
+function TablePage({ setPage, onOpenDossier, view, setView }) {
   const bp = useBP();
   const mob = bp === 'mobile';
   const layout = bp === 'desktop' ? 'w27' : 'sq9';
-  const [view, setView] = React.useState('graph'); // 'table' | 'graph' | 'mo'
   const [hover, setHover] = React.useState(null);
   const [selected, setSelected] = React.useState(null);
   const [highlightGroup, setHighlightGroup] = React.useState(null);
