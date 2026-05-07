@@ -603,7 +603,7 @@ const CAST = [
   ]},
 ];
 
-function CastView({ onOpenDossier }) {
+function CastView({ onOpenDossier, hideHeader }) {
   const mob = useBP() === 'mobile';
 
   const allVoices = CAST.flatMap(c => c.voices);
@@ -637,8 +637,9 @@ function CastView({ onOpenDossier }) {
   };
 
   return (
-    <div style={{ paddingBottom: 80 }}>
+    <div style={{ paddingBottom: hideHeader ? 0 : 80 }}>
 
+      {!hideHeader && (<>
       {/* Explainer header */}
       <div style={{
         padding: mob ? '20px 16px 24px' : '28px 24px 32px',
@@ -694,6 +695,7 @@ function CastView({ onOpenDossier }) {
           </div>
         ))}
       </div>
+      </>)}
 
       {/* Chapter sections */}
       <div style={{ padding: mob ? '0 0 40px' : '0 0 40px' }}>
@@ -795,12 +797,12 @@ function TablePage({ setPage, onOpenDossier, view, setView }) {
             </h2>
           </div>
           <div style={{ display: 'flex', gap: 0, border: '1px solid var(--ink)' }}>
-            {[['table','ELEMENTS'],['graph','GRAPH'],['mo','M.O.'],['cast','CAST']].map(([k,l]) => (
+            {[['table','ELEMENTS'],['graph','GRAPH'],['mo','M.O.']].map(([k,l]) => (
               <button key={k} onClick={() => setView(k)} className="mono" style={{
                 background: view === k ? 'var(--ink)' : 'var(--paper)',
                 color: view === k ? 'var(--paper)' : 'var(--ink)',
                 border: 'none',
-                borderRight: k !== 'cast' ? '1px solid var(--ink)' : 'none',
+                borderRight: k !== 'mo' ? '1px solid var(--ink)' : 'none',
                 padding: '7px 12px', cursor: 'pointer', fontSize: 11,
               }}>{l}</button>
             ))}
@@ -809,20 +811,64 @@ function TablePage({ setPage, onOpenDossier, view, setView }) {
 
         {view === 'table' ? (
           <>
-            {/* Hover-to-preview strip — below title, above table, sticky on scroll */}
+            {/* Hover-to-preview strip — sticky, reacts to grid hover */}
             <div style={{
               position: 'sticky', top: 48, zIndex: 9,
               borderTop: '1px solid var(--rule)',
               borderBottom: '1px solid var(--rule)',
               marginLeft: mob ? -16 : -24, marginRight: mob ? -16 : -24,
               marginBottom: 0,
-              minHeight: 88, display: 'flex', alignItems: 'stretch',
+              height: mob ? 72 : 96, overflow: 'hidden',
+              display: 'flex', alignItems: 'stretch',
               background: shown ? `var(${shown.group.varCSS})` : 'var(--bg)',
               transition: 'background .15s',
               boxShadow: shown ? '0 2px 12px rgba(0,0,0,0.07)' : 'none',
             }}>
               {shown ? <VoiceStrip v={shown} /> : <EmptyStrip />}
             </div>
+
+            {/* Black band — cast context */}
+            <div style={{
+              marginLeft: mob ? -16 : -24, marginRight: mob ? -16 : -24,
+              padding: mob ? '20px 16px 24px' : '28px 24px 32px',
+              background: 'var(--ink)', color: 'var(--paper)',
+              borderBottom: '1px solid var(--rule)',
+            }}>
+              <p style={{
+                margin: '0 0 20px',
+                fontSize: mob ? 14 : 15, lineHeight: 1.6,
+                letterSpacing: '-0.01em', color: 'oklch(0.75 0.04 250)',
+                maxWidth: 640,
+              }}>
+                None of these interviews happened. Every insight is real.
+                All 81 voices are synthesised from published work, lectures, papers, and primary sources.
+                Nine are legacy guests — historical figures whose ideas outlasted their presence.
+                The pattern is real even when the room never existed.
+              </p>
+              {(() => {
+                const allVoices = CAST.flatMap(c => c.voices);
+                const stats = [
+                  ['81', 'total voices'],
+                  [String(allVoices.filter(v => v.f === 'old').length), 'old'],
+                  [String(allVoices.filter(v => v.f !== 'old').length), 'new'],
+                  [String(allVoices.filter(v => v.tg === 'legacy').length), 'legacy guests'],
+                  [String(allVoices.filter(v => v.s === 'anon').length), 'anonymous'],
+                  [String(allVoices.filter(v => v.tg === 'origin').length), 'named the field'],
+                ];
+                return (
+                  <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                    {stats.map(([v, l]) => (
+                      <div key={l} style={{ borderLeft: '2px solid var(--accent)', paddingLeft: 10 }}>
+                        <div className="mono" style={{ fontSize: mob ? 18 : 22, fontWeight: 500, lineHeight: 1 }}>{v}</div>
+                        <div className="mono" style={{ fontSize: 9, color: 'var(--sub)', marginTop: 3, letterSpacing: '0.04em' }}>{l.toUpperCase()}</div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Grid — periodic table of voices */}
             <HorizontalLegend active={highlightGroup} setActive={setHighlightGroup} />
             <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)',
               borderTop: 'none', padding: 16 }}>
@@ -838,17 +884,21 @@ function TablePage({ setPage, onOpenDossier, view, setView }) {
               />
             </div>
             <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
-              marginTop: 10, display: 'flex', justifyContent: 'space-between' }}>
+              marginTop: 10, marginBottom: 40, display: 'flex', justifyContent: 'space-between' }}>
               <span>Hover a cell for detail · Hover a tier to isolate · Click to pin</span>
               <span>{selected ? `pinned № ${String(selected).padStart(2, '0')}` : '—'}</span>
+            </div>
+
+            {/* Cast — full manifest, no duplicate header */}
+            <div style={{ marginLeft: mob ? -16 : -24, marginRight: mob ? -16 : -24,
+              borderTop: '1px solid var(--rule)' }}>
+              <CastView onOpenDossier={onOpenDossier} hideHeader />
             </div>
           </>
         ) : view === 'graph' ? (
           <GraphView onOpenDossier={onOpenDossier} />
-        ) : view === 'mo' ? (
-          <MOTable onOpenDossier={onOpenDossier} />
         ) : (
-          <CastView onOpenDossier={onOpenDossier} />
+          <MOTable onOpenDossier={onOpenDossier} />
         )}
       </div>
     </div>
@@ -1954,8 +2004,7 @@ function Read({ onOpenReader }) {
           />
         </article>
 
-        {/* RIGHT RAIL — collapsible drawer */}
-        <ReaderDrawer chapter={s.n} cited={cited} />
+        {/* RIGHT RAIL — reserved for editor tools */}
       </div>
 
       {/* ── Full-width synthesis band ── */}
