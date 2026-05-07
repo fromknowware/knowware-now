@@ -22,18 +22,16 @@ function useBreakpoint() {
 // ─── Hash routing ───────────────────────────────────────
 // URL scheme:
 //   #cover                  → cover page
-//   #table                  → The 81, graph view (default)
-//   #table/elements         → The 81, elements view
+//   #table                  → The 81, elements view (default)
 //   #table/graph            → The 81, graph view
 //   #table/mo               → The 81, M.O. view
-//   #table/cast             → The 81, cast view
 //   #profile/N              → person dossier (N = 1–81)
 //   #read                   → read page
 //   #read/ch/N              → chapter N interview list
 //   #read/interview/N       → interview N markdown reader
 //   #join                   → join page
 
-const TABLE_VIEWS = ['elements', 'graph', 'mo', 'cast'];
+const TABLE_VIEWS = ['table', 'graph', 'mo'];
 
 function parseHash() {
   const h = (window.location.hash || '').slice(1) || 'cover';
@@ -45,7 +43,10 @@ function parseHash() {
     if (n >= 1 && n <= 81) return { page: 'table', tableView: 'graph', dossierN: n, reader: null };
   }
   if (key === 'table') {
-    const view = TABLE_VIEWS.includes(parts[1]) ? parts[1] : 'graph';
+    // 'elements' and 'cast' are legacy aliases → remap to 'table'
+    const raw = parts[1];
+    const view = raw === 'elements' || raw === 'cast' ? 'table'
+      : TABLE_VIEWS.includes(raw) ? raw : 'table';
     return { page: 'table', tableView: view, dossierN: null, reader: null };
   }
   if (key === 'read') {
@@ -75,7 +76,7 @@ function stateToHash(page, tableView, dossierN, reader) {
   if (reader?.mode === 'interview' && reader.voice?.n) return `#read/interview/${profileSlug(reader.voice.n)}`;
   if (reader?.mode === 'chapter' && reader.ch) return `#read/ch/${reader.ch}`;
   if (dossierN) return `#profile/${profileSlug(dossierN)}`;
-  if (page === 'table') return tableView && tableView !== 'graph' ? `#table/${tableView}` : '#table';
+  if (page === 'table') return tableView && tableView !== 'table' ? `#table/${tableView}` : '#table';
   if (page === 'read') return '#read';
   if (page === 'join') return '#join';
   return '#cover';
@@ -116,7 +117,12 @@ function App() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  const navTo = (p) => { setPage(p); setDossierN(null); setReader(null); };
+  const navTo = (p) => {
+    setPage(p);
+    setDossierN(null);
+    setReader(null);
+    if (p === 'table') setTableView('table');
+  };
 
   const openDossier = (n) => {
     setDossierN(n);
