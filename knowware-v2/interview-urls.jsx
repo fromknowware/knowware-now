@@ -1,6 +1,6 @@
 // Maps interview n (1–81) → raw GitHub URL for the .md file
 
-const BASE = 'https://raw.githubusercontent.com/fromknowware/book/main/chapters/';
+const BASE = 'https://raw.githubusercontent.com/fromknowware/systems-intelligence/main/chapters/';
 
 const INTERVIEW_SLUGS = {
    1: 'ch01/interviews/01.01.A-dr_paul_pangaro.md',
