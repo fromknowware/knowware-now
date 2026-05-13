@@ -22,11 +22,41 @@ const MD_CSS = `
   font-size: 17px; line-height: 1.7;
   letter-spacing: -0.015em; margin: 0 0 22px;
 }
-.kw-md > p:first-of-type::first-letter {
-  font-size: 4.2em; font-weight: 400;
-  float: left; line-height: 0.78;
-  margin: 6px 10px 0 0;
-  letter-spacing: -0.04em;
+.kw-md .kw-speaker {
+  font-size: 12px; font-variant: small-caps;
+  letter-spacing: 0.09em; font-weight: 600;
+  color: rgb(100, 45, 20);
+  margin: 36px 0 2px;
+}
+.kw-md .kw-interviewer {
+  font-size: 12px; font-variant: small-caps;
+  letter-spacing: 0.09em;
+  color: var(--sub);
+  margin: 36px 0 2px;
+}
+.kw-md .kw-stagedir {
+  font-size: 14px; font-style: italic;
+  color: var(--sub); line-height: 1.55;
+  margin: 4px 0 16px;
+}
+.kw-md .kw-timecode {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px; color: var(--sub2);
+  letter-spacing: 0.03em; margin: 28px 0 2px;
+}
+.kw-md .kw-tc-banner {
+  margin: 44px 0; padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  display: flex; gap: 18px; align-items: baseline;
+}
+.kw-md .kw-tc-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px; color: var(--sub2); flex-shrink: 0;
+}
+.kw-md .kw-tc-quote {
+  font-size: 13px; font-style: italic;
+  letter-spacing: -0.01em; color: var(--sub);
 }
 .kw-md blockquote {
   margin: 36px 0; padding: 0 0 0 20px;
@@ -69,6 +99,46 @@ const MD_CSS = `
 .kw-md td { padding: 10px 12px; border-bottom: 1px solid var(--rule); }
 `;
 
+// Transform raw marked HTML into interview-typeset HTML
+function processInterviewHtml(html) {
+  // 1. Timecode Visual banners  e.g. **[8:30] [Timecode Visual: "QUOTE — Name"]**
+  html = html.replace(
+    /<p><strong>\[([^\]]+)\] \[Timecode Visual: "([^"]+)"\]<\/strong><\/p>/g,
+    '<div class="kw-tc-banner"><span class="kw-tc-label">[$1]</span><span class="kw-tc-quote">"$2"</span></div>'
+  );
+
+  // 2. Combined timecode + stage direction  e.g. **[00:00 - 00:45] [Visual: ...]**
+  html = html.replace(
+    /<p><strong>(\[\d+:\d+(?:\s*[-–—]+\s*\d+:\d+)?\]) \[Visual: ([^\]]+)\]<\/strong><\/p>/g,
+    '<p class="kw-timecode">$1</p><p class="kw-stagedir">$2</p>'
+  );
+
+  // 3. Timecode only  e.g. **[00:00 - 00:45]**
+  html = html.replace(
+    /<p><strong>(\[\d+:\d+(?:\s*[-–—]+\s*\d+:\d+)?\])<\/strong><\/p>/g,
+    '<p class="kw-timecode">$1</p>'
+  );
+
+  // 4. Stage direction only  e.g. **[Visual: ...]**
+  html = html.replace(
+    /<p><strong>\[Visual: ([^\]]+)\]<\/strong><\/p>/g,
+    '<p class="kw-stagedir">$1</p>'
+  );
+
+  // 5. Speakers — ALL_CAPS_NAME: at start of <p> followed by newline + opening quote
+  html = html.replace(
+    /<p><strong>([A-Z][A-Z.\s()]+?):<\/strong>\n"/g,
+    (_, name) => {
+      const n = name.trim();
+      const cls = n === 'INTERVIEWER' ? 'kw-interviewer' : 'kw-speaker';
+      const display = n.charAt(0) + n.slice(1).toLowerCase().replace(/\(v\.o\.\)/g, '(V.O.)');
+      return `<p class="${cls}">${display}</p>\n<p>"`;
+    }
+  );
+
+  return html;
+}
+
 function MarkdownReader({ url, onBack, onNext, hasNext }) {
   const bp = React.useContext(window.BreakpointContext);
   const mob = bp === 'mobile';
@@ -86,7 +156,7 @@ function MarkdownReader({ url, onBack, onNext, hasNext }) {
         // Extract title from first # heading if present
         const titleMatch = text.match(/^#\s+(.+)$/m);
         setTitle(titleMatch ? titleMatch[1] : '');
-        setHtml(window.marked.parse(text));
+        setHtml(processInterviewHtml(window.marked.parse(text)));
         setState('ok');
       })
       .catch(() => setState('error'));
