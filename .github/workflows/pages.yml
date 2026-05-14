@@ -20,6 +20,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: knowware-now
+          projectName: knowware-book
           directory: .
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
