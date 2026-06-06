@@ -7,10 +7,11 @@ function Shell({ page, setPage, children }) {
   const bp = useBP();
   const mob = bp === 'mobile';
   const nav = [
-    ['cover', '01', 'Index'],
-    ['table', '02', 'The 81'],
-    ['read',  '03', 'Manuscript'],
-    ['join',  '04', 'Contribute'],
+    ['cover',  '01', 'Index'],
+    ['table',  '02', 'The 81'],
+    ['read',   '03', 'Manuscript'],
+    ['method', '04', 'Method'],
+    ['join',   '05', 'Contribute'],
   ];
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -216,7 +217,7 @@ function Cover({ setPage }) {
         }}>
           <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
             display: 'flex', justifyContent: 'space-between' }}>
-            <span>FIG. 01</span><span>INTERVIEWS</span>
+            <span>FIG. 01</span><span>SYNTHESES</span>
           </div>
           <div style={{
             fontSize: 'min(92cqw, 460px)',
@@ -229,7 +230,7 @@ function Cover({ setPage }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
               fontStyle: 'italic', letterSpacing: '-0.005em' }}>
-              These interviews never happened.
+              Not interviews — the Third Body in action.
             </div>
             <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
               display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -652,10 +653,12 @@ function CastView({ onOpenDossier, hideHeader }) {
           letterSpacing: '-0.01em', color: 'oklch(0.75 0.04 250)',
           maxWidth: 640,
         }}>
-          None of these interviews happened. Every insight is real.
-          All 81 voices are synthesised from published work, lectures, papers, and primary sources.
+          What you are reading is not interviews. It is the Third Body in action —
+          human knowledge coordinated with machine synthesis to produce insights that
+          neither could generate independently. Every insight is real: all 81 voices are
+          synthesised from published work, lectures, papers, and primary sources.
           Nine are legacy guests — historical figures whose ideas outlasted their presence.
-          The pattern is real even when the room never existed.
+          This book is not about Knowware. This book IS Knowware.
         </p>
         {/* Stats row */}
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -840,10 +843,12 @@ function TablePage({ setPage, onOpenDossier, view, setView }) {
                 letterSpacing: '-0.01em', color: 'oklch(0.75 0.04 250)',
                 maxWidth: 640,
               }}>
-                None of these interviews happened. Every insight is real.
-                All 81 voices are synthesised from published work, lectures, papers, and primary sources.
+                What you are reading is not interviews. It is the Third Body in action —
+                human knowledge coordinated with machine synthesis to produce insights that
+                neither could generate independently. Every insight is real: all 81 voices are
+                synthesised from published work, lectures, papers, and primary sources.
                 Nine are legacy guests — historical figures whose ideas outlasted their presence.
-                The pattern is real even when the room never existed.
+                This book is not about Knowware. This book IS Knowware.
               </p>
               {(() => {
                 const allVoices = CAST.flatMap(c => c.voices);
@@ -1130,30 +1135,28 @@ function GraphView({ onOpenDossier }) {
         const baseA = tier === 'A' ? [100,140,220] : tier === 'P' ? [210,110,70] : [80,170,110];
         const [r,g,b] = baseA;
 
-        const fill = isDim
-          ? `rgba(${r},${g},${b},0.12)`
-          : (isPinned || isHovered)
+        // Hollow circles: tier colour as the outline, background as the fill.
+        const stroke = isDim
+          ? `rgba(${r},${g},${b},0.2)`
+          : isPinned
+          ? 'rgba(200,30,30,0.95)'
+          : isHovered
           ? `rgb(${Math.round(r*0.6)},${Math.round(g*0.6)},${Math.round(b*0.6)})`
           : isNbr
-          ? `rgba(${r},${g},${b},0.88)`
-          : `rgba(${r},${g},${b},0.65)`;
+          ? `rgba(${r},${g},${b},0.95)`
+          : `rgba(${r},${g},${b},0.8)`;
+
+        const lineWidth = isPinned ? 2.5 : isHovered ? 2 : isNbr ? 1.6 : 1.3;
 
         const radius = isPinned ? R+5 : isHovered ? R+3 : isNbr ? R+1 : R-2;
 
         ctx.beginPath();
         ctx.arc(n.x, n.y, radius, 0, Math.PI*2);
-        ctx.fillStyle = fill;
+        ctx.fillStyle = bg;
         ctx.fill();
-
-        if (isPinned) {
-          ctx.strokeStyle = 'rgba(200,30,30,0.85)';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        } else if (isHovered) {
-          ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-        }
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = lineWidth;
+        ctx.stroke();
 
         const showLabel = isPinned || isHovered || isNbr || !hasFocus;
         if (showLabel && !isDim) {
@@ -1570,7 +1573,7 @@ function MOTable({ onOpenDossier }) {
             </div>
             <div style={{ fontSize: 17, letterSpacing: '-0.015em',
               lineHeight: 1.4, maxWidth: '72ch' }}>
-              None of these interviews happened — but they did. These are the
+              Not interviews — the Third Body made visible. These are the
               digital twins: voices from different fields whose knowledge
               coordinates so precisely they could only have been assembled
               by the same intelligence that assembled the rest.
@@ -1663,7 +1666,7 @@ function EmptyStrip() {
       {!mob && <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
         letterSpacing: '-0.005em' }}>HOVER TO PREVIEW</div>}
       <div style={{ fontSize: 13, color: 'var(--sub)', lineHeight: 1.4 }}>
-        {mob ? 'Tap any cell to open a dossier.' : 'Each cell is one of the eighty-one interviews. Colour marks the tier — blue for academics, terracotta for practitioners, sage for visionaries.'}
+        {mob ? 'Tap any cell to open a dossier.' : 'Each cell is one of the eighty-one syntheses. Colour marks the tier — blue for academics, terracotta for practitioners, sage for visionaries.'}
       </div>
       <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)', flexShrink: 0 }}>
         81 · 09 · 03
@@ -2061,14 +2064,6 @@ function Read({ onOpenReader }) {
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                   fontSize: 11, letterSpacing: '0.04em',
                 }}>→ READ FULL CHAPTER</a>
-                <button onClick={() => onOpenReader && onOpenReader(s.n)} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 8,
-                  background: 'none', color: 'var(--paper)',
-                  padding: mob ? '11px 14px' : '13px 16px', cursor: 'pointer',
-                  fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 11, border: '1px solid rgba(240,240,234,0.25)',
-                  letterSpacing: '0.02em',
-                }}>↗ {interviewCount} INTERVIEWS</button>
                 <a href="contribute.html" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   background: 'none', color: 'var(--paper)', textDecoration: 'none',
@@ -3216,4 +3211,313 @@ function Btn({ children, filled, onClick }) {
   );
 }
 
-Object.assign(window, { Shell, Cover, TablePage, Read, Join });
+// ─── Method page ───────────────────────────────────────
+function MethodPage({ setPage }) {
+  const mob = useBP() === 'mobile';
+
+  const LINEAGE = [
+    { year: '1948', name: 'Norbert Wiener', label: 'Cybernetics', note: 'Control and communication in the animal and the machine. Feedback loops between human operators and anti-aircraft radar — the first formal model of human-machine coordination.' },
+    { year: '1956', name: 'W. Ross Ashby', label: 'Requisite Variety', note: "Law of Requisite Variety: only variety can absorb variety. A system's regulatory capacity must match the complexity of its environment — the formal condition for coordination to hold." },
+    { year: '1972', name: 'Stafford Beer', label: 'Viable System Model', note: 'Five nested subsystems required for any living organisation to survive. System 3 coordinates operations. System 4 scans the environment. System 5 holds identity. Without all five, the organisation dies.' },
+    { year: '1972', name: 'Gregory Bateson', label: 'Ecology of Mind', note: 'Levels of Learning: Learning I is stimulus-response; Learning II is recognising patterns across contexts; Learning III is a paradigm shift in how reality is framed. Knowware requires Learning II.' },
+    { year: '1975', name: 'Gordon Pask', label: 'Conversation Theory', note: 'Knowledge does not reside in either participant of a conversation — it emerges from the interaction between them. Paskian conversations at scale are exactly what the 81 syntheses represent.' },
+  ];
+
+  const RECOGNIZERS = [
+    { domain: 'Kitchen', figure: 'The Chef', text: 'Thirty years on the line. When the sauté cook adjusts to the sound of the sear two stations over — no words, just weight and timing — that silent choreography is the same pattern. The brigade system is coordination intelligence with fire.' },
+    { domain: 'Construction', figure: 'The Foreman', text: 'AI-coordinated logistics on a major job site. The software didn\'t swing the hammers — it orchestrated delivery windows, pour schedules, and crew movement. The site finished three weeks early. Zero safety incidents. Neither the human nor the machine did that alone.' },
+    { domain: 'Classroom', figure: 'The Teacher', text: 'Watching a student use an AI writing tool to produce an essay. The student guided. The AI suggested. The student edited. The resulting work was something neither could have written independently. The intelligence lived in the exchange.' },
+    { domain: 'Autocomplete', figure: 'The Sentence', text: 'You type "looking forward to" and Gmail offers "seeing you tomorrow" in grey. You read it. You agree. Tab. Who wrote that sentence? You had the intent. The machine had the probability. You coordinated. That sentence is the Third Body in three seconds.' },
+  ];
+
+  return (
+    <div>
+      {/* Masthead */}
+      <div className="mono" style={{
+        borderBottom: '1px solid var(--rule)',
+        padding: mob ? '8px 16px' : '10px 24px',
+        display: 'grid',
+        gridTemplateColumns: mob ? '1fr 1fr' : 'repeat(4, 1fr)',
+        gap: 16, fontSize: 10, color: 'var(--sub)',
+      }}>
+        <span>METHOD / 04</span>
+        {!mob && <span>COORDINATION SYNTHESIS</span>}
+        {!mob && <span>EPISTEMIC ARCHITECTURE</span>}
+        <span style={{ textAlign: 'right' }}>SYSTEMS OF INTELLIGENCE</span>
+      </div>
+
+      {/* Hero statement — full bleed dark */}
+      <div style={{
+        background: 'var(--ink)', color: 'var(--paper)',
+        padding: mob ? '40px 16px 48px' : '64px 48px 72px',
+        borderBottom: '1px solid var(--rule)',
+      }}>
+        <div style={{ maxWidth: 820 }}>
+          <div className="mono" style={{ fontSize: 10, color: 'var(--accent-soft)',
+            letterSpacing: '0.06em', marginBottom: 28 }}>
+            THE SYNTHESIS IS THE PROOF
+          </div>
+          <p style={{
+            margin: 0,
+            fontSize: mob ? 20 : 32,
+            lineHeight: 1.3,
+            letterSpacing: '-0.02em',
+            fontStyle: 'italic',
+          }}>
+            "No human interviewer sat across from Stuart Russell, Melanie Mitchell,
+            or Judea Pearl. Instead, their published thinking — decades of papers,
+            lectures, debates, and books — was coordinated through an AI system that
+            found emergent patterns none of them articulated alone."
+          </p>
+          <p style={{
+            margin: '28px 0 0',
+            fontSize: mob ? 16 : 20,
+            lineHeight: 1.45,
+            letterSpacing: '-0.015em',
+            color: 'oklch(0.75 0.04 250)',
+          }}>
+            What you are reading is not interviews. It is the Third Body in action —
+            human knowledge coordinated with machine synthesis to produce insights
+            that neither could generate independently.{' '}
+            <span style={{ color: 'var(--accent-soft)', fontWeight: 500 }}>
+              This book is not about Knowware. This book IS Knowware.
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* Two-body vs Three-body */}
+      <div style={{ padding: mob ? '40px 16px' : '56px 48px', borderBottom: '1px solid var(--rule)' }}>
+        <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
+          letterSpacing: '0.06em', marginBottom: 24 }}>01 · TWO BODIES VS THREE BODIES</div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mob ? '1fr' : '1fr 1fr',
+          gap: mob ? 16 : 2,
+          border: '1px solid var(--ink)',
+        }}>
+          {/* Left — AI Hallucination */}
+          <div style={{
+            padding: mob ? 20 : 32,
+            borderRight: mob ? 'none' : '1px solid var(--ink)',
+            borderBottom: mob ? '1px solid var(--ink)' : 'none',
+          }}>
+            <div className="mono" style={{ fontSize: 9, letterSpacing: '0.06em',
+              color: 'var(--sub)', marginBottom: 16 }}>TWO-BODY SYSTEM</div>
+            <div style={{ fontSize: mob ? 18 : 22, fontWeight: 500,
+              letterSpacing: '-0.02em', marginBottom: 16 }}>
+              AI Hallucination
+            </div>
+            {[
+              ['Mechanism', 'Machine generates content directly from training data. No grounding in specific human expertise.'],
+              ['Constraint', 'Lacks contextual coordination and intentional design. The output may appear authoritative but simulates authority rather than earning it.'],
+              ['Result', 'A stochastic parrot. Confident confabulation. No Third Body — only the machine pretending to be one.'],
+            ].map(([k, v]) => (
+              <div key={k} style={{ display: 'grid', gridTemplateColumns: '90px 1fr',
+                gap: 12, marginBottom: 14, alignItems: 'start' }}>
+                <span className="mono" style={{ fontSize: 10, color: 'var(--sub)', paddingTop: 2 }}>{k}</span>
+                <span style={{ fontSize: 13, lineHeight: 1.55, color: 'var(--ink)' }}>{v}</span>
+              </div>
+            ))}
+          </div>
+          {/* Right — Coordination Synthesis */}
+          <div style={{
+            padding: mob ? 20 : 32,
+            background: 'var(--paper)',
+          }}>
+            <div className="mono" style={{ fontSize: 9, letterSpacing: '0.06em',
+              color: 'var(--accent)', marginBottom: 16 }}>THREE-BODY SYSTEM</div>
+            <div style={{ fontSize: mob ? 18 : 22, fontWeight: 500,
+              letterSpacing: '-0.02em', marginBottom: 16 }}>
+              Coordination Synthesis
+            </div>
+            {[
+              ['Body A', 'Human expertise: decades of published work by named thinkers — verified, cited, real.'],
+              ['Body B', 'Machine pattern recognition: finding cross-domain connections no single human mind could hold simultaneously.'],
+              ['Context', 'Authorial intent: the author\'s coordination architecture — the questions asked, the curation applied, the critical editing that shaped every synthesis.'],
+              ['Result', 'Paskian conversations at scale. The synthesis IS the Third Body. Knowledge that emerges from the interaction, not from either participant alone.'],
+            ].map(([k, v]) => (
+              <div key={k} style={{ display: 'grid', gridTemplateColumns: '90px 1fr',
+                gap: 12, marginBottom: 14, alignItems: 'start' }}>
+                <span className="mono" style={{ fontSize: 10, color: 'var(--accent)', paddingTop: 2 }}>{k}</span>
+                <span style={{ fontSize: 13, lineHeight: 1.55, color: 'var(--ink)' }}>{v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Recognition examples */}
+      <div style={{ padding: mob ? '40px 16px' : '56px 48px', borderBottom: '1px solid var(--rule)' }}>
+        <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
+          letterSpacing: '0.06em', marginBottom: 8 }}>02 · RECOGNITION OVER REVELATION</div>
+        <p style={{ fontSize: mob ? 16 : 20, lineHeight: 1.4,
+          letterSpacing: '-0.015em', margin: '0 0 36px', maxWidth: 680,
+          color: 'var(--sub)' }}>
+          You do not need to accept a new theory. You need to recognise what you already know.
+          The pattern existed before the name.
+        </p>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mob ? '1fr' : 'repeat(2, 1fr)',
+          gap: 2, border: '1px solid var(--rule)',
+        }}>
+          {RECOGNIZERS.map((r, i) => (
+            <div key={r.domain} style={{
+              padding: mob ? '20px 16px' : '28px 24px',
+              borderRight: !mob && i % 2 === 0 ? '1px solid var(--rule)' : 'none',
+              borderBottom: i < RECOGNIZERS.length - 2 || mob ? '1px solid var(--rule)' : 'none',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between',
+                alignItems: 'baseline', marginBottom: 12 }}>
+                <span style={{ fontSize: mob ? 15 : 17, fontWeight: 500,
+                  letterSpacing: '-0.015em' }}>{r.figure}</span>
+                <span className="mono" style={{ fontSize: 9, color: 'var(--sub)',
+                  letterSpacing: '0.04em' }}>{r.domain.toUpperCase()}</span>
+              </div>
+              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.65,
+                color: 'var(--sub)', letterSpacing: '-0.005em' }}>{r.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* The formula */}
+      <div style={{
+        background: 'var(--paper)',
+        padding: mob ? '40px 16px' : '56px 48px',
+        borderBottom: '1px solid var(--rule)',
+      }}>
+        <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
+          letterSpacing: '0.06em', marginBottom: 28 }}>03 · THE COORDINATION FUNCTION</div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mob ? '1fr' : '1fr 1fr',
+          gap: mob ? 32 : 64, alignItems: 'start',
+        }}>
+          <div>
+            <div style={{
+              fontSize: mob ? 'clamp(28px, 8vw, 48px)' : 'clamp(32px, 5vw, 56px)',
+              fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.1,
+              fontFamily: 'Georgia, serif',
+              borderBottom: '2px solid var(--ink)',
+              paddingBottom: 20, marginBottom: 20,
+            }}>
+              C(A, B, Context) → Emergence
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                ['C', 'Coordination — the active process, not a static state'],
+                ['A', 'Human expertise: domain knowledge, lived experience, authorial intent'],
+                ['B', 'Machine synthesis: pattern recognition at scale, cross-domain connection'],
+                ['Context', 'The specific problem space, the question asked, the coordination architecture'],
+                ['Emergence', 'The Third Body — insights that belong to neither A nor B alone'],
+              ].map(([sym, def]) => (
+                <div key={sym} style={{ display: 'grid',
+                  gridTemplateColumns: 'minmax(110px, max-content) 1fr',
+                  gap: 16, alignItems: 'baseline' }}>
+                  <span style={{ fontSize: 18, fontWeight: 500,
+                    letterSpacing: '-0.02em', fontFamily: 'Georgia, serif',
+                    color: 'var(--accent)', lineHeight: 1.2,
+                    whiteSpace: 'nowrap' }}>{sym}</span>
+                  <span style={{ fontSize: 12, lineHeight: 1.6,
+                    color: 'var(--sub)' }}>{def}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p style={{ margin: '0 0 16px', fontSize: mob ? 15 : 17,
+              lineHeight: 1.5, letterSpacing: '-0.015em' }}>
+              The formula formalises what Gordon Pask proved in 1975: knowledge
+              is not extracted from one mind and deposited into another. It{' '}
+              <em>emerges from the interaction</em> between participants.
+            </p>
+            <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.6,
+              color: 'var(--sub)', letterSpacing: '-0.01em' }}>
+              In the 81 syntheses, Body A is the thinker's published corpus —
+              verified, citable, real. Body B is the pattern-recognition layer
+              that spans decades and domains simultaneously. The Context is the
+              author's coordination architecture: the specific questions,
+              the editorial curation, the insistence on divergence over
+              mere summary.
+            </p>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6,
+              color: 'var(--sub)', letterSpacing: '-0.01em' }}>
+              What emerges is not a simulation of an interview. It is something
+              an interview could not produce — pattern synthesis across an
+              entire intellectual life, held simultaneously.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Cybernetic lineage */}
+      <div style={{ padding: mob ? '40px 16px 56px' : '56px 48px 72px' }}>
+        <div className="mono" style={{ fontSize: 10, color: 'var(--sub)',
+          letterSpacing: '0.06em', marginBottom: 8 }}>04 · THE LINEAGE</div>
+        <p style={{ fontSize: mob ? 15 : 18, lineHeight: 1.45,
+          letterSpacing: '-0.015em', margin: '0 0 36px', maxWidth: 640,
+          color: 'var(--sub)' }}>
+          This concept is not new. That is not a weakness — it is sixty years
+          of validation. Knowware is where these frameworks converge.
+        </p>
+        <div style={{ position: 'relative' }}>
+          {/* Vertical rule */}
+          {!mob && (
+            <div style={{
+              position: 'absolute', left: 72, top: 0, bottom: 0,
+              width: 1, background: 'var(--rule)',
+            }} />
+          )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {LINEAGE.map((l, i) => (
+              <div key={l.year} style={{
+                display: 'grid',
+                gridTemplateColumns: mob ? '1fr' : '72px 1fr',
+                gap: mob ? 8 : 0,
+                borderBottom: i < LINEAGE.length - 1 ? '1px solid var(--rule)' : 'none',
+                padding: mob ? '20px 0' : '24px 0 24px 0',
+              }}>
+                <div style={{
+                  padding: mob ? 0 : '0 24px 0 0',
+                  display: 'flex', flexDirection: mob ? 'row' : 'column',
+                  alignItems: mob ? 'baseline' : 'flex-start',
+                  gap: mob ? 12 : 4,
+                }}>
+                  <span className="mono" style={{ fontSize: mob ? 11 : 12,
+                    fontWeight: 600, color: 'var(--ink)' }}>{l.year}</span>
+                  {mob && <span className="mono" style={{ fontSize: 9,
+                    color: 'var(--accent)', letterSpacing: '0.04em' }}>{l.label.toUpperCase()}</span>}
+                </div>
+                <div style={{ paddingLeft: mob ? 0 : 32 }}>
+                  <div style={{ display: 'flex', gap: 12,
+                    alignItems: 'baseline', marginBottom: 8 }}>
+                    <span style={{ fontSize: mob ? 15 : 17, fontWeight: 500,
+                      letterSpacing: '-0.015em' }}>{l.name}</span>
+                    {!mob && <span className="mono" style={{ fontSize: 9,
+                      color: 'var(--accent)', letterSpacing: '0.04em' }}>
+                      {l.label.toUpperCase()}
+                    </span>}
+                  </div>
+                  <p style={{ margin: 0, fontSize: 13, lineHeight: 1.65,
+                    color: 'var(--sub)', maxWidth: 640,
+                    letterSpacing: '-0.005em' }}>{l.note}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mono" style={{ marginTop: 28, fontSize: 11,
+            color: 'var(--sub)', borderTop: '1px solid var(--rule)', paddingTop: 16,
+            display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+            <span>Wiener → Ashby → Beer → Bateson → Pask → Knowware</span>
+            <span style={{ color: 'var(--sub2)' }}>1948 — 2026</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+Object.assign(window, { Shell, Cover, TablePage, Read, Join, MethodPage });

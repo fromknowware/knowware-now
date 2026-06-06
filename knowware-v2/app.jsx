@@ -62,7 +62,8 @@ function parseHash() {
     }
     return { page: 'read', tableView: 'graph', dossierN: null, reader: null };
   }
-  if (key === 'join') return { page: 'join', tableView: 'graph', dossierN: null, reader: null };
+  if (key === 'join')   return { page: 'join',   tableView: 'graph', dossierN: null, reader: null };
+  if (key === 'method') return { page: 'method', tableView: 'graph', dossierN: null, reader: null };
   return { page: 'cover', tableView: 'graph', dossierN: null, reader: null };
 }
 
@@ -78,7 +79,8 @@ function stateToHash(page, tableView, dossierN, reader) {
   if (dossierN) return `#profile/${profileSlug(dossierN)}`;
   if (page === 'table') return tableView && tableView !== 'table' ? `#table/${tableView}` : '#table';
   if (page === 'read') return '#read';
-  if (page === 'join') return '#join';
+  if (page === 'join')   return '#join';
+  if (page === 'method') return '#method';
   return '#cover';
 }
 
@@ -175,10 +177,11 @@ function App() {
           />
         ) : (
           <>
-            {page === 'cover' && <window.Cover setPage={setPage} />}
-            {page === 'table' && <window.TablePage setPage={setPage} onOpenDossier={openDossier} view={tableView} setView={setTableView} />}
-            {page === 'read'  && <window.Read onOpenReader={openChapterInterviews} />}
-            {page === 'join'  && <window.Join />}
+            {page === 'cover'  && <window.Cover setPage={setPage} />}
+            {page === 'table'  && <window.TablePage setPage={setPage} onOpenDossier={openDossier} view={tableView} setView={setTableView} />}
+            {page === 'read'   && <window.Read onOpenReader={openChapterInterviews} />}
+            {page === 'method' && <window.MethodPage setPage={setPage} />}
+            {page === 'join'   && <window.Join />}
           </>
         )}
       </window.Shell>

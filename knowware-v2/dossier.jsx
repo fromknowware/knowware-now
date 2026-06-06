@@ -272,7 +272,7 @@ function PersonDossier({ personN, onClose }) {
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 11, letterSpacing: '0.02em', marginBottom: 8,
             }}>
-              READ FULL INTERVIEW <span>→</span>
+              READ THE SYNTHESIS <span>→</span>
             </a>
             <a href="contribute.html" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
