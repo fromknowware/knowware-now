@@ -2130,7 +2130,7 @@ const VOICES = [
       "Ch. 08",
       "Practitioner"
     ],
-    "affiliation": "Cognitive scientist & AI researcher · creator of the MicroPsi architecture",
+    "affiliation": "Independent Researcher · Cognitive Architectures & Machine Consciousness · MIT Media Lab (affiliate)",
     "status": "Living · Active",
     "active": "1973 – present",
     "jurisdiction": "Cognitive Science / Artificial Intelligence / Computational Consciousness",
