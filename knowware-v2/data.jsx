@@ -124,7 +124,7 @@ const INTERVIEWS_RAW = [
   { n: 66, ch: '08', tier: 'A', name: 'Jill Tarter',             affiliation: 'SETI Institute',                          slug: 'dr_jill_tarter' },
   { n: 67, ch: '08', tier: 'P', name: 'Sara Seager',             affiliation: 'MIT · Exoplanets',                        slug: 'dr_sara_seager' },
   { n: 68, ch: '08', tier: 'P', name: 'David Chalmers',          affiliation: 'NYU · The hard problem',                  slug: 'dr_david_chalmers' },
-  { n: 69, ch: '08', tier: 'P', name: 'Anil Seth',               affiliation: 'Sussex · Being You',                      slug: 'anil_seth' },
+  { n: 69, ch: '08', tier: 'P', name: 'Joscha Bach',             affiliation: 'Synthetic Intelligence · MicroPsi',       slug: 'joscha_bach' },
   { n: 70, ch: '08', tier: 'V', name: 'Liu Cixin',               affiliation: 'Three-Body Problem',                      slug: 'liu_cixin' },
   { n: 71, ch: '08', tier: 'V', name: 'Thomas Nagel',            affiliation: 'NYU · What is it like to be a bat?',      slug: 'dr_thomas_nagel' },
   { n: 72, ch: '08', tier: 'V', name: 'Srinivasa Ramanujan',     affiliation: 'Mathematics from dreams',                 slug: 'ramanujan' },

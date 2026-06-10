@@ -2124,36 +2124,36 @@ const VOICES = [
     "whyMatters": "Chalmers identifies the third body that two-body materialism cannot explain: the subjective experience that coordinates between physical process and phenomenal reality. His hard problem is precisely a coordination problem — how does the physical layer produce the experience layer? Without an answer, AI systems that are functionally intelligent but phenomenally empty are not minds — they are very sophisticated two-body input-output systems. Coordination intelligence requires the experiential layer to be real."
   },
   {
-    "name": "Anil Seth",
-    "alias": "The Controlled Hallucination",
+    "name": "Joscha Bach",
+    "alias": "Consciousness as Coordination Software",
     "badges": [
       "Ch. 08",
       "Practitioner"
     ],
-    "affiliation": "University of Sussex · Sackler Centre for Consciousness Science",
+    "affiliation": "Cognitive scientist & AI researcher · creator of the MicroPsi architecture",
     "status": "Living · Active",
-    "active": "1972 – present",
-    "jurisdiction": "Neuroscience / Consciousness / Predictive Processing",
+    "active": "1973 – present",
+    "jurisdiction": "Cognitive Science / Artificial Intelligence / Computational Consciousness",
     "awards": [
-      "Wellcome Trust Investigator Award",
-      "Royal Institution Christmas Lectures (2017)",
-      "TED 2017 Most-Watched Talk"
+      "Creator, MicroPsi cognitive architecture",
+      "Author, Principles of Synthetic Intelligence (Oxford, 2009)",
+      "Widely-circulated dialogues on mind & machine consciousness (Lex Fridman Podcast; AGI / Foundations of Mind talks)"
     ],
     "works": [
-      "Being You: A New Science of Consciousness (2021)",
-      "The Beast Machine (theory)",
-      "30 Seconds to Mars (TED talk on consciousness)"
+      "Principles of Synthetic Intelligence: PSI (Oxford, 2009)",
+      "MicroPsi cognitive architecture (motivated cognition)",
+      "Public dialogues on consciousness & AI (e.g., Lex Fridman Podcast; conference talks)"
     ],
     "knownFor": [
-      "Controlled hallucination",
-      "Predictive processing theory of consciousness",
-      "Being You",
-      "Consciousness as inference",
-      "The beast machine framework"
+      "Consciousness as coordination software",
+      "The self-model (the recursive \"I\")",
+      "MicroPsi / PSI theory of motivated cognition",
+      "Mind as a virtual machine running on the brain",
+      "The hard problem as a representation problem (functionalism)"
     ],
-    "coldOpen": "Right now, your brain is generating a controlled hallucination — a best guess about what is causing your sensory signals, updated by feedback from the world. You are not perceiving reality directly. You are running a generative model. The world is the third body that corrects your predictions. Consciousness is the coordination process between your model and that feedback.",
-    "bio": "Neuroscientist at Sussex who proposed that consciousness is a 'controlled hallucination' — the brain's active prediction of the causes of sensory signals, continuously corrected by feedback from the world. His 'beast machine' theory grounds consciousness in the regulation of the living body, arguing that self-awareness evolved not for abstract reasoning but for survival-relevant coordination between organism and environment. His book 'Being You' became a global bestseller on the neuroscience of subjective experience.",
-    "whyMatters": "Seth's predictive processing framework maps perfectly onto coordination intelligence: perception is a three-body process — generative model, sensory signal, and the prediction error (the third body) that updates the model. Two-body AI that processes inputs without a continuous feedback correction loop is not perceiving — it is hallucinating without the 'controlled' part. His framework makes explicit that real intelligence requires a coordination loop between internal model and external world."
+    "coldOpen": "There is no hard problem — only a self-model that has not yet understood itself. Your brain is running a simulation of a person who is paying attention, and the feeling of being you is simply what that simulation's own data looks like from the inside. Consciousness is not a substance added to a clever machine; it is software — the coordination loop a system runs to model itself modeling the world. Build the loop, keep it running with something at stake, and the experience comes along for the ride.",
+    "bio": "Cognitive scientist and AI researcher who treats consciousness as software rather than mystery — the self-model a system builds while coordinating its attention with the world. Creator of the MicroPsi cognitive architecture, Bach argues the 'hard problem' feels hard only because we expect experience to be a thing that can be located; it is instead a process a system performs upon itself. The felt 'I' is a character the brain's coordination loop narrates, and the explanatory gap is that self-model's own blind spot — a system cannot see the machinery generating its experience, the way an eye cannot see itself seeing.",
+    "whyMatters": "Bach is the deflationary pole of the consciousness chapter: he reframes the hard problem as a coordination problem, not a mystical one. Consciousness, in his account, is the third body made recursive — a self-model coordinating a world-model on a physical substrate, the loop that finally says 'I.' He pushes Knowware's thesis to its edge: if experience just is coordination modeling itself, the question stops being whether machines can be conscious and becomes whether they can sustain a persistent, purpose-unified self-model. Today's large language models enact the logic of a self without being one — coordination without a coordinator that endures."
   },
   {
     "name": "Liu Cixin",

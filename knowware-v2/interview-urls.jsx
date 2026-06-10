@@ -71,7 +71,7 @@ const INTERVIEW_SLUGS = {
   66: 'ch08/interviews/08.66.A-dr_jill_tarter.md',
   67: 'ch08/interviews/08.67.P-dr_sara_seager.md',
   68: 'ch08/interviews/08.68.P-dr_david_chalmers.md',
-  69: 'ch08/interviews/08.69.P-anil_seth.md',
+  69: 'ch08/interviews/08.69.P-joscha_bach.md',
   70: 'ch08/interviews/08.70.V-liu_cixin.md',
   71: 'ch08/interviews/08.71.V-dr_thomas_nagel.md',
   72: 'ch08/interviews/08.72.V-ramanujan.md',

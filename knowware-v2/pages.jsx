@@ -586,7 +586,7 @@ const CAST = [
     {i:"66",nm:"Dr. Jill Tarter",r:"SETI Institute",s:"alive",tri:"A",f:"old"},
     {i:"67",nm:"Dr. Sara Seager",r:"Exoplanet Research",s:"alive",tri:"P",f:"old"},
     {i:"68",nm:"Dr. David Chalmers",r:"Philosophy of Mind",s:"alive",tri:"P",f:"old"},
-    {i:"69",nm:"Anil Seth",r:"Being You — consciousness as controlled hallucination",s:"alive",tri:"P",tg:"new",f:"missing"},
+    {i:"69",nm:"Joscha Bach",r:"Synthetic Intelligence — consciousness as coordination software",s:"alive",tri:"P",tg:"new",f:"missing"},
     {i:"70",nm:"Liu Cixin",r:"Dark Forest",s:"alive",tri:"V",f:"old"},
     {i:"71",nm:"Dr. Thomas Nagel",r:"What Is It Like To Be",s:"alive",tri:"V",f:"old"},
     {i:"72",nm:"Srinivasa Ramanujan",r:"Mathematician, 1887–1920",s:"passed",tri:"V",tg:"legacy",f:"new"},
