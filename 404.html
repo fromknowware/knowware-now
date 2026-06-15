@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Not found — Knowware</title>
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fafaf9; --ink:#0a0a0a; --sub:#6b6b6b; --sub2:#9a9a97;
+    --rule:#e5e5e4; --accent:oklch(0.55 0.15 250);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#111110; --ink:#f0f0ea; --sub:#9a9a97; --sub2:#6b6b6b;
+      --rule:#2a2a28; --accent:oklch(0.7 0.15 250); }
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:40px; position:relative; overflow:hidden;
+  }
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+  .ghost{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    font-weight:700; font-size:38vw; letter-spacing:-.04em; line-height:1;
+    color:var(--ink); opacity:.035; white-space:nowrap; user-select:none; pointer-events:none;
+  }
+  .wrap{position:relative; z-index:2; max-width:560px; text-align:center}
+  .code{font-weight:500; font-size:13px; letter-spacing:.34em; text-transform:uppercase; color:var(--sub2)}
+  .accent{display:inline-block; width:64px; height:5px; margin:26px 0; background:var(--accent)}
+  h1{font-weight:700; font-size:clamp(34px,6vw,56px); letter-spacing:-.02em; line-height:1.05}
+  p{margin-top:18px; font-size:18px; line-height:1.5; color:var(--sub)}
+  .home{
+    display:inline-block; margin-top:34px; font-size:13px; letter-spacing:.18em;
+    text-transform:uppercase; text-decoration:none; color:var(--ink);
+    border-bottom:1px solid var(--ink); padding-bottom:4px;
+    transition:opacity .2s ease;
+  }
+  .home:hover{opacity:.55}
+</style>
+</head>
+<body>
+  <div class="ghost">404</div>
+  <div class="wrap">
+    <div class="code mono">Error 404 · Knowware</div>
+    <span class="accent"></span>
+    <h1>This page slipped<br>out of coordination.</h1>
+    <p>The page you’re looking for doesn’t exist, moved, or was never part of the field guide.</p>
+    <a class="home mono" href="/">Return to knowware.press</a>
+  </div>
+</body>
+</html>
