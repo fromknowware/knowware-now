@@ -1,0 +1,12 @@
+{
+  // Pages config — needed since /functions were added (claim form endpoint).
+  // The CLAIMS KV binding also exists on the knowware-book project itself
+  // (set via API); declaring it here keeps deploys and local dev in sync.
+  // Local dev: wrangler pages dev --kv CLAIMS  (pages dev ignores config kv)
+  "name": "knowware-book",
+  "pages_build_output_dir": ".",
+  "compatibility_date": "2026-05-01",
+  "kv_namespaces": [
+    { "binding": "CLAIMS", "id": "c7826d8f77334be6830db7191955fa22" }
+  ]
+}

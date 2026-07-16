@@ -445,7 +445,7 @@
     <span class="meta" style="margin-left: 14px">systems-of-intelligence · v1.0 · mmxxvi</span>
   </div>
   <span class="meta">VOLUME I · SPOTS OPEN</span>
-  <a href="Knowware v2.html" class="back">← back to the book</a>
+  <a href="/" class="back">← back to the book</a>
 </header>
 
 <section class="hero">
@@ -474,7 +474,7 @@
       <a href="#pick" class="btn primary">
         Claim your spot <span class="arrow">→</span>
       </a>
-      <a href="Knowware v2.html" class="btn ghost">
+      <a href="/" class="btn ghost">
         Preview the chapters <span class="arrow">↗</span>
       </a>
       <span class="mono" style="font-size: 11px; color: var(--sub); margin-left: 8px">
@@ -634,7 +634,7 @@
     <span class="mono">27·A</span> Academics · 
     <span class="mono">27·P</span> Practitioners · 
     <span class="mono">27·V</span> Visionaries.
-    <a href="Knowware v2.html" style="color: var(--accent); margin-left: 10px">See the full table →</a>
+    <a href="/" style="color: var(--accent); margin-left: 10px">See the full table →</a>
   </div>
   <div class="voice-wall" id="voice-wall"></div>
 </section>
@@ -689,6 +689,10 @@
         <div class="fld full">
           <label>WHY THIS BOOK, RIGHT NOW (OPTIONAL)</label>
           <textarea id="f-why" rows="3" placeholder="Three sentences max. We read every one."></textarea>
+        </div>
+        <div style="position: absolute; left: -9999px" aria-hidden="true">
+          <label for="f-company">Company</label>
+          <input id="f-company" name="company" tabindex="-1" autocomplete="off" />
         </div>
       </div>
 
@@ -864,7 +868,7 @@
   [f.name, f.reach, f.work, f.ch].forEach(el => el.addEventListener('input', paintTicket));
   paintTicket();
 
-  window.claim = function () {
+  window.claim = async function () {
     const missing = [];
     if (!f.name.value) missing.push('name');
     if (!f.reach.value) missing.push('reach');
@@ -872,6 +876,34 @@
       alert('Almost there — need your ' + missing.join(' and ') + ' before we can send a ticket.');
       return;
     }
+
+    const btn = document.querySelector('#claim-form .btn.primary');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: picked,
+          name: f.name.value,
+          reach: f.reach.value,
+          work: f.work.value,
+          chapter: f.ch.value,
+          why: document.getElementById('f-why').value,
+          ticket: t.num.textContent,
+          company: document.getElementById('f-company').value,
+        }),
+      });
+      if (!res.ok) throw new Error('claim failed: ' + res.status);
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = 'Send my claim <span class="arrow">→</span>';
+      alert('Something went wrong sending your claim. Please try again in a moment.');
+      return;
+    }
+    btn.innerHTML = 'Claim sent';
+
     const msg = document.createElement('div');
     msg.style.cssText = 'position: fixed; inset: 0; background: rgba(10,10,10,0.92); z-index: 100; display: grid; place-items: center; padding: 32px;';
     msg.innerHTML = `
@@ -882,10 +914,10 @@
         </div>
         <div style="font-size: 14px; line-height: 1.55; color: var(--sub); margin-bottom: 24px">
           We reply within fourteen days, by hand, in the order claims arrive.
-          Your passcode and first chapter arrive together — enter the reading room below when it does.
+          Your first chapter arrives with our reply.
         </div>
-        <a href="reading-room.html" style="display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); text-decoration: none; margin-bottom: 12px; transition: all 0.15s" onmouseover="this.style.background='oklch(0.55 0.15 250)';this.style.borderColor='oklch(0.55 0.15 250)'" onmouseout="this.style.background='var(--ink)';this.style.borderColor='var(--ink)'">
-          Enter the reading room →
+        <a href="/" style="display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); text-decoration: none; margin-bottom: 12px; transition: all 0.15s" onmouseover="this.style.background='oklch(0.55 0.15 250)';this.style.borderColor='oklch(0.55 0.15 250)'" onmouseout="this.style.background='var(--ink)';this.style.borderColor='var(--ink)'">
+          Return to the manuscript →
         </a>
         <br>
         <button onclick="this.closest('div[style*=fixed]').remove()" class="btn ghost" style="margin-top: 8px">

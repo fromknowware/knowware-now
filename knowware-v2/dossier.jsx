@@ -281,7 +281,7 @@ function PersonDossier({ personN, onClose }) {
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 11, letterSpacing: '0.02em',
             }}>
-              CLAIM YOUR SPOT IN VOL. II <span>↗</span>
+              CLAIM YOUR SPOT IN VOL. I <span>↗</span>
             </a>
           </div>
         </div>
