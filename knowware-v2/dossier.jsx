@@ -70,16 +70,16 @@ function PersonDossier({ personN, onClose }) {
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
           {prev && (
-            <button onClick={() => onClose(prev)} className="mono" style={{
+            <a href={`#profile/${prev}`} className="mono" style={{
               background: 'none', border: '1px solid var(--rule)',
               padding: '6px 8px', cursor: 'pointer', fontSize: 10, color: 'var(--sub)',
-            }}>←</button>
+            }}>←</a>
           )}
           {next && (
-            <button onClick={() => onClose(next)} className="mono" style={{
+            <a href={`#profile/${next}`} className="mono" style={{
               background: 'none', border: '1px solid var(--rule)',
               padding: '6px 8px', cursor: 'pointer', fontSize: 10, color: 'var(--sub)',
-            }}>→</button>
+            }}>→</a>
           )}
         </div>
         <button onClick={() => onClose(null)} className="mono" style={{
@@ -281,7 +281,7 @@ function PersonDossier({ personN, onClose }) {
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 11, letterSpacing: '0.02em',
             }}>
-              CLAIM YOUR SPOT IN VOL. I <span>↗</span>
+              CLAIM YOUR SPOT IN VOL. II <span>↗</span>
             </a>
           </div>
         </div>
@@ -365,10 +365,10 @@ function PersonDossier({ personN, onClose }) {
         borderTop: '1px solid var(--ink)',
       }}>
         {prev ? (
-          <button onClick={() => onClose(prev)} style={{
+          <a href={`#profile/${prev}`} style={{
             background: 'none', border: 'none', borderRight: '1px solid var(--ink)',
             padding: mob ? '16px' : '24px 32px', cursor: 'pointer', textAlign: 'left',
-            fontFamily: 'inherit',
+            fontFamily: 'inherit', display: 'block',
           }}>
             <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
               marginBottom: 6 }}>← PREVIOUS</div>
@@ -376,14 +376,14 @@ function PersonDossier({ personN, onClose }) {
               letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {window.INTERVIEWS[prev - 1]?.name}
             </div>
-          </button>
+          </a>
         ) : <div style={{ borderRight: '1px solid var(--ink)' }} />}
 
         {next ? (
-          <button onClick={() => onClose(next)} style={{
+          <a href={`#profile/${next}`} style={{
             background: 'none', border: 'none', padding: mob ? '16px' : '24px 32px',
             cursor: 'pointer', textAlign: 'right', fontFamily: 'inherit',
-            width: '100%',
+            width: '100%', display: 'block',
           }}>
             <div className="mono" style={{ fontSize: 9, color: 'var(--sub)',
               marginBottom: 6 }}>NEXT →</div>
@@ -391,7 +391,7 @@ function PersonDossier({ personN, onClose }) {
               letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {window.INTERVIEWS[next - 1]?.name}
             </div>
-          </button>
+          </a>
         ) : <div />}
       </div>
     </div>

@@ -71,8 +71,9 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
         const isSel = selected === v.n;
         const isDim = highlightGroup != null && v.groupId !== highlightGroup;
         return (
-          <button
+          <a
             key={v.n}
+            href={`#profile/${v.n}`}
             onMouseEnter={() => onHover && onHover(v.n)}
             onMouseLeave={() => onHover && onHover(null)}
             onClick={() => onSelect && onSelect(v.n)}
@@ -131,7 +132,7 @@ function PeriodicTable({ layoutKey, onHover, onSelect, selected, hover, highligh
                 }}>{v.minutes}m</span>
               </>
             )}
-          </button>
+          </a>
         );
       })}
     </div>

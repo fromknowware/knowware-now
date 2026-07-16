@@ -22,11 +22,11 @@ function Shell({ page, setPage, children }) {
         position: 'sticky', top: 0, background: 'var(--bg)', zIndex: 10,
       }}>
         <div style={{ display: 'flex', gap: 14, alignItems: 'baseline' }}>
-          <button onClick={() => setPage('cover')} style={{
+          <a href="#cover" style={{
             background: 'none', border: 'none', padding: 0, cursor: 'pointer',
             fontFamily: 'inherit', fontSize: 17, fontWeight: 600,
             letterSpacing: '-0.015em', color: 'var(--ink)',
-          }}>Knowware<span style={{ color: 'var(--sub2)' }}>®</span></button>
+          }}>Knowware<span style={{ color: 'var(--sub2)' }}>®</span></a>
           {!mob && (
             <span className="mono" style={{ fontSize: 12, color: 'var(--sub)' }}>
               systems-of-intelligence · v1.0 · mmxxvi
@@ -35,16 +35,17 @@ function Shell({ page, setPage, children }) {
         </div>
         <nav style={{ display: 'flex', gap: 0 }}>
           {nav.map(([k, n, l]) => (
-            <button key={k} onClick={() => setPage(k)} style={{
+            <a key={k} href={`#${k}`} style={{
               background: page === k ? 'var(--ink)' : 'transparent',
               color: page === k ? 'var(--paper)' : 'var(--ink)',
-              border: 'none', padding: mob ? '7px 10px' : '7px 12px', cursor: 'pointer',
-              fontFamily: 'inherit', fontSize: mob ? 13 : 15, letterSpacing: '-0.01em',
-              display: 'flex', gap: mob ? 0 : 8, alignItems: 'baseline',
+              border: 'none', padding: mob ? '6px 8px' : '7px 12px', cursor: 'pointer',
+              fontFamily: 'inherit', fontSize: mob ? 11 : 15, letterSpacing: '-0.01em',
+              display: 'flex', flexDirection: mob ? 'column' : 'row',
+              gap: mob ? 2 : 8, alignItems: mob ? 'center' : 'baseline',
             }}>
-              <span className="mono" style={{ fontSize: mob ? 10 : 11, opacity: 0.6 }}>{n}</span>
-              {!mob && <span>{l}</span>}
-            </button>
+              <span className="mono" style={{ fontSize: mob ? 9 : 11, opacity: 0.6 }}>{n}</span>
+              <span style={{ fontSize: mob ? 9 : 'inherit' }}>{l}</span>
+            </a>
           ))}
         </nav>
       </header>
@@ -62,7 +63,7 @@ function Foot() {
       <div style={{ gridColumn: '1 / span 3' }} className="mono">Knowware / Systems of Intelligence</div>
       <div style={{ gridColumn: '4 / span 3' }} className="mono">MMXXVI · Edition 01</div>
       <div style={{ gridColumn: '7 / span 3' }} className="mono">~350 pp · 09 ch · 81 voices</div>
-      <div style={{ gridColumn: '10 / span 3', textAlign: 'right' }} className="mono">iamkhayyam.github.io/knowware</div>
+      <div style={{ gridColumn: '10 / span 3', textAlign: 'right' }} className="mono">knowware.press</div>
     </footer>
   );
 }
@@ -102,7 +103,7 @@ function MobileSpine({ setPage }) {
     <div ref={ref}>
       <div style={{ border: '1px solid var(--rule)', background: 'var(--paper)' }}>
         {window.SECTIONS.map((s, i) => (
-          <button key={s.n} onClick={() => setPage('read')} style={{
+          <a key={s.n} href={`#read/ch/${s.n}`} style={{
             width: '100%', background: 'none', border: 'none',
             borderBottom: '1px solid var(--rule)',
             padding: '10px 14px', cursor: 'pointer',
@@ -120,7 +121,7 @@ function MobileSpine({ setPage }) {
               }} />
             </span>
             <span className="mono" style={{ fontSize: 9, color: 'var(--sub2)' }}>↗</span>
-          </button>
+          </a>
         ))}
       </div>
       <div style={{ position: 'relative', marginTop: 8, paddingBottom: 14 }}>
@@ -166,7 +167,7 @@ function Cover({ setPage }) {
         <span>ISSUE / 01</span>
         {!mob && <span>VOL / I OF II</span>}
         {!mob && <span>PRINT / AUTUMN 26</span>}
-        {!mob && <span>PAGES / 512</span>}
+        {!mob && <span>PAGES / ~350</span>}
         {!mob && <span>VOICES / 081</span>}
         <span style={{ textAlign: 'right' }}>{clock}</span>
       </div>
@@ -304,13 +305,13 @@ function Cover({ setPage }) {
           <Label>Abstract</Label>
           <p style={{ fontSize: 18, lineHeight: 1.4, margin: 0, letterSpacing: '-0.015em' }}>
             A field guide for anyone who must survive what is coming. Built from{' '}
-            <strong style={{ fontWeight: 500, color: 'var(--accent)' }}>eighty-one long conversations</strong>{' '}
+            <strong style={{ fontWeight: 500, color: 'var(--accent)' }}>eighty-one syntheses</strong>{' '}
             with academics, practitioners, and visionaries.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <Btn filled onClick={() => setPage('table')}>Open the 81 →</Btn>
-            <Btn onClick={() => setPage('read')}>Read the preview →</Btn>
-            <Btn onClick={() => setPage('join')}>Contribute to Vol. II →</Btn>
+            <Btn filled href="#table">Open the 81 →</Btn>
+            <Btn href="#read">Read the preview →</Btn>
+            <Btn href="#join">Contribute to Vol. II →</Btn>
           </div>
         </div>
       ) : (
@@ -321,14 +322,14 @@ function Cover({ setPage }) {
             A field guide for anyone who must survive what is coming — and the
             tools, markets, and institutions they'll have to think with. Built
             from <strong style={{ fontWeight: 500, color: 'var(--accent)' }}>
-            eighty-one long conversations</strong> with academics, practitioners,
+            eighty-one syntheses</strong> with academics, practitioners,
             and visionaries who are quietly redrawing the maps.
           </p>
           <div style={{ gridColumn: '10 / span 3', display: 'flex',
             flexDirection: 'column', gap: 6 }}>
-            <Btn filled onClick={() => setPage('table')}>Open the 81 →</Btn>
-            <Btn onClick={() => setPage('read')}>Read the preview →</Btn>
-            <Btn onClick={() => setPage('join')}>Contribute to Vol. II →</Btn>
+            <Btn filled href="#table">Open the 81 →</Btn>
+            <Btn href="#read">Read the preview →</Btn>
+            <Btn href="#join">Contribute to Vol. II →</Btn>
           </div>
         </Grid>
       )}
@@ -362,7 +363,7 @@ function Cover({ setPage }) {
                 {window.SECTIONS.map((s, i) => {
                   const h = 45 + ((i * 37) % 55);
                   return (
-                    <button key={s.n} onClick={() => setPage('read')}
+                    <a key={s.n} href={`#read/ch/${s.n}`}
                       style={{
                         background: 'var(--ink)', border: 'none', cursor: 'pointer',
                         height: `${h}%`, display: 'flex', flexDirection: 'column',
@@ -379,7 +380,7 @@ function Cover({ setPage }) {
                         textOverflow: 'ellipsis', maxHeight: '100%' }}>
                         {s.title}
                       </span>
-                    </button>
+                    </a>
                   );
                 })}
               </div>
@@ -426,7 +427,7 @@ function Cover({ setPage }) {
           }}>
             {[
               ['09', 'Chapters'],
-              ['81', 'Interviews'],
+              ['81', 'Syntheses'],
               ['03', 'Tiers'],
               ['~60', 'Diagrams'],
               ['~350', 'Pages'],
@@ -741,15 +742,14 @@ function CastView({ onOpenDossier, hideHeader }) {
                         background: statusDot(v.s), display:'inline-block', flexShrink:0 }} />
                     </span>
                     {/* Number + name + legacy badge — always full opacity, clickable */}
-                    <div style={{ ...cell, gap:8, padding: mob ? '9px 8px' : '9px 12px', minWidth:0,
-                      cursor: onOpenDossier ? 'pointer' : 'default' }}
-                      onClick={() => onOpenDossier && onOpenDossier(parseInt(v.i, 10))}>
+                    <a href={`#profile/${parseInt(v.i, 10)}`} style={{ ...cell, gap:8, padding: mob ? '9px 8px' : '9px 12px', minWidth:0,
+                      cursor: 'pointer' }}>
                       <span className="mono" style={{ fontSize:10, color:'var(--sub2)', flexShrink:0 }}>{v.i}</span>
                       <span style={{ fontSize: mob ? 13 : 14, fontWeight:500, letterSpacing:'-0.01em',
                         overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{v.nm}</span>
                       {tb && <span className="mono" style={{ fontSize:8, padding:'1px 5px', fontWeight:500,
                         background:tb.bg, color:tb.ink, flexShrink:0 }}>{tb.label}</span>}
-                    </div>
+                    </a>
                     {/* Role — desktop only, starts at 50% of viewport */}
                     {!mob && (
                       <span className="mono" style={{ ...cell, fontSize:11, color:'var(--sub)',
@@ -3198,17 +3198,17 @@ function Field({ label, placeholder, full, value, onChange, rows }) {
   );
 }
 
-function Btn({ children, filled, onClick }) {
-  return (
-    <button onClick={onClick} style={{
-      background: filled ? 'var(--ink)' : 'var(--paper)',
-      color: filled ? 'var(--paper)' : 'var(--ink)',
-      border: '1px solid var(--ink)', padding: '10px 14px',
-      fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-      fontSize: 12, cursor: 'pointer', letterSpacing: '-0.005em',
-      textAlign: 'left',
-    }}>{children}</button>
-  );
+function Btn({ children, filled, onClick, href }) {
+  const style = {
+    background: filled ? 'var(--ink)' : 'var(--paper)',
+    color: filled ? 'var(--paper)' : 'var(--ink)',
+    border: '1px solid var(--ink)', padding: '10px 14px',
+    fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+    fontSize: 12, cursor: 'pointer', letterSpacing: '-0.005em',
+    textAlign: 'left',
+  };
+  if (href) return <a href={href} style={{ ...style, display: 'block' }}>{children}</a>;
+  return <button onClick={onClick} style={style}>{children}</button>;
 }
 
 // ─── Method page ───────────────────────────────────────
@@ -3472,7 +3472,7 @@ function MethodPage({ setPage }) {
           )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {LINEAGE.map((l, i) => (
-              <div key={l.year} style={{
+              <div key={l.year + '-' + l.name} style={{
                 display: 'grid',
                 gridTemplateColumns: mob ? '1fr' : '72px 1fr',
                 gap: mob ? 8 : 0,
