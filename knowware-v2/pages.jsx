@@ -491,7 +491,7 @@ function Cover({ setPage }) {
             Pre-order before Autumn and your name enters the colophon.
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
-            <Btn filled>Pre-order · $34</Btn>
+            <Btn filled>Pre-order · $33</Btn>
             <Btn>Join the list</Btn>
           </div>
         </div>
