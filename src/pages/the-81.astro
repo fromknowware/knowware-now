@@ -1,54 +1,141 @@
 ---
 import Base from '../layouts/Base.astro';
-import Ladder from '../components/Ladder.astro';
 import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 
 const chapters = await getCollection('chapters');
-const voices = await getCollection('voices');
+const voices   = await getCollection('voices');
 
 const sortedChapters = chapters.sort((a, b) => a.data.n - b.data.n);
 
+// Aggregate stats
+const total      = voices.length;
+const legacyN    = voices.filter(v => v.data.tag    === 'legacy').length;
+const originN    = voices.filter(v => v.data.tag    === 'origin').length;
+const aliveN     = voices.filter(v => v.data.status === 'alive').length;
+const passedN    = voices.filter(v => v.data.status === 'passed').length;
+const anonN      = voices.filter(v => v.data.status === 'anon').length;
+
 const chapterData = sortedChapters.map((ch) => ({
-  n: ch.data.n,
-  title: ch.data.title,
+  n:      ch.data.n,
+  title:  ch.data.title,
   voices: voices
-    .filter((v) => v.data.chapter === ch.data.n)
+    .filter(v => v.data.chapter === ch.data.n)
     .sort((a, b) => Number(a.data.id) - Number(b.data.id))
-    .map((v) => v.data),
+    .map(v => v.data),
 }));
+
+const TIER_COLOR: Record<string, string> = {
+  A: 'var(--tier-a)',
+  P: 'var(--tier-p)',
+  V: 'var(--tier-v)',
+};
+const TIER_LBL: Record<string, string> = {
+  A: 'ACAD.',
+  P: 'PRAC.',
+  V: 'VIS.',
+};
+const STATUS_COLOR: Record<string, string> = {
+  alive:  '#1D9E75',
+  passed: 'var(--sub2)',
+  anon:   'oklch(0.60 0.15 270)',
+};
 ---
-<Base title="The 81" description="The 81 voices of Knowware — academics, practitioners, and visionaries.">
-  <section class="kw-section">
-    <p class="kw-label">The Manifest</p>
-    <h1 class="kw-h2">Eighty-one voices.</h1>
-    <p class="kw-body">
-      Three tiers — Academic, Practitioner, Visionary. Nine per chapter.
-      Dead and living. Named and anonymised. All placed where their thinking
-      bears most directly on coordination intelligence.
+<Base
+  title="The 81"
+  description="Eighty-one voices — academics, practitioners, and visionaries — across nine chapters of Knowware: Systems of Intelligence."
+>
+
+  <!-- Dark header -->
+  <div class="cast-header">
+    <h1 class="cast-header-title">02 · The 81</h1>
+    <p class="cast-header-sub">
+      Eighty-one voices, three tiers, nine chapters. Dead and living. Named
+      and anonymised. All placed where their thinking bears most directly on
+      coordination intelligence.
     </p>
-
-    <div class="tier-legend">
-      <span class="kw-tier kw-tier--A">Academic</span>
-      <span class="mono tier-desc">The theorists — people who named the structures</span>
-      <span class="kw-tier kw-tier--P">Practitioner</span>
-      <span class="mono tier-desc">The builders — people who ran the systems</span>
-      <span class="kw-tier kw-tier--V">Visionary</span>
-      <span class="mono tier-desc">The seers — people who saw what was coming</span>
+    <div class="cast-stats-row">
+      <div class="cast-stat">
+        <span class="cast-stat-n">{total}</span>
+        <span class="cast-stat-l">Total</span>
+      </div>
+      <div class="cast-stat">
+        <span class="cast-stat-n">{aliveN}</span>
+        <span class="cast-stat-l">With us</span>
+      </div>
+      <div class="cast-stat">
+        <span class="cast-stat-n">{passedN}</span>
+        <span class="cast-stat-l">Beyond</span>
+      </div>
+      <div class="cast-stat">
+        <span class="cast-stat-n">{anonN}</span>
+        <span class="cast-stat-l">Anonymous</span>
+      </div>
+      <div class="cast-stat">
+        <span class="cast-stat-n">{legacyN}</span>
+        <span class="cast-stat-l">Legacy</span>
+      </div>
+      <div class="cast-stat">
+        <span class="cast-stat-n">{originN}</span>
+        <span class="cast-stat-l">Named the field</span>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <Ladder chapters={chapterData} />
+  <!-- Legend -->
+  <div class="cast-legend">
+    <span class="cast-legend-item">
+      <span class="cast-legend-dot" style="background:#1D9E75"></span> With us
+    </span>
+    <span class="cast-legend-item">
+      <span class="cast-legend-dot" style="background:var(--sub2)"></span> Beyond
+    </span>
+    <span class="cast-legend-item">
+      <span class="cast-legend-dot" style="background:oklch(0.60 0.15 270)"></span> Anonymous
+    </span>
+    <span style="margin-left:16px; color:var(--rule-strong)">·</span>
+    <span class="cast-legend-item">
+      <span class="kw-tier kw-tier--A">A</span> Academic
+    </span>
+    <span class="cast-legend-item">
+      <span class="kw-tier kw-tier--P">P</span> Practitioner
+    </span>
+    <span class="cast-legend-item">
+      <span class="kw-tier kw-tier--V">V</span> Visionary
+    </span>
+    <span style="margin-left:16px; color:var(--rule-strong)">·</span>
+    <span class="cast-legend-item">
+      <span class="cast-badge">LEGACY</span> established corpus
+    </span>
+    <span class="cast-legend-item">
+      <span class="cast-badge cast-badge--origin">ORIGIN</span> named the field
+    </span>
+  </div>
+
+  <!-- Cast view -->
+  <div class="cast-view">
+    {chapterData.map((ch) => (
+      <div class="cast-chapter">
+        <div class="cast-ch-head mono">
+          <span class="cast-ch-num">{String(ch.n).padStart(2,'0')}</span>
+          <span class="cast-ch-title">{ch.title}</span>
+          <span class="cast-ch-count">{ch.voices.length} voices</span>
+        </div>
+        {ch.voices.map((v) => (
+          <div class="cast-row">
+            <span class="cast-sliver" style={`background:${TIER_COLOR[v.tier] ?? 'var(--sub2)'}`}></span>
+            <span class="cast-dot" style={`background:${STATUS_COLOR[v.status] ?? 'var(--sub2)'}`}></span>
+            <div class="cast-name-col">
+              <span class="cast-num">{String(v.id).padStart(3,'0')}</span>
+              <span class="cast-name">{v.name}</span>
+              {v.tag === 'legacy' && <span class="cast-badge">LEGACY</span>}
+              {v.tag === 'origin' && <span class="cast-badge cast-badge--origin">ORIGIN</span>}
+            </div>
+            <span class="cast-role">{v.role ?? v.affiliation}</span>
+            <span class="cast-tier-lbl">{TIER_LBL[v.tier]}</span>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
 </Base>
-
-<style>
-.tier-legend {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px 16px;
-  align-items: center;
-  margin-top: 32px;
-  max-width: 480px;
-}
-.tier-desc { font-size: 12px; color: var(--sub); }
-</style>

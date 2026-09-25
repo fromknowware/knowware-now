@@ -2,15 +2,73 @@
 import Base from '../layouts/Base.astro';
 import Field from '../components/Field.astro';
 import Disclosure from '../components/Disclosure.astro';
-import { STRIPE_URL, VOICES_COUNT, CHAPTERS_COUNT, PRICE_PREORDER } from '../config';
-import { getCollection } from 'astro:content';
+import { STRIPE_URL, PRICE_PREORDER } from '../config';
 
-const chapters = await getCollection('chapters');
-const voices = await getCollection('voices');
+const DOMAINS = [
+  { label: 'AI',          code: 'AI',  color: 'oklch(0.88 0.09 20)'  },
+  { label: 'Finance',     code: 'FIN', color: 'oklch(0.88 0.09 55)'  },
+  { label: 'Logistics',   code: 'LOG', color: 'oklch(0.88 0.09 85)'  },
+  { label: 'Biology',     code: 'BIO', color: 'oklch(0.88 0.09 140)' },
+  { label: 'Education',   code: 'EDU', color: 'oklch(0.88 0.09 160)' },
+  { label: 'Policy',      code: 'POL', color: 'oklch(0.88 0.09 195)' },
+  { label: 'Agriculture', code: 'AGR', color: 'oklch(0.88 0.09 215)' },
+  { label: 'Cities',      code: 'CIT', color: 'oklch(0.88 0.09 240)' },
+  { label: 'Memory',      code: 'MEM', color: 'oklch(0.88 0.09 280)' },
+  { label: 'Media',       code: 'MED', color: 'oklch(0.88 0.09 310)' },
+  { label: 'Labour',      code: 'LAB', color: 'oklch(0.88 0.09 340)' },
+];
+const inkOf = (c: string) => c.replace('0.88', '0.38');
+// 3 copies for seamless loop
+const marqueeItems = [...DOMAINS, ...DOMAINS, ...DOMAINS];
 
-const chaptersSorted = chapters.sort((a, b) => a.data.n - b.data.n);
+const SPINE = [
+  { n: '01', title: 'The Coordination Intelligence Revolution', h: 45 },
+  { n: '02', title: 'The Dawn of Systems Intelligence',         h: 82 },
+  { n: '03', title: 'Architecture of Systems Intelligence',     h: 64 },
+  { n: '04', title: 'Systems Intelligence in Action',           h: 46 },
+  { n: '05', title: 'Human–Systems Intelligence Interaction',   h: 83 },
+  { n: '06', title: 'Consciousness as Pattern Recognition',     h: 65 },
+  { n: '07', title: 'Engineering Reality',                      h: 47 },
+  { n: '08', title: 'Beyond Human Intelligence',                h: 84 },
+  { n: '09', title: 'No Way? Know-How',                         h: 66 },
+];
+
+const QUOTES = [
+  { q: 'A book that reads you while you read it.',                      attr: 'N. Mehta',   role: 'researcher', col: '1 / span 6' },
+  { q: 'The most serious attempt to map the new terrain I have seen.',  attr: 'L. Okafor', role: 'economist',  col: '7 / span 6' },
+  { q: 'Essential, and a little frightening.',                           attr: 'Y. Park',   role: 'editor',     col: '3 / span 7' },
+];
 ---
 <Base>
+
+  <!-- Masthead strip — ISSUE / VOL / PRINT / PAGES / VOICES / CLOCK -->
+  <div class="kw-masthead">
+    <div class="kw-masthead-cell">
+      <span class="kw-masthead-lbl">Issue</span>
+      <span class="kw-masthead-val">01</span>
+    </div>
+    <div class="kw-masthead-cell">
+      <span class="kw-masthead-lbl">Vol</span>
+      <span class="kw-masthead-val">I of II</span>
+    </div>
+    <div class="kw-masthead-cell">
+      <span class="kw-masthead-lbl">Print</span>
+      <span class="kw-masthead-val">Q1 '27</span>
+    </div>
+    <div class="kw-masthead-cell">
+      <span class="kw-masthead-lbl">Pages</span>
+      <span class="kw-masthead-val">~350</span>
+    </div>
+    <div class="kw-masthead-cell">
+      <span class="kw-masthead-lbl">Voices</span>
+      <span class="kw-masthead-val">081</span>
+    </div>
+    <div class="kw-masthead-cell">
+      <span class="kw-masthead-lbl">UTC</span>
+      <span class="kw-masthead-val mono" id="kw-clock">—</span>
+    </div>
+  </div>
+
   <!-- Cover hero -->
   <div class="kw-hero-cover">
     <Field height="360px" sigTop="41%" />
@@ -30,72 +88,178 @@ const chaptersSorted = chapters.sort((a, b) => a.data.n - b.data.n);
   <!-- Synthesis disclosure -->
   <Disclosure />
 
-  <!-- Method section -->
-  <section class="kw-section" id="method">
-    <p class="kw-label">The Third Body</p>
-    <h2 class="kw-h2">Not interviews. Synthesis.</h2>
-    <p class="kw-body">
-      The corpus is not the person. These are not transcripts — they are a form of coordination intelligence in action.
-      {VOICES_COUNT} thinkers, dead and living, placed in structured dialogue by the author. The Third Body is what emerges in the space between them.
-    </p>
-  </section>
-
-  <!-- Nine chapters -->
-  <section class="kw-section" id="chapters">
-    <p class="kw-label">{CHAPTERS_COUNT} Chapters</p>
-    <div class="chapters-grid">
-      {chaptersSorted.map((ch) => (
-        <a href={`/read/${ch.slug}`} class="chapter-card">
-          <span class="chapter-num mono">{String(ch.data.n).padStart(2, '0')}</span>
-          <div>
-            <p class="chapter-opener">{ch.data.opener}</p>
-            <p class="chapter-title">{ch.data.title}</p>
-          </div>
-        </a>
+  <!-- Domains marquee -->
+  <div class="kw-marquee-wrap" aria-hidden="true">
+    <div class="kw-marquee-track">
+      {marqueeItems.map((d, i) => (
+        <span class="kw-marquee-item">
+          <span class="kw-marquee-swatch" style={`background:${d.color};border:1px solid ${inkOf(d.color)}`}></span>
+          <span style="color:var(--ink)">{d.label.toUpperCase()}</span>
+          <span class="kw-marquee-code">{d.code}</span>
+        </span>
       ))}
     </div>
-  </section>
+  </div>
 
-  <!-- Field divider -->
-  <Field variant="divider" />
+  <!-- Body sections wrapper -->
+  <div class="kw-cover-body">
 
-  <!-- The 81 teaser -->
-  <section class="kw-section" id="cast">
-    <p class="kw-label">The {VOICES_COUNT}</p>
-    <h2 class="kw-h2">Who speaks.</h2>
-    <p class="kw-body" style="margin-bottom: 32px">
-      Academics, practitioners, and visionaries — nine per chapter.
-      Legacy voices, living researchers, and anonymised insiders.
-    </p>
-    <a href="/the-81" class="kw-btn">View all {VOICES_COUNT} voices →</a>
-  </section>
+    <!-- Abstract — 12-col grid -->
+    <div class="kw-grid" style="margin-top:36px">
+      <span class="kw-grid-label" style="grid-column: 1 / span 3">Abstract</span>
+      <p class="kw-abstract-text" style="grid-column: 4 / span 6">
+        A field guide for anyone who must survive what is coming — and the
+        tools, markets, and institutions they'll have to think with. Built
+        from <strong style="font-weight:500;color:var(--accent)">eighty-one syntheses</strong>
+        with academics, practitioners, and visionaries who are quietly redrawing the maps.
+      </p>
+      <div class="kw-abstract-ctas" style="grid-column: 10 / span 3">
+        <a href="/the-81" class="kw-btn kw-btn--filled">Open the 81 →</a>
+        <a href="/read" class="kw-btn">Read the preview →</a>
+        <a href="/contribute" class="kw-btn">Contribute to Vol. II →</a>
+      </div>
+    </div>
+
+    <!-- 01 · The spine -->
+    <div class="kw-grid" style="margin-top:64px">
+      <span class="kw-grid-label" style="grid-column: 1 / span 3">01 · The spine</span>
+      <div style="grid-column: 4 / span 9">
+        <div class="kw-spine-head">
+          <h2 class="kw-spine-h2">Nine chapters, one capstone.</h2>
+          <a href="/read" class="mono kw-spine-read-btn">Read manuscript ↗</a>
+        </div>
+        <div class="kw-spine-bars">
+          {SPINE.map((s) => (
+            <a href={`/read/${s.n}`} class="kw-spine-bar" style={`height:${s.h}%`}>
+              <span class="kw-spine-ch">ch{s.n}</span>
+              <span class="kw-spine-title">{s.title}</span>
+            </a>
+          ))}
+        </div>
+        <div class="kw-spine-caption">
+          <span>Fig. 02 — Page-count by section.</span>
+          <span>Click any spine to open.</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .kw-cover-body -->
+
+  <!-- 02 · Thesis — full bleed -->
+  <div class="kw-thesis">
+    <div class="kw-thesis-inner">
+      <span class="kw-thesis-label">02 · Thesis</span>
+      <p class="kw-thesis-text">
+        The tools we use to think are no longer
+        <span class="kw-thesis-accent">separate</span>
+        from the thinking itself. This book is a field guide for what
+        happens when that line dissolves — in labs, in ledgers, in fields,
+        in classrooms, in clinics.
+      </p>
+    </div>
+  </div>
+
+  <!-- 03 · Structure + 04 · Early readers -->
+  <div class="kw-cover-body">
+
+    <!-- 03 · Structure -->
+    <div class="kw-grid" style="margin-top:64px">
+      <span class="kw-grid-label" style="grid-column: 1 / span 3">03 · Structure</span>
+      <div style="grid-column: 4 / span 9">
+        <div class="kw-stats-grid">
+          {[
+            ['09', 'Chapters'],
+            ['81', 'Syntheses'],
+            ['03', 'Tiers'],
+            ['~60', 'Diagrams'],
+            ['~350', 'Pages'],
+            ['03', 'Years'],
+          ].map(([n, l]) => (
+            <div class="kw-stat-cell">
+              <span class="kw-stat-n">{n}</span>
+              <span class="kw-stat-l">{l}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 · Early readers -->
+    <div class="kw-grid" style="margin-top:64px;margin-bottom:64px">
+      <span class="kw-grid-label" style="grid-column: 1 / span 3">04 · Early readers</span>
+      <div style="grid-column: 4 / span 9; display:grid; grid-template-columns:repeat(12,1fr); gap:20px; row-gap:40px">
+        {QUOTES.map(({ q, attr, role, col }) => (
+          <blockquote class="kw-quote" style={`grid-column: ${col}`}>
+            <p class="kw-quote-text">"{q}"</p>
+            <div class="kw-quote-attr">— {attr} · {role}</div>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+
+  </div><!-- end .kw-cover-body -->
+
 </Base>
 
 <style>
-.chapters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1px;
-  border: 1px solid var(--rule);
+.kw-cover-body {
+  padding-bottom: 0;
 }
-.chapter-card {
-  padding: 24px;
-  border: none;
-  display: flex; gap: 16px; align-items: flex-start;
-  background: var(--paper);
-  transition: background 0.15s;
+
+/* Abstract CTAs */
+.kw-abstract-ctas {
+  display: flex; flex-direction: column; gap: 6px;
+  align-self: start; padding-top: 4px;
 }
-.chapter-card:hover { background: var(--accent-soft); }
-.chapter-num {
-  font-size: 11px; color: var(--signal);
-  letter-spacing: .08em; flex-shrink: 0; padding-top: 3px;
+
+/* Spine head */
+.kw-spine-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; margin-bottom: 14px;
 }
-.chapter-opener {
-  font: 600 15px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
-  letter-spacing: -.01em; color: var(--ink); margin: 0 0 6px;
+.kw-spine-h2 {
+  font: 500 clamp(22px,3vw,40px)/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.03em; margin: 0;
 }
-.chapter-title {
-  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
-  color: var(--sub); margin: 0; letter-spacing: .04em;
+.kw-spine-read-btn {
+  font-size: 11px; background: none;
+  border: 1px solid var(--ink); padding: 6px 10px;
+  cursor: pointer; flex-shrink: 0; color: var(--ink);
+}
+.kw-spine-read-btn:hover { background: var(--ink); color: var(--paper); }
+
+/* Mobile grid collapses */
+@media (max-width: 900px) {
+  .kw-grid > [style*="grid-column: 4 / span 6"],
+  .kw-grid > [style*="grid-column: 4 / span 9"] {
+    grid-column: 1 / -1 !important;
+  }
+  .kw-grid > [style*="grid-column: 10 / span 3"],
+  .kw-abstract-ctas {
+    grid-column: 1 / -1 !important;
+  }
+  .kw-grid > [style*="grid-column: 1 / span 3"] {
+    grid-column: 1 / -1 !important;
+    margin-bottom: 4px;
+  }
+  .kw-grid > div > [style*="grid-column:"] {
+    grid-column: 1 / -1 !important;
+  }
+  .kw-quotes-grid,
+  .kw-grid > div > div[style*="grid-template-columns:repeat(12"] {
+    grid-template-columns: 1fr !important;
+  }
 }
 </style>
+
+<script>
+  // Live UTC clock in masthead
+  const el = document.getElementById('kw-clock');
+  if (el) {
+    const tick = () => {
+      el.textContent = new Date().toISOString().replace('T', ' ').slice(0, 19) + 'Z';
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+</script>
