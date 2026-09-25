@@ -1,0 +1,421 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const voices   = await getCollection('voices');
+  const chapters = await getCollection('chapters');
+
+  const sorted = voices.sort((a, b) => Number(a.data.id) - Number(b.data.id));
+  const chMap  = Object.fromEntries(chapters.map(c => [c.data.n, c.data.title]));
+
+  return sorted.map((voice, i) => ({
+    params: { id: voice.data.id },
+    props: {
+      voice: voice.data,
+      chapterTitle: chMap[voice.data.chapter] ?? '',
+      prevId: sorted[i - 1]?.data.id ?? null,
+      nextId: sorted[i + 1]?.data.id ?? null,
+      total:  sorted.length,
+      rank:   i + 1,
+    },
+  }));
+}
+
+const { voice, chapterTitle, prevId, nextId, total, rank } = Astro.props;
+
+const HONORIFICS = /^(dr|prof|mr|mrs|ms|sir|lady|lord)\.?\s+/i;
+function sym(name: string): string {
+  if (!name || name.startsWith('Former') || name.startsWith('Anonymous')) return '—';
+  const clean = name.replace(HONORIFICS, '').trim();
+  const parts  = clean.split(/\s+/);
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+const TIER_BG  = { A: 'var(--tier-a)',     P: 'var(--tier-p)',     V: 'var(--tier-v)'     };
+const TIER_INK = { A: 'var(--tier-a-ink)', P: 'var(--tier-p-ink)', V: 'var(--tier-v-ink)' };
+const TIER_LBL = { A: 'Academic',          P: 'Practitioner',       V: 'Visionary'         };
+
+const tierBg   = TIER_BG[voice.tier]  ?? 'var(--accent-soft)';
+const tierInk  = TIER_INK[voice.tier] ?? 'var(--ink)';
+const tierLbl  = TIER_LBL[voice.tier] ?? voice.tier;
+
+const statusLbl = voice.status === 'alive' ? 'Living · Active'
+                : voice.status === 'passed' ? 'Legacy · Passed'
+                : 'Anonymous';
+
+const voiceSym   = sym(voice.name);
+const chapterSlug = String(voice.chapter).padStart(2, '0');
+---
+<Base
+  title={`${voice.name} — Dossier`}
+  description={voice.coldOpen ?? voice.bio ?? `Voice №${voice.id} of 81 in Knowware.`}
+  ogType="article"
+>
+
+<!-- Sticky top bar -->
+<div class="dos-topbar mono">
+  <span class="dos-breadcrumb">
+    DOSSIER · №{voice.id} OF {String(total).padStart(2,'0')} · {tierLbl.toUpperCase()} · ch{chapterSlug}
+  </span>
+  <div class="dos-nav-btns">
+    {prevId && <a href={`/voices/${prevId}`} class="dos-nav-btn">←</a>}
+    {nextId && <a href={`/voices/${nextId}`} class="dos-nav-btn">→</a>}
+  </div>
+  <a href="/the-81" class="dos-back-btn mono">← Back to The 81</a>
+</div>
+
+<!-- Identity card -->
+<div class="dos-id-card">
+
+  <!-- Monogram panel -->
+  <div class="dos-monogram" style={`background:${tierBg}`}>
+    <span class="dos-mono-num mono" style={`color:${tierInk}`}>
+      {voice.id} · {voice.tier}
+    </span>
+    <span class="dos-mono-sym" style="color:rgba(0,0,0,0.15)">{voiceSym}</span>
+    <span class="dos-mono-tier mono" style={`color:${tierInk}`}>{tierLbl.toUpperCase()}</span>
+  </div>
+
+  <!-- Name + meta -->
+  <div class="dos-id-meta">
+    <div>
+      {voice.alias && <p class="dos-alias mono">"{voice.alias}"</p>}
+      <h1 class="dos-name">{voice.name}</h1>
+    </div>
+    <div class="dos-meta-grid">
+      {[
+        ['CHAPTER',      `ch${chapterSlug} · ${chapterTitle}`],
+        ['TIER',         tierLbl],
+        ['STATUS',       statusLbl],
+        ['ACTIVE',       voice.active || ''],
+        ['AFFILIATION',  voice.affiliation || ''],
+        ['JURISDICTION', voice.jurisdiction || ''],
+      ].filter(([,v]) => v).map(([k, v]) => (
+        <div>
+          <div class="dos-meta-key mono">{k}</div>
+          <div class="dos-meta-val">{v}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<!-- Cold open -->
+{voice.coldOpen && (
+  <div class="dos-cold-open">
+    <div class="dos-section-lbl mono">COLD OPEN</div>
+    <blockquote class="dos-quote">"{voice.coldOpen}"</blockquote>
+  </div>
+)}
+
+<!-- Bio + right panel -->
+<div class="dos-body-grid">
+
+  <!-- Left: bio + why it matters -->
+  <div class="dos-body-left">
+    {voice.bio && (
+      <>
+        <div class="dos-section-lbl mono">OVERVIEW</div>
+        <p class="dos-bio">{voice.bio}</p>
+      </>
+    )}
+    {voice.whyMatters && (
+      <>
+        <div class="dos-section-lbl mono" style="color:var(--signal);margin-top:32px">WHY THIS VOICE MATTERS TO KNOWWARE</div>
+        <div class="dos-why-matters">{voice.whyMatters}</div>
+      </>
+    )}
+  </div>
+
+  <!-- Right: awards, classification, CTAs -->
+  <div class="dos-body-right">
+
+    {(voice.awards && voice.awards.length > 0) && (
+      <div class="dos-panel-section">
+        <div class="dos-panel-hd mono">OUTSTANDING NOTES</div>
+        <ul class="dos-bullet-list">
+          {voice.awards.map(a => (
+            <li><span class="dos-bullet-dot" style="color:var(--signal)">◦</span>{a}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <div class="dos-panel-section">
+      <div class="dos-panel-hd mono">CLASSIFICATION</div>
+      <div class="dos-classification" style={`background:${tierBg};border:1px solid ${tierInk}`}>
+        <span class="dos-cls-sym" style="color:var(--ink)">{voiceSym}</span>
+        <div>
+          <div class="mono" style={`font-size:9px;color:${tierInk};letter-spacing:0.06em`}>
+            {tierLbl.toUpperCase()} · TIER {voice.tier}
+          </div>
+          <div class="mono" style="font-size:9px;color:var(--sub)">ch{chapterSlug}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dos-panel-section dos-ctas">
+      <a href={`/read/${chapterSlug}`} class="dos-cta dos-cta--signal mono">
+        READ THE CHAPTER <span>→</span>
+      </a>
+      <a href="/contribute" class="dos-cta dos-cta--ink mono">
+        CLAIM YOUR SPOT IN VOL. II <span>↗</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Methods & frameworks -->
+{(voice.knownFor && voice.knownFor.length > 0) && (
+  <div class="dos-section">
+    <div class="dos-section-hd">
+      <div class="dos-section-lbl mono">METHODS &amp; FRAMEWORKS</div>
+      <span class="mono" style="font-size:9px;color:var(--sub2)">{voice.knownFor.length} entries</span>
+    </div>
+    <div class="dos-tags">
+      {voice.knownFor.map(t => <span class="dos-tag mono">{t}</span>)}
+    </div>
+  </div>
+)}
+
+<!-- Key works -->
+{(voice.works && voice.works.length > 0) && (
+  <div class="dos-section">
+    <div class="dos-section-lbl mono">KEY WORKS</div>
+    <ol class="dos-works-list">
+      {voice.works.map((w, i) => (
+        <li>
+          <span class="dos-work-num mono">{String(i + 1).padStart(2, '0')}</span>
+          <span>{w}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+)}
+
+<!-- Bottom nav -->
+<div class="dos-bottom-nav">
+  <a href="/the-81" class="kw-btn">← All 81</a>
+  <div style="display:flex;gap:8px">
+    {prevId && <a href={`/voices/${prevId}`} class="kw-btn">← {String(Number(prevId)).padStart(3,'0')}</a>}
+    {nextId && <a href={`/voices/${nextId}`} class="kw-btn">{String(Number(nextId)).padStart(3,'0')} →</a>}
+  </div>
+</div>
+
+</Base>
+
+<style>
+/* ── Topbar ─────────────────────────────────── */
+.dos-topbar {
+  position: sticky; top: 52px; z-index: 20;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+  padding: 10px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px; align-items: center;
+}
+.dos-breadcrumb {
+  font-size: 10px; color: var(--sub);
+  letter-spacing: 0.04em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dos-nav-btns { display: flex; gap: 6px; }
+.dos-nav-btn {
+  background: none; border: 1px solid var(--rule);
+  padding: 6px 8px; font-size: 10px; color: var(--sub);
+}
+.dos-nav-btn:hover { border-color: var(--ink); color: var(--ink); }
+.dos-back-btn {
+  background: var(--ink); color: var(--paper);
+  border: none; padding: 7px 12px; cursor: pointer;
+  font-size: 10px; letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.dos-back-btn:hover { background: var(--sub); }
+
+/* ── Identity card ──────────────────────────── */
+.dos-id-card {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  border-bottom: 1px solid var(--ink);
+  min-height: 220px;
+}
+.dos-monogram {
+  border-right: 1px solid var(--ink);
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+.dos-mono-num { font-size: 9px; letter-spacing: 0.05em; }
+.dos-mono-sym {
+  font-size: 88px; font-weight: 600;
+  letter-spacing: -0.06em; line-height: 1;
+  text-align: center; user-select: none;
+}
+.dos-mono-tier { font-size: 8px; text-align: center; letter-spacing: 0.06em; }
+
+.dos-id-meta {
+  padding: 32px 40px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.dos-alias {
+  font-size: 11px; color: var(--signal);
+  letter-spacing: 0.02em; margin: 0 0 10px;
+}
+.dos-name {
+  font: 500 clamp(32px,5vw,64px)/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -0.025em; margin: 0;
+}
+.dos-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-top: 24px; padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.dos-meta-key {
+  font-size: 9px; color: var(--sub);
+  letter-spacing: 0.06em; margin-bottom: 3px;
+}
+.dos-meta-val { font-size: 12px; line-height: 1.4; letter-spacing: -0.005em; }
+
+/* ── Cold open ──────────────────────────────── */
+.dos-cold-open {
+  border-bottom: 1px solid var(--ink);
+  padding: 48px 40px;
+}
+.dos-section-lbl {
+  font-size: 9px; color: var(--sub);
+  letter-spacing: 0.06em; margin-bottom: 20px;
+}
+.dos-quote {
+  font: 400 clamp(20px,3vw,32px)/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -0.015em;
+  margin: 0; max-width: 82ch;
+  color: var(--ink);
+  border-left: 3px solid var(--signal);
+  padding-left: 28px;
+}
+
+/* ── Body grid ──────────────────────────────── */
+.dos-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  border-bottom: 1px solid var(--rule);
+}
+.dos-body-left {
+  padding: 40px;
+  border-right: 1px solid var(--rule);
+}
+.dos-bio {
+  font-size: 16px; line-height: 1.7;
+  margin: 0 0 32px; color: var(--ink); max-width: 70ch;
+}
+.dos-why-matters {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--signal);
+  padding: 16px 20px; font-size: 15px; line-height: 1.6;
+  color: var(--ink); max-width: 70ch;
+}
+.dos-body-right {
+  padding: 32px 28px; background: var(--paper);
+  display: flex; flex-direction: column; gap: 24px;
+}
+.dos-panel-section {}
+.dos-panel-hd {
+  font-size: 9px; color: var(--sub); letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--rule); padding-bottom: 8px;
+}
+.dos-bullet-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.dos-bullet-list li {
+  font-size: 12px; line-height: 1.4;
+  display: flex; gap: 8px; color: var(--ink);
+}
+.dos-bullet-dot { flex-shrink: 0; }
+.dos-classification {
+  padding: 10px 14px;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.dos-cls-sym { font-size: 24px; font-weight: 600; }
+.dos-ctas { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+.dos-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; font-size: 11px; letter-spacing: 0.02em;
+}
+.dos-cta--signal { background: var(--signal); color: var(--paper); }
+.dos-cta--signal:hover { opacity: 0.9; }
+.dos-cta--ink { background: var(--ink); color: var(--paper); }
+.dos-cta--ink:hover { background: var(--sub); }
+
+/* ── Sections ───────────────────────────────── */
+.dos-section {
+  padding: 40px; border-bottom: 1px solid var(--rule);
+}
+.dos-section-hd {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 20px;
+}
+.dos-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.dos-tag {
+  font-size: 11px; letter-spacing: 0.02em;
+  padding: 5px 10px;
+  border: 1px solid var(--rule); color: var(--ink);
+}
+.dos-tag:hover { border-color: var(--signal); color: var(--signal); }
+.dos-works-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column;
+}
+.dos-works-list li {
+  display: flex; gap: 16px; align-items: baseline;
+  padding: 12px 0; border-bottom: 1px solid var(--rule);
+  font-size: 14px; line-height: 1.4;
+}
+.dos-works-list li:last-child { border-bottom: none; }
+.dos-work-num { font-size: 10px; color: var(--sub); flex-shrink: 0; }
+
+/* ── Bottom nav ─────────────────────────────── */
+.dos-bottom-nav {
+  padding: 32px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+/* ── Mobile ─────────────────────────────────── */
+@media (max-width: 900px) {
+  .dos-topbar {
+    padding: 8px 16px;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+  }
+  .dos-breadcrumb { font-size: 9px; }
+  .dos-back-btn { padding: 7px 10px; }
+
+  .dos-id-card { grid-template-columns: 1fr; }
+  .dos-monogram {
+    border-right: none; border-bottom: 1px solid var(--ink);
+    flex-direction: row; align-items: center; padding: 14px 16px;
+  }
+  .dos-mono-sym { font-size: 52px; }
+
+  .dos-id-meta { padding: 20px 16px; }
+  .dos-meta-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; padding-top: 16px; }
+
+  .dos-cold-open { padding: 28px 16px; }
+  .dos-body-grid { grid-template-columns: 1fr; }
+  .dos-body-left {
+    padding: 24px 16px;
+    border-right: none; border-bottom: 1px solid var(--rule);
+  }
+  .dos-body-right { padding: 20px 16px; }
+  .dos-section { padding: 24px 16px; }
+  .dos-bottom-nav { padding: 24px 16px; }
+}
+</style>

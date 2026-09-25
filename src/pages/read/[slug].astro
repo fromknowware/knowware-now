@@ -122,7 +122,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
     <p class="kw-h3">{chapter.data.title}</p>
     <div class="voice-list">
       {chapterVoices.map((v) => (
-        <div class="kw-voice-card">
+        <a class="kw-voice-card" href={`/voices/${v.data.id}`}>
           <span class="kw-voice-num">{v.data.id}</span>
           <div>
             <p class="kw-voice-name">{v.data.name}</p>
@@ -134,7 +134,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
             )}
           </div>
           <span class={`kw-tier kw-tier--${v.data.tier}`}>{tierLabel[v.data.tier]}</span>
-        </div>
+        </a>
       ))}
     </div>
   </section>
