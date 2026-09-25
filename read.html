@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Read — Knowware: Systems of Intelligence</title>
+<meta name="description" content="Read the Knowware manuscript. Three free chapters — preview the field guide before you order." />
+<link rel="canonical" href="https://knowware.press/read.html" />
+<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Knowware" />
+<meta property="og:title" content="Read Knowware — Free Preview" />
+<meta property="og:description" content="Three chapters free. An interview-driven field guide for a world where machines think." />
+<meta property="og:url" content="https://knowware.press/read.html" />
+<meta property="og:image" content="https://knowware.press/assets/og-knowware.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Read Knowware — Free Preview" />
+<meta name="twitter:image" content="https://knowware.press/assets/og-knowware.png" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf9; --paper: #ffffff; --ink: #0a0a0a;
+    --sub: #6b6b6b; --sub2: #9a9a97; --rule: #e5e5e4;
+    --accent: oklch(0.55 0.15 250); --accent-soft: oklch(0.96 0.02 250);
+    --tier-a: oklch(0.88 0.09 260); --tier-p: oklch(0.88 0.09 35); --tier-v: oklch(0.88 0.09 140);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111110; --paper: #1a1a18; --ink: #f0f0ea;
+      --sub: #8a8a84; --sub2: #555550; --rule: #2a2a27;
+      --accent: oklch(0.65 0.15 250); --accent-soft: oklch(0.22 0.06 250); }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+
+  header {
+    position: sticky; top: 0; z-index: 20; background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 16px; align-items: center; padding: 14px 32px;
+  }
+  header .brand { font-size: 15px; font-weight: 600; letter-spacing: -0.015em; }
+  header .meta { font-size: 11px; color: var(--sub); text-align: right; }
+
+  .masthead { border-bottom: 1px solid var(--rule); padding: 10px 32px;
+    display: flex; gap: 32px; font-size: 10px; color: var(--sub);
+    letter-spacing: -0.005em; overflow: hidden; }
+
+  /* Hero */
+  .hero { padding: 64px 32px; border-bottom: 2px solid var(--ink);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .hero-h1 { font-size: clamp(36px, 5vw, 72px); font-weight: 500;
+    letter-spacing: -0.04em; line-height: 1.0; }
+  .hero-body { font-size: 17px; line-height: 1.6; color: var(--sub);
+    margin-top: 20px; }
+  .hero-right { padding-top: 8px; }
+
+  /* Disclosure band */
+  .disclosure {
+    background: var(--ink); color: var(--paper);
+    padding: 16px 32px; display: flex; gap: 16px; align-items: flex-start;
+    border-bottom: 1px solid var(--rule);
+  }
+  .disclosure-label { font-size: 10px; color: rgba(255,255,255,0.4);
+    letter-spacing: 0.04em; flex-shrink: 0; padding-top: 2px; }
+  .disclosure-text { font-size: 13px; line-height: 1.5; }
+  .disclosure-text a { color: #2F55E0; border-bottom: 1px solid #2F55E0; }
+
+  /* Chapter list */
+  .ch-list { }
+  .ch-item {
+    display: grid; grid-template-columns: 56px 1fr auto;
+    align-items: center; gap: 16px;
+    border-bottom: 1px solid var(--rule); padding: 20px 32px;
+    transition: background .1s;
+    text-decoration: none; color: var(--ink);
+  }
+  .ch-item:hover { background: var(--accent-soft); }
+  .ch-item.free { cursor: pointer; }
+  .ch-item.locked { cursor: default; }
+  .ch-item.locked:hover { background: transparent; }
+  .ch-n { font-size: clamp(28px, 3vw, 40px); font-weight: 500;
+    letter-spacing: -0.04em; line-height: 1; color: var(--sub2); }
+  .ch-body { }
+  .ch-title { font-size: 17px; font-weight: 500; letter-spacing: -0.015em;
+    line-height: 1.25; }
+  .ch-sub { font-size: 12px; color: var(--sub); margin-top: 5px; line-height: 1.4; }
+  .ch-voices { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+  .chip {
+    font-size: 9px; padding: 2px 7px; letter-spacing: 0.04em;
+    font-family: "JetBrains Mono", monospace; display: inline-block;
+  }
+  .chip-a { background: var(--tier-a); }
+  .chip-p { background: var(--tier-p); }
+  .chip-v { background: var(--tier-v); }
+  .ch-badge { font-size: 10px; letter-spacing: 0.04em; flex-shrink: 0; }
+  .badge-free { color: var(--accent); border: 1px solid var(--accent); padding: 4px 8px; }
+  .badge-locked { color: var(--sub2); border: 1px solid var(--rule); padding: 4px 8px; }
+
+  /* CTA strip */
+  .order-strip {
+    background: var(--ink); color: var(--paper);
+    padding: 32px 32px; display: flex;
+    align-items: center; justify-content: space-between; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .order-strip h2 { font-size: clamp(20px, 3vw, 32px); font-weight: 500;
+    letter-spacing: -0.03em; }
+  .btn-order { background: #2F55E0; color: #fff;
+    font-family: "JetBrains Mono", monospace; font-size: 13px;
+    letter-spacing: -0.005em; padding: 14px 28px;
+    text-decoration: none; display: inline-block; flex-shrink: 0; }
+  .btn-order:hover { background: #1e3fc0; }
+
+  /* Footer */
+  .foot-letter { border-top: 2px solid var(--ink); padding: 48px 32px 40px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .foot-headline { font-size: clamp(28px, 4vw, 48px); font-weight: 500;
+    letter-spacing: -0.04em; line-height: 1.05; }
+  .foot-headline span { color: var(--sub); }
+  .foot-email { display: inline-block; margin-top: 16px; font-size: 12px;
+    color: var(--accent); border-bottom: 1px solid var(--accent); }
+  .foot-meta { font-size: 10px; color: var(--sub2); text-align: right;
+    line-height: 1.9; letter-spacing: -0.005em; }
+  .foot-ledger { border-top: 1px solid var(--rule); padding: 12px 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    font-size: 11px; color: var(--sub); }
+
+  @media (max-width: 640px) {
+    header { padding: 12px 16px; grid-template-columns: auto 1fr; }
+    header .meta { display: none; }
+    .masthead { padding: 8px 16px; gap: 16px; }
+    .hero { grid-template-columns: 1fr; padding: 36px 16px; gap: 24px; }
+    .hero-right { padding-top: 0; }
+    .disclosure { padding: 14px 16px; }
+    .ch-item { padding: 16px 16px; grid-template-columns: 40px 1fr auto; }
+    .order-strip { padding: 24px 16px; }
+    .foot-letter { grid-template-columns: 1fr; padding: 36px 16px; }
+    .foot-ledger { grid-template-columns: 1fr 1fr; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="brand">Knowware<span style="color:var(--sub2)">®</span></a>
+  <span></span>
+  <span class="mono meta">READING ROOM / VOL. I</span>
+</header>
+
+<div class="masthead mono">
+  <span>ISSUE / 01</span>
+  <span>CHAPTERS / 09</span>
+  <span>FREE PREVIEW / 03 CH</span>
+  <span>SYNTHESES / 081</span>
+  <span>PAGES / ~350</span>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="mono" style="font-size:10px; color:var(--sub); letter-spacing:0.06em; margin-bottom:20px;">01 · READING ROOM</div>
+    <h1 class="hero-h1">Read before<br>you decide.</h1>
+    <p class="hero-body">Three chapters are open. The rest require a pre-order or a contribution.
+      No account, no paywall — open the chapter and read.</p>
+  </div>
+  <div class="hero-right">
+    <div class="mono" style="font-size:11px; color:var(--sub); line-height:1.8;">
+      <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--rule); padding-bottom:10px; margin-bottom:10px;">
+        <span>Free to read</span><span style="color:var(--accent)">3 chapters</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--rule); padding-bottom:10px; margin-bottom:10px;">
+        <span>Total chapters</span><span>9 + capstone</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--rule); padding-bottom:10px; margin-bottom:10px;">
+        <span>Voices per chapter</span><span>9 (3 per tier)</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span>Reading time per chapter</span><span>~25 min</span>
+      </div>
+    </div>
+    <div style="margin-top:24px; font-size:13px; line-height:1.6; color:var(--sub);">
+      Each chapter draws on nine voices — academics, practitioners, and
+      visionaries — synthesised into one manuscript. No voice is quoted
+      directly.
+    </div>
+  </div>
+</div>
+
+<!-- Disclosure -->
+<div class="disclosure">
+  <span class="mono disclosure-label">FORM</span>
+  <span class="disclosure-text">
+    Not interviews — the Third Body in action. Each corpus is a synthesis of published work,
+    lectures, and field notes. No sentence appears as anyone said it.
+    <a href="/#method">Read the method →</a>
+  </span>
+</div>
+
+<!-- Chapter list -->
+<div class="ch-list">
+
+  <a href="/#read/ch/1" class="ch-item free">
+    <div class="ch-n mono">01</div>
+    <div class="ch-body">
+      <div class="ch-title">The Coordination Intelligence Revolution</div>
+      <div class="ch-sub">Cybernetics, feedback, and the first formal model of human-machine coordination.</div>
+      <div class="ch-voices">
+        <span class="chip chip-a">Pangaro</span>
+        <span class="chip chip-a">Hayles</span>
+        <span class="chip chip-a">Meadows</span>
+        <span class="chip chip-p">Brand</span>
+        <span class="chip chip-p">Kelly</span>
+        <span class="chip chip-p">Minh</span>
+        <span class="chip chip-v">McKenna</span>
+        <span class="chip chip-v">Deere</span>
+        <span class="chip chip-v">Schmachtenberger</span>
+      </div>
+    </div>
+    <span class="mono ch-badge badge-free">FREE →</span>
+  </a>
+
+  <a href="/#read/ch/2" class="ch-item free">
+    <div class="ch-n mono">02</div>
+    <div class="ch-body">
+      <div class="ch-title">The Dawn of Systems Intelligence</div>
+      <div class="ch-sub">Information theory, causal inference, and the people who saw the transition coming from inside.</div>
+      <div class="ch-voices">
+        <span class="chip chip-a">Pearl</span>
+        <span class="chip chip-a">Shannon</span>
+        <span class="chip chip-a">Turing</span>
+        <span class="chip chip-p">Neven</span>
+        <span class="chip chip-p">NSA Tech Dir.</span>
+        <span class="chip chip-p">Luckey</span>
+        <span class="chip chip-v">Gawdat</span>
+        <span class="chip chip-v">Hunbatz Men</span>
+        <span class="chip chip-v">Lu</span>
+      </div>
+    </div>
+    <span class="mono ch-badge badge-free">FREE →</span>
+  </a>
+
+  <a href="/#read/ch/3" class="ch-item free">
+    <div class="ch-n mono">03</div>
+    <div class="ch-body">
+      <div class="ch-title">Architecture of Systems Intelligence</div>
+      <div class="ch-sub">The engineers and thinkers who are laying the structural foundations of the intelligence layer.</div>
+      <div class="ch-voices">
+        <span class="chip chip-a">LeCun</span>
+        <span class="chip chip-a">Feynman</span>
+        <span class="chip chip-a">Gosling</span>
+        <span class="chip chip-p">Amodei</span>
+        <span class="chip chip-p">Hassabis</span>
+        <span class="chip chip-p">Delangue</span>
+        <span class="chip chip-v">McGilchrist</span>
+        <span class="chip chip-v">Capra</span>
+        <span class="chip chip-v">Kurzweil</span>
+      </div>
+    </div>
+    <span class="mono ch-badge badge-free">FREE →</span>
+  </a>
+
+  <!-- Locked chapters -->
+  <div class="ch-item locked">
+    <div class="ch-n mono" style="color:var(--rule)">04</div>
+    <div class="ch-body">
+      <div class="ch-title">Systems Intelligence in Action</div>
+      <div class="ch-sub">Smart cities, digital medicine, adaptive finance — coordination at city scale.</div>
+    </div>
+    <span class="mono ch-badge badge-locked">ORDER</span>
+  </div>
+
+  <div class="ch-item locked">
+    <div class="ch-n mono" style="color:var(--rule)">05</div>
+    <div class="ch-body">
+      <div class="ch-title">Human–Systems Intelligence Interaction</div>
+      <div class="ch-sub">How people and institutions adapt when the cognitive boundary dissolves.</div>
+    </div>
+    <span class="mono ch-badge badge-locked">ORDER</span>
+  </div>
+
+  <div class="ch-item locked">
+    <div class="ch-n mono" style="color:var(--rule)">06</div>
+    <div class="ch-body">
+      <div class="ch-title">Consciousness as Pattern Recognition</div>
+      <div class="ch-sub">Neuroscience, phenomenology, and the question of where the pattern ends.</div>
+    </div>
+    <span class="mono ch-badge badge-locked">ORDER</span>
+  </div>
+
+  <div class="ch-item locked">
+    <div class="ch-n mono" style="color:var(--rule)">07</div>
+    <div class="ch-body">
+      <div class="ch-title">Engineering Reality</div>
+      <div class="ch-sub">Synthetic biology, quantum computing, and the people making the substrate.</div>
+    </div>
+    <span class="mono ch-badge badge-locked">ORDER</span>
+  </div>
+
+  <div class="ch-item locked">
+    <div class="ch-n mono" style="color:var(--rule)">08</div>
+    <div class="ch-body">
+      <div class="ch-title">Beyond Human Intelligence</div>
+      <div class="ch-sub">Post-biological cognition — the honest reckoning with what comes after.</div>
+    </div>
+    <span class="mono ch-badge badge-locked">ORDER</span>
+  </div>
+
+  <div class="ch-item locked">
+    <div class="ch-n mono" style="color:var(--rule)">09</div>
+    <div class="ch-body">
+      <div class="ch-title">No Way? Know-How.</div>
+      <div class="ch-sub">The capstone. The synthesis of the synthesis. What the field guide actually says.</div>
+    </div>
+    <span class="mono ch-badge badge-locked">ORDER</span>
+  </div>
+
+</div>
+
+<!-- Order strip -->
+<div class="order-strip">
+  <h2>Read all nine chapters.</h2>
+  <a href="/order.html" class="btn-order">Pre-order · $33 →</a>
+</div>
+
+<footer>
+  <div class="foot-letter">
+    <div>
+      <div class="foot-headline">Write us a letter.<br><span>An email is also a letter.</span></div>
+      <a href="mailto:hello@knowware.press" class="mono foot-email">hello@knowware.press</a>
+    </div>
+    <div class="mono foot-meta">
+      <div>KNOWWARE / VOL. I</div>
+      <div>MMXXVI · ED. 01</div>
+      <div>MACHINE-COORDINATED.</div>
+      <div>HUMAN-OPERATED.</div>
+    </div>
+  </div>
+  <div class="mono foot-ledger">
+    <span>Knowware / Systems of Intelligence</span>
+    <span>MMXXVI · Edition 01</span>
+    <span>~350 pp · 09 ch · 81 voices</span>
+    <span style="text-align:right">knowware.press</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -57,13 +57,42 @@ function Shell({ page, setPage, children }) {
 
 function Foot() {
   return (
-    <footer style={{ borderTop: '1px solid var(--rule)', padding: '20px 32px',
-      display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 16,
-      fontSize: 12, color: 'var(--sub)' }}>
-      <div style={{ gridColumn: '1 / span 3' }} className="mono">Knowware / Systems of Intelligence</div>
-      <div style={{ gridColumn: '4 / span 3' }} className="mono">MMXXVI · Edition 01</div>
-      <div style={{ gridColumn: '7 / span 3' }} className="mono">~350 pp · 09 ch · 81 voices</div>
-      <div style={{ gridColumn: '10 / span 3', textAlign: 'right' }} className="mono">knowware.press</div>
+    <footer>
+      {/* Letter unit */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'end',
+        gap: 24, padding: '48px 32px 40px',
+        borderTop: '2px solid var(--ink)',
+      }}>
+        <div>
+          <div style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 500,
+            letterSpacing: '-0.04em', lineHeight: 1.05 }}>
+            Write us a letter.<br />
+            <span style={{ color: 'var(--sub)' }}>An email is also a letter.</span>
+          </div>
+          <a href="mailto:hello@knowware.press" className="mono" style={{
+            display: 'inline-block', marginTop: 18, fontSize: 12,
+            color: 'var(--accent)', borderBottom: '1px solid var(--accent)',
+            letterSpacing: '-0.005em',
+          }}>hello@knowware.press</a>
+        </div>
+        <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
+          textAlign: 'right', lineHeight: 1.9, letterSpacing: '-0.005em' }}>
+          <div>KNOWWARE / VOL. I</div>
+          <div>MMXXVI · ED. 01</div>
+          <div>MACHINE-COORDINATED.</div>
+          <div>HUMAN-OPERATED.</div>
+        </div>
+      </div>
+      {/* Colophon line */}
+      <div style={{ borderTop: '1px solid var(--rule)', padding: '12px 32px',
+        display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 16,
+        fontSize: 11, color: 'var(--sub)' }} className="mono">
+        <div style={{ gridColumn: '1 / span 3' }}>Knowware / Systems of Intelligence</div>
+        <div style={{ gridColumn: '4 / span 3' }}>MMXXVI · Edition 01</div>
+        <div style={{ gridColumn: '7 / span 3' }}>~350 pp · 09 ch · 81 voices</div>
+        <div style={{ gridColumn: '10 / span 3', textAlign: 'right' }}>knowware.press</div>
+      </div>
     </footer>
   );
 }
@@ -166,7 +195,7 @@ function Cover({ setPage }) {
       }}>
         <span>ISSUE / 01</span>
         {!mob && <span>VOL / I OF II</span>}
-        {!mob && <span>PRINT / AUTUMN 26</span>}
+        {!mob && <span>PRINT / Q1 &apos;27</span>}
         {!mob && <span>PAGES / ~350</span>}
         {!mob && <span>VOICES / 081</span>}
         <span style={{ textAlign: 'right' }}>{clock}</span>
@@ -229,9 +258,13 @@ function Cover({ setPage }) {
             81
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
-              fontStyle: 'italic', letterSpacing: '-0.005em' }}>
-              Not interviews — the Third Body in action.
+            <div className="mono" style={{ fontSize: 11, color: 'var(--ink)',
+              borderTop: '1px solid var(--rule)', paddingTop: 8,
+              letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+              Not interviews — the Third Body in action.{' '}
+              <a href="#method" style={{ color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>
+                What does that mean? →
+              </a>
             </div>
             <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
               display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -478,23 +511,9 @@ function Cover({ setPage }) {
         </div>
       </Grid>
 
-      {/* CTA strip */}
-      <div style={{ marginTop: 64, padding: mob ? '0 16px' : '0 24px' }}>
-        <div style={{
-          display: 'grid', gridTemplateColumns: mob ? '1fr' : '1fr auto',
-          alignItems: 'center', gap: mob ? 16 : 24,
-          border: '1px solid var(--ink)',
-          padding: mob ? '20px 16px' : '28px 32px', background: 'var(--accent-soft)',
-        }}>
-          <div style={{ fontSize: mob ? 20 : 28, letterSpacing: '-0.02em',
-            lineHeight: 1.15, fontWeight: 500 }}>
-            Pre-order before Autumn and your name enters the colophon.
-          </div>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Btn filled>Pre-order · $33</Btn>
-            <Btn>Join the list</Btn>
-          </div>
-        </div>
+      {/* Ladder — three doors */}
+      <div style={{ marginTop: 64 }}>
+        <Ladder setPage={setPage} />
       </div>
 
       </div>
@@ -3209,6 +3228,58 @@ function Btn({ children, filled, onClick, href }) {
   };
   if (href) return <a href={href} style={{ ...style, display: 'block' }}>{children}</a>;
   return <button onClick={onClick} style={style}>{children}</button>;
+}
+
+function LadderDoor({ door, i, mob }) {
+  const [hover, setHover] = React.useState(false);
+  const bg = door.primary
+    ? 'var(--ink)'
+    : hover ? 'var(--accent-soft)' : 'transparent';
+  return (
+    <a href={door.href}
+      style={{
+        display: 'flex', flexDirection: 'column', gap: 14,
+        padding: mob ? '20px 16px' : '28px 24px',
+        background: bg,
+        color: door.primary ? 'var(--paper)' : 'var(--ink)',
+        borderRight: !mob && i < 2 ? '1px solid var(--rule)' : 'none',
+        borderBottom: mob && i < 2 ? '1px solid var(--rule)' : 'none',
+        textDecoration: 'none',
+        transition: 'background .15s',
+      }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}>
+      <span style={{ fontSize: 13, letterSpacing: '-0.005em' }}>{door.label}</span>
+      <span style={{ fontSize: 10, color: door.primary ? 'rgba(255,255,255,0.6)' : 'var(--sub)', lineHeight: 1.4 }}>
+        {door.sub}
+      </span>
+      <span style={{ fontSize: 20, marginTop: 'auto', opacity: door.primary ? 1 : 0.5 }}>→</span>
+    </a>
+  );
+}
+
+function Ladder({ setPage }) {
+  const mob = useBP() === 'mobile';
+  const price  = (window.KW && window.KW.PRICE_ORDER) || 33;
+  const stripe = (window.KW && window.KW.STRIPE)      || '#order';
+  const saved  = (window.KW && window.KW.PRICE_SAVED)  || 11.95;
+  const doors = [
+    { label: 'READ FREE',              sub: 'Three chapters. No account.',                href: '#read',            primary: false },
+    { label: `PRE-ORDER · $${price}`,  sub: `$${saved} off at print. Name in colophon.`, href: stripe,             primary: true  },
+    { label: 'SHAPE IT',               sub: 'Interview · Annotate · Edit',                href: '/contribute.html', primary: false },
+  ];
+  return (
+    <div className="mono" style={{
+      display: 'grid',
+      gridTemplateColumns: mob ? '1fr' : 'repeat(3, 1fr)',
+      borderTop: '2px solid var(--ink)',
+      borderBottom: '2px solid var(--ink)',
+    }}>
+      {doors.map((door, i) => (
+        <LadderDoor key={door.label} door={door} i={i} mob={mob} />
+      ))}
+    </div>
+  );
 }
 
 // ─── Method page ───────────────────────────────────────

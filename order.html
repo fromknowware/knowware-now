@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pre-order — Knowware: Systems of Intelligence</title>
+<meta name="description" content="Pre-order Knowware: Systems of Intelligence at $33. The founding price. Your name enters the colophon. Closes at SOLSTICE — December 21, 2026." />
+<link rel="canonical" href="https://knowware.press/order.html" />
+<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Knowware" />
+<meta property="og:title" content="Pre-order Knowware — $33" />
+<meta property="og:description" content="The founding price closes at SOLSTICE. $33 now. $44.95 at print. Your name enters the colophon." />
+<meta property="og:url" content="https://knowware.press/order.html" />
+<meta property="og:image" content="https://knowware.press/assets/og-knowware.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Pre-order Knowware — $33" />
+<meta name="twitter:description" content="The founding price closes at SOLSTICE. $33 now. $44.95 at print." />
+<meta name="twitter:image" content="https://knowware.press/assets/og-knowware.png" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf9; --paper: #ffffff; --ink: #0a0a0a;
+    --sub: #6b6b6b; --sub2: #9a9a97; --rule: #e5e5e4;
+    --accent: oklch(0.55 0.15 250); --accent-soft: oklch(0.96 0.02 250);
+    --signal: #2F55E0; --navy: #191938;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111110; --paper: #1a1a18; --ink: #f0f0ea;
+      --sub: #8a8a84; --sub2: #555550; --rule: #2a2a27;
+      --accent: oklch(0.65 0.15 250); --accent-soft: oklch(0.22 0.06 250); }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+
+  header {
+    position: sticky; top: 0; z-index: 20; background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 16px; align-items: center; padding: 14px 32px;
+  }
+  header .brand { font-size: 15px; font-weight: 600; letter-spacing: -0.015em; }
+  header .meta { font-size: 11px; color: var(--sub); text-align: right; }
+
+  /* Masthead */
+  .masthead {
+    border-bottom: 1px solid var(--rule); padding: 10px 32px;
+    display: flex; gap: 32px; font-size: 10px; color: var(--sub);
+    letter-spacing: -0.005em; overflow: hidden;
+  }
+
+  /* Hero */
+  .hero {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-bottom: 2px solid var(--ink); min-height: 60vh;
+  }
+  .hero-left { padding: 56px 32px; display: flex; flex-direction: column; justify-content: space-between; }
+  .hero-right {
+    border-left: 1px solid var(--ink); background: var(--navy);
+    color: #EDEEE4; padding: 56px 32px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .kicker { font-size: 10px; letter-spacing: 0.06em; color: var(--sub); margin-bottom: 20px; }
+  .hero-h1 { font-size: clamp(36px, 5vw, 72px); font-weight: 500;
+    letter-spacing: -0.04em; line-height: 1.0; }
+  .price-big { font-size: clamp(64px, 10vw, 120px); font-weight: 500;
+    letter-spacing: -0.06em; line-height: 0.85; color: #EDEEE4; }
+  .price-sub { font-size: 13px; color: rgba(237,238,228,0.55); margin-top: 12px; line-height: 1.5; }
+  .not-discount { font-size: 16px; color: #2F55E0; font-style: italic;
+    border-top: 1px solid rgba(237,238,228,0.2); padding-top: 16px; }
+
+  /* Benefits */
+  .benefits { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule); }
+  .benefit {
+    padding: 28px 24px; border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 10;
+  }
+  .benefit:last-child { border-right: none; }
+  .benefit-n { font-size: 32px; font-weight: 500; letter-spacing: -0.04em; }
+  .benefit-label { font-size: 11px; color: var(--sub); line-height: 1.45; }
+
+  /* Countdown */
+  .countdown-band {
+    background: var(--ink); color: var(--paper);
+    padding: 24px 32px; display: flex; align-items: center;
+    justify-content: space-between; gap: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .countdown-n { font-size: clamp(32px, 6vw, 64px); font-weight: 500;
+    letter-spacing: -0.05em; }
+  .countdown-label { font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; margin-top: 6px; }
+
+  /* CTA block */
+  .cta-block { padding: 56px 32px; border-bottom: 1px solid var(--rule); }
+  .cta-h2 { font-size: clamp(22px, 3vw, 36px); font-weight: 500;
+    letter-spacing: -0.03em; margin-bottom: 10px; }
+  .cta-sub { font-size: 15px; color: var(--sub); margin-bottom: 32px; line-height: 1.5; }
+  .btn-order {
+    display: inline-block; background: var(--signal); color: #fff;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.005em;
+    padding: 16px 32px; border: none; cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-order:hover { background: #1e3fc0; }
+  .btn-read {
+    display: inline-block; background: transparent; color: var(--ink);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px; letter-spacing: -0.005em;
+    padding: 16px 24px; border: 1px solid var(--ink); cursor: pointer;
+    text-decoration: none; margin-left: 12px;
+  }
+  .btn-read:hover { background: var(--accent-soft); }
+  .cta-legal { font-size: 11px; color: var(--sub2); margin-top: 16px; line-height: 1.6; }
+
+  /* FAQ */
+  .faq { padding: 56px 32px; border-top: 1px solid var(--rule); }
+  .faq h2 { font-size: clamp(22px, 3vw, 36px); font-weight: 500;
+    letter-spacing: -0.03em; margin-bottom: 32px; }
+  details { border-top: 1px solid var(--rule); }
+  details:last-child { border-bottom: 1px solid var(--rule); }
+  summary { padding: 18px 0; cursor: pointer; font-size: 16px;
+    font-weight: 500; letter-spacing: -0.01em; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; }
+  summary::after { content: '+'; font-family: "JetBrains Mono", monospace;
+    font-size: 16px; color: var(--sub); flex-shrink: 0; }
+  details[open] summary::after { content: '−'; }
+  .a { padding: 0 0 20px; font-size: 15px; line-height: 1.7;
+    color: var(--sub); max-width: 680px; }
+  .a a { color: var(--accent); border-bottom: 1px solid var(--accent); }
+
+  /* Footer */
+  footer { }
+  .foot-letter { border-top: 2px solid var(--ink); padding: 48px 32px 40px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .foot-headline { font-size: clamp(28px, 4vw, 48px); font-weight: 500;
+    letter-spacing: -0.04em; line-height: 1.05; }
+  .foot-headline span { color: var(--sub); }
+  .foot-email { display: inline-block; margin-top: 16px; font-size: 12px;
+    color: var(--accent); border-bottom: 1px solid var(--accent); }
+  .foot-meta { font-size: 10px; color: var(--sub2); text-align: right;
+    line-height: 1.9; letter-spacing: -0.005em; }
+  .foot-ledger { border-top: 1px solid var(--rule); padding: 12px 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    font-size: 11px; color: var(--sub); }
+
+  @media (max-width: 640px) {
+    header { padding: 12px 16px; grid-template-columns: auto 1fr; }
+    header .meta { display: none; }
+    .masthead { padding: 8px 16px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 32px 16px; }
+    .hero-right { border-left: none; border-top: 1px solid var(--ink); padding: 32px 16px; }
+    .benefits { grid-template-columns: 1fr 1fr; }
+    .benefit:nth-child(3) { border-right: none; }
+    .countdown-band { padding: 20px 16px; }
+    .cta-block { padding: 40px 16px; }
+    .btn-read { display: block; margin-left: 0; margin-top: 10px; }
+    .faq { padding: 40px 16px; }
+    .foot-letter { grid-template-columns: 1fr; padding: 36px 16px; }
+    .foot-ledger { grid-template-columns: 1fr 1fr; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="brand">Knowware<span style="color:var(--sub2)">®</span></a>
+  <span></span>
+  <span class="mono meta">PRE-ORDER / VOL. I</span>
+</header>
+
+<div class="masthead mono">
+  <span>ISSUE / 01</span>
+  <span>VOL / I OF II</span>
+  <span>PRINT / Q1 '27</span>
+  <span>VOICES / 081</span>
+  <span>FOUNDING PRICE / $33</span>
+  <span>LIST PRICE / $44.95</span>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="kicker mono">01 · PRE-ORDER</div>
+    <h1 class="hero-h1">The founding price closes at SOLSTICE.</h1>
+    <div>
+      <p style="font-size:17px; line-height:1.5; color:var(--sub); max-width:480px;">
+        December 21, 2026. After that, the colophon seals and the price moves to $44.95 at print.
+        Order before then and your name is in the book.
+      </p>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="mono" style="font-size:10px; color:rgba(237,238,228,0.4); letter-spacing:0.06em;">FOUNDING PRICE</div>
+    <div>
+      <div class="price-big">$33</div>
+      <div class="price-sub">
+        List price at print: <strong style="color:#EDEEE4">$44.95</strong><br>
+        You save: <strong style="color:#2F55E0">$11.95</strong>
+      </div>
+    </div>
+    <div class="not-discount mono">
+      You're not getting a discount.<br>You're getting in.
+    </div>
+  </div>
+</div>
+
+<!-- Benefits -->
+<div class="benefits">
+  <div class="benefit">
+    <div class="benefit-n">01</div>
+    <div class="mono" style="font-size:11px; color:var(--sub2); letter-spacing:0.04em; margin-bottom:6px;">COLOPHON</div>
+    <div class="benefit-label">Your name enters the Volume I colophon. One list, one typeface, one size. No tiers.</div>
+  </div>
+  <div class="benefit">
+    <div class="benefit-n">02</div>
+    <div class="mono" style="font-size:11px; color:var(--sub2); letter-spacing:0.04em; margin-bottom:6px;">PRICE LOCK</div>
+    <div class="benefit-label">Locked at $33 regardless of any price adjustments between now and print.</div>
+  </div>
+  <div class="benefit">
+    <div class="benefit-n">03</div>
+    <div class="mono" style="font-size:11px; color:var(--sub2); letter-spacing:0.04em; margin-bottom:6px;">FIRST NOTICE</div>
+    <div class="benefit-label">You hear about the print date before anyone else. Ship notification by email.</div>
+  </div>
+</div>
+
+<!-- Countdown band -->
+<div class="countdown-band">
+  <div>
+    <div class="countdown-n mono" id="days-remaining">—</div>
+    <div class="countdown-label mono">DAYS TO SOLSTICE · DEC 21, 2026</div>
+  </div>
+  <div class="mono" style="font-size:11px; color:rgba(255,255,255,0.4); text-align:right; line-height:1.7;">
+    Colophon closes<br>at SOLSTICE exactly
+  </div>
+</div>
+
+<!-- CTA block -->
+<div class="cta-block">
+  <div class="mono" style="font-size:10px; color:var(--sub); margin-bottom:12px; letter-spacing:0.04em;">02 · ORDER</div>
+  <h2 class="cta-h2">Order now at the founding price.</h2>
+  <p class="cta-sub">No account required. Fulfilled via Stripe. Ships Q1 '27.</p>
+  <div>
+    <a href="#stripe" class="btn-order">Pre-order · $33 →</a>
+    <a href="/read.html" class="btn-read">Read free preview →</a>
+  </div>
+  <p class="cta-legal mono">
+    No tracking. No analytics. No mailing list cross-sells.<br>
+    Stripe handles payment. Your email is used for shipping notification only.
+  </p>
+</div>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="mono" style="font-size:11px; color:var(--sub); margin-bottom:12px">03 · QUESTIONS</div>
+  <h2>What people ask before ordering.</h2>
+  <details>
+    <summary>When does it ship?</summary>
+    <div class="a">
+      Q1 2027. That is the target. If it moves, pre-order holders hear first.
+      The colophon deadline (SOLSTICE, December 21, 2026) is fixed regardless of ship date.
+    </div>
+  </details>
+  <details>
+    <summary>What exactly is the colophon?</summary>
+    <div class="a">
+      The colophon is the closing page of the book — a list of everyone who ordered
+      before the seal date. One name per line. No ranks, no tiers, no job titles.
+      <a href="/colophon.html">Read more about how it works →</a>
+    </div>
+  </details>
+  <details>
+    <summary>Can I contribute instead of ordering?</summary>
+    <div class="a">
+      Yes. <a href="/contribute.html">Contribute a path</a> — interview, annotate, write a letter,
+      or edit a chapter — and your name also enters the colophon. Contributing
+      costs time, not money. Some contributors do both.
+    </div>
+  </details>
+</section>
+
+<footer>
+  <div class="foot-letter">
+    <div>
+      <div class="foot-headline">Write us a letter.<br><span>An email is also a letter.</span></div>
+      <a href="mailto:hello@knowware.press" class="mono foot-email">hello@knowware.press</a>
+    </div>
+    <div class="mono foot-meta">
+      <div>KNOWWARE / VOL. I</div>
+      <div>MMXXVI · ED. 01</div>
+      <div>MACHINE-COORDINATED.</div>
+      <div>HUMAN-OPERATED.</div>
+    </div>
+  </div>
+  <div class="mono foot-ledger">
+    <span>Knowware / Systems of Intelligence</span>
+    <span>MMXXVI · Edition 01</span>
+    <span>~350 pp · 09 ch · 81 voices</span>
+    <span style="text-align:right">knowware.press</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var el = document.getElementById('days-remaining');
+  var deadline = new Date('2026-12-21T00:00:00Z');
+  function tick() {
+    var diff = deadline - Date.now();
+    if (diff <= 0) { el.textContent = '0'; return; }
+    el.textContent = Math.floor(diff / 864e5);
+  }
+  tick();
+  setInterval(tick, 60000);
+})();
+</script>
+</body>
+</html>

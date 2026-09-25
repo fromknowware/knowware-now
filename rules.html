@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rules — Knowware: Systems of Intelligence</title>
+<meta name="description" content="The non-negotiables. How Knowware is made, what it will never do, and why." />
+<link rel="canonical" href="https://knowware.press/rules.html" />
+<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Knowware" />
+<meta property="og:title" content="The Rules — Knowware" />
+<meta property="og:description" content="The non-negotiables. How Knowware is made, what it will never do, and why." />
+<meta property="og:url" content="https://knowware.press/rules.html" />
+<meta property="og:image" content="https://knowware.press/assets/og-knowware.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Rules — Knowware" />
+<meta name="twitter:image" content="https://knowware.press/assets/og-knowware.png" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf9; --paper: #ffffff; --ink: #0a0a0a;
+    --sub: #6b6b6b; --sub2: #9a9a97; --rule: #e5e5e4;
+    --accent: oklch(0.55 0.15 250); --accent-soft: oklch(0.96 0.02 250);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111110; --paper: #1a1a18; --ink: #f0f0ea;
+      --sub: #8a8a84; --sub2: #555550; --rule: #2a2a27;
+      --accent: oklch(0.65 0.15 250); --accent-soft: oklch(0.22 0.06 250); }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+
+  header {
+    position: sticky; top: 0; z-index: 20; background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 16px; align-items: center; padding: 14px 32px;
+  }
+  header .brand { font-size: 15px; font-weight: 600; letter-spacing: -0.015em; }
+  header .meta { font-size: 11px; color: var(--sub); text-align: right; }
+
+  .masthead { border-bottom: 1px solid var(--rule); padding: 10px 32px;
+    display: flex; gap: 32px; font-size: 10px; color: var(--sub);
+    letter-spacing: -0.005em; }
+
+  /* Hero */
+  .hero { padding: 64px 32px; border-bottom: 2px solid var(--ink); }
+  .kicker { font-size: 10px; letter-spacing: 0.06em; color: var(--sub); margin-bottom: 20px; }
+  .hero-h1 { font-size: clamp(40px, 6vw, 80px); font-weight: 500;
+    letter-spacing: -0.04em; line-height: 1.0; max-width: 720px; }
+  .hero-sub { font-size: 17px; line-height: 1.6; color: var(--sub);
+    margin-top: 20px; max-width: 580px; }
+
+  /* Rules */
+  .rules { }
+  .rule-item {
+    display: grid; grid-template-columns: 64px 1fr;
+    border-bottom: 1px solid var(--rule); padding: 36px 32px; gap: 24px;
+  }
+  .rule-n { font-size: 40px; font-weight: 500; letter-spacing: -0.04em;
+    color: var(--sub2); line-height: 1; padding-top: 4px; }
+  .rule-body { }
+  .rule-title { font-size: 22px; font-weight: 500; letter-spacing: -0.02em;
+    line-height: 1.2; margin-bottom: 12px; }
+  .rule-title em { font-style: normal; color: var(--accent); }
+  .rule-text { font-size: 15px; line-height: 1.75; color: var(--sub); max-width: 640px; }
+  .rule-text strong { color: var(--ink); font-weight: 500; }
+
+  /* Footer */
+  .foot-letter { border-top: 2px solid var(--ink); padding: 48px 32px 40px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .foot-headline { font-size: clamp(28px, 4vw, 48px); font-weight: 500;
+    letter-spacing: -0.04em; line-height: 1.05; }
+  .foot-headline span { color: var(--sub); }
+  .foot-email { display: inline-block; margin-top: 16px; font-size: 12px;
+    color: var(--accent); border-bottom: 1px solid var(--accent); }
+  .foot-meta { font-size: 10px; color: var(--sub2); text-align: right;
+    line-height: 1.9; letter-spacing: -0.005em; }
+  .foot-ledger { border-top: 1px solid var(--rule); padding: 12px 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    font-size: 11px; color: var(--sub); }
+
+  @media (max-width: 640px) {
+    header { padding: 12px 16px; grid-template-columns: auto 1fr; }
+    header .meta { display: none; }
+    .hero { padding: 40px 16px; }
+    .rule-item { grid-template-columns: 1fr; padding: 28px 16px; gap: 8px; }
+    .rule-n { font-size: 28px; }
+    .foot-letter { grid-template-columns: 1fr; padding: 36px 16px; }
+    .foot-ledger { grid-template-columns: 1fr 1fr; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="brand">Knowware<span style="color:var(--sub2)">®</span></a>
+  <span></span>
+  <span class="mono meta">RULES / VOL. I</span>
+</header>
+
+<div class="masthead mono">
+  <span>ISSUE / 01</span>
+  <span>NON-NEGOTIABLES / 05</span>
+  <span>REVISION / NONE</span>
+</div>
+
+<div class="hero">
+  <div class="kicker mono">00 · NON-NEGOTIABLES</div>
+  <h1 class="hero-h1">Five rules this project will not break.</h1>
+  <p class="hero-sub">These are not guidelines. They are the conditions under which Knowware exists.
+    If any is violated, the project is something else.</p>
+</div>
+
+<div class="rules">
+
+  <div class="rule-item">
+    <div class="mono rule-n">01</div>
+    <div class="rule-body">
+      <div class="rule-title">No tracking. No analytics. <em>No pixels.</em></div>
+      <p class="rule-text">
+        There is no tracking script on this site. No analytics, no cookies, no third-party
+        share pixels. Sharing is <strong>navigator.share</strong> and clipboard copy only.
+        We do not know how many people visit. We do not want to.
+        <br><br>
+        If you want to tell us something reached you, send a letter.
+        That is the only signal we are collecting.
+      </p>
+    </div>
+  </div>
+
+  <div class="rule-item">
+    <div class="mono rule-n">02</div>
+    <div class="rule-body">
+      <div class="rule-title"><em>Blue</em> is earned. Never decoration.</div>
+      <p class="rule-text">
+        The signal colour — <strong style="color:oklch(0.55 0.15 250)">this blue</strong> —
+        appears only on thesis words, the one line that matters on a given page,
+        and action links. It is never used to decorate, separate, or draw attention
+        to something that does not deserve it.
+        <br><br>
+        When everything is blue, nothing is. We use it once per screen.
+      </p>
+    </div>
+  </div>
+
+  <div class="rule-item">
+    <div class="mono rule-n">03</div>
+    <div class="rule-body">
+      <div class="rule-title">No runtime AI features. <em>Synthesis is in the manuscript.</em></div>
+      <p class="rule-text">
+        There are no chatbots, no generative summaries, no AI-in-the-browser features on this site.
+        The intelligence in this project lives in the manuscript — produced over three years
+        by a method developed for the purpose.
+        <br><br>
+        The synthesis happened before you arrived. You are reading the result.
+        <a href="/#method" style="color:var(--accent); border-bottom:1px solid var(--accent)">Read the method →</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="rule-item">
+    <div class="mono rule-n">04</div>
+    <div class="rule-body">
+      <div class="rule-title">The corpus is not the person. <em>Never "X says."</em></div>
+      <p class="rule-text">
+        Each of the 81 syntheses is built from a corpus — published work, lectures, interviews,
+        and field notes attributed to a person. The corpus surfaces what the conversation produced.
+        <br><br>
+        We never write "Pearl says" or "Hayles argues." We write "the corpus surfaces" or
+        "the synthesis finds." The distinction matters. A person has a right to
+        speak for themselves. A corpus is a record, not a voice.
+      </p>
+    </div>
+  </div>
+
+  <div class="rule-item">
+    <div class="mono rule-n">05</div>
+    <div class="rule-body">
+      <div class="rule-title">Machine proposes. <em>Human approves every drop before fire.</em></div>
+      <p class="rule-text">
+        This book is machine-coordinated. The production method uses language models at every
+        stage — drafting, synthesis, cross-referencing, and structural analysis.
+        <br><br>
+        Every line that enters the manuscript has been read, approved, and edited by a human.
+        Nothing fires automatically. Nothing publishes without a decision.
+        Machine proposes; human approves. That is the rule. It does not bend.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-letter">
+    <div>
+      <div class="foot-headline">Write us a letter.<br><span>An email is also a letter.</span></div>
+      <a href="mailto:hello@knowware.press" class="mono foot-email">hello@knowware.press</a>
+    </div>
+    <div class="mono foot-meta">
+      <div>KNOWWARE / VOL. I</div>
+      <div>MMXXVI · ED. 01</div>
+      <div>MACHINE-COORDINATED.</div>
+      <div>HUMAN-OPERATED.</div>
+    </div>
+  </div>
+  <div class="mono foot-ledger">
+    <span>Knowware / Systems of Intelligence</span>
+    <span>MMXXVI · Edition 01</span>
+    <span>~350 pp · 09 ch · 81 voices</span>
+    <span style="text-align:right">knowware.press</span>
+  </div>
+</footer>
+
+</body>
+</html>
