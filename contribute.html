@@ -434,6 +434,37 @@
     footer .inner { grid-template-columns: 1fr; align-items: start; }
     footer .meta { text-align: left; }
   }
+
+  /* Field — 82nd line component */
+  .kw-field {
+    --field-h: 360px; --sig-top: 41%;
+    position: relative; height: var(--field-h); overflow: hidden;
+    background:
+      repeating-linear-gradient(to bottom,
+        transparent 0 72px,
+        var(--paper,#fff) 72px 76px,
+        var(--ink,#0a0a0a) 76px 104px,
+        var(--paper,#fff) 104px 108px,
+        transparent 108px 120px),
+      repeating-linear-gradient(to bottom,
+        var(--ink,#0a0a0a) 0 3px, transparent 3px 12px);
+  }
+  .kw-field-sig {
+    position: absolute; left: 0; right: 0; top: var(--sig-top);
+    height: 4px; background: var(--signal, #2F55E0);
+    transform-origin: left center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .kw-field-sig { animation: kw-sig 900ms cubic-bezier(.2,.7,.2,1) .35s both; }
+    @keyframes kw-sig { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  }
+  .kw-field--82 { --sig-top: calc(100% - 7px); --field-h: 280px; }
+  .kw-field-caption {
+    position: absolute; right: 24px; bottom: 24px;
+    font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--signal, #2F55E0);
+  }
 </style>
 <script src="/gate.js"></script>
 </head>
@@ -650,6 +681,12 @@
 <div style="border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 0;">
   <span class="mono" style="font-size: 11px; color: var(--sub);">Just want the book?</span>
   <a href="#order" style="background: var(--ink); color: var(--paper); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: -0.005em; padding: 10px 18px; text-decoration: none; display: inline-block;">Pre-order · $33 →</a>
+</div>
+
+<!-- 82nd line — the reader's spot -->
+<div class="kw-field kw-field--82">
+  <div class="kw-field-sig"></div>
+  <p class="kw-field-caption">Line 82 is yours.</p>
 </div>
 
 <!-- The form -->

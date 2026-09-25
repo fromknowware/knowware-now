@@ -63,15 +63,16 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fafaf9;
-    --paper: #ffffff;
-    --ink: #0a0a0a;
+    --bg: #EDEEE4;
+    --paper: #EDEEE4;
+    --ink: #191938;
     --sub: #6b6b6b;
     --sub2: #9a9a97;
-    --rule: #e5e5e4;
-    --rule-strong: #0a0a0a;
-    --accent: oklch(0.55 0.15 250);
-    --accent-soft: oklch(0.96 0.02 250);
+    --rule: rgba(25,25,56,.16);
+    --rule-strong: #191938;
+    --signal: #2F55E0;
+    --accent: #2F55E0;
+    --accent-soft: oklch(0.90 0.05 250);
     --theme-transition: background-color 0.7s cubic-bezier(0.19,1,0.22,1), color 0.7s cubic-bezier(0.19,1,0.22,1), border-color 0.7s cubic-bezier(0.19,1,0.22,1);
 
     /* Tweakable readability variables */
@@ -172,6 +173,69 @@
   article[data-kw-read] {
     max-width: var(--read-col);
   }
+
+  /* ============================================================
+     Field — the cover's bar-field, generative on the web
+     ============================================================ */
+  .kw-field {
+    --field-h: 360px;
+    --sig-top: 41%;
+    position: relative;
+    height: var(--field-h);
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(to bottom,
+        transparent 0 72px,
+        var(--paper)  72px  76px,
+        var(--ink)    76px 104px,
+        var(--paper) 104px 108px,
+        transparent  108px 120px),
+      repeating-linear-gradient(to bottom,
+        var(--ink) 0 3px,
+        transparent 3px 12px);
+  }
+  .kw-field-sig {
+    position: absolute; left: 0; right: 0; top: var(--sig-top);
+    height: 4px; background: var(--signal, #2F55E0);
+    transform-origin: left center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .kw-field-sig { animation: kw-sig 900ms cubic-bezier(.2,.7,.2,1) .35s both; }
+    @keyframes kw-sig { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  }
+  .kw-field--divider { --field-h: 72px; background-position: 0 -40px; }
+  .kw-field--82 { --sig-top: calc(100% - 7px); --field-h: 300px; }
+  .kw-field-caption {
+    position: absolute; right: 0; bottom: -30px;
+    font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--signal, #2F55E0);
+  }
+
+  /* Dot — the cover mark */
+  .kw-dot {
+    display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--ink); margin-right: 10px; vertical-align: 1px;
+  }
+
+  /* Cover hero */
+  .kw-hero-cover { border-bottom: 2px solid var(--ink); }
+  .kw-hero-word {
+    font: 800 clamp(64px, 15vw, 220px)/0.92 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -.035em; color: var(--ink);
+    text-transform: uppercase;
+    margin: 0; padding: clamp(20px,3vw,36px) clamp(16px,3vw,48px) 0;
+  }
+  .kw-hero-foot {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 24px; flex-wrap: wrap;
+    padding: clamp(20px,3vw,36px) clamp(16px,3vw,48px) clamp(40px,6vw,72px);
+  }
+  .kw-hero-tag {
+    font: 400 clamp(15px,1.6vw,19px)/1.5 "JetBrains Mono", ui-monospace, monospace;
+    color: var(--sub); margin: 0;
+  }
+  .kw-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
@@ -195,7 +259,7 @@
 <script type="text/babel" src="knowware-v2/voices.jsx?v=5"></script>
 <script type="text/babel" src="knowware-v2/mo.jsx?v=4"></script>
 <script type="text/babel" src="knowware-v2/periodic.jsx?v=5"></script>
-<script type="text/babel" src="knowware-v2/pages.jsx?v=52"></script>
+<script type="text/babel" src="knowware-v2/pages.jsx?v=53"></script>
 <script type="text/babel" src="knowware-v2/dossier.jsx?v=8"></script>
 <script type="text/babel" src="knowware-v2/tweaks.jsx?v=4"></script>
 <script type="text/babel" src="knowware-v2/interview-urls.jsx?v=3"></script>
