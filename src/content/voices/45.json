@@ -1,0 +1,34 @@
+{
+  "id": "45",
+  "name": "Donna Haraway",
+  "alias": "The Cyborg Manifesto",
+  "chapter": 5,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "UC Santa Cruz · History of Consciousness",
+  "active": "1944 – present",
+  "jurisdiction": "Feminist Theory / Cyborg Studies / More-Than-Human Coordination",
+  "role": "Cyborg Manifesto",
+  "awards": [
+    "J.D. Bernal Prize (Society for Social Studies of Science)",
+    "SFRA Pilgrim Award"
+  ],
+  "works": [
+    "A Cyborg Manifesto",
+    "Situated Knowledges",
+    "The Companion Species Manifesto",
+    "Staying with the Trouble"
+  ],
+  "knownFor": [
+    "Cyborg theory",
+    "Situated knowledge",
+    "Making kin not babies",
+    "More-than-human worlds",
+    "Staying with the trouble"
+  ],
+  "coldOpen": "I am not interested in transcendence. I am interested in the tissue of connection — the muddy, partial, mortal bonds between species, technologies, and ecologies. The cyborg is not a fantasy of escape. It is an honest description of what we already are.",
+  "bio": "Feminist theorist and biologist who argued in A Cyborg Manifesto that the boundary between human, animal, and machine was always already permeable — and that this is an opportunity for politics, not a threat. Her concept of situated knowledges insists that all knowledge is produced from inside a web of relations, never from a view from nowhere.",
+  "whyMatters": "Haraway theorizes the coordination interface as identity: the cyborg is not a human plus a machine but a new coordination pattern that exceeds both. Her situated knowledges argument shows that two-body epistemology (knower vs. known) is always false — there is always a third body (situation, embodiment, relation) that constitutes the knowing. She gives coordination intelligence its feminist and ecological dimensions."
+}

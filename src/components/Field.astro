@@ -1,0 +1,28 @@
+---
+interface Props {
+  height?: string;
+  sigTop?: string;
+  variant?: '82' | 'divider' | undefined;
+  caption?: string;
+  class?: string;
+}
+
+const {
+  height,
+  sigTop,
+  variant,
+  caption,
+  class: extraClass = '',
+} = Astro.props;
+
+const style = [
+  height ? `--field-h: ${height}` : '',
+  sigTop ? `--sig-top: ${sigTop}` : '',
+].filter(Boolean).join('; ');
+
+const cls = ['kw-field', variant ? `kw-field--${variant}` : '', extraClass].filter(Boolean).join(' ');
+---
+<div class={cls} style={style || undefined}>
+  <div class="kw-field-sig"></div>
+  {caption && <p class="kw-field-caption">{caption}</p>}
+</div>

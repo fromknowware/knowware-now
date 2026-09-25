@@ -1,0 +1,33 @@
+{
+  "id": "03",
+  "name": "Donella Meadows",
+  "alias": "The Leverage Point",
+  "chapter": 1,
+  "tier": "A",
+  "status": "passed",
+  "tag": "legacy",
+  "flag": "missing",
+  "affiliation": "Dartmouth College · Sustainability Institute",
+  "active": "1941 – 2001",
+  "jurisdiction": "Systems Thinking / Sustainability",
+  "role": "Thinking in Systems",
+  "awards": [
+    "World Federation of United Nations Associations Award",
+    "Ashoka Fellow"
+  ],
+  "works": [
+    "Thinking in Systems",
+    "The Limits to Growth",
+    "Leverage Points: Places to Intervene in a System"
+  ],
+  "knownFor": [
+    "Leverage points",
+    "Feedback loops",
+    "Systems thinking",
+    "Balancing vs. reinforcing loops",
+    "Paradigm shifts"
+  ],
+  "coldOpen": "The most powerful place to intervene in a system is in the mindset or paradigm out of which the system arises. Change the paradigm and you change the goals, the rules, the feedback loops — everything.",
+  "bio": "Systems thinker who spent her career explaining why smart people working hard keep making things worse. She modeled global systems before computers could scale them, and argued that the highest leverage point is always the one nobody sees — the paradigm.",
+  "whyMatters": "Meadows provides the foundational theory of coordination: feedback loops, leverage points, and the three-body structure of stable systems. Her work shows that intervention without understanding context produces overshoot. She names the coordination problems that the alignment researchers are trying to solve."
+}

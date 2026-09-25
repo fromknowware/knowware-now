@@ -1,0 +1,32 @@
+{
+  "id": "22",
+  "name": "Dario Amodei",
+  "alias": "The Constitutional Architect",
+  "chapter": 3,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Anthropic · ex-OpenAI",
+  "active": "2004 – present",
+  "jurisdiction": "AI / Alignment / Coordination Intelligence",
+  "role": "CEO, Anthropic",
+  "awards": [
+    "Time 100 AI",
+    "Forbes 30 Under 30 (alumnus)"
+  ],
+  "works": [
+    "Constitutional AI (2022)",
+    "Scaling Laws for Neural Language Models",
+    "AI and Compute"
+  ],
+  "knownFor": [
+    "Constitutional AI",
+    "Alignment through coordination",
+    "Scaling laws",
+    "RLAIF",
+    "Hybrid intelligence"
+  ],
+  "coldOpen": "If we get AGI wrong, there's no second chance. We need coordination architecture, not constraint architecture. Constitutional AI proves it works.",
+  "bio": "Recognized that traditional safety (filtering bad outputs) doesn't scale to AGI. Instead, he built Constitutional AI: a coordination architecture where capability and values grow together. Anthropic proves that alignment is not constraint but coordination.",
+  "whyMatters": "Amodei demonstrates that the three-body pattern — capability, values, coordination — solves the alignment problem. He shows that coordination intelligence can be built and scaled. His work makes the abstract coordination framework concrete for AI systems."
+}

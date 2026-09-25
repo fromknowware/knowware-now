@@ -1,0 +1,34 @@
+{
+  "id": "20",
+  "name": "Richard Feynman",
+  "alias": "The Path Integral",
+  "chapter": 3,
+  "tier": "A",
+  "status": "passed",
+  "tag": "legacy",
+  "flag": "new",
+  "affiliation": "Caltech · Los Alamos",
+  "active": "1918 – 1988",
+  "jurisdiction": "Physics / Coordination / Knowing vs. Understanding",
+  "role": "Theoretical Physicist",
+  "awards": [
+    "Nobel Prize in Physics (1965)",
+    "Dirac Medal",
+    "Oersted Medal"
+  ],
+  "works": [
+    "The Feynman Lectures on Physics",
+    "QED: The Strange Theory of Light and Matter",
+    "Surely You're Joking, Mr. Feynman!"
+  ],
+  "knownFor": [
+    "Feynman diagrams",
+    "Path integrals",
+    "Sum over histories",
+    "Nanotechnology vision",
+    "Teaching"
+  ],
+  "coldOpen": "The most powerful place to intervene in a system is always the place you're ignoring because you thought you understood it.",
+  "bio": "Refused to confuse knowing the name of something with understanding it. His Feynman diagrams reveal that every interaction in nature is three-body: particle, force carrier, particle. The diagram shows the coordination; the equation obscures it.",
+  "whyMatters": "Feynman showed that understanding requires seeing coordination — how three bodies meet at a vertex. His O-ring demonstration proved that analysis fails when the third body (context) is excluded. He teaches that coordination is what intelligence actually recognizes."
+}

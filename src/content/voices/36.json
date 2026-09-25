@@ -1,0 +1,35 @@
+{
+  "id": "36",
+  "name": "Nassim Taleb",
+  "alias": "The Antifragile",
+  "chapter": 4,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "NYU Tandon School of Engineering · Universa Investments",
+  "active": "1960 – present",
+  "jurisdiction": "Risk / Probability / Epistemology / Tail Events",
+  "role": "Antifragility — coordination resilience",
+  "awards": [
+    "Foreign Policy Top 100 Global Thinkers",
+    "Wiley Finance Prize"
+  ],
+  "works": [
+    "Fooled by Randomness (2001)",
+    "The Black Swan (2007)",
+    "Antifragile (2012)",
+    "Skin in the Game (2018)",
+    "The Bed of Procrustes (2010)"
+  ],
+  "knownFor": [
+    "Black Swan theory",
+    "Antifragility",
+    "Fat-tail distributions",
+    "Via negativa",
+    "Skin in the game principle"
+  ],
+  "coldOpen": "Fragile things break under stress. Robust things survive it. Antifragile things get stronger. Most of what passes for intelligence is optimized for the average, which means it is catastrophically fragile to the extremes. The third body — the tail event, the black swan — is always the one the model excluded.",
+  "bio": "Former options trader turned epistemologist whose Incerto series dismantles the foundations of risk modeling, decision theory, and expert prediction. He argues that the dominant two-body models of cause and effect — linear, thin-tailed, Gaussian — systematically exclude the third body: the fat-tailed, non-linear, emergent event that actually drives history.",
+  "whyMatters": "Taleb makes the book's thesis about the excluded third body into a theory of civilizational risk. His antifragility concept is coordination intelligence applied to survival: systems that coordinate with uncertainty rather than suppressing it grow stronger. His via negativa — knowing by what you remove, not what you add — is the practitioner's version of the three-body framework."
+}

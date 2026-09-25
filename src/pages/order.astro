@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Field from '../components/Field.astro';
+import { PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL, STRIPE_URL, DEADLINE } from '../config';
+---
+<Base title="Order" description={`Pre-order Knowware — ${PRICE_PREORDER} before the solstice.`}>
+  <section class="kw-section">
+    <p class="kw-label">Pre-order</p>
+    <h1 class="kw-h2">Reserve your copy.</h1>
+    <p class="kw-body">
+      Knowware ships on the solstice: December 21, 2026. Pre-order now and lock the launch price.
+    </p>
+  </section>
+
+  <Field height="180px" sigTop="50%" />
+
+  <section class="kw-section">
+    <div class="pricing-grid">
+      <div class="pricing-card pricing-card--featured">
+        <p class="kw-label">Pre-order</p>
+        <p class="pricing-price">{PRICE_PREORDER}</p>
+        <p class="pricing-desc kw-body">Print + digital bundle. Launch price, locked now.</p>
+        <a href={STRIPE_URL} class="kw-btn kw-btn--filled" style="margin-top:24px">
+          Pre-order · {PRICE_PREORDER} →
+        </a>
+      </div>
+      <div class="pricing-card">
+        <p class="kw-label">At Print</p>
+        <p class="pricing-price">{PRICE_PRINT}</p>
+        <p class="pricing-desc kw-body">Full retail price after December 21.</p>
+      </div>
+      <div class="pricing-card">
+        <p class="kw-label">Digital Only</p>
+        <p class="pricing-price">{PRICE_DIGITAL}</p>
+        <p class="pricing-desc kw-body">PDF + ePub edition, available at launch.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="kw-section">
+    <p class="kw-label">What you get</p>
+    <ul class="what-list kw-body">
+      <li>9 chapters on coordination intelligence</li>
+      <li>81 structured voices — 27 academics, 27 practitioners, 27 visionaries</li>
+      <li>Original three-body diagrams for each chapter</li>
+      <li>Named contributor line (if you contribute a voice before the deadline)</li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1px; border: 1px solid var(--rule);
+}
+.pricing-card {
+  padding: 32px 24px; background: var(--paper);
+}
+.pricing-card--featured {
+  background: var(--ink); color: var(--bg);
+}
+.pricing-card--featured .kw-label { color: var(--accent); }
+.pricing-card--featured .kw-body { color: rgba(237,238,228,0.65); }
+.pricing-price {
+  font: 800 clamp(40px,6vw,80px)/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.04em; margin: 16px 0 8px;
+}
+.what-list { padding-left: 20px; }
+.what-list li { margin-bottom: 8px; }
+</style>

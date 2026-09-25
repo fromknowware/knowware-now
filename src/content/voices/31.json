@@ -1,0 +1,31 @@
+{
+  "id": "31",
+  "name": "Dan Doctoroff",
+  "alias": "The Sidewalk Mayor",
+  "chapter": 4,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Sidewalk Labs · ex-Bloomberg LP · ex-NYC Deputy Mayor",
+  "active": "1958 – 2023",
+  "jurisdiction": "Urban Development / Smart Cities / Municipal Coordination",
+  "role": "Former CEO Sidewalk Labs",
+  "awards": [
+    "NYC Economic Development legacy recognition"
+  ],
+  "works": [
+    "Greater than Ever: New York's Big Comeback (2017)",
+    "Sidewalk Toronto project",
+    "PlaNYC 2030 initiative"
+  ],
+  "knownFor": [
+    "NYC 2012 Olympics bid",
+    "PlaNYC sustainability plan",
+    "Bloomberg LP CEO",
+    "Sidewalk Labs urban tech",
+    "Public-private coordination"
+  ],
+  "coldOpen": "A city is the largest coordination machine humanity has ever built. Streets, zoning, utilities, transit — every piece is a coordination contract between millions of people who will never meet. When those contracts stop updating, cities fail. Sidewalk Labs was an attempt to let the city rewrite its own coordination contracts in real time.",
+  "bio": "Served as NYC Deputy Mayor for Economic Development under Michael Bloomberg, orchestrating the largest urban transformation in the city's modern history — the post-9/11 economic revival, the PlaNYC sustainability initiative, and the unsuccessful but visionary 2012 Olympic bid. Later founded Sidewalk Labs to build AI-native urban infrastructure before his death from ALS in 2023.",
+  "whyMatters": "Doctoroff spent his career as a practitioner of coordination intelligence at city scale. He understood that urban systems fail not from resource scarcity but from coordination failure — misaligned incentives, outdated contracts, siloed data. Sidewalk Labs was a direct attempt to instrument the coordination layer of urban life."
+}

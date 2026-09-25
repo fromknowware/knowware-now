@@ -1,0 +1,34 @@
+{
+  "id": "67",
+  "name": "Dr. Sara Seager",
+  "alias": "The Exoplanet Hunter",
+  "chapter": 8,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT · Department of Earth, Atmospheric and Planetary Sciences",
+  "active": "1971 – present",
+  "jurisdiction": "Astrophysics / Exoplanet Atmospheres / Biosignatures",
+  "role": "Exoplanet Research",
+  "awards": [
+    "MacArthur Fellowship (2013)",
+    "Sackler Prize in Physics (2012)",
+    "Time 100 (2012)",
+    "Raymond and Beverly Sackler Prize"
+  ],
+  "works": [
+    "Exoplanet Atmospheres (2010)",
+    "TESS Mission (Transiting Exoplanet Survey Satellite)",
+    "The Smallest Lights in the Universe (memoir, 2020)"
+  ],
+  "knownFor": [
+    "Exoplanet atmospheric characterization",
+    "Biosignature detection",
+    "TESS mission",
+    "Seager equation",
+    "Life detection via atmospheric chemistry"
+  ],
+  "coldOpen": "I am not looking for life. I am looking for the chemical signature of a planet coordinating with its biosphere. When life exists on a planet, it changes the atmosphere. Oxygen, methane, ozone — these are coordination products. The planet and its life have been in dialogue for billions of years. I am reading the transcript.",
+  "bio": "Astrophysicist who pioneered the study of exoplanet atmospheres, developing the theoretical framework for detecting biosignatures — chemical signatures in planetary atmospheres that can only be sustained by living systems. Her Seager equation extends the Drake equation by accounting for the atmospheric detectability of life. She led key aspects of the TESS mission, which has identified thousands of exoplanet candidates for atmospheric follow-up.",
+  "whyMatters": "Seager's biosignature work defines coordination intelligence at planetary scale: life is detectable because it coordinates with its environment, changing atmospheric chemistry in ways that pure chemistry cannot maintain. A biosphere is a three-body coordination system — organism, ecosystem, and planetary chemistry in continuous feedback. Her detection frameworks are searches for coordination artifacts: the chemical traces left when life and planet have been talking to each other for geological time."
+}

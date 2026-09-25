@@ -1,0 +1,342 @@
+/* ============================================================
+   Knowware design system — kw.css
+   Palette lock: navy #191938 / cream #EDEEE4 / signal #2F55E0
+   ============================================================ */
+
+:root {
+  --bg: #EDEEE4;
+  --paper: #EDEEE4;
+  --ink: #191938;
+  --sub: #6b6b6b;
+  --sub2: #9a9a97;
+  --rule: rgba(25,25,56,.16);
+  --rule-strong: #191938;
+  --signal: #2F55E0;
+  --accent: #2F55E0;
+  --accent-soft: oklch(0.90 0.05 250);
+  --theme-transition: background-color 0.7s cubic-bezier(0.19,1,0.22,1),
+    color 0.7s cubic-bezier(0.19,1,0.22,1),
+    border-color 0.7s cubic-bezier(0.19,1,0.22,1);
+
+  --body-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --read-scale: 1.1;
+  --read-lh: 1.7;
+  --read-col: 880px;
+  --read-track: -0.015em;
+
+  --tier-a:     oklch(0.88 0.09 260);
+  --tier-p:     oklch(0.88 0.09 35);
+  --tier-v:     oklch(0.88 0.09 140);
+  --tier-a-ink: oklch(0.35 0.10 260);
+  --tier-p-ink: oklch(0.40 0.12 35);
+  --tier-v-ink: oklch(0.35 0.10 140);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body-font);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "kern", "liga";
+  overflow-x: hidden;
+  transition: var(--theme-transition);
+}
+
+.mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+a { color: inherit; text-decoration: none; }
+
+/* Dark theme */
+html[data-theme="dark"] {
+  --bg: #111110;
+  --paper: #1a1a18;
+  --ink: #f0f0ea;
+  --sub: #8a8a84;
+  --sub2: #555550;
+  --rule: #2a2a27;
+  --accent: oklch(0.65 0.15 250);
+  --accent-soft: oklch(0.22 0.06 250);
+}
+
+/* Warm theme */
+html[data-theme="warm"] {
+  --bg: #e8e5de;
+  --paper: #eeebe3;
+  --ink: #1a1814;
+  --sub: #6b6458;
+  --sub2: #9a9488;
+  --rule: #cbc7bd;
+  --accent: oklch(0.50 0.15 250);
+  --accent-soft: oklch(0.92 0.04 250);
+}
+
+/* High-contrast mode */
+html[data-contrast="high"] {
+  --bg: #ffffff;
+  --paper: #ffffff;
+  --ink: #000000;
+  --sub: #3a3a3a;
+  --sub2: #5a5a5a;
+  --rule: #b8b8b8;
+}
+
+/* ============================================================
+   Dock bar — fixed bottom
+   ============================================================ */
+#kw-dock {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: #191938; color: #EDEEE4;
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 24px; height: 48px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; letter-spacing: -0.005em;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+  border-top: 1px solid rgba(237,238,228,0.12);
+}
+#kw-dock.kw-visible { transform: translateY(0); }
+#kw-dock-cta {
+  background: #2F55E0; color: #EDEEE4;
+  padding: 8px 18px; border: none; cursor: pointer;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; letter-spacing: -0.005em;
+  text-decoration: none; display: inline-block;
+  margin-left: auto; flex-shrink: 0;
+}
+#kw-dock-cta:hover { background: #1e3fc0; }
+#kw-dock-sep { color: rgba(237,238,228,0.25); }
+
+/* ============================================================
+   Reading article
+   ============================================================ */
+article[data-kw-read] p,
+article[data-kw-read] blockquote p {
+  font-size: calc(17px * var(--read-scale));
+  line-height: var(--read-lh);
+  letter-spacing: var(--read-track);
+}
+article[data-kw-read] blockquote p {
+  font-size: calc(22px * var(--read-scale));
+}
+article[data-kw-read] {
+  max-width: var(--read-col);
+}
+
+/* ============================================================
+   Field — the cover's bar-field
+   ============================================================ */
+.kw-field {
+  --field-h: 360px;
+  --sig-top: 41%;
+  position: relative;
+  height: var(--field-h);
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(to bottom,
+      transparent 0 72px,
+      var(--paper)  72px  76px,
+      var(--ink)    76px 104px,
+      var(--paper) 104px 108px,
+      transparent  108px 120px),
+    repeating-linear-gradient(to bottom,
+      var(--ink) 0 3px,
+      transparent 3px 12px);
+}
+.kw-field-sig {
+  position: absolute; left: 0; right: 0; top: var(--sig-top);
+  height: 4px; background: var(--signal, #2F55E0);
+  transform-origin: left center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kw-field-sig { animation: kw-sig 900ms cubic-bezier(.2,.7,.2,1) .35s both; }
+  @keyframes kw-sig { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+}
+.kw-field--divider { --field-h: 72px; background-position: 0 -40px; }
+.kw-field--82 { --sig-top: calc(100% - 7px); --field-h: 300px; }
+.kw-field-caption {
+  position: absolute; right: 0; bottom: -30px;
+  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--signal, #2F55E0);
+}
+
+/* ============================================================
+   Dot — the cover mark
+   ============================================================ */
+.kw-dot {
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--ink); margin-right: 10px; vertical-align: 1px;
+}
+
+/* ============================================================
+   Cover hero
+   ============================================================ */
+.kw-hero-cover { border-bottom: 2px solid var(--ink); }
+.kw-hero-word {
+  font: 800 clamp(64px, 15vw, 220px)/0.92 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.035em; color: var(--ink);
+  text-transform: uppercase;
+  margin: 0; padding: clamp(20px,3vw,36px) clamp(16px,3vw,48px) 0;
+}
+.kw-hero-foot {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 24px; flex-wrap: wrap;
+  padding: clamp(20px,3vw,36px) clamp(16px,3vw,48px) clamp(40px,6vw,72px);
+}
+.kw-hero-tag {
+  font: 400 clamp(15px,1.6vw,19px)/1.5 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); margin: 0;
+}
+.kw-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.kw-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 12px 22px;
+  font: 500 13px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: -0.01em;
+  border: 2px solid var(--ink);
+  background: transparent; color: var(--ink);
+  cursor: pointer; text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.kw-btn:hover { background: var(--ink); color: var(--bg); }
+.kw-btn--filled {
+  background: var(--signal); border-color: var(--signal); color: #EDEEE4;
+}
+.kw-btn--filled:hover { background: #1e3fc0; border-color: #1e3fc0; }
+
+/* ============================================================
+   Disclosure band
+   ============================================================ */
+.kw-disclosure {
+  border-bottom: 1px solid var(--rule);
+  padding: 10px clamp(16px,3vw,48px);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 16px; flex-wrap: wrap;
+  font: 400 11px/1.4 "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ============================================================
+   Section / layout utilities
+   ============================================================ */
+.kw-section {
+  padding: clamp(40px,6vw,80px) clamp(16px,3vw,48px);
+  border-bottom: 1px solid var(--rule);
+}
+.kw-label {
+  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--sub); margin: 0 0 24px;
+}
+.kw-h2 {
+  font: 700 clamp(28px,4vw,56px)/1.05 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.025em; color: var(--ink);
+  margin: 0 0 24px;
+}
+.kw-h3 {
+  font: 600 clamp(18px,2vw,24px)/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.02em; color: var(--ink);
+  margin: 0 0 12px;
+}
+.kw-body {
+  font-size: clamp(15px,1.4vw,18px); line-height: 1.65;
+  color: var(--sub); max-width: 640px;
+}
+
+/* ============================================================
+   Tier badges
+   ============================================================ */
+.kw-tier {
+  display: inline-block; padding: 3px 8px;
+  font: 600 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase;
+  border-radius: 2px;
+}
+.kw-tier--A { background: var(--tier-a); color: var(--tier-a-ink); }
+.kw-tier--P { background: var(--tier-p); color: var(--tier-p-ink); }
+.kw-tier--V { background: var(--tier-v); color: var(--tier-v-ink); }
+
+/* ============================================================
+   Nav / header
+   ============================================================ */
+.kw-nav {
+  display: flex; align-items: center; gap: 24px;
+  padding: 0 clamp(16px,3vw,48px);
+  height: 52px;
+  border-bottom: 1px solid var(--rule);
+}
+.kw-nav-logo {
+  font: 700 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.02em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.kw-nav-links {
+  display: flex; gap: 20px; margin-left: auto;
+  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .01em;
+}
+.kw-nav-links a { color: var(--sub); }
+.kw-nav-links a:hover { color: var(--ink); }
+
+/* ============================================================
+   Diagram (three-body)
+   ============================================================ */
+.kw-diagram {
+  border: 1px solid var(--rule);
+  padding: 32px;
+  margin: 40px 0;
+}
+.kw-diagram-title {
+  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--sub); margin: 0 0 8px;
+}
+.kw-diagram-caption {
+  font-size: 13px; line-height: 1.5; color: var(--sub);
+  margin: 8px 0 24px; max-width: 480px;
+}
+
+/* ============================================================
+   Voice card (in ladder / manifest)
+   ============================================================ */
+.kw-voice-card {
+  border-bottom: 1px solid var(--rule);
+  padding: 16px 0;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 12px; align-items: start;
+}
+.kw-voice-num {
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub2); padding-top: 2px;
+}
+.kw-voice-name {
+  font: 600 14px/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.01em; color: var(--ink); margin: 0 0 4px;
+}
+.kw-voice-role {
+  font: 400 12px/1.3 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub);
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.kw-footer {
+  padding: clamp(40px,6vw,80px) clamp(16px,3vw,48px);
+  border-top: 2px solid var(--ink);
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 24px; flex-wrap: wrap;
+}
+.kw-footer-word {
+  font: 800 clamp(32px,5vw,64px)/0.92 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.035em; text-transform: uppercase; color: var(--ink);
+}
+.kw-footer-meta {
+  font: 400 11px/1.6 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); text-align: right;
+}

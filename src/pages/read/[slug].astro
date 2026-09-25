@@ -1,0 +1,182 @@
+---
+import Base from '../../layouts/Base.astro';
+import SceneHead from '../../components/SceneHead.astro';
+import Field from '../../components/Field.astro';
+import { getCollection, render } from 'astro:content';
+import { SITE_URL } from '../../config';
+
+export async function getStaticPaths() {
+  const chapters = await getCollection('chapters');
+  return chapters.map((ch) => ({ params: { slug: ch.slug }, props: { chapter: ch } }));
+}
+
+const { chapter } = Astro.props;
+const { Content } = await render(chapter);
+
+// Load voices for this chapter
+const voices = await getCollection('voices');
+const chapterVoices = voices
+  .filter((v) => v.data.chapter === chapter.data.n)
+  .sort((a, b) => Number(a.data.id) - Number(b.data.id));
+
+const tierLabel: Record<string, string> = { A: 'Academic', P: 'Practitioner', V: 'Visionary' };
+
+// Prev / next
+const all = await getCollection('chapters');
+const sorted = all.sort((a, b) => a.data.n - b.data.n);
+const idx = sorted.findIndex((c) => c.slug === chapter.slug);
+const prev = idx > 0 ? sorted[idx - 1] : null;
+const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+---
+<Base
+  title={chapter.data.opener}
+  description={`Chapter ${String(chapter.data.n).padStart(2,'0')} of Knowware: ${chapter.data.opener}`}
+  ogType="article"
+  canonical={`${SITE_URL}/read/${chapter.slug}`}
+>
+  <SceneHead n={chapter.data.n} opener={chapter.data.opener} />
+
+  <!-- Field divider -->
+  <Field height="180px" sigTop="50%" />
+
+  <!-- Scene prose -->
+  <article class="kw-section kw-scene-prose" data-kw-read>
+    <Content />
+  </article>
+
+  <!-- Diagram -->
+  {chapter.data.diagram && (
+    <div class="kw-section">
+      <div class="kw-diagram">
+        <p class="kw-diagram-title">{chapter.data.diagram.title}</p>
+        <p class="kw-diagram-caption">{chapter.data.diagram.caption}</p>
+        <svg class="diagram-svg" viewBox="0 0 500 360" aria-hidden="true">
+          <!-- Arcs -->
+          {chapter.data.diagram.arcs.map((arc) => {
+            const fromNode = chapter.data.diagram!.nodes.find(n => n.id === arc.from);
+            const toNode = chapter.data.diagram!.nodes.find(n => n.id === arc.to);
+            if (!fromNode || !toNode) return null;
+            const fx = 80 + fromNode.pos[0] * 160;
+            const fy = 60 + fromNode.pos[1] * 120;
+            const tx = 80 + toNode.pos[0] * 160;
+            const ty = 60 + toNode.pos[1] * 120;
+            const mx = (fx + tx) / 2;
+            const my = (fy + ty) / 2;
+            const isLatent = arc.kind === 'latent';
+            return (
+              <g>
+                <line
+                  x1={fx} y1={fy} x2={tx} y2={ty}
+                  stroke={isLatent ? 'var(--signal)' : 'var(--ink)'}
+                  stroke-width={isLatent ? '1' : '1.5'}
+                  stroke-dasharray={isLatent ? '4 3' : undefined}
+                  opacity={isLatent ? '0.4' : '1'}
+                />
+                {arc.label && !isLatent && (
+                  <text
+                    x={mx} y={my - 6}
+                    font-family="JetBrains Mono, monospace"
+                    font-size="8"
+                    fill="var(--sub)"
+                    text-anchor="middle"
+                  >{arc.label}</text>
+                )}
+              </g>
+            );
+          })}
+          <!-- Nodes -->
+          {chapter.data.diagram.nodes.map((node) => {
+            const x = 80 + node.pos[0] * 160;
+            const y = 60 + node.pos[1] * 120;
+            const isLatent = node.latent;
+            return (
+              <g>
+                <circle
+                  cx={x} cy={y} r={isLatent ? '20' : '24'}
+                  fill={isLatent ? 'var(--accent-soft)' : 'var(--paper)'}
+                  stroke={isLatent ? 'var(--signal)' : 'var(--ink)'}
+                  stroke-width={isLatent ? '1' : '2'}
+                  stroke-dasharray={isLatent ? '4 3' : undefined}
+                />
+                {node.label.split('\n').map((line, li) => (
+                  <text
+                    x={x} y={y + (li - (node.label.split('\n').length - 1) / 2) * 11}
+                    font-family="JetBrains Mono, monospace"
+                    font-size="9"
+                    fill={isLatent ? 'var(--signal)' : 'var(--ink)'}
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                  >{line}</text>
+                ))}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </div>
+  )}
+
+  <!-- Chapter voices -->
+  <section class="kw-section">
+    <p class="kw-label">Nine Voices — Chapter {String(chapter.data.n).padStart(2,'0')}</p>
+    <p class="kw-h3">{chapter.data.title}</p>
+    <div class="voice-list">
+      {chapterVoices.map((v) => (
+        <div class="kw-voice-card">
+          <span class="kw-voice-num">{v.data.id}</span>
+          <div>
+            <p class="kw-voice-name">{v.data.name}</p>
+            <p class="kw-voice-role">{v.data.role}</p>
+            {v.data.coldOpen && (
+              <blockquote class="voice-cold-open">
+                "{v.data.coldOpen}"
+              </blockquote>
+            )}
+          </div>
+          <span class={`kw-tier kw-tier--${v.data.tier}`}>{tierLabel[v.data.tier]}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Prev / next -->
+  <nav class="kw-section chapter-nav" aria-label="Chapter navigation">
+    {prev ? (
+      <a href={`/read/${prev.slug}`} class="chapter-nav-link">
+        <span class="mono" style="font-size:11px;color:var(--sub)">← Ch. {String(prev.data.n).padStart(2,'0')}</span>
+        <span>{prev.data.opener}</span>
+      </a>
+    ) : <span />}
+    {next ? (
+      <a href={`/read/${next.slug}`} class="chapter-nav-link" style="text-align:right">
+        <span class="mono" style="font-size:11px;color:var(--sub)">Ch. {String(next.data.n).padStart(2,'0')} →</span>
+        <span>{next.data.opener}</span>
+      </a>
+    ) : <span />}
+  </nav>
+</Base>
+
+<style>
+.kw-scene-prose p {
+  max-width: 640px;
+  font-size: calc(17px * var(--read-scale));
+  line-height: var(--read-lh);
+  letter-spacing: var(--read-track);
+  margin: 0 0 1.4em;
+}
+.diagram-svg { width: 100%; max-width: 500px; height: auto; display: block; }
+.voice-cold-open {
+  font: 400 13px/1.6 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); margin: 10px 0 0;
+  border-left: 2px solid var(--signal); padding-left: 12px;
+}
+.chapter-nav {
+  display: flex; justify-content: space-between; gap: 24px;
+}
+.chapter-nav-link {
+  display: flex; flex-direction: column; gap: 4px;
+  font: 600 14px/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.01em; color: var(--ink); max-width: 300px;
+}
+.chapter-nav-link:hover { color: var(--accent); }
+</style>

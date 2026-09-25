@@ -1,0 +1,31 @@
+{
+  "id": "34",
+  "name": "Sarah Rossbach",
+  "alias": "The Feng Shui Cartographer",
+  "chapter": 4,
+  "tier": "V",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Independent Scholar · Author",
+  "active": "1950 – present",
+  "jurisdiction": "Spatial Intelligence / Feng Shui / Environmental Coordination",
+  "role": "Feng Shui Scholar",
+  "awards": [
+    "International Feng Shui Guild legacy recognition"
+  ],
+  "works": [
+    "Interior Design with Feng Shui (1987)",
+    "Feng Shui: The Chinese Art of Placement (1983)",
+    "Living Color: Master Lin Yun's Guide to Feng Shui and the Art of Color (1994)"
+  ],
+  "knownFor": [
+    "Introducing feng shui to Western audiences",
+    "Spatial coordination as intelligence",
+    "Environmental chi mapping",
+    "Lin Yun school of feng shui",
+    "Architectural energy flows"
+  ],
+  "coldOpen": "A room is not a container. A room is a coordination field. The furniture, the light, the door positions — they are all coordinating with the people who inhabit the space. Chi is just a name for the coordination flow that Western designers forgot to design for.",
+  "bio": "Writer and scholar who introduced the ancient Chinese system of feng shui to Western audiences through her collaboration with Grand Master Lin Yun. Her books framed environmental design as coordination practice: spaces actively shape the cognitive and emotional states of their inhabitants, creating feedback loops between physical arrangement and human behavior.",
+  "whyMatters": "Rossbach articulates spatial coordination intelligence — the thesis that environments are not passive containers but active participants in the three-body system of person, space, and life outcomes. Feng shui is a coordination protocol: it instructs how to align the third body (environmental context) to produce coherent outcomes from the other two."
+}

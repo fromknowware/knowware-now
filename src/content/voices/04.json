@@ -1,0 +1,32 @@
+{
+  "id": "04",
+  "name": "Stewart Brand",
+  "alias": "The Whole Earth Signal",
+  "chapter": 1,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "The WELL · Whole Earth Institute",
+  "active": "1938 – present",
+  "jurisdiction": "Technology / Philosophy / Design",
+  "role": "Whole Earth Catalog",
+  "awards": [
+    "Golden Goose Award nominee",
+    "Buckminster Fuller Prize nominee"
+  ],
+  "works": [
+    "The Whole Earth Catalog",
+    "How Buildings Learn",
+    "The Clock of the Long Now"
+  ],
+  "knownFor": [
+    "Whole Earth Catalog",
+    "Long-now thinking",
+    "Mutualism",
+    "Coordination as philosophy",
+    "Technology as living system"
+  ],
+  "coldOpen": "Technology wants to coordinate with humanity, not to replace it. The most advanced state of technology is not automation — it's mutualism.",
+  "bio": "Counterculture visionary who created the Whole Earth Catalog as a coordination infrastructure for decentralized learning. He recognized that technology is not separate from life but a continuation of it, and that coordination should be distributed, not centralized.",
+  "whyMatters": "Brand established the philosophical foundation for coordination intelligence: technology as a living system with its own trajectory, and the commitment to mutualism over replacement. He shows that coordination has always been the goal, even before the field had language for it."
+}

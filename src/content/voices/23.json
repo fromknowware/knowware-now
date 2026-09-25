@@ -1,0 +1,35 @@
+{
+  "id": "23",
+  "name": "Demis Hassabis",
+  "alias": "The AlphaFold Engine",
+  "chapter": 3,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Google DeepMind · ex-Cambridge Neuroscience",
+  "active": "1976 – present",
+  "jurisdiction": "AI Research / Protein Biology / Neuroscience-Inspired AI",
+  "role": "CEO, Google DeepMind",
+  "awards": [
+    "Nobel Prize in Chemistry (2024)",
+    "Time 100 AI",
+    "CBE (2018)",
+    "Lasker Award (2023)"
+  ],
+  "works": [
+    "AlphaFold (2020, 2022)",
+    "AlphaGo (2016)",
+    "AlphaZero (2017)",
+    "Atari Deep Q-Network (DQN)"
+  ],
+  "knownFor": [
+    "AlphaFold protein structure prediction",
+    "AlphaGo and AlphaZero",
+    "Neuroscience-AI integration",
+    "Reinforcement learning breakthroughs",
+    "DeepMind co-founder"
+  ],
+  "coldOpen": "Protein folding was called the hardest problem in biology for 50 years. We solved it not by computing harder — but by learning the coordination grammar of amino acids. The sequence is one body. The physics is another. The coordination rules between them were the missing third.",
+  "bio": "Co-founded DeepMind with the explicit mission of solving intelligence to advance science. AlphaFold decoded protein structure by treating folding as a coordination problem — learning how sequence coordinates with chemistry to produce shape. Won the Nobel Prize in Chemistry in 2024 for work done by an AI system, a first in scientific history.",
+  "whyMatters": "Hassabis proves that the three-body framework is not theoretical — it is the structure that unlocks otherwise intractable scientific problems. AlphaFold's breakthrough was recognizing that protein folding is a coordination problem: the solution lives in the space between sequence, physics, and evolutionary context."
+}

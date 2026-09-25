@@ -1,0 +1,32 @@
+{
+  "id": "35",
+  "name": "Caroline Myss",
+  "alias": "The Sacred Contract",
+  "chapter": 4,
+  "tier": "V",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "CMED Institute · Independent",
+  "active": "1952 – present",
+  "jurisdiction": "Energy Medicine / Medical Intuition / Archetypal Psychology",
+  "role": "Medical Intuitive",
+  "awards": [
+    "New York Times bestselling author (multiple titles)"
+  ],
+  "works": [
+    "Anatomy of the Spirit (1996)",
+    "Why People Don't Heal and How They Can (1997)",
+    "Sacred Contracts (2001)",
+    "Entering the Castle (2007)"
+  ],
+  "knownFor": [
+    "Medical intuition",
+    "Energy anatomy",
+    "Chakras and archetypes",
+    "Sacred Contracts framework",
+    "Power vs. force distinction"
+  ],
+  "coldOpen": "Your biography becomes your biology. Every wound you haven't processed, every contract you haven't honored — they accumulate in the body as disrupted coordination between your energy field and your physical tissue. Healing is not fixing. Healing is restoring the coordination loop.",
+  "bio": "Medical intuitive and author who built a framework — energy anatomy — that maps how psychological, emotional, and spiritual states coordinate with physical health. Her Sacred Contracts model argues that each life unfolds according to soul-level coordination agreements, expressed through Jungian archetypes, that shape the person's characteristic patterns of strength and wounding.",
+  "whyMatters": "Myss offers a radical inversion of the two-body medical model (symptom → treatment). Her energy anatomy is explicitly three-body: physical body, energy field, and the coordination layer of consciousness that organizes both. She maps coordination failures — where the loop between intention, energy, and body breaks — as the root mechanism of disease."
+}

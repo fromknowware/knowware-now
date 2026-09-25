@@ -1,0 +1,31 @@
+{
+  "id": "07",
+  "name": "Terence McKenna",
+  "alias": "The Stoned Ape",
+  "chapter": 1,
+  "tier": "V",
+  "status": "passed",
+  "tag": "legacy",
+  "flag": "old",
+  "affiliation": "Botanical Dimensions · Esalen Institute",
+  "active": "1946 – 2000",
+  "jurisdiction": "Ethnobotany / Psychedelic Philosophy / Novelty Theory",
+  "role": "Ethnobotanist, Philosopher",
+  "awards": [],
+  "works": [
+    "Food of the Gods",
+    "The Archaic Revival",
+    "True Hallucinations",
+    "Timewave Zero"
+  ],
+  "knownFor": [
+    "Stoned ape hypothesis",
+    "Timewave zero",
+    "Novelty theory",
+    "The archaic revival",
+    "Psilocybin and language"
+  ],
+  "coldOpen": "History is the shockwave of eschatology. Everything is accelerating toward a moment of maximum novelty — a singularity of coordination so dense that the universe folds back on itself and becomes aware. We're in the third body of time.",
+  "bio": "Ethnobotanist and psychedelic philosopher who proposed that psilocybin mushrooms catalyzed the cognitive leap that produced language, culture, and coordination in early hominids. His Timewave Zero model argued that novelty — the opposite of entropy — was accelerating toward a terminal event of maximum coordination.",
+  "whyMatters": "McKenna treats consciousness itself as a coordination field — a three-body system where the mushroom, the mind, and the cosmos exchange information that neither contains alone. His archaic revival thesis suggests that pre-modern cultures understood coordination intelligence before modernity automated it away."
+}

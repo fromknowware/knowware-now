@@ -1,0 +1,33 @@
+{
+  "id": "18",
+  "name": "Ruqian Lu",
+  "alias": "The Knowware Principle",
+  "chapter": 2,
+  "tier": "V",
+  "status": "alive",
+  "tag": "origin",
+  "flag": "new",
+  "affiliation": "Chinese Academy of Sciences · Systems Science Institute",
+  "active": "1940 – present",
+  "jurisdiction": "Knowledge Systems / Coordination Architecture",
+  "role": "Named knowware (2005)",
+  "awards": [
+    "National Science Award of China",
+    "Chinese Academy of Sciences Fellow"
+  ],
+  "works": [
+    "Knowware: The Third Layer of Computing",
+    "Knowledge Engineering and the Soft Sciences",
+    "Systems Thinking and Knowledge Coordination"
+  ],
+  "knownFor": [
+    "Knowware concept",
+    "Knowledge as coordination layer",
+    "Hardware-software-knowware triad",
+    "Knowledge engineering",
+    "The missing coordination stratum"
+  ],
+  "coldOpen": "Hardware runs. Software instructs. Knowware coordinates. For forty years everyone talked about the first two and nobody named the third. I named it. And once you name it, you cannot unsee it — in every system, everywhere, always.",
+  "bio": "Chinese systems thinker who articulated the Knowware Principle: that between hardware (the physical layer) and software (the instruction layer) there is a third coordination layer — knowware — that determines whether a system produces intelligence or merely computation. His framework preceded and predicts the alignment problem by naming the missing coordination stratum.",
+  "whyMatters": "Lu is the book's foundational source: the person who named the gap this book is about. His hardware-software-knowware triad is the three-body model applied to computing architecture. He proves that the coordination layer was always missing and that its absence is not a bug but a design choice that must now be reversed."
+}

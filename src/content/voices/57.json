@@ -1,0 +1,32 @@
+{
+  "id": "57",
+  "name": "Chip Huyen",
+  "alias": "The ML Systems Builder",
+  "chapter": 7,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Stanford University · Claypot AI",
+  "active": "1992 – present",
+  "jurisdiction": "Machine Learning Systems / AI Engineering / Real-Time ML",
+  "role": "Production ML",
+  "awards": [
+    "Forbes 30 Under 30 (Technology)",
+    "O'Reilly Most-Read Author (ML)"
+  ],
+  "works": [
+    "Designing Machine Learning Systems (2022)",
+    "Introduction to Machine Learning Interviews",
+    "AI Engineering (2024)"
+  ],
+  "knownFor": [
+    "ML systems design",
+    "Real-time feature pipelines",
+    "RLHF popularization",
+    "Model deployment at scale",
+    "AI engineering curriculum"
+  ],
+  "coldOpen": "Everyone wants to talk about the model. Nobody wants to talk about the system the model lives inside. But the model is five percent of your ML system. The other ninety-five percent is coordination: data pipelines, feature stores, serving layers, feedback loops. That is where the real engineering happens.",
+  "bio": "Author and educator who brought rigor to the emerging discipline of ML systems engineering, distinguishing the craft of building ML products from the craft of building ML models. Her book 'Designing Machine Learning Systems' became the field's standard reference for production AI. She teaches at Stanford and co-founded Claypot AI, focused on real-time ML infrastructure that makes models continuously aware of changing data.",
+  "whyMatters": "Huyen's work makes explicit what most AI discourse hides: the model is not the intelligence — the system around the model is. Her ML systems framework is a coordination architecture: data (input), model (processing), feedback loop (the third body that makes the system learn from deployment). Without her systems layer, even a perfect model is coordination-blind, unable to update from the world it acts on."
+}

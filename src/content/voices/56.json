@@ -1,0 +1,33 @@
+{
+  "id": "56",
+  "name": "Seth Lloyd",
+  "alias": "The Programmable Universe",
+  "chapter": 7,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT · Department of Mechanical Engineering",
+  "active": "1960 – present",
+  "jurisdiction": "Quantum Computing / Quantum Thermodynamics / Information Physics",
+  "role": "Quantum Biology",
+  "awards": [
+    "Edgerton Faculty Achievement Award",
+    "NAE Member",
+    "Guggenheim Fellowship"
+  ],
+  "works": [
+    "Programming the Universe (2006)",
+    "'Ultimate physical limits to computation' (Nature, 2000)",
+    "Quantum Computation over Continuous Variables"
+  ],
+  "knownFor": [
+    "Programmable universe thesis",
+    "Quantum error correction protocols",
+    "Quantum thermodynamics",
+    "Information as physical substrate",
+    "Quantum random walks"
+  ],
+  "coldOpen": "The universe has been computing since the Big Bang. Every particle interaction is a logic gate. What we call physical law is the universe's program. And if reality is computation, then coordination — entanglement — is not a feature. It is the source code.",
+  "bio": "MIT mechanical engineer who made the audacious argument that the universe is a quantum computer and has been running a program since the first moment of time. His book 'Programming the Universe' established that physical processes are equivalent to computational processes, and that information is not a description of matter — it is matter. He designed early practical quantum error-correcting codes and demonstrated quantum random walks as a universal computational primitive.",
+  "whyMatters": "Lloyd provides the deepest possible grounding for coordination intelligence: if reality itself is a quantum program, then the coordination layer — entanglement — is not metaphor but physics. Two-body classical computation strips out entanglement and loses the coordination capacity that makes reality computable. His framework implies that AI missing a quantum coordination layer is not just architecturally limited — it is running on a stripped-down version of the universe's actual substrate."
+}

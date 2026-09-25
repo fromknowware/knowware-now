@@ -1,0 +1,33 @@
+{
+  "id": "30",
+  "name": "Andrew Lo",
+  "alias": "The Adaptive Markets",
+  "chapter": 4,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT Sloan School of Management · AlphaSimplex Group",
+  "active": "1960 – present",
+  "jurisdiction": "Financial Economics / Behavioral Finance / Evolutionary Finance",
+  "role": "Finance Professor, MIT",
+  "awards": [
+    "Paul A. Samuelson Award",
+    "Graham and Dodd Award",
+    "IAFE Financial Engineer of the Year"
+  ],
+  "works": [
+    "Adaptive Markets: Financial Evolution at the Speed of Thought (2017)",
+    "A Non-Random Walk Down Wall Street (1999)",
+    "In Pursuit of the Perfect Portfolio (2021)"
+  ],
+  "knownFor": [
+    "Adaptive Markets Hypothesis",
+    "Evolution applied to finance",
+    "Hedge fund ecology",
+    "Neuroeconomics",
+    "Financial system as living organism"
+  ],
+  "coldOpen": "Markets are not rational. Markets are not irrational. Markets are adaptive — they coordinate the evolutionary responses of participants to changing environments. The efficient market hypothesis is a special case of a much larger coordination dynamic. Evolution, not equilibrium, is the right model.",
+  "bio": "MIT finance professor who replaced the Efficient Market Hypothesis with the Adaptive Markets Hypothesis — the idea that financial markets exhibit evolutionary dynamics, not rational equilibrium. Markets are ecosystems where strategies, participants, and environments coordinate in ways that produce periods of efficiency and periods of chaos.",
+  "whyMatters": "Lo applies evolutionary coordination theory to finance and demonstrates that the third body — the environment that shapes market behavior — is always excluded from two-body (rational agent + price) models. His hedge fund ecology shows that what looks like market intelligence is actually population-level coordination adapting to fitness landscapes."
+}

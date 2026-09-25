@@ -1,0 +1,35 @@
+{
+  "id": "59",
+  "name": "Dr. Lisa Su",
+  "alias": "The Silicon Helmsman",
+  "chapter": 7,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "new",
+  "affiliation": "AMD · Advanced Micro Devices",
+  "active": "1969 – present",
+  "jurisdiction": "Semiconductor Engineering / AI Hardware / Corporate Strategy",
+  "role": "Chair & CEO, AMD",
+  "awards": [
+    "IEEE Robert Noyce Medal (2021)",
+    "Semiconductor Industry Association Award (2020)",
+    "Fortune Most Powerful Women (multiple years)",
+    "MIT Corporation Member"
+  ],
+  "works": [
+    "AMD EPYC Server CPU (2017–present)",
+    "AMD Radeon Instinct MI300X AI Accelerator",
+    "AMD Ryzen Architecture"
+  ],
+  "knownFor": [
+    "AMD turnaround ($2B to $200B+)",
+    "EPYC server chips",
+    "MI300X AI accelerators",
+    "Heterogeneous computing",
+    "Chiplet architecture"
+  ],
+  "coldOpen": "When I took over AMD, the company was a month from running out of cash. Everyone said we were done. But the problem was not the engineers — it was the strategy. We needed to stop competing on volume and start competing on coordination: heterogeneous chiplets, interconnects, the architecture of how pieces communicate with each other. The silicon is easy. The coordination layer is what wins.",
+  "bio": "Electrical engineer who became one of the most consequential CEOs in semiconductor history by turning AMD from near-bankruptcy into a $200B+ company. Her insight was architectural: instead of competing chip-for-chip, she pioneered chiplet design — modular silicon tiles that communicate through high-bandwidth interconnects. The MI300X AI accelerator places CPU and GPU chiplets in the same package, creating a physical coordination layer between compute types that dramatically reduces memory bottlenecks in AI workloads.",
+  "whyMatters": "Su's chiplet architecture is a physical embodiment of coordination intelligence. Rather than monolithic processors, her chips are networks of specialized tiles coordinated by high-bandwidth interconnects — the silicon equivalent of the three-body pattern. The MI300X's integrated CPU-GPU design means the coordination cost (data movement) is minimized at the hardware layer, making it disproportionately powerful for AI tasks that require tight coordination between memory and compute."
+}

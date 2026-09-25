@@ -1,0 +1,32 @@
+{
+  "id": "06",
+  "name": "Yann Minh",
+  "alias": "The Noonaut",
+  "chapter": 1,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Noonautes Lab",
+  "active": "1961 – present",
+  "jurisdiction": "Digital Art / VR / Transhumanist Performance",
+  "role": "Digital Shamanism",
+  "awards": [
+    "Festival of New Cinema and New Media Montreal Award",
+    "SCAM prize (Digital Arts)"
+  ],
+  "works": [
+    "Nooscape (VR installation series)",
+    "The Noonautes Manifesto",
+    "Avatar Body Collision (Second Life performance series)"
+  ],
+  "knownFor": [
+    "Noonaut concept",
+    "Mental space navigation",
+    "Second Life avatar embodiment",
+    "Transhumanist performance art",
+    "VR as coordination medium"
+  ],
+  "coldOpen": "I am a noonaut — a navigator of mental space. The avatar is not a costume. It is a coordination interface between the mind that pilots it and the world that receives it. Take away the interface and neither exists.",
+  "bio": "French digital artist and VR pioneer who coined the term 'noonaut' to describe explorers of inner cognitive space. He staged his body and its avatar simultaneously in Second Life performances, demonstrating that identity is not a fixed entity but a coordination act between self, medium, and audience.",
+  "whyMatters": "Minh practices what the theorists describe: the self as a three-body coordination event. His avatar work proves that intelligence and identity emerge in the space between bodies, not within them. He brings the coordination thesis to life — literally — as performance."
+}

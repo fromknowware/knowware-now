@@ -1,0 +1,36 @@
+{
+  "id": "52",
+  "name": "Sir Roger Penrose",
+  "alias": "The Orch-OR",
+  "chapter": 6,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Oxford University · Mathematical Institute",
+  "active": "1931 – present",
+  "jurisdiction": "Mathematical Physics / Consciousness",
+  "role": "Consciousness & Quantum",
+  "awards": [
+    "Abel Prize (2020)",
+    "Wolf Prize in Physics",
+    "Dirac Medal",
+    "Knighthood (1994)"
+  ],
+  "works": [
+    "The Emperor's New Mind",
+    "Shadows of the Mind",
+    "The Road to Reality",
+    "Fashion, Faith and Fantasy"
+  ],
+  "knownFor": [
+    "Penrose tiling",
+    "Orchestrated objective reduction",
+    "Gödel and consciousness",
+    "Twistor theory",
+    "Non-algorithmic understanding"
+  ],
+  "coldOpen": "Gödel shows that human mathematical understanding exceeds any algorithm. The question is what that something is. I believe it's quantum.",
+  "bio": "Uses Gödel's theorem to prove that human mathematical understanding exceeds computation. Proposes Orchestrated Objective Reduction in microtubules as the physical basis of consciousness — a non-algorithmic process that no algorithm can replicate.",
+  "whyMatters": "Penrose shows the fundamental limit of current AI: it cannot achieve the non-algorithmic understanding that humans demonstrate. His three-worlds argument (math, physics, mind) maps perfectly onto the coordination pattern. The third body, for Penrose, is quantum."
+}

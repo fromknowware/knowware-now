@@ -1,0 +1,33 @@
+{
+  "id": "75",
+  "name": "François Chollet",
+  "alias": "The Abstraction Benchmark",
+  "chapter": 9,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Google DeepMind · ex-Keras",
+  "active": "1987 – present",
+  "jurisdiction": "AI Architecture / Reasoning Benchmarks / Abstraction Theory",
+  "role": "Keras, ARC Prize",
+  "awards": [
+    "Google Distinguished Engineer",
+    "Keras Lifetime Achievement"
+  ],
+  "works": [
+    "Deep Learning with Python (2017)",
+    "On the Measure of Intelligence (2019)",
+    "ARC-AGI Benchmark (2019)",
+    "Keras framework"
+  ],
+  "knownFor": [
+    "ARC benchmark",
+    "Abstraction and reasoning corpus",
+    "Critique of deep learning generalization",
+    "Keras creator",
+    "Skill vs. intelligence distinction"
+  ],
+  "coldOpen": "Current AI systems acquire skills through exposure. That is not intelligence — it is sophisticated retrieval. Intelligence is the ability to efficiently acquire new skills from minimal data. The ARC benchmark tests that. Almost every modern model fails it.",
+  "bio": "Created Keras, making deep learning accessible to millions, then turned around and built the test that proves deep learning cannot reason. His ARC benchmark — the Abstraction and Reasoning Corpus — presents simple visual puzzles that any five-year-old can solve but that state-of-the-art AI consistently fails, because they require genuine abstraction, not pattern matching.",
+  "whyMatters": "Chollet proves empirically that current AI is a two-body system: training data maps to trained pattern. The third body — the ability to abstract across contexts and reason from minimal examples — is missing. His benchmark is the clearest existing test of whether coordination intelligence has been achieved, and so far the answer is no."
+}

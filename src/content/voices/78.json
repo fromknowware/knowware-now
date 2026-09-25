@@ -1,0 +1,34 @@
+{
+  "id": "78",
+  "name": "Peter Senge",
+  "alias": "The Learning Organization",
+  "chapter": 9,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "MIT Sloan School of Management · Society for Organizational Learning",
+  "active": "1947 – present",
+  "jurisdiction": "Systems Thinking / Organizational Learning / Management Theory",
+  "role": "The Fifth Discipline, Systems Learning",
+  "awards": [
+    "Journal of Business Strategy Strategist of the Century",
+    "Harvard Business Review Top Business Books of the Century"
+  ],
+  "works": [
+    "The Fifth Discipline (1990)",
+    "The Dance of Change (1999)",
+    "Presence (2004)",
+    "The Necessary Revolution (2008)"
+  ],
+  "knownFor": [
+    "Learning organizations",
+    "Five disciplines",
+    "Mental models",
+    "Systems archetypes",
+    "Shared vision as coordination"
+  ],
+  "coldOpen": "Most organizations are designed for control, not learning. The fifth discipline — systems thinking — is the discipline of seeing the coordination patterns that the other four disciplines create. Without it, you are optimizing parts of a system you cannot see.",
+  "bio": "Management theorist who made systems thinking actionable for organizations with The Fifth Discipline. His five disciplines — personal mastery, mental models, shared vision, team learning, and systems thinking — are a coordination architecture for institutional intelligence. He showed that organizational failure is almost always a coordination failure, not a competence failure.",
+  "whyMatters": "Senge operationalizes coordination intelligence at the organizational scale. His learning organization is a three-body system: individual capability, shared mental models (the coordination layer), and collective action. His insight that mental models are the leverage point maps directly onto Meadows — the paradigm is always the third body."
+}

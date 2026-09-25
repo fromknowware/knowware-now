@@ -1,0 +1,34 @@
+{
+  "id": "38",
+  "name": "Dr. Alex Pentland",
+  "alias": "The Honest Signals",
+  "chapter": 5,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT Media Lab · Connection Science",
+  "active": "1952 – present",
+  "jurisdiction": "Computational Social Science / Collective Intelligence",
+  "role": "Social Physics",
+  "awards": [
+    "McKinsey Award",
+    "IEEE Pioneer Award",
+    "Brandeis Award for Privacy"
+  ],
+  "works": [
+    "Social Physics",
+    "Honest Signals",
+    "Building the New Economy",
+    "Reality Mining"
+  ],
+  "knownFor": [
+    "Social physics",
+    "Honest signals",
+    "Reality mining",
+    "Wearable sensing",
+    "Collective intelligence from data"
+  ],
+  "coldOpen": "I can predict whether your team will succeed before you say a single word. I measure the coordination — the flow of energy between people. The content of conversation is noise. The coordination pattern is signal.",
+  "bio": "Pioneered the use of wearable sensors to measure social coordination at scale, discovering that non-verbal honest signals — turn-taking rhythms, energy levels, body language — predict team performance, salary negotiations, and stock returns better than the content of speech. His concept of social physics treats collective human behavior as a coordination system governed by mathematical laws.",
+  "whyMatters": "Pentland operationalizes coordination intelligence: he measures the third body — the interaction layer between people — and shows it carries more information than what individuals say or think. His work proves that the coordination pattern is the primary data, not a side effect, validating the book's core thesis empirically."
+}

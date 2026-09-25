@@ -1,0 +1,33 @@
+{
+  "id": "40",
+  "name": "Dr. Thomas Oxley",
+  "alias": "The Endovascular BCI",
+  "chapter": 5,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Synchron · Mount Sinai Hospital",
+  "active": "1980 – present",
+  "jurisdiction": "Neural Engineering / Brain-Computer Interfaces / Neurovascular Medicine",
+  "role": "CEO, Synchron",
+  "awards": [
+    "World Economic Forum Young Global Leader",
+    "MIT Innovators Under 35",
+    "TED Fellow"
+  ],
+  "works": [
+    "Stentrode (endovascular BCI)",
+    "First-in-human motor BCI without craniotomy (2021)",
+    "Synchron Switch"
+  ],
+  "knownFor": [
+    "Stentrode device",
+    "Endovascular brain access",
+    "No-surgery BCI",
+    "Motor cortex decoding",
+    "ALS communication restoration"
+  ],
+  "coldOpen": "We reach the brain through the blood vessels it already depends on for life. We do not cut. We coordinate. The body's own architecture becomes the path.",
+  "bio": "Neurosurgeon and CEO of Synchron who invented the Stentrode, a brain-computer interface deployed through a blood vessel rather than open brain surgery. In 2021 his team completed the first human motor BCI implanted without craniotomy, allowing ALS patients to control digital devices by thought alone. He reimagined neural access as a coordination problem solved by working with the body's existing infrastructure.",
+  "whyMatters": "Oxley's Stentrode is coordination intelligence made physical: by routing through the vascular network rather than cutting through tissue, he demonstrates that the most powerful path is always through existing coordination channels. His device shows that human-machine neural coordination does not require violation — it requires alignment with the body's own architecture."
+}

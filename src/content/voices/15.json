@@ -1,0 +1,33 @@
+{
+  "id": "15",
+  "name": "Palmer Luckey",
+  "alias": "The Defense Primitive",
+  "chapter": 2,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Anduril Industries · ex-Oculus VR",
+  "active": "1992 – present",
+  "jurisdiction": "Defense AI / Autonomous Weapons / VR / Dual-Use Technology",
+  "role": "Oculus, Anduril",
+  "awards": [
+    "Forbes 30 Under 30",
+    "TIME 100 Most Influential (2017)"
+  ],
+  "works": [
+    "Oculus Rift (2012)",
+    "Lattice AI platform (Anduril)",
+    "Ghost autonomous drone system",
+    "Tower defense AI infrastructure"
+  ],
+  "knownFor": [
+    "Oculus VR founder",
+    "Anduril Industries founder",
+    "Lattice autonomous weapons AI",
+    "Defense tech entrepreneur",
+    "Facebook acquisition ($2B)"
+  ],
+  "coldOpen": "People want AI to coordinate peacefully. I build the systems that make violent coordination impossible to win against. Defense is coordination under adversarial conditions. The side with better coordination intelligence wins.",
+  "bio": "Built the Oculus Rift in his garage and sold it to Facebook for $2 billion at age 21. Then founded Anduril Industries to apply consumer AI to defense: autonomous drones, persistent surveillance, AI-assisted targeting. His Lattice platform coordinates autonomous weapons systems across a battlefield in real time.",
+  "whyMatters": "Luckey represents the defense vector of coordination intelligence — where the stakes of miscoordination are lethal. His Lattice system is a live implementation of three-body coordination (sensor, AI coordinator, weapon), with the terrifying implication that coordination intelligence deployed without adequate context is an autonomous kill chain."
+}

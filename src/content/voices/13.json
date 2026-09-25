@@ -1,0 +1,32 @@
+{
+  "id": "13",
+  "name": "Dr. Hartmut Neven",
+  "alias": "The Quantum AI Lab",
+  "chapter": 2,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Google Quantum AI",
+  "active": "1965 – present",
+  "jurisdiction": "Quantum Computing / Machine Learning / Hardware Scaling",
+  "role": "Google Quantum AI",
+  "awards": [
+    "Google Distinguished Engineer",
+    "IEEE Fellow"
+  ],
+  "works": [
+    "Quantum supremacy using a programmable superconducting processor (2019)",
+    "Neven's Law formulation",
+    "Quantum Machine Learning (Google AI white papers)"
+  ],
+  "knownFor": [
+    "Neven's law",
+    "Quantum supremacy demonstrations",
+    "Doubly exponential quantum growth",
+    "Quantum machine learning",
+    "Google Sycamore processor"
+  ],
+  "coldOpen": "Classical computers scale linearly. Quantum computers scale doubly exponentially. But here is what nobody says: the reason quantum works is that it does not collapse possibilities until it must. It coordinates all states simultaneously. It is a three-body computer.",
+  "bio": "Founded Google Quantum AI and established Neven's law — the observation that quantum hardware was improving at a doubly exponential rate, faster than any known technology curve. Led the team that achieved quantum supremacy in 2019, demonstrating that quantum systems can solve problems classical systems cannot in any practical timeframe.",
+  "whyMatters": "Neven's quantum architecture operates on superposition — the ability to coordinate across all possible states before committing to one. This is structurally a three-body system: the question, the superposition (the coordination field), and the measured answer. He builds hardware that embodies the coordination intelligence thesis."
+}

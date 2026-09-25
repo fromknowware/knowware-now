@@ -1,0 +1,35 @@
+{
+  "id": "58",
+  "name": "Jeff Dean",
+  "alias": "The Distributed Systems Oracle",
+  "chapter": 7,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Google DeepMind · Google Senior Fellow",
+  "active": "1968 – present",
+  "jurisdiction": "Distributed Systems / AI Infrastructure / Large-Scale Computing",
+  "role": "Google Infrastructure",
+  "awards": [
+    "ACM Fellow",
+    "NAE Member",
+    "IEEE von Neumann Medal (2020)",
+    "ACM-AAAI Allen Newell Award (2021)"
+  ],
+  "works": [
+    "MapReduce (2004)",
+    "Bigtable (2006)",
+    "TensorFlow (2015)",
+    "Pathways Architecture (2022)"
+  ],
+  "knownFor": [
+    "MapReduce",
+    "Bigtable",
+    "TensorFlow",
+    "Google Brain founder",
+    "Pathways multi-task architecture"
+  ],
+  "coldOpen": "When you have a million machines, the hardest problem is not compute — it is coordination. How do you get a million independent processors to agree on a single state? That is MapReduce. That is Bigtable. That is every distributed system I have ever built. The machine is easy. The coordination is the engineering.",
+  "bio": "Google Senior Fellow who designed the distributed infrastructure that runs modern civilization's AI. His MapReduce paper taught the world to program at planetary scale; his Bigtable gave that scale a memory; his TensorFlow gave it a brain. He founded Google Brain and now leads Google DeepMind, where the Pathways architecture attempts to build a unified coordination layer across all of Google's AI systems — a single model that coordinates across tasks rather than a collection of specialist models.",
+  "whyMatters": "Dean built the coordination layer that makes large-scale AI physically possible. His distributed systems reveal the three-body pattern at infrastructure scale: compute nodes, network coordination, and emergent distributed computation. His Pathways architecture is explicitly an attempt to replace narrow two-body task-specific models with a single coordination-capable system — a direct engineering implementation of the coordination intelligence thesis."
+}

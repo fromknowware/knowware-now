@@ -1,0 +1,35 @@
+{
+  "id": "24",
+  "name": "Clément Delangue",
+  "alias": "The Open Model Curator",
+  "chapter": 3,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "old",
+  "affiliation": "Hugging Face",
+  "active": "1986 – present",
+  "jurisdiction": "Open-Source AI / NLP / Democratized Machine Learning",
+  "role": "CEO, Hugging Face",
+  "awards": [
+    "Forbes 30 Under 30 (2019)",
+    "Time 100 AI (2023)",
+    "Fast Company Most Creative People"
+  ],
+  "works": [
+    "Transformers library (open source)",
+    "Hugging Face Hub",
+    "Datasets library",
+    "Gradio integration"
+  ],
+  "knownFor": [
+    "Hugging Face model hub",
+    "Transformers library",
+    "Democratizing AI access",
+    "Open-source NLP",
+    "Community-driven model sharing"
+  ],
+  "coldOpen": "We could have built a closed platform and extracted value from AI. Instead we built a coordination layer. The model isn't the value. The ecosystem that coordinates around the model — that's the value. Open-source is coordination infrastructure.",
+  "bio": "Co-founded Hugging Face as an AI chatbot startup; pivoted it into the world's largest open-source AI model repository. The Transformers library became the universal coordination layer between AI researchers and production deployments, with over 500,000 models hosted and millions of daily downloads.",
+  "whyMatters": "Delangue built coordination infrastructure for the entire AI field. The Hugging Face Hub is not a model store — it is a coordination ecosystem where researchers, practitioners, and applications discover and align around shared representations. He demonstrates that open coordination architecture outcompetes closed two-body systems."
+}

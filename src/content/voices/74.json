@@ -1,0 +1,31 @@
+{
+  "id": "74",
+  "name": "Kate Raworth",
+  "alias": "The Doughnut Economist",
+  "chapter": 9,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Oxford University · Amsterdam Donut Coalition",
+  "active": "1970 – present",
+  "jurisdiction": "Ecological Economics / Planetary Boundaries / Systems Design",
+  "role": "Doughnut Economics",
+  "awards": [
+    "Shuttleworth Foundation Fellow",
+    "Post-Growth Economics Network recognition"
+  ],
+  "works": [
+    "Doughnut Economics: Seven Ways to Think Like a 21st Century Economist (2017)",
+    "A Safe and Just Space for Humanity (2012)"
+  ],
+  "knownFor": [
+    "Doughnut economics",
+    "Planetary boundaries",
+    "Social foundation",
+    "Regenerative economies",
+    "Growth agnosticism"
+  ],
+  "coldOpen": "The economy is not a machine to be optimized. It is a garden to be tended. GDP growth is not a goal — it is a side effect of coordination between human needs and planetary limits. Design the coordination and growth becomes irrelevant as a metric.",
+  "bio": "Economist who replaced the linear growth model with the Doughnut: a safe and just space for humanity bounded above by planetary ceilings and below by social foundations. Her framework has been adopted by cities including Amsterdam, Copenhagen, and Melbourne as a practical governance coordination tool.",
+  "whyMatters": "Raworth redesigns the coordination architecture of economics — shifting from a two-body system (production → consumption) to a three-body model where human welfare and planetary limits are both active participants. Her Doughnut is the coordination constraint that makes long-run economic intelligence possible. Without it, optimization produces overshoot."
+}

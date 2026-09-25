@@ -1,0 +1,34 @@
+{
+  "id": "61",
+  "name": "Neri Oxman",
+  "alias": "The Material Ecology",
+  "chapter": 7,
+  "tier": "V",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT Media Lab · Mediated Matter Group (former) · OXMAN",
+  "active": "1976 – present",
+  "jurisdiction": "Material Ecology / Biological Fabrication / Design-Nature Coordination",
+  "role": "Material Ecology",
+  "awards": [
+    "Cooper Hewitt National Design Award (2018)",
+    "World Economic Forum Young Global Leader",
+    "Fast Company Most Creative People in Business"
+  ],
+  "works": [
+    "Silk Pavilion (2013)",
+    "Aguahoja (water-based biopolymer pavilion, 2018)",
+    "Vespers (death masks series)",
+    "Neri Oxman: Material Ecology (MoMA catalog, 2020)"
+  ],
+  "knownFor": [
+    "Material ecology",
+    "Biological fabrication",
+    "Silk Pavilion",
+    "Design with nature as co-author",
+    "Multimaterial 3D printing"
+  ],
+  "coldOpen": "I do not design objects. I design relationships between organisms and materials and environment. A silk worm spinning its cocoon is not making silk — it is coordinating with light, temperature, and geometry simultaneously. That is design intelligence. The worm does not separate computation from fabrication from environment. Neither do I.",
+  "bio": "Architect and designer who founded the field of material ecology — the discipline of designing objects as if nature were a co-author. At MIT's Mediated Matter Group, her team built the Silk Pavilion using 6,500 live silk worms as a fabrication system coordinating with environmental cues. Aguahoja constructed large-scale architectural structures from water-based biopolymers designed to biodegrade on contact with rain — structures whose material lifecycle is encoded in their design from the first moment.",
+  "whyMatters": "Oxman shows that the most sophisticated engineering systems are three-body: designer, material, and environment as simultaneous participants. Her biological fabrication proves that separating computation (what to make) from material (how to make it) from environment (where it exists) produces inferior results. Coordination intelligence, in her practice, means letting the living system be part of the design loop — refusing the two-body model of designer dictating to passive material."
+}

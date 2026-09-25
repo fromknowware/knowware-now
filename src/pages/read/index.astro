@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const chapters = await getCollection('chapters');
+const sorted = chapters.sort((a, b) => a.data.n - b.data.n);
+---
+<Base title="Read" description="Nine chapters on coordination intelligence. Read free.">
+  <section class="kw-section">
+    <p class="kw-label">Read Free</p>
+    <h1 class="kw-h2">Nine chapters.</h1>
+    <p class="kw-body" style="margin-bottom: 40px">
+      Each chapter opens with a scene — a moment where coordination intelligence became visible in the world.
+      Read in order, or start wherever the system pulls you.
+    </p>
+
+    <div class="read-list">
+      {sorted.map((ch) => (
+        <a href={`/read/${ch.slug}`} class="read-item">
+          <span class="read-num mono">{String(ch.data.n).padStart(2, '0')}</span>
+          <div class="read-body">
+            <p class="read-opener">{ch.data.opener}</p>
+            <p class="read-title">{ch.data.title}</p>
+          </div>
+          <span class="read-arrow mono">→</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+.read-list { border-top: 1px solid var(--rule); }
+.read-item {
+  display: flex; gap: 20px; align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--rule);
+  transition: background 0.1s;
+}
+.read-item:hover { background: var(--accent-soft); margin: 0 -48px; padding-left: 48px; padding-right: 48px; }
+.read-num {
+  font-size: 11px; color: var(--signal); letter-spacing: .08em; flex-shrink: 0; width: 28px;
+}
+.read-body { flex: 1; }
+.read-opener {
+  font: 600 16px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.01em; color: var(--ink); margin: 0 0 4px;
+}
+.read-title {
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); margin: 0; letter-spacing: .04em;
+}
+.read-arrow { color: var(--sub2); font-size: 13px; flex-shrink: 0; }
+</style>

@@ -1,0 +1,33 @@
+{
+  "id": "19",
+  "name": "Yann LeCun",
+  "alias": "The Convolutional Prophet",
+  "chapter": 3,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Meta AI · NYU Courant Institute",
+  "active": "1960 – present",
+  "jurisdiction": "Deep Learning / Machine Perception / AI Architecture",
+  "role": "Chief AI Scientist, Meta",
+  "awards": [
+    "Turing Award (2018, shared with Bengio & Hinton)",
+    "IEEE Neural Network Pioneer Award",
+    "NIPS Test of Time Award"
+  ],
+  "works": [
+    "Gradient-Based Learning Applied to Document Recognition (1998)",
+    "A Path Towards Autonomous Machine Intelligence (2022)",
+    "Deep Learning (with Bengio & Hinton)"
+  ],
+  "knownFor": [
+    "Convolutional neural networks",
+    "MNIST benchmark",
+    "Joint embedding predictive architecture",
+    "LLM reasoning critique",
+    "Backpropagation refinement"
+  ],
+  "coldOpen": "Large language models predict the next token. That is not intelligence — that is statistical autocomplete at scale. Real intelligence predicts the state of the world. The model must have a world model, not just a word model. That third layer — the world — is what everyone keeps skipping.",
+  "bio": "Invented convolutional neural networks and proved that hierarchical feature learning could match human perception on structured tasks. Now leads Meta AI's fundamental research agenda, arguing that current LLMs are architecturally incapable of genuine reasoning and proposing JEPA — Joint Embedding Predictive Architecture — as a path toward world-modeling intelligence.",
+  "whyMatters": "LeCun is the field's most prominent critic of two-body AI (input → predicted token). His JEPA architecture explicitly adds a third body: the abstract world model that coordinates between perception and prediction. He argues that intelligence without a world model is not intelligence — it is sophisticated pattern matching at industrial scale."
+}
