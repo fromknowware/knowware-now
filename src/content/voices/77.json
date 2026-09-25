@@ -1,0 +1,33 @@
+{
+  "id": "77",
+  "name": "Dr. Fiona Hill",
+  "alias": "The Kleptocracy Analyst",
+  "chapter": 9,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "new",
+  "affiliation": "Brookings Institution · ex-NSC",
+  "active": "1965 – present",
+  "jurisdiction": "Geopolitics / Russia Studies / Kleptocracy Analysis",
+  "role": "Brookings, Former NSC",
+  "awards": [
+    "Commander of the Order of the British Empire (CBE)",
+    "Carnegie Corporation Great Immigrants Award"
+  ],
+  "works": [
+    "There Is Nothing for You Here (2021)",
+    "Mr. Putin: Operative in the Kremlin (2013)",
+    "The Siberian Curse (2003)"
+  ],
+  "knownFor": [
+    "Russia intelligence analysis",
+    "Kleptocracy as system design",
+    "NSC Russia expert",
+    "Trump impeachment testimony",
+    "Geopolitical coordination failure"
+  ],
+  "coldOpen": "Kleptocracy is not corruption. Corruption is when the system fails. Kleptocracy is when theft becomes the system — when the coordination architecture of a state is designed to extract rather than coordinate. Understanding that distinction is the difference between a reform strategy and a fantasy.",
+  "bio": "Russia expert and former NSC Senior Director for European and Russian Affairs under multiple administrations. Her testimony during the first Trump impeachment became a landmark account of coordination failure inside the national security state. Her memoir documents how kleptocratic systems systematically destroy the coordination infrastructure of civil society.",
+  "whyMatters": "Hill shows coordination intelligence operating at geopolitical scale — and failing. Kleptocracy is the explicit design of a state coordination architecture for extraction rather than coordination. Her analysis proves that the third body in any political system is the trust infrastructure, and that destroying it destroys the system's ability to coordinate at any level."
+}

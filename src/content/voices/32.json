@@ -1,0 +1,31 @@
+{
+  "id": "32",
+  "name": "Linda Raschke",
+  "alias": "The Tape Reader",
+  "chapter": 4,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "LBRGroup · ex-Pacific Coast Stock Exchange",
+  "active": "1959 – present",
+  "jurisdiction": "Technical Trading / Market Microstructure / Tape Reading",
+  "role": "Professional Trader",
+  "awards": [
+    "Market Wizards (featured)",
+    "Futures magazine Best Trader recognition"
+  ],
+  "works": [
+    "Street Smarts: High Probability Short-Term Trading Strategies (1995, with Larry Connors)",
+    "LBR Group research publications"
+  ],
+  "knownFor": [
+    "Tape reading",
+    "Market microstructure",
+    "Short-term technical trading",
+    "Mean-reversion strategies",
+    "Professional trader education"
+  ],
+  "coldOpen": "The tape doesn't lie. It tells you the coordination state of the market — who is absorbing, who is running, where the energy is building. Price is just a number. The tape is the relationship between price, time, and the humans behind every tick. That relationship is where the edge lives.",
+  "bio": "One of the most successful professional traders of her generation, Raschke learned tape reading on the Pacific Coast Stock Exchange floor before transitioning to screen-based trading. Her LBRGroup has traded markets continuously for over forty years. She teaches that market intelligence is not about predicting price — it is about reading the coordination dynamics between buyers, sellers, and liquidity.",
+  "whyMatters": "Raschke demonstrates coordination intelligence in real-time financial markets. Her tape-reading practice is the application of three-body analysis: price (one body), volume/liquidity (second body), and the behavioral coordination of market participants (the third body that drives the other two). Two-body models fail precisely where she excels."
+}

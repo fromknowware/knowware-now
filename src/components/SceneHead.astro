@@ -1,0 +1,20 @@
+---
+// Chapter scene header — number + title
+interface Props {
+  n: number;
+  opener: string;
+}
+const { n, opener } = Astro.props;
+const num = String(n).padStart(2, '0');
+---
+<header class="kw-scene-head">
+  <p class="kw-label">Chapter {num}</p>
+  <h1 class="kw-h2" style="max-width: 820px">{opener}</h1>
+</header>
+
+<style>
+.kw-scene-head {
+  padding: clamp(40px,6vw,80px) clamp(16px,3vw,48px) 0;
+  border-bottom: none;
+}
+</style>

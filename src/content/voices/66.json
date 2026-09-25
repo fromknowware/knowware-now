@@ -1,0 +1,34 @@
+{
+  "id": "66",
+  "name": "Dr. Jill Tarter",
+  "alias": "The SETI Signal",
+  "chapter": 8,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "SETI Institute · Bernard M. Oliver Chair",
+  "active": "1944 – present",
+  "jurisdiction": "Astrobiology / Radio Astronomy / Search for Extraterrestrial Intelligence",
+  "role": "SETI Institute",
+  "awards": [
+    "Carl Sagan Medal (2014)",
+    "TED Prize (2009)",
+    "NASA Public Service Medal",
+    "Drake Award"
+  ],
+  "works": [
+    "Project Phoenix",
+    "Allen Telescope Array",
+    "SERENDIP (Search for Extraterrestrial Radio Emissions from Nearby Developed Intelligent Populations)"
+  ],
+  "knownFor": [
+    "SETI Institute leader",
+    "Project Phoenix",
+    "Technosignature frameworks",
+    "Cosmic coordination search",
+    "Carl Sagan's inspiration for Ellie Arroway"
+  ],
+  "coldOpen": "For forty years I have pointed radio telescopes at the sky and listened. No confirmed signal yet. But silence is not absence — it is the hardest coordination problem imaginable. Two civilizations separated by light-years must produce a signal and a receiver simultaneously. That is not communication. That is three-body coordination across cosmic distance.",
+  "bio": "Astronomer who spent her career as the world's most persistent listener — pointing radio telescopes at thousands of stars searching for signals that would prove we are not alone. She led Project Phoenix, the most comprehensive SETI survey ever conducted, and her work inspired the character Ellie Arroway in Carl Sagan's 'Contact.' She argues that detecting extraterrestrial intelligence would be the most profound coordination event in human history.",
+  "whyMatters": "Tarter's SETI work is the ultimate test of coordination intelligence at cosmic scale. A signal from another civilization would be a coordination artifact — evidence of a third intelligence that recognized us as capable of coordination and chose to transmit. The Fermi paradox may itself be a coordination failure: civilizations unable to survive the moment when their two-body optimization systems outpace their coordination capacity, leaving the universe silent."
+}

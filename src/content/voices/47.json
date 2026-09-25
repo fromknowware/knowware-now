@@ -1,0 +1,33 @@
+{
+  "id": "47",
+  "name": "Dr. Timnit Gebru",
+  "alias": "The Stochastic Parrot",
+  "chapter": 6,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "DAIR Institute · Distributed AI Research",
+  "active": "1983 – present",
+  "jurisdiction": "AI Ethics / Algorithmic Bias / Responsible AI",
+  "role": "AI Justice, DAIR",
+  "awards": [
+    "MIT Technology Review Innovators Under 35",
+    "Bloomberg 50",
+    "TIME100 AI (2023)"
+  ],
+  "works": [
+    "Stochastic Parrots: On the Dangers of Very Large Language Models (2021)",
+    "Gender Shades",
+    "DAIR Institute (founded 2021)"
+  ],
+  "knownFor": [
+    "Stochastic Parrots paper",
+    "Algorithmic bias research",
+    "Gender Shades audit",
+    "DAIR Institute",
+    "Big Tech accountability"
+  ],
+  "coldOpen": "A language model that predicts the next word is not understanding. It is coordinating with statistical patterns in text written by people who were never asked if they consented. That coordination is not neutral. It encodes who was counted and who was not.",
+  "bio": "Computer scientist and AI ethics researcher who co-authored the Stochastic Parrots paper, arguing that large language models amplify biases without understanding. Fired by Google for refusing to retract the paper, she founded the Distributed AI Research Institute to build community-centered AI accountability outside Big Tech's reach.",
+  "whyMatters": "Gebru shows that coordination intelligence without accountability is extraction: LLMs coordinate with human language data but not with the communities that produced it. She insists that legitimate coordination requires consent, representation, and feedback from the communities being modeled — revealing that the coordination layer can be stolen and exploited."
+}

@@ -1,0 +1,34 @@
+{
+  "id": "50",
+  "name": "Margaret Mitchell",
+  "alias": "The Model Card",
+  "chapter": 6,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Hugging Face · ex-Google AI",
+  "active": "1980 – present",
+  "jurisdiction": "Responsible AI / Model Documentation / AI Ethics Practice",
+  "role": "Hugging Face Ethics",
+  "awards": [
+    "Forbes AI 50",
+    "MIT Technology Review Innovators Under 35",
+    "IEEE Intelligent Systems AI's 10 to Watch"
+  ],
+  "works": [
+    "Model Cards for Model Reporting (2019)",
+    "Stochastic Parrots (co-author)",
+    "Hugging Face Ethics Lead"
+  ],
+  "knownFor": [
+    "Model Cards",
+    "AI documentation standards",
+    "Responsible AI practice",
+    "Co-author Stochastic Parrots",
+    "Machine ethics"
+  ],
+  "coldOpen": "If you don't know what a model was trained on, who it was trained for, and what it fails at — you don't know the model. You only know its output. And output without context is the definition of a stochastic parrot.",
+  "bio": "Chief Ethics Scientist at Hugging Face who co-invented Model Cards, now the industry standard for documenting AI models' capabilities, limitations, and risks. Fired from Google AI alongside Timnit Gebru, she has continued building the infrastructure of responsible AI practice — documentation standards as coordination architecture.",
+  "whyMatters": "Mitchell shows that coordination intelligence requires legibility: systems that cannot be interrogated cannot be coordinated with. Her Model Cards are a three-body tool — they create a shared representation between model, developer, and user that enables genuine coordination rather than blind deployment. She builds the paperwork that makes accountability possible."
+}

@@ -1,0 +1,145 @@
+---
+import Base from '../layouts/Base.astro';
+import Field from '../components/Field.astro';
+---
+<Base title="Contribute" description="Claim Line 82. Add a voice to Knowware before the solstice.">
+  <section class="kw-section">
+    <p class="kw-label">The 82nd Line</p>
+    <h1 class="kw-h2">Line 82 is yours.</h1>
+    <p class="kw-body">
+      The book has 81 voices. The 82nd belongs to the reader who contributes one.
+      Nominate a living thinker whose work illuminates coordination intelligence —
+      and if the author accepts, your name goes in the book.
+    </p>
+  </section>
+
+  <!-- The 82nd line field -->
+  <Field variant="82" caption="Line 82 is yours." />
+
+  <section class="kw-section">
+    <p class="kw-label">How it works</p>
+    <ol class="contribute-steps kw-body">
+      <li>Submit a name and one paragraph on why this voice belongs.</li>
+      <li>The author reviews. Accepted voices are added to the chapter where they fit best.</li>
+      <li>Your name appears in the colophon: "Line 82 contributed by [you]."</li>
+      <li>Deadline: December 21, 2026 — the solstice.</li>
+    </ol>
+  </section>
+
+  <!-- Claim form -->
+  <section class="kw-section" id="claim">
+    <p class="kw-label">Submit a voice</p>
+    <form
+      id="claim-form"
+      action="/api/claim"
+      method="POST"
+      class="claim-form"
+    >
+      <div class="field-group">
+        <label for="your-name" class="field-label">Your name</label>
+        <input type="text" id="your-name" name="yourName" required class="field-input" placeholder="How it should appear in the colophon" />
+      </div>
+      <div class="field-group">
+        <label for="your-email" class="field-label">Your email</label>
+        <input type="email" id="your-email" name="email" required class="field-input" placeholder="For correspondence only — not published" />
+      </div>
+      <div class="field-group">
+        <label for="voice-name" class="field-label">Nominee's name</label>
+        <input type="text" id="voice-name" name="voiceName" required class="field-input" placeholder="Full name" />
+      </div>
+      <div class="field-group">
+        <label for="voice-role" class="field-label">Role / affiliation</label>
+        <input type="text" id="voice-role" name="voiceRole" required class="field-input" placeholder="Brief role or affiliation" />
+      </div>
+      <div class="field-group">
+        <label for="why" class="field-label">Why this voice?</label>
+        <textarea id="why" name="why" required class="field-input field-textarea" rows="5" placeholder="One paragraph on why this voice belongs in the book. Be specific about what they've said or written."></textarea>
+      </div>
+      <div class="field-group">
+        <label for="chapter" class="field-label">Suggested chapter (optional)</label>
+        <select id="chapter" name="chapter" class="field-input">
+          <option value="">— choose if you have a view —</option>
+          <option value="1">01 — The Coordination Intelligence Revolution</option>
+          <option value="2">02 — The Dawn of Systems Intelligence</option>
+          <option value="3">03 — Architecture of Systems Intelligence</option>
+          <option value="4">04 — Systems Intelligence in Action</option>
+          <option value="5">05 — Human-Systems Intelligence Interaction</option>
+          <option value="6">06 — Consciousness as Pattern Recognition</option>
+          <option value="7">07 — Engineering Reality</option>
+          <option value="8">08 — Beyond Human Intelligence</option>
+          <option value="9">09 — No Way Know-How</option>
+        </select>
+      </div>
+      <button type="submit" class="kw-btn kw-btn--filled" style="margin-top:8px">
+        Submit nomination →
+      </button>
+      <p id="form-status" class="form-status" aria-live="polite" hidden></p>
+    </form>
+  </section>
+</Base>
+
+<style>
+.contribute-steps {
+  padding-left: 24px;
+  max-width: 560px;
+}
+.contribute-steps li { margin-bottom: 12px; }
+
+.claim-form { max-width: 520px; display: flex; flex-direction: column; gap: 20px; }
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--sub);
+}
+.field-input {
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule-strong);
+  padding: 10px 14px;
+  font: 400 14px/1.4 "JetBrains Mono", ui-monospace, monospace;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+.field-input:focus { border-color: var(--signal); }
+.field-textarea { resize: vertical; min-height: 120px; }
+.form-status {
+  font: 400 13px/1.4 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub);
+  padding: 12px; border: 1px solid var(--rule);
+}
+</style>
+
+<script>
+const form = document.getElementById('claim-form') as HTMLFormElement | null;
+const status = document.getElementById('form-status') as HTMLElement | null;
+
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!form || !status) return;
+
+  const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const res = await fetch('/api/claim', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(new FormData(form))),
+    });
+    const data = await res.json();
+    status.hidden = false;
+    if (res.ok) {
+      status.textContent = 'Submitted. The author will be in touch if accepted.';
+      form.reset();
+    } else {
+      status.textContent = data.error ?? 'Something went wrong. Please try again.';
+    }
+  } catch {
+    status.textContent = 'Network error. Please try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit nomination →';
+  }
+});
+</script>

@@ -1,0 +1,34 @@
+{
+  "id": "26",
+  "name": "Fritjof Capra",
+  "alias": "The Web of Life",
+  "chapter": 3,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Center for Ecoliteracy · ex-University of Vienna",
+  "active": "1939 – present",
+  "jurisdiction": "Systems Physics / Deep Ecology / Autopoiesis",
+  "role": "Web of Life, Systems Thinking",
+  "awards": [
+    "American Book Award",
+    "Gold Medal of the City of Vienna"
+  ],
+  "works": [
+    "The Tao of Physics (1975)",
+    "The Web of Life (1996)",
+    "The Systems View of Life (2014, with Luisi)",
+    "The Turning Point (1982)"
+  ],
+  "knownFor": [
+    "Tao of Physics synthesis",
+    "Systems view of life",
+    "Santiago theory of cognition",
+    "Autopoiesis as coordination",
+    "Deep ecology"
+  ],
+  "coldOpen": "Every living system is characterized by its network of relationships, not its components. Take away the web, and you don't have simplified life — you have no life at all. Cognition is coordination. The web is the mind.",
+  "bio": "Physicist who crossed disciplines to argue that the mechanistic worldview of Western science fails to describe life, mind, or society. His Santiago Theory — developed with Humberto Maturana — defines cognition as the process of living, not a function occurring inside brains. Systems coordinate; coordination is intelligence.",
+  "whyMatters": "Capra provides the biological foundation of coordination intelligence. His autopoiesis framework shows that living systems are self-organizing coordination loops, not input-output machines. He extends this to cities, economies, and consciousness — wherever the third body (the network of relationships) is ignored, the system dies."
+}

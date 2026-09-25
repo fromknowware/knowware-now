@@ -1,0 +1,33 @@
+{
+  "id": "25",
+  "name": "Iain McGilchrist",
+  "alias": "The Divided Brain",
+  "chapter": 3,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Independent Scholar · ex-Oxford All Souls College",
+  "active": "1953 – present",
+  "jurisdiction": "Neuropsychiatry / Philosophy of Mind / Epistemology",
+  "role": "The Master and His Emissary",
+  "awards": [
+    "Royal College of Psychiatrists Book Award",
+    "Lankavatara Award for Outstanding Contribution to Buddhist-Christian Studies"
+  ],
+  "works": [
+    "The Master and His Emissary (2009)",
+    "The Matter With Things (2021)",
+    "Ways of Attending"
+  ],
+  "knownFor": [
+    "Left-hemisphere vs. right-hemisphere dominance",
+    "Attention as world-constituting",
+    "Master and emissary metaphor",
+    "Hemispheric asymmetry thesis",
+    "Critique of reductive rationalism"
+  ],
+  "coldOpen": "The left hemisphere says: I have understood this — I have taken it apart and named the pieces. The right hemisphere says: I am still attending to what is actually there. They are not two processors. They are two modes of coordinating with reality. And we have let the wrong one win.",
+  "bio": "Psychiatrist, neuroscientist, and literary scholar who spent thirty years arguing that the left and right hemispheres of the brain don't divide labor — they embody two fundamentally different relationships to the world. The left hemisphere abstracts, categorizes, and controls. The right attends, contextualizes, and coordinates. Western civilization, he argues, has dangerously over-weighted the left.",
+  "whyMatters": "McGilchrist maps the three-body problem onto neuroscience: left hemisphere (analysis), right hemisphere (contextual attention), and the coordination between them that constitutes genuine intelligence. His work shows that current AI is architecturally left-hemispheric — it categorizes brilliantly but cannot attend. The coordination deficit is biological and cultural."
+}

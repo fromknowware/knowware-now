@@ -1,0 +1,26 @@
+{
+  "id": "81",
+  "name": "MK-Ultra Operator",
+  "alias": "Anonymous — The Cognitive Program",
+  "chapter": 9,
+  "tier": "V",
+  "status": "anon",
+  "tag": "new",
+  "flag": "new",
+  "affiliation": "CIA · [Project MKULTRA — Declassified]",
+  "active": "",
+  "jurisdiction": "Cognitive Control / Behavioral Modification / Weaponized Coordination",
+  "role": "Coordination failure from inside",
+  "awards": [],
+  "works": [],
+  "knownFor": [
+    "MKULTRA behavioral programs",
+    "Forced cognitive decoupling",
+    "Psychic driving experiments",
+    "Coordination as weaponizable architecture",
+    "The limits of coercive control"
+  ],
+  "coldOpen": "[SOURCE: PARTIALLY DECLASSIFIED — Church Committee, 1977] We tried to break the coordination between a person's beliefs and their behavior. We failed. You can coerce behavior. You cannot coerce coordination. The self reconstitutes. This is either the most hopeful thing I know or the most dangerous.",
+  "bio": "[IDENTITY PROTECTED — record partially declassified under FOIA] Operator within the CIA's MKULTRA program (1953–1973), which attempted to develop techniques for behavioral control through drugs, hypnosis, electro-convulsive therapy, and sensory manipulation. The program's classified conclusion: coercive control of coordination is achievable in the short term but self-defeating — the coordinated self rebuilds around the trauma.",
+  "whyMatters": "The MKULTRA Operator represents the most extreme historical attempt to weaponize coordination intelligence: to break the third body between a person's perception, values, and action. The program's failure is the book's most counterintuitive proof point — genuine coordination cannot be imposed, only cultivated. Control destroys coordination. The state's most sophisticated attempt to seize the third body produced only damage."
+}

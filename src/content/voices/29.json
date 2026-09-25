@@ -1,0 +1,33 @@
+{
+  "id": "29",
+  "name": "Dr. Eric Topol",
+  "alias": "The Deep Medicine",
+  "chapter": 4,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Scripps Research Translational Institute",
+  "active": "1954 – present",
+  "jurisdiction": "Cardiology / Digital Health / AI in Medicine",
+  "role": "Digital Medicine",
+  "awards": [
+    "Top 10 Most Cited Researcher in Medicine (Clarivate)",
+    "Hastings Center Fellow",
+    "NIH Director's Pioneer Award"
+  ],
+  "works": [
+    "Deep Medicine (2019)",
+    "The Patient Will See You Now (2015)",
+    "The Creative Destruction of Medicine (2012)"
+  ],
+  "knownFor": [
+    "AI diagnosis and precision medicine",
+    "Genomics in clinical care",
+    "Deep medicine framework",
+    "Digital health democratization",
+    "Doctor-patient rebalancing"
+  ],
+  "coldOpen": "Medicine spent a century becoming a two-body transaction: doctor input, patient output. Deep medicine restores the third body — context, the patient's full biology, life, and circumstance. AI doesn't replace the doctor. It restores the relationship between doctor, patient, and the full complexity of human health.",
+  "bio": "Leading cardiologist and digital medicine pioneer who has sequenced his own genome, measured his own microbiome, and tracked his own biosignals to prove that precision medicine is not a future technology — it is a coordination practice available now. His deep medicine framework argues that AI frees physicians from data processing so they can return to genuine human coordination.",
+  "whyMatters": "Topol shows that medicine's crisis is a coordination failure: doctor and patient, separated by information asymmetry, produce suboptimal outcomes. AI as the third body — integrating genomics, imaging, lifestyle, and biology — restores the coordination loop. His work makes the book's thesis clinical and personal."
+}

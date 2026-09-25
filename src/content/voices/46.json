@@ -1,0 +1,33 @@
+{
+  "id": "46",
+  "name": "Stuart Russell",
+  "alias": "The Human Compatible",
+  "chapter": 6,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "UC Berkeley · Center for Human-Compatible AI",
+  "active": "1962 – present",
+  "jurisdiction": "Artificial Intelligence / AI Safety / Provably Beneficial AI",
+  "role": "AI Safety, UC Berkeley",
+  "awards": [
+    "IJCAI Computers and Thought Award",
+    "ACM Fellow",
+    "Time 100 AI (2023)"
+  ],
+  "works": [
+    "Artificial Intelligence: A Modern Approach (with Norvig)",
+    "Human Compatible",
+    "Research Defense Initiative"
+  ],
+  "knownFor": [
+    "Standard AI textbook",
+    "Inverse reward design",
+    "CAIS co-founder",
+    "Provably beneficial AI",
+    "Corrigibility"
+  ],
+  "coldOpen": "The problem is not that we are building intelligent machines. The problem is that we are telling them exactly what we want. A machine that pursues a fixed objective does not coordinate with human values — it optimizes over them.",
+  "bio": "Author of the defining AI textbook used in universities worldwide, who then wrote its philosophical corrective: Human Compatible argues that the entire framework of specifying reward functions is wrong. Instead of telling AI what to optimize, we should build systems that remain uncertain about human preferences and coordinate with us to discover them over time.",
+  "whyMatters": "Russell formalizes the three-body structure that safe AI requires: the machine, the human, and the coordination loop between them that keeps values aligned. His inverse reward design is coordination intelligence applied to alignment — the machine learns what to want by coordinating with human feedback, not by receiving a fixed target."
+}

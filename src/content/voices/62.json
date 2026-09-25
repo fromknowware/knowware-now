@@ -1,0 +1,26 @@
+{
+  "id": "62",
+  "name": "DARPA Operator",
+  "alias": "Anonymous — The Hard Problems Desk",
+  "chapter": 7,
+  "tier": "V",
+  "status": "anon",
+  "tag": "new",
+  "flag": "new",
+  "affiliation": "DARPA · [Program Redacted]",
+  "active": "[REDACTED]",
+  "jurisdiction": "[CLASSIFIED] / Hard-Problem Research / Cognitive Systems",
+  "role": "Breakthrough tech coordination",
+  "awards": [],
+  "works": [],
+  "knownFor": [
+    "Hard-problem funding",
+    "Brain-machine interface programs",
+    "Autonomous systems development",
+    "Materials science at the frontier",
+    "Cognitive enhancement research"
+  ],
+  "coldOpen": "[TRANSCRIPT BEGINS MID-STATEMENT] — the reason we fund problems that look impossible is because the solvable problems do not change anything. The hard problem is always coordination: how do you get a brain and a machine to share a world model? How do you get autonomous systems to coordinate with human intent without being told? We do not build weapons. We build coordination architectures and wait for the world to catch up.",
+  "bio": "[IDENTITY WITHHELD PER PROGRAM SECURITY PROTOCOLS] Program manager at DARPA with responsibility for hard-problem research portfolios spanning brain-machine interfaces, autonomous systems, materials science at extreme conditions, and cognitive enhancement. DARPA program managers receive research budgets with near-total discretion and five-year horizons — funded on the principle that the hardest problems require coordination across disciplines that have never spoken to each other. The program manager is the coordination layer.",
+  "whyMatters": "DARPA represents institutionalized coordination intelligence: the organizational structure is itself a three-body system — hard problems, unconstrained researchers, and a coordination manager with full discretion. DARPA's most significant breakthroughs — the internet, GPS, stealth technology — were not inventions but coordinations of existing knowledge across domains that had never been aligned. Anonymous, because the coordination layer works best when it is invisible."
+}

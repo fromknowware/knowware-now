@@ -1,0 +1,35 @@
+{
+  "id": "60",
+  "name": "Wendell Weeks",
+  "alias": "The Gorilla Glass",
+  "chapter": 7,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "new",
+  "affiliation": "Corning Incorporated",
+  "active": "1959 – present",
+  "jurisdiction": "Materials Science / Glass Technology / Manufacturing Infrastructure",
+  "role": "CEO, Corning",
+  "awards": [
+    "National Medal of Technology and Innovation (2014)",
+    "NAE Member",
+    "Corning Chairman, CEO, and President"
+  ],
+  "works": [
+    "Gorilla Glass (2007)",
+    "Corning Optical Fiber (global internet backbone)",
+    "Valor Glass (pharmaceutical packaging)",
+    "Ceramic Substrate for Catalytic Converters"
+  ],
+  "knownFor": [
+    "Gorilla Glass",
+    "Optical fiber infrastructure",
+    "Materials as enabling layer",
+    "Corning's 165-year innovation continuity",
+    "Glass ceramics for extreme environments"
+  ],
+  "coldOpen": "Nobody thinks about the glass on their phone. They think about the app, the screen, the processor. But without Gorilla Glass, every smartphone would shatter in your pocket by Tuesday. Materials are the coordination layer between human intention and physical reality. We do not make the computers — we make the surfaces that make the computers possible.",
+  "bio": "CEO of Corning who built his career at the company that makes the invisible substrate of the digital age. Gorilla Glass — protecting more than six billion devices — was a product that existed in Corning's lab for decades until Steve Jobs called asking for glass that could survive a pocket. Optical fiber is the physical infrastructure of the global internet. Corning makes neither chips nor software — it makes the coordination surface between human hands and digital systems.",
+  "whyMatters": "Weeks represents the invisible third body of the technology stack: materials. Every AI system requires hardware; every hardware requires materials; materials are the coordination layer between abstract computation and physical reality. Optical fiber is literally the coordination substrate of the internet — without it, distributed AI is physically impossible. His work reveals that coordination intelligence requires a physical coordination infrastructure that is almost never credited in discussions of AI capability."
+}

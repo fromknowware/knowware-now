@@ -1,0 +1,26 @@
+{
+  "id": "51",
+  "name": "In-Q-Tel Operator",
+  "alias": "Anonymous — The Strategic Invest",
+  "chapter": 6,
+  "tier": "P",
+  "status": "anon",
+  "tag": "new",
+  "flag": "new",
+  "affiliation": "In-Q-Tel · [Redacted]",
+  "active": "",
+  "jurisdiction": "Intelligence Community / Dual-Use Technology / Pattern Recognition at Scale",
+  "role": "Intel community ↔ tech",
+  "awards": [],
+  "works": [],
+  "knownFor": [
+    "Dual-use AI investment",
+    "Surveillance infrastructure",
+    "Pattern recognition at intelligence scale",
+    "Predictive analytics",
+    "Strategic technology acquisition"
+  ],
+  "coldOpen": "[CLASSIFICATION LEVEL: UNACKNOWLEDGED] The question we ask about every technology is not: what does it do? The question is: what does it see? Pattern recognition at scale is not intelligence. It is the precondition for coordination — or for its denial.",
+  "bio": "[SOURCE IDENTITY PROTECTED] Operator within the Intelligence Community's venture investment arm. In-Q-Tel funds technologies that will be ready for national security deployment within 3–5 years — including computer vision, natural language processing, social network analysis, and predictive behavioral modeling. Coordinates commercial AI development with classified operational requirements.",
+  "whyMatters": "The In-Q-Tel operator represents the shadow side of the coordination intelligence thesis: when the third body is a state surveillance apparatus, coordination becomes control. Pattern recognition at intelligence scale can either empower coordination or destroy its preconditions — trust, privacy, distributed agency. This voice names the stakes if the coordination layer is captured."
+}

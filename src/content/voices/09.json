@@ -1,0 +1,30 @@
+{
+  "id": "09",
+  "name": "Daniel Schmachtenberger",
+  "alias": "The Generator Function",
+  "chapter": 1,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Consilience Project · Neurohacker Collective",
+  "active": "1980 – present",
+  "jurisdiction": "Civilizational Risk / Sense-Making / Coordination Philosophy",
+  "role": "Consilience Project",
+  "awards": [],
+  "works": [
+    "The Metacrisis Series (Consilience Project)",
+    "Superstructures (podcast series)",
+    "War on Sensemaking (lecture series)"
+  ],
+  "knownFor": [
+    "Generator functions of existential risk",
+    "Sense-making infrastructure",
+    "Omni-win design",
+    "Civilizational coordination failures",
+    "The metacrisis"
+  ],
+  "coldOpen": "Every existential risk has the same generator function: a two-body optimization — agent plus goal — with no third body to care about externalities. You can't patch that. You have to rebuild the coordination architecture from the ground up.",
+  "bio": "Philosopher and civilizational risk analyst who argues that all major global crises — from climate to AI to financial collapse — share a single generator function: competitive, two-body optimization with no coordination layer. His Consilience Project works to build the sense-making and governance infrastructure that would constitute a functional third body for civilization.",
+  "whyMatters": "Schmachtenberger names the coordination problem at civilizational scale more precisely than anyone else working today. His generator function analysis proves that solving any individual crisis without addressing the underlying two-body optimization pattern is futile. He is the book's most direct argument for why coordination intelligence is not optional."
+}

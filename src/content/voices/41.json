@@ -1,0 +1,32 @@
+{
+  "id": "41",
+  "name": "Tristan Harris",
+  "alias": "The Attention Defender",
+  "chapter": 5,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Center for Humane Technology · ex-Google",
+  "active": "1984 – present",
+  "jurisdiction": "Technology Ethics / Attention Economy / Persuasive Design",
+  "role": "Center for Humane Tech",
+  "awards": [
+    "CommonSense Media Award",
+    "Time 100 Most Influential People (2021)"
+  ],
+  "works": [
+    "The Social Dilemma (2020, Netflix)",
+    "How Technology Hijacks People's Minds",
+    "Ledger of Harms"
+  ],
+  "knownFor": [
+    "Attention economy critique",
+    "Race to the bottom of the brainstem",
+    "Persuasive technology ethics",
+    "Humane technology design",
+    "Design ethicist"
+  ],
+  "coldOpen": "Two billion people carry a supercomputer in their pocket that has been optimized — by the world's smartest engineers — to extract their attention against their own interests. That is not design failure. That is coordination weaponized.",
+  "bio": "Former Google design ethicist who exposed Silicon Valley's deliberate exploitation of cognitive vulnerabilities. Co-founded the Center for Humane Technology to reverse the attention economy's race to the bottom of the brainstem. His Netflix documentary The Social Dilemma brought the persuasive technology critique to mass audiences.",
+  "whyMatters": "Harris shows what coordination intelligence looks like when it runs in reverse: platforms that optimize the human-machine coordination loop against the human's interests. He maps the failure mode — coordination without consent — and argues that the fix requires designing for the whole person's coordination needs, not just engagement metrics."
+}

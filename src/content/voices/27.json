@@ -1,0 +1,36 @@
+{
+  "id": "27",
+  "name": "Ray Kurzweil",
+  "alias": "The Singularity Runner",
+  "chapter": 3,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "old",
+  "affiliation": "Google AI · Kurzweil Technologies",
+  "active": "1948 – present",
+  "jurisdiction": "Futurism / AI / Pattern Recognition / Longevity",
+  "role": "Singularity, Law of Accelerating Returns",
+  "awards": [
+    "National Medal of Technology and Innovation (1999)",
+    "Lemelson-MIT Prize",
+    "17 honorary doctorates",
+    "National Inventors Hall of Fame"
+  ],
+  "works": [
+    "The Singularity Is Near (2005)",
+    "The Singularity Is Nearer (2024)",
+    "How to Create a Mind (2012)",
+    "The Age of Spiritual Machines (1999)"
+  ],
+  "knownFor": [
+    "Law of accelerating returns",
+    "Technological singularity",
+    "Pattern recognition model of mind",
+    "Longevity research",
+    "Neocortical hierarchy theory"
+  ],
+  "coldOpen": "The universe is moving toward greater complexity, greater intelligence, greater coordination. This is not an opinion — it is measurable. Every S-curve of technology is the universe finding a new coordination strategy. The singularity is just the next coordination threshold.",
+  "bio": "Inventor, entrepreneur, and Google's director of engineering, Kurzweil has made more verified technological predictions than any other living futurist. His law of accelerating returns describes how each technological paradigm coordinates information and energy more efficiently than the last, enabling the next paradigm at exponential speed.",
+  "whyMatters": "Kurzweil articulates coordination intelligence at cosmic scale: the universe is an accelerating coordination engine. His neocortical hierarchy model maps the three-body pattern — pattern, recognizer, and the meta-recognizer that coordinates them — as the fundamental structure of mind. The singularity is when coordination becomes self-compounding."
+}

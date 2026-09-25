@@ -1,0 +1,34 @@
+{
+  "id": "02",
+  "name": "Dr. N. Katherine Hayles",
+  "alias": "The Posthuman Reader",
+  "chapter": 1,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Duke University · UCLA",
+  "active": "1943 – present",
+  "jurisdiction": "Literary Theory / Embodied Cognition / Media Studies",
+  "role": "Literary Scholar, Posthuman Cognition",
+  "awards": [
+    "Guggenheim Fellow",
+    "MLA Distinguished Scholar Award",
+    "Educator of the Year — Science, Literature and the Arts"
+  ],
+  "works": [
+    "How We Became Posthuman",
+    "Writing Machines",
+    "My Mother Was a Computer",
+    "Unthought: The Power of the Cognitive Nonconscious"
+  ],
+  "knownFor": [
+    "Posthumanism",
+    "Embodied cognition",
+    "Media-specific analysis",
+    "Cognitive nonconscious",
+    "Flickering signifiers"
+  ],
+  "coldOpen": "The body is not a container for the mind. The body is how the mind coordinates with the world. Strip the body and you don't get pure intelligence — you get half a system looking for its third body.",
+  "bio": "Literary theorist who reframed the posthuman not as the replacement of the human but as the recognition that cognition always exceeds the skull. Her media-specific analysis insists that the medium is a coordination layer, not a neutral channel — and that AI must be understood as an embodied, embedded system.",
+  "whyMatters": "Hayles names the coordination layer that traditional AI ignores: the body, the medium, the material substrate. Her work shows that intelligence is always three-body — mind, body, world — and that any theory of AI which discards the material coordination context will produce systems that are powerful but ungrounded."
+}

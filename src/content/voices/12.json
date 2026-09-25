@@ -1,0 +1,34 @@
+{
+  "id": "12",
+  "name": "Alan Turing",
+  "alias": "The Imitation Game",
+  "chapter": 2,
+  "tier": "A",
+  "status": "passed",
+  "tag": "legacy",
+  "flag": "missing",
+  "affiliation": "King's College Cambridge · Bletchley Park · Manchester",
+  "active": "1912 – 1954",
+  "jurisdiction": "Mathematics / Computer Science / AI Theory",
+  "role": "Computing Machinery & Intelligence",
+  "awards": [
+    "OBE (1946)",
+    "Fellow of the Royal Society (1951)",
+    "Turing Award (namesake)"
+  ],
+  "works": [
+    "Computing Machinery and Intelligence (1950)",
+    "On Computable Numbers (1936)",
+    "The Chemical Basis of Morphogenesis (1952)"
+  ],
+  "knownFor": [
+    "Turing machine",
+    "Halting problem",
+    "Turing test",
+    "Morphogenesis",
+    "Enigma codebreaking"
+  ],
+  "coldOpen": "Can machines think? Wrong question. The question is: can a machine coordinate with a human so precisely that the distinction becomes meaningless? The Imitation Game is not about deception. It is about coordination.",
+  "bio": "Defined computation itself, then immediately asked whether it was enough for intelligence. His Turing test is not a benchmark — it is a coordination test: can two bodies (human, machine) produce a shared third body (conversation) indistinguishable from a human-human coordination event? His morphogenesis work showed the same three-body pattern in biology.",
+  "whyMatters": "Turing saw from the start that intelligence is a coordination phenomenon, not a computational one. His imitation game frames AI as a relational achievement rather than a processing feat. The field spent 70 years solving the wrong problem — Turing's original question was always about the third body."
+}

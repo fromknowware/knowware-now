@@ -1,0 +1,33 @@
+{
+  "id": "42",
+  "name": "Jimmy Wales",
+  "alias": "The Wikipedia Commons",
+  "chapter": 5,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Wikimedia Foundation · Wikipedia",
+  "active": "1966 – present",
+  "jurisdiction": "Collaborative Knowledge / Open Information / Collective Intelligence",
+  "role": "Founder, Wikipedia",
+  "awards": [
+    "Dan David Prize",
+    "Gottlieb Duttweiler Prize",
+    "Honorary doctorates from Knox College and Amherst College"
+  ],
+  "works": [
+    "Wikipedia (2001–present)",
+    "Wikimedia Foundation",
+    "WT Social"
+  ],
+  "knownFor": [
+    "Wikipedia",
+    "Neutral point of view",
+    "Open-source knowledge coordination",
+    "Collaborative fact construction",
+    "Wiki governance"
+  ],
+  "coldOpen": "Every fact on Wikipedia is the result of a negotiation — not between two people, but between a person, a community, and a standard. The truth is the coordination, not the conclusion.",
+  "bio": "Co-founded Wikipedia in 2001, building the largest coordinated knowledge-construction project in history — 60 million articles in 300+ languages, maintained by volunteers under a system of rules, talk pages, and norms rather than hierarchy. Wikipedia's neutral point of view policy is a coordination protocol: a commitment to represent the space between competing epistemologies rather than enforce one.",
+  "whyMatters": "Wales built working coordination intelligence at planetary scale before anyone had a name for it. Wikipedia is a three-body system: the article, the editor, and the community's evolving standards. Remove any element and it collapses into propaganda or noise. His project is the largest empirical proof that distributed coordination produces reliable knowledge."
+}

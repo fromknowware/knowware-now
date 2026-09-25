@@ -1,0 +1,33 @@
+{
+  "id": "73",
+  "name": "David Autor",
+  "alias": "The Task Decomposition",
+  "chapter": 9,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT Department of Economics · NBER",
+  "active": "1966 – present",
+  "jurisdiction": "Labor Economics / Automation / Task Theory",
+  "role": "Labor Economics",
+  "awards": [
+    "IZA Prize in Labor Economics",
+    "John Bates Clark Medal (2024)",
+    "ASA Fellow"
+  ],
+  "works": [
+    "The Work of the Future (2022)",
+    "Skills, Tasks and Technologies (2010)",
+    "Why Are There Still So Many Jobs? (2015)"
+  ],
+  "knownFor": [
+    "Task decomposition framework",
+    "Labor market polarization",
+    "Automation and employment",
+    "Skill-biased technical change",
+    "Middle-skill job hollowing"
+  ],
+  "coldOpen": "Automation does not eliminate jobs. It eliminates tasks within jobs. The question is never whether the machine can do what you do. The question is what new coordination tasks emerge once the old ones are gone — and whether humans will occupy them.",
+  "bio": "Labor economist who reframed the automation debate by decomposing jobs into bundles of tasks rather than fixed roles. His task decomposition framework shows that automation systematically eliminates routine tasks while creating demand for non-routine coordination — the human work that machines cannot yet do because it requires contextual judgment.",
+  "whyMatters": "Autor names the economic argument for coordination intelligence: as automation eliminates two-body tasks (input → output), the residual work is three-body coordination — tasks that require understanding context, managing exceptions, and working across systems. His research predicts that coordination intelligence will be the most valuable human capability in an automated economy."
+}

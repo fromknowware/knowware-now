@@ -1,0 +1,33 @@
+{
+  "id": "72",
+  "name": "Srinivasa Ramanujan",
+  "alias": "The Namagiri Download",
+  "chapter": 8,
+  "tier": "V",
+  "status": "passed",
+  "tag": "legacy",
+  "flag": "new",
+  "affiliation": "Trinity College Cambridge · Kumbakonam",
+  "active": "1887 – 1920",
+  "jurisdiction": "Pure Mathematics / Coordination Intelligence",
+  "role": "Mathematician, 1887–1920",
+  "awards": [
+    "Fellow of the Royal Society (1918)",
+    "Fellow of Trinity College Cambridge"
+  ],
+  "works": [
+    "Ramanujan's Notebooks (Vols. I–V)",
+    "Hardy-Ramanujan partition function",
+    "Mock theta functions"
+  ],
+  "knownFor": [
+    "Partition theory",
+    "Modular forms",
+    "Infinite series",
+    "Mock theta functions",
+    "Knowing without proving"
+  ],
+  "coldOpen": "Every positive integer is a personal friend to me. I know their qualities directly. This is not computation. This is relationship. And relationship is coordination.",
+  "bio": "Produced nearly 4,000 theorems without formal proofs, discovered relationships mathematicians would spend 80+ years verifying. Attributed his insights to the goddess Namagiri. His notebooks record coordination between mind and mathematics that proof-first approaches cannot explain.",
+  "whyMatters": "Ramanujan is the historical existence proof of coordination intelligence. His notebooks show that results can be recognized before they are derived, that the third body — the goddess, emergence — produces mathematics faster than two-body systems can verify it."
+}

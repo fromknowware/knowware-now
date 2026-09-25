@@ -1,0 +1,34 @@
+{
+  "id": "55",
+  "name": "Dr. John Preskill",
+  "alias": "The Quantum Supremacy",
+  "chapter": 7,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Caltech · Institute for Quantum Information and Matter",
+  "active": "1953 – present",
+  "jurisdiction": "Quantum Computing / Quantum Error Correction / NISQ Era",
+  "role": "Quantum Computing",
+  "awards": [
+    "Dirac Medal (2019)",
+    "Harvey Prize (2023)",
+    "Albert Einstein Medal (2022)",
+    "NAE Member"
+  ],
+  "works": [
+    "Quantum Error Correction (lecture notes)",
+    "'Quantum Computing in the NISQ Era and Beyond' (2018)",
+    "Caltech Physics 219 / CS 219 course notes"
+  ],
+  "knownFor": [
+    "Coined 'quantum supremacy'",
+    "Quantum error correction",
+    "NISQ era framework",
+    "Topological quantum codes",
+    "Quantum advantage benchmarking"
+  ],
+  "coldOpen": "I coined 'quantum supremacy' not to declare victory — but to name the moment we cross a threshold where quantum coordination does something no classical machine can efficiently simulate. That crossing is not about processing power. It is about the structure of correlation itself. Classical bits cannot be entangled. Entanglement is the coordination layer that classical computation cannot access.",
+  "bio": "Theoretical physicist who has spent four decades building the conceptual and mathematical framework for quantum computation. He coined the term 'quantum supremacy' in 2012 and introduced the NISQ (Noisy Intermediate-Scale Quantum) framework that correctly predicted how quantum hardware would mature. His Institute for Quantum Information at Caltech became the intellectual nursery of the quantum computing field, training a generation of researchers in quantum error correction and quantum information theory.",
+  "whyMatters": "Preskill maps the three-body pattern at the quantum level: qubits (input), entanglement (the coordination layer), and measurement (output). Quantum error correction is entirely about maintaining the coordination layer against decoherence — the collapse of the third body into classical two-body noise. His work shows that the coordination layer is physically fragile and must be actively engineered, making him the field's clearest voice for why two-body classical AI cannot access the full computational power of nature."
+}

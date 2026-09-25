@@ -1,0 +1,25 @@
+{
+  "id": "43",
+  "name": "BCI User",
+  "alias": "Anonymous — The First-Person Interface",
+  "chapter": 5,
+  "tier": "V",
+  "status": "anon",
+  "flag": "old",
+  "affiliation": "Clinical Trial · [Redacted Institution]",
+  "active": "",
+  "jurisdiction": "Lived Experience / Neural Coordination / Human-Machine Interface",
+  "role": "Living the Hybrid Reality",
+  "awards": [],
+  "works": [],
+  "knownFor": [
+    "First-person BCI experience",
+    "Neural signal interpretation",
+    "Locked-in syndrome navigation",
+    "Machine-mediated communication",
+    "Embodied coordination intelligence"
+  ],
+  "coldOpen": "[REDACTED PER PARTICIPANT AGREEMENT] — 'When the cursor moved, I did not think about moving it. I thought about what I wanted to say. The machine had learned to coordinate with my intention, not my command.'",
+  "bio": "[SOURCE IDENTITY PROTECTED] Clinical trial participant with severe motor impairment. Enrolled in an FDA-approved brain-computer interface study. Provided first-person testimony on the phenomenology of neural coordination with machine systems — describing the transition from two-body (input/output) to three-body (intention/interpretation/output) experience.",
+  "whyMatters": "This anonymous voice is the ground truth the book cannot omit: what does coordination intelligence feel like from inside the loop? The BCI user reports that successful neural coordination is not experienced as control but as recognition — the machine meets intention before intention becomes command. That is the three-body pattern in phenomenological form."
+}

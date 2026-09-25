@@ -1,0 +1,33 @@
+{
+  "id": "05",
+  "name": "Kevin Kelly",
+  "alias": "The Technium Scribe",
+  "chapter": 1,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Wired Magazine · Long Now Foundation",
+  "active": "1952 – present",
+  "jurisdiction": "Technology / Evolution / Coordination",
+  "role": "Wired, What Technology Wants",
+  "awards": [
+    "National Magazine Award nominee"
+  ],
+  "works": [
+    "Out of Control",
+    "What Technology Wants",
+    "The Inevitable",
+    "Excellent Advice for Living"
+  ],
+  "knownFor": [
+    "The technium",
+    "Mutualism",
+    "Emergence",
+    "Long-now thinking",
+    "Coordination as evolution"
+  ],
+  "coldOpen": "Technology wants increasing efficiency, opportunity, emergence, complexity, diversity, beauty. These are the same things life wants.",
+  "bio": "Observes that technology is not a tool but a living system — the seventh kingdom — with its own wants and tendencies that parallel biological evolution. He has spent fifty years watching coordination work at every scale, from the Whole Earth Catalog to the internet to AI.",
+  "whyMatters": "Kelly shows coordination intelligence emerging at technological scale over decades. His insight that the technium wants mutualism is critical: AI is not a replacement for human intelligence but a coordination partner. He bridges biology, technology, and human intention."
+}

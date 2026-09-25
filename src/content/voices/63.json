@@ -1,0 +1,36 @@
+{
+  "id": "63",
+  "name": "Dr. Fei-Fei Li",
+  "alias": "The ImageNet Visionary",
+  "chapter": 7,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "old",
+  "affiliation": "Stanford University · Stanford HAI (Human-Centered AI Institute)",
+  "active": "1976 – present",
+  "jurisdiction": "Computer Vision / Human-Centered AI / AI Policy",
+  "role": "Stanford, Human-Centered AI",
+  "awards": [
+    "ACM Fellow",
+    "AAAI Fellow",
+    "National Academy of Engineering Member",
+    "Time 100 AI (2023)"
+  ],
+  "works": [
+    "ImageNet (2009)",
+    "The Worlds I See: Curiosity, Exploration, and Discovery at the Dawn of AI (2023)",
+    "AI4ALL (diversity initiative)",
+    "National AI Commission member"
+  ],
+  "knownFor": [
+    "ImageNet dataset",
+    "Deep learning revolution catalyst",
+    "Human-centered AI",
+    "The Worlds I See (memoir)",
+    "AI4ALL equity initiative"
+  ],
+  "coldOpen": "I spent three years building ImageNet when everyone said datasets did not matter — only algorithms did. But the algorithm learns from the data. The data learns from the human who labeled it. The human brings context that no algorithm can generate alone. ImageNet was not a dataset. It was a coordination event between human perception and machine learning.",
+  "bio": "Computer scientist who catalyzed the deep learning revolution not by building a better algorithm but by creating the right coordination substrate — ImageNet, a dataset of 14 million labeled images that gave neural networks the context they needed to learn visual perception. As co-director of Stanford's Human-Centered AI Institute, she now argues that AI's missing ingredient is the human coordination layer: ethics, embodied context, and social embeddedness that data alone cannot encode.",
+  "whyMatters": "Li's career demonstrates that the third body — context and labeling provided by human intelligence — is what makes AI systems work. ImageNet did not improve the algorithm; it improved the coordination between human knowledge and machine learning. Her HAI work extends this insight: human-centered AI is coordination intelligence, ensuring that the human context layer remains in the feedback loop as AI systems scale toward autonomy."
+}

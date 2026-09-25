@@ -1,0 +1,35 @@
+{
+  "id": "53",
+  "name": "Antonio Damasio",
+  "alias": "The Somatic Marker",
+  "chapter": 6,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "USC Brain and Creativity Institute",
+  "active": "1944 – present",
+  "jurisdiction": "Neuroscience / Philosophy of Mind / Embodied Cognition",
+  "role": "Somatic Markers",
+  "awards": [
+    "Signoret Prize",
+    "Honda Prize",
+    "Asturias Award for Technical and Scientific Research"
+  ],
+  "works": [
+    "Descartes' Error",
+    "The Feeling of What Happens",
+    "Self Comes to Mind",
+    "The Strange Order of Things"
+  ],
+  "knownFor": [
+    "Somatic marker hypothesis",
+    "Emotion and decision-making",
+    "Embodied consciousness",
+    "Descartes' Error refutation",
+    "Body-brain coordination"
+  ],
+  "coldOpen": "The brain does not make decisions alone. The body is always in the room. It has already voted — long before the frontal lobe begins its deliberation. Consciousness is not the general. Consciousness is the diplomat who arrives after the negotiation.",
+  "bio": "Neurologist whose somatic marker hypothesis upended the Cartesian separation of mind and body: decisions are not made by pure reason, he showed, but by the body's felt sense of past outcomes, registered as somatic markers that guide cognition from below. Patients with damage to emotion-processing brain regions — while retaining full logical ability — become catastrophically bad at decisions.",
+  "whyMatters": "Damasio proves that the third body in all human cognition is the body itself: the somatic feedback loop that coordinates past experience with present choice. His work shows that rational two-body intelligence (problem plus reasoning) is physiologically impossible without the embodied coordination layer. He gives the book its neurological anchor for why coordination cannot be abstracted away."
+}

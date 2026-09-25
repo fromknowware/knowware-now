@@ -1,0 +1,33 @@
+{
+  "id": "10",
+  "name": "Dr. Judea Pearl",
+  "alias": "The Causation Architect",
+  "chapter": 2,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "UCLA · Computer Science",
+  "active": "1936 – present",
+  "jurisdiction": "AI / Causal Inference",
+  "role": "Causal Inference",
+  "awards": [
+    "Turing Award (2011)",
+    "ACM Fellow",
+    "MacArthur Fellow"
+  ],
+  "works": [
+    "The Book of Why",
+    "Causality: Models, Reasoning, and Inference",
+    "Probabilistic Reasoning in Intelligent Systems"
+  ],
+  "knownFor": [
+    "Ladder of Causation",
+    "Do-calculus",
+    "Causal diagrams",
+    "Bayesian networks",
+    "Causal inference"
+  ],
+  "coldOpen": "Causation IS coordination. A causes B only when A coordinates with context C to produce B. The cause doesn't operate in isolation — it coordinates with the system to create the effect.",
+  "bio": "Revolutionized AI by proving that intelligence requires causal understanding, not just pattern recognition. His Ladder of Causation maps three coordination levels: seeing (association), doing (intervention), and imagining (counterfactuals). Current AI is stuck at rung one.",
+  "whyMatters": "Pearl formalizes why two-body systems (data + patterns) cannot produce genuine intelligence. The third body — causal context — is essential. He shows that coordination intelligence requires understanding how actions coordinate with systems to produce effects."
+}

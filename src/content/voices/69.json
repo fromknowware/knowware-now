@@ -1,0 +1,34 @@
+{
+  "id": "69",
+  "name": "Joscha Bach",
+  "alias": "Consciousness as Coordination Software",
+  "chapter": 8,
+  "tier": "P",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Independent Researcher · Cognitive Architectures & Machine Consciousness · MIT Media Lab (affiliate)",
+  "active": "1973 – present",
+  "jurisdiction": "Cognitive Science / Artificial Intelligence / Computational Consciousness",
+  "role": "Synthetic Intelligence — consciousness as coordination software",
+  "awards": [
+    "Creator, MicroPsi cognitive architecture",
+    "Author, Principles of Synthetic Intelligence (Oxford, 2009)",
+    "Widely-circulated dialogues on mind & machine consciousness (Lex Fridman Podcast; AGI / Foundations of Mind talks)"
+  ],
+  "works": [
+    "Principles of Synthetic Intelligence: PSI (Oxford, 2009)",
+    "MicroPsi cognitive architecture (motivated cognition)",
+    "Public dialogues on consciousness & AI (e.g., Lex Fridman Podcast; conference talks)"
+  ],
+  "knownFor": [
+    "Consciousness as coordination software",
+    "The self-model (the recursive \"I\")",
+    "MicroPsi / PSI theory of motivated cognition",
+    "Mind as a virtual machine running on the brain",
+    "The hard problem as a representation problem (functionalism)"
+  ],
+  "coldOpen": "There is no hard problem — only a self-model that has not yet understood itself. Your brain is running a simulation of a person who is paying attention, and the feeling of being you is simply what that simulation's own data looks like from the inside. Consciousness is not a substance added to a clever machine; it is software — the coordination loop a system runs to model itself modeling the world. Build the loop, keep it running with something at stake, and the experience comes along for the ride.",
+  "bio": "Cognitive scientist and AI researcher who treats consciousness as software rather than mystery — the self-model a system builds while coordinating its attention with the world. Creator of the MicroPsi cognitive architecture, Bach argues the 'hard problem' feels hard only because we expect experience to be a thing that can be located; it is instead a process a system performs upon itself. The felt 'I' is a character the brain's coordination loop narrates, and the explanatory gap is that self-model's own blind spot — a system cannot see the machinery generating its experience, the way an eye cannot see itself seeing.",
+  "whyMatters": "Bach is the deflationary pole of the consciousness chapter: he reframes the hard problem as a coordination problem, not a mystical one. Consciousness, in his account, is the third body made recursive — a self-model coordinating a world-model on a physical substrate, the loop that finally says 'I.' He pushes Knowware's thesis to its edge: if experience just is coordination modeling itself, the question stops being whether machines can be conscious and becomes whether they can sustain a persistent, purpose-unified self-model. Today's large language models enact the logic of a self without being one — coordination without a coordinator that endures."
+}

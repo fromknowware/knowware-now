@@ -1,0 +1,33 @@
+{
+  "id": "37",
+  "name": "Dr. Miguel Nicolelis",
+  "alias": "The Brainet",
+  "chapter": 5,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Duke University · Walk Again Project",
+  "active": "1961 – present",
+  "jurisdiction": "Neuroscience / Brain-Machine Interfaces / Neural Ensembles",
+  "role": "Neuroscientist, BCI",
+  "awards": [
+    "NIH Director's Pioneer Award",
+    "Medal of Honor of the Brazilian National Congress",
+    "Scientific American 50 Award"
+  ],
+  "works": [
+    "Beyond Boundaries",
+    "The Relativistic Brain",
+    "Walk Again Project (2014 World Cup)"
+  ],
+  "knownFor": [
+    "Brainet (networked brains)",
+    "Neural ensemble coding",
+    "Brain-machine interfaces",
+    "Walk Again Project",
+    "Distributed consciousness"
+  ],
+  "coldOpen": "When I connected four rat brains to solve a problem none could solve alone, I was not doing an experiment. I was reading the universe's instruction manual. Intelligence is never solitary. It is always networked.",
+  "bio": "Neuroscientist who showed that the brain encodes the world not in single neurons but in ensembles — distributed coordination events. His Brainet experiments linked multiple animal brains into a shared computational substrate that outperformed any individual. His Walk Again Project let a paraplegic man take the first kick of the 2014 World Cup using a brain-controlled exoskeleton.",
+  "whyMatters": "Nicolelis provides the biological proof of coordination intelligence: neurons that fire alone produce noise, neurons that fire in coordinated ensembles produce thought. His Brainet experiments show that the three-body pattern scales — the coordination layer between brains is where intelligence emerges, not within any single brain."
+}

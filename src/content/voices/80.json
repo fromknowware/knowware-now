@@ -1,0 +1,35 @@
+{
+  "id": "80",
+  "name": "Sherry Turkle",
+  "alias": "The Alone Together",
+  "chapter": 9,
+  "tier": "V",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT Initiative on Technology and Self",
+  "active": "1948 – present",
+  "jurisdiction": "Technology and Identity / Human-Computer Interaction / Digital Culture",
+  "role": "Technology & Connection",
+  "awards": [
+    "Guggenheim Fellow",
+    "Rockefeller Fellow",
+    "Named one of the 100 most influential people by Scientific American"
+  ],
+  "works": [
+    "The Second Self (1984)",
+    "Life on the Screen (1995)",
+    "Alone Together (2011)",
+    "Reclaiming Conversation (2015)",
+    "The Empathy Diaries (2021)"
+  ],
+  "knownFor": [
+    "Alone together phenomenon",
+    "Simulated companionship",
+    "Technology and identity",
+    "Reclaiming conversation",
+    "Digital self-construction"
+  ],
+  "coldOpen": "We are using technology to feel connected while avoiding the risks of genuine connection. We are always on but never present. That is not coordination. That is the simulation of coordination — and the simulation is destroying our capacity for the real thing.",
+  "bio": "MIT psychologist who spent four decades studying how people relate to computers, robots, and digital selves. Her trilogy — from The Second Self to Alone Together — documents a civilizational shift from technology as tool to technology as companion, and the psychological consequences of substituting simulated relationship for genuine three-body coordination.",
+  "whyMatters": "Turkle names the psychological corruption that occurs when the coordination layer is replaced by its simulation. Social media creates the experience of connection without the vulnerability that makes coordination real. Her work shows that coordination intelligence requires genuine presence — and that technology optimized for engagement without presence systematically erodes our coordination capacity."
+}

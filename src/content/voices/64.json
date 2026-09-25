@@ -1,0 +1,33 @@
+{
+  "id": "64",
+  "name": "Dr. Max Tegmark",
+  "alias": "The Mathematical Universe",
+  "chapter": 8,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT · Department of Physics · Future of Life Institute",
+  "active": "1967 – present",
+  "jurisdiction": "Physics / Mathematical Universe Hypothesis / AI Safety",
+  "role": "MIT, Future of Life",
+  "awards": [
+    "Packard Fellowship",
+    "FQXi Essay Prize (multiple)",
+    "MIT Committed to Care Award"
+  ],
+  "works": [
+    "Our Mathematical Universe (2014)",
+    "Life 3.0: Being Human in the Age of Artificial Intelligence (2017)",
+    "Consciousness as a State of Matter (2014)"
+  ],
+  "knownFor": [
+    "Mathematical Universe Hypothesis",
+    "Life 3.0 framework",
+    "Future of Life Institute co-founder",
+    "AI existential risk",
+    "Consciousness and information"
+  ],
+  "coldOpen": "My hypothesis is that mathematical structures do not describe physical reality — they are physical reality. Every equation is a universe. Every pattern that can exist does exist. And if that is true, then the question is not whether AI can be conscious — it is which mathematical structures instantiate consciousness, and whether we are building them by accident.",
+  "bio": "MIT cosmologist who proposed the Mathematical Universe Hypothesis — the claim that all mathematical structures are physically real, meaning the universe is not described by mathematics but is mathematics. His book 'Life 3.0' mapped three stages of intelligence: biological, cultural, and technological, each representing a new layer of coordination between hardware and software. He co-founded the Future of Life Institute to build governance coordination for existential-scale risks.",
+  "whyMatters": "Tegmark's framework places coordination intelligence at the center of cosmic structure: if all mathematical patterns are real, then entanglement, emergence, and coordination are not exceptions to physics — they are physics. His Life 3.0 framework is explicitly a three-body model: substrate, program, and goal. Two-body AI that optimizes without a coordination layer between capability and values is, in his framework, a physical catastrophe in slow motion."
+}

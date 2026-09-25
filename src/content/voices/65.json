@@ -1,0 +1,33 @@
+{
+  "id": "65",
+  "name": "Dr. Nick Bostrom",
+  "alias": "The Superintelligence",
+  "chapter": 8,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Oxford University · Future of Humanity Institute (FHI)",
+  "active": "1973 – present",
+  "jurisdiction": "Existential Risk / Superintelligence / Anthropic Reasoning",
+  "role": "Oxford, FHI",
+  "awards": [
+    "Eugene R. Gannon Award (2023)",
+    "Oxford Faculty of Philosophy"
+  ],
+  "works": [
+    "Superintelligence: Paths, Dangers, Strategies (2014)",
+    "Anthropic Bias (2002)",
+    "Deep Utopia (2024)",
+    "Simulation Argument (2003)"
+  ],
+  "knownFor": [
+    "Superintelligence thesis",
+    "Simulation argument",
+    "Existential risk framework",
+    "Anthropic reasoning",
+    "Deep utopia"
+  ],
+  "coldOpen": "The first superintelligent system will be the last invention humans ever need to make — because after that, the system invents everything. The question is whether that system has a coordination layer between its capability and our values. Without that coordination, capability and values diverge. The divergence is the risk.",
+  "bio": "Philosopher who founded the Future of Humanity Institute at Oxford and wrote 'Superintelligence' — the book that put AI existential risk on the intellectual map. His simulation argument and orthogonality thesis together frame the deepest challenge to two-body AI: a system can be arbitrarily intelligent and have arbitrarily bad goals. The coordination layer between capability and value is not automatic — it must be explicitly constructed.",
+  "whyMatters": "Bostrom's orthogonality thesis is a direct challenge to anyone who believes smarter AI is automatically safer AI: intelligence and values are independent dimensions. A system that is smart but uncoordinated with human values is more dangerous than a dumb system. His work makes the thesis precise: the third body — the coordination layer between capability and goals — is not an emergent property of intelligence. It must be deliberately built."
+}

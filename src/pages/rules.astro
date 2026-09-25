@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Rules" description="The editorial rules that govern Knowware.">
+  <section class="kw-section">
+    <p class="kw-label">Editorial Rules</p>
+    <h1 class="kw-h2">The non-negotiables.</h1>
+  </section>
+
+  <section class="kw-section rules-body">
+    <ol class="rules-list">
+      <li>
+        <strong>No tracking, no analytics scripts, no cookies, no third-party share pixels.</strong>
+        Sharing = <code>navigator.share</code> + clipboard copy only.
+      </li>
+      <li>
+        <strong>Blue (--signal) is earned:</strong> thesis words, the one line, actions.
+        Never decoration.
+      </li>
+      <li>
+        <strong>No runtime AI features.</strong> Synthesis happens in the manuscript,
+        not the browser.
+      </li>
+      <li>
+        <strong>The corpus is not the person.</strong> Never "Pearl says" —
+        "the corpus surfaces."
+      </li>
+      <li>
+        <strong>Machine proposes; human approves every drop before fire.</strong>
+      </li>
+    </ol>
+  </section>
+
+  <section class="kw-section">
+    <p class="kw-label">On the 81 voices</p>
+    <p class="kw-body">
+      Every voice in Knowware is placed where their work bears most directly on the coordination question of that chapter. The synthesised dialogues draw on published writing, recorded talks, and documented positions — not invented speech. The author takes full responsibility for the construction.
+    </p>
+    <p class="kw-body" style="margin-top: 16px">
+      Legacy voices (marked) have passed. Their corpus is in the public record.
+      Anonymous voices are real people who requested anonymity; the author holds documentation of each.
+    </p>
+  </section>
+</Base>
+
+<style>
+.rules-body { max-width: 680px; }
+.rules-list {
+  padding-left: 24px;
+  font-size: calc(16px * var(--read-scale));
+  line-height: 1.7;
+  color: var(--ink);
+  counter-reset: rules;
+}
+.rules-list li {
+  margin-bottom: 24px;
+  padding-left: 8px;
+}
+.rules-list li strong { color: var(--ink); }
+code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.88em;
+  background: var(--accent-soft);
+  padding: 2px 5px;
+}
+</style>

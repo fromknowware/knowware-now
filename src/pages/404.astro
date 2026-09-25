@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Field from '../components/Field.astro';
+---
+<Base title="404" description="Page not found." noindex>
+  <section class="kw-section">
+    <p class="kw-label">404</p>
+    <h1 class="kw-h2">Not found.</h1>
+    <p class="kw-body">This page doesn't exist — or hasn't been placed yet.</p>
+    <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
+      <a href="/" class="kw-btn kw-btn--filled">Home →</a>
+      <a href="/read" class="kw-btn">Read free →</a>
+    </div>
+  </section>
+  <Field height="240px" sigTop="60%" />
+</Base>

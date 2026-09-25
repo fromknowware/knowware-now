@@ -1,0 +1,33 @@
+{
+  "id": "39",
+  "name": "Dr. Shannon Vallor",
+  "alias": "The Technomoral Virtue",
+  "chapter": 5,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "University of Edinburgh · Centre for Technomoral Futures",
+  "active": "1972 – present",
+  "jurisdiction": "AI Ethics / Philosophy of Technology / Virtue Ethics",
+  "role": "AI Ethicist",
+  "awards": [
+    "Fulbright Award",
+    "NSF Ethics Award",
+    "Patrick Suppes Prize in Philosophy of Science"
+  ],
+  "works": [
+    "Technology and the Virtues",
+    "The AI Mirror",
+    "Shaping Our Tools: Contestation and Technology"
+  ],
+  "knownFor": [
+    "Technomoral virtues",
+    "Aristotelian AI ethics",
+    "Care ethics in technology",
+    "Responsible AI design",
+    "Moral ecology"
+  ],
+  "coldOpen": "We don't need rules that tell machines what not to do. We need virtues — cultivated habits of attention, care, and coordination with others. Ethics is not a filter. It is a feedback loop.",
+  "bio": "Applied Aristotelian virtue ethics to artificial intelligence, arguing that the question is not what rules AI should follow but what moral character it should embody. Her concept of technomoral virtues insists that technology shapes the moral ecology of the humans who use it — making design itself an ethical act.",
+  "whyMatters": "Vallor brings the third body into ethics: virtue is not a rule applied to an action, but a coordination pattern between agent, situation, and community over time. She argues that AI without embedded virtues disrupts the coordination loops through which humans become good — making ethics inseparable from the coordination intelligence thesis."
+}

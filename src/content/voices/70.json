@@ -1,0 +1,34 @@
+{
+  "id": "70",
+  "name": "Liu Cixin",
+  "alias": "The Dark Forest",
+  "chapter": 8,
+  "tier": "V",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "China Science Fiction Writers Association",
+  "active": "1963 – present",
+  "jurisdiction": "Science Fiction / Cosmic Sociology / Coordination Failure Theory",
+  "role": "Dark Forest",
+  "awards": [
+    "Hugo Award for Best Novel (2015, The Three-Body Problem)",
+    "Galaxy Award (China, multiple)",
+    "Nebula Award (nominated)"
+  ],
+  "works": [
+    "The Three-Body Problem (2008)",
+    "The Dark Forest (2008)",
+    "Death's End (2010)",
+    "The Wandering Earth (2000)"
+  ],
+  "knownFor": [
+    "Three-Body Problem trilogy",
+    "Dark Forest theory",
+    "Cosmic sociology",
+    "Technological singularity in fiction",
+    "Chinese science fiction movement"
+  ],
+  "coldOpen": "The universe is a dark forest. Every civilization is a hunter with a loaded gun. If you hear another hunter, you must kill them — because if they hear you first, they will kill you. This is not paranoia. This is the logic of coordination failure at cosmic scale. The universe is silent not because it is empty but because coordination is fatal when there is no trust layer.",
+  "bio": "Chinese science fiction author whose Three-Body Problem trilogy is the most consequential science fiction of the 21st century. The Dark Forest theory — his in-universe explanation for the Fermi paradox — proposes that all advanced civilizations hide because detection means destruction: the universe is a prisoner's dilemma with no communication channel and lethal stakes. His work imagines a universe that has already solved the coordination problem — by universal defection.",
+  "whyMatters": "Liu Cixin's Dark Forest is the nightmare scenario of coordination intelligence failure: a universe of actors capable of perfect two-body optimization (self-preservation) but unable to achieve three-body coordination (mutual trust, communication, shared goals) that would allow civilizations to coexist. His trilogy is the most rigorous fictional exploration of why coordination intelligence is not just advantageous but existentially necessary — its absence produces cosmic silence."
+}

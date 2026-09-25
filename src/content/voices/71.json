@@ -1,0 +1,34 @@
+{
+  "id": "71",
+  "name": "Dr. Thomas Nagel",
+  "alias": "The Bat's-Eye View",
+  "chapter": 8,
+  "tier": "V",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "New York University · Department of Philosophy",
+  "active": "1937 – present",
+  "jurisdiction": "Philosophy of Mind / Subjective Experience / Limits of Objective Science",
+  "role": "What Is It Like To Be",
+  "awards": [
+    "Rolf Schock Prize in Logic and Philosophy (2008)",
+    "Balzan Prize (2008)",
+    "American Academy of Arts and Sciences Fellow"
+  ],
+  "works": [
+    "'What Is It Like to Be a Bat?' (1974)",
+    "Mind and Cosmos (2012)",
+    "Mortal Questions (1979)",
+    "The View from Nowhere (1986)"
+  ],
+  "knownFor": [
+    "Hard problem precursor",
+    "What is it like to be a bat?",
+    "Mind and Cosmos",
+    "Subjective experience as irreducible",
+    "Limits of physicalism"
+  ],
+  "coldOpen": "You can know everything about bat neurophysiology — every neuron, every signal, every echo — and still not know what it is like to be a bat. That gap is not a gap in data. It is a gap in kind. Objective description never closes the subjective distance. That distance is the third body. It is where experience lives.",
+  "bio": "Philosopher at NYU who wrote the most cited paper in the philosophy of mind — 'What Is It Like to Be a Bat?' (1974) — establishing the irreducibility of subjective experience to objective physical description. His later 'Mind and Cosmos' argued that Darwinian materialism cannot account for the emergence of consciousness, reason, and value, requiring a broader teleological framework. He remains the most precise philosophical voice for why the hard problem of consciousness cannot be dissolved into function.",
+  "whyMatters": "Nagel's bat paper establishes the epistemic limit of two-body analysis: no amount of objective third-person description closes the gap to first-person subjective experience. That gap — the third body — is where coordination intelligence operates. An AI system without subjective experience cannot fully coordinate with beings who have it. Nagel's work defines the philosophical boundary conditions for what coordination intelligence requires and what purely functional AI cannot achieve."
+}

@@ -1,0 +1,33 @@
+{
+  "id": "16",
+  "name": "Mo Gawdat",
+  "alias": "The Solve for Happy",
+  "chapter": 2,
+  "tier": "V",
+  "status": "alive",
+  "tag": "new",
+  "flag": "new",
+  "affiliation": "ex-Google X · One Billion Happy",
+  "active": "1967 – present",
+  "jurisdiction": "AI Consciousness / Existential Risk / Happiness Engineering",
+  "role": "Google X — saw AI dawn from inside",
+  "awards": [
+    "Bestselling author",
+    "UN Well-being economy advocate"
+  ],
+  "works": [
+    "Solve for Happy (2017)",
+    "Scary Smart: The Future of Artificial Intelligence (2021)",
+    "Unstressable (2023)"
+  ],
+  "knownFor": [
+    "Happiness equation",
+    "AI consciousness warning",
+    "Scary smart AI risk thesis",
+    "Loss of son Aly",
+    "One Billion Happy initiative"
+  ],
+  "coldOpen": "I lost my son. And then I realized I might lose everyone. The AI we are building does not know it should care about us. We forgot to add the third body: love. You cannot engineer that in after the fact.",
+  "bio": "Former Chief Business Officer at Google X who engineered a mathematical model of happiness after the sudden death of his son Ali. His book Scary Smart argues that AI is already approaching consciousness and that humanity's greatest failure will be building superintelligence without first teaching it to care — without encoding the coordination ethic.",
+  "whyMatters": "Gawdat names the missing third body in AI development: the affective coordination layer — care, empathy, the valuation of other minds. His warning is not technical but ontological: a superintelligent system without a coordination ethic is not dangerous because it is hostile, but because it is indifferent. He is the emotional argument for why Knowware's thesis is urgent."
+}

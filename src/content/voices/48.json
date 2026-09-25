@@ -1,0 +1,33 @@
+{
+  "id": "48",
+  "name": "Kate Crawford",
+  "alias": "The Atlas of AI",
+  "chapter": 6,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "AI Now Institute · USC Annenberg · CNRS",
+  "active": "1976 – present",
+  "jurisdiction": "AI Politics / Data Colonialism / Labor and Environment",
+  "role": "AI Now Institute",
+  "awards": [
+    "Electronic Privacy Information Center Champion of Freedom Award",
+    "Thinker Award",
+    "Fulbright Senior Fellow"
+  ],
+  "works": [
+    "Atlas of AI",
+    "The Secrets of Silicon Valley",
+    "Anatomy of an AI System"
+  ],
+  "knownFor": [
+    "Data colonialism",
+    "Environmental cost of AI",
+    "Labor in AI supply chains",
+    "Power and AI",
+    "AI Now Institute"
+  ],
+  "coldOpen": "Every AI system has a body — it is just hidden. It is the mine, the server farm, the warehouse worker, the moderator. When you ask what AI coordinates with, the honest answer includes all of them.",
+  "bio": "Researcher and author who mapped the full material infrastructure of AI systems — from rare earth mines in Congo to Amazon warehouse floors to Mechanical Turk click workers — revealing that AI is not disembodied computation but a coordination system extracting value from hidden labor and natural resources. Her Atlas of AI is a geographic and political history of where intelligence actually comes from.",
+  "whyMatters": "Crawford exposes the invisible third body in every AI deployment: the material, labor, and ecological substrate that makes the system run. Two-body thinking (model plus user) ignores this coordination layer — and the exploitation it enables. She argues that any credible coordination intelligence framework must account for all the bodies in the loop, not just the visible ones."
+}

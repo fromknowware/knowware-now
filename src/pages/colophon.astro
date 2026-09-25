@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import { AUTHOR, PUBLISHER, SITE_URL } from '../config';
+---
+<Base title="Colophon" description="Production notes for Knowware.">
+  <section class="kw-section">
+    <p class="kw-label">Colophon</p>
+    <h1 class="kw-h2">How it was made.</h1>
+  </section>
+
+  <section class="kw-section colophon-body">
+    <h2 class="kw-h3">The work</h2>
+    <p class="kw-body">
+      <em>Knowware: Systems of Intelligence</em> is a book in the form of a structured intelligence synthesis. Nine chapters. 81 voices. One argument: that coordination, not computation, is the defining problem of our moment.
+    </p>
+    <p class="kw-body" style="margin-top:16px">
+      Written and constructed by {AUTHOR}. Published by {PUBLISHER}.
+    </p>
+
+    <h2 class="kw-h3" style="margin-top:40px">The site</h2>
+    <p class="kw-body">
+      Built with Astro — fully prerendered, zero client-side frameworks, no tracking.
+      Typography: JetBrains Mono (monospace), Helvetica Neue (display/body).
+      Palette: navy <code>#191938</code>, cream <code>#EDEEE4</code>, signal <code>#2F55E0</code>.
+    </p>
+    <p class="kw-body" style="margin-top:16px">
+      The bar-field that appears on the cover and throughout the site is a generative CSS rendering of the physical book's printed field — two <code>repeating-linear-gradient</code>s, no images.
+      The signal line (blue) draws in on load via a single CSS animation.
+    </p>
+
+    <h2 class="kw-h3" style="margin-top:40px">Third-party resources</h2>
+    <p class="kw-body">
+      Google Fonts (JetBrains Mono, Inter) — loaded via <code>font-display: swap</code>, no tracking pixel.
+      No analytics. No cookies. No share pixels. Sharing uses <code>navigator.share</code> and clipboard API only.
+    </p>
+
+    <h2 class="kw-h3" style="margin-top:40px">The 82nd line</h2>
+    <p class="kw-body">
+      Readers who contribute a named voice before the deadline receive a permanent credit line in the colophon and an acknowledgement in the book's back matter.
+      <a href="/contribute" style="color:var(--accent);border-bottom:1px solid var(--accent)">Contribute a voice →</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+.colophon-body { max-width: 680px; }
+code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.88em;
+  background: var(--accent-soft);
+  padding: 2px 5px;
+}
+</style>

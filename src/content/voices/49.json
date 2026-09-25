@@ -1,0 +1,34 @@
+{
+  "id": "49",
+  "name": "Norbert Wiener",
+  "alias": "The Cybernetic Warning",
+  "chapter": 6,
+  "tier": "P",
+  "status": "passed",
+  "tag": "legacy",
+  "flag": "new",
+  "affiliation": "MIT · Bell Labs",
+  "active": "1894 – 1964",
+  "jurisdiction": "Cybernetics / Coordination Science / AI Safety",
+  "role": "Father of Cybernetics",
+  "awards": [
+    "Bôcher Memorial Prize",
+    "National Medal of Science",
+    "Chauvenet Prize"
+  ],
+  "works": [
+    "Cybernetics: Or Control and Communication in the Animal and the Machine",
+    "The Human Use of Human Beings",
+    "God and Golem, Inc."
+  ],
+  "knownFor": [
+    "Cybernetics",
+    "Feedback loops",
+    "The genie problem",
+    "Control vs. coordination",
+    "Second industrial revolution"
+  ],
+  "coldOpen": "The thermostat coordinates with the temperature. The dictator tries to control it. The thermostat is wiser than the dictator. This is mathematics.",
+  "bio": "Founder of cybernetics, he named the science of feedback and coordination. But the field lost his core insight: coordination over control. He saw the genie problem (optimization without context) in 1950 and predicted automation's displacement decades before it occurred.",
+  "whyMatters": "Wiener identified the coordination pattern 75 years ago. He named the genie problem — the core alignment failure. His insistence that the third body (context) must stay in the feedback loop is the foundation of all coordination intelligence theory."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "33",
+  "name": "Quant/HFT Savant",
+  "alias": "Anonymous — The Latency Arbitrageur",
+  "chapter": 4,
+  "tier": "P",
+  "status": "anon",
+  "flag": "old",
+  "affiliation": "[REDACTED] · Prop Trading Desk · Co-Location Facility",
+  "active": "",
+  "jurisdiction": "High-Frequency Trading / Market Microstructure / Latency Engineering",
+  "role": "Systematic Trading",
+  "awards": [],
+  "works": [],
+  "knownFor": [
+    "Latency arbitrage",
+    "Co-location infrastructure",
+    "Market microstructure exploitation",
+    "Order flow analysis",
+    "Nanosecond-scale coordination"
+  ],
+  "coldOpen": "Everyone thinks HFT is about speed. It isn't. Speed is just the tax of entry. What you're actually doing is reading the coordination state of the market faster than the market can update its own model of itself. The edge lives in that gap — the nanoseconds between reality and its reflection in price.",
+  "bio": "Identity withheld at source's request. Operates at the intersection of physics, microstructure theory, and exchange topology. Has built and maintained co-location infrastructure across multiple exchange data centers. Studies the market not as a price discovery mechanism but as a coordination protocol — and exploits the moments when that protocol lags its underlying state.",
+  "whyMatters": "The Latency Arbitrageur operates in the coordination gap — the space between a market event and the market's coordinated response to it. This gap is not a market inefficiency; it is the fundamental latency of any coordination system. HFT is applied three-body theory: signal (body one), exchange protocol (body two), the lag between them (body three, where the money is)."
+}

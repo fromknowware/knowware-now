@@ -1,0 +1,34 @@
+{
+  "id": "21",
+  "name": "James Gosling",
+  "alias": "The Java Father",
+  "chapter": 3,
+  "tier": "A",
+  "status": "alive",
+  "tag": "new",
+  "flag": "missing",
+  "affiliation": "Amazon Web Services · ex-Sun Microsystems",
+  "active": "1955 – present",
+  "jurisdiction": "Software Architecture / Distributed Systems / Platform Design",
+  "role": "Creator of Java",
+  "awards": [
+    "IEEE John von Neumann Medal (2015)",
+    "NAE Member",
+    "Order of Canada"
+  ],
+  "works": [
+    "Java Programming Language (1995)",
+    "The Java Language Specification",
+    "Write Once Run Anywhere (WORA) paradigm"
+  ],
+  "knownFor": [
+    "Java programming language",
+    "Write once run anywhere",
+    "Garbage collection",
+    "Distributed systems",
+    "Virtual machine abstraction"
+  ],
+  "coldOpen": "The whole point of Java wasn't the syntax. It was portability — one program coordinating with every platform it would ever encounter. The machine doesn't matter. The coordination layer does. The JVM is just a formalized coordination contract.",
+  "bio": "Created Java at Sun Microsystems in 1995, solving the fundamental coordination problem of distributed computing: how does a program written once coordinate correctly with any hardware it runs on? The Java Virtual Machine is not an emulator — it is a universal coordination protocol for software and substrate.",
+  "whyMatters": "Gosling built the most successful coordination layer in software history. The JVM embodies the three-body pattern: source code, bytecode (the coordination layer), and machine execution. His garbage collector introduced automatic coordination between program logic and memory state — a third body managing what the other two cannot see."
+}

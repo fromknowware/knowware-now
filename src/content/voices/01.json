@@ -1,0 +1,32 @@
+{
+  "id": "01",
+  "name": "Dr. Paul Pangaro",
+  "alias": "The Conversation Theorist",
+  "chapter": 1,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "Corcoran College of Art + Design · formerly Carnegie Mellon",
+  "active": "1950 – present",
+  "jurisdiction": "Cybernetics / Conversation Theory / Interaction Design",
+  "role": "Cybernetician, Conversation Theory",
+  "awards": [
+    "Fulbright Scholar",
+    "AIGA Fellow"
+  ],
+  "works": [
+    "Designing for Conversation (with Hugh Dubberly)",
+    "Gordon Pask and His Maverick Machines",
+    "LYRIC: A Conversational System"
+  ],
+  "knownFor": [
+    "Conversation theory",
+    "Second-order cybernetics",
+    "Interaction as coordination",
+    "Gordon Pask collaboration",
+    "Designing conversational systems"
+  ],
+  "coldOpen": "A conversation is not an exchange of information. It is the construction of a shared space — a third body — that neither participant brings to the table alone. If that third body doesn't form, nothing was said.",
+  "bio": "Cybernetician and interaction designer who worked directly with Gordon Pask on conversation theory — the idea that understanding only emerges through iterative, coordinated exchange between two systems. He has spent decades designing interactions as forms of coordination, not transmission.",
+  "whyMatters": "Pangaro operationalizes the three-body pattern at the scale of conversation: speaker, listener, and the shared constructed meaning between them. His work proves that intelligence is never in one node — it lives in the coordination space. Current AI fails here because it transmits rather than coordinates."
+}

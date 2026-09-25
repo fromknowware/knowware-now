@@ -1,0 +1,66 @@
+---
+// Ladder — compact manifest of all 81 voices, grouped by chapter
+// Receives pre-loaded voice data from the page
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  chapters: Array<{
+    n: number;
+    title: string;
+    voices: CollectionEntry<'voices'>['data'][];
+  }>;
+}
+
+const { chapters } = Astro.props;
+
+const tierLabel: Record<string, string> = { A: 'Academic', P: 'Practitioner', V: 'Visionary' };
+const statusColor: Record<string, string> = {
+  alive: '#1D9E75',
+  passed: 'var(--sub2)',
+  anon: 'oklch(0.60 0.15 270)',
+};
+---
+
+<section class="kw-section" id="the-81">
+  <p class="kw-label">The 81 Voices</p>
+  <p class="kw-body" style="margin-bottom: 40px">
+    Nine chapters. Three tiers — Academic, Practitioner, Visionary. Every voice placed where their work bears most directly on coordination intelligence.
+  </p>
+
+  {chapters.map((ch) => (
+    <div class="ladder-chapter">
+      <div class="ladder-ch-head mono">
+        <span class="ladder-ch-num">{String(ch.n).padStart(2, '0')}</span>
+        <span class="ladder-ch-title">{ch.title}</span>
+      </div>
+      {ch.voices.map((v) => (
+        <div class="kw-voice-card" data-tier={v.tier}>
+          <span class="kw-voice-num">{v.id}</span>
+          <div>
+            <p class="kw-voice-name">{v.name}</p>
+            <p class="kw-voice-role">{v.role}</p>
+          </div>
+          <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end">
+            <span class={`kw-tier kw-tier--${v.tier}`}>{tierLabel[v.tier]}</span>
+            <span class="kw-voice-status" style={`width:7px;height:7px;border-radius:50%;background:${statusColor[v.status] ?? 'var(--sub2)'};display:inline-block`} title={v.status}></span>
+          </div>
+        </div>
+      ))}
+    </div>
+  ))}
+</section>
+
+<style>
+.ladder-chapter { margin-bottom: 40px; }
+.ladder-ch-head {
+  display: flex; gap: 16px; align-items: baseline;
+  padding: 8px 0; border-bottom: 2px solid var(--ink);
+  margin-bottom: 0;
+}
+.ladder-ch-num {
+  font-size: 11px; color: var(--signal); letter-spacing: .08em; flex-shrink: 0;
+}
+.ladder-ch-title {
+  font-size: 12px; color: var(--sub); letter-spacing: .04em;
+}
+</style>

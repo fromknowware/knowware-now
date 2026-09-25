@@ -1,0 +1,33 @@
+{
+  "id": "68",
+  "name": "Dr. David Chalmers",
+  "alias": "The Hard Problem",
+  "chapter": 8,
+  "tier": "P",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "New York University · Center for Mind, Brain and Consciousness",
+  "active": "1966 – present",
+  "jurisdiction": "Philosophy of Mind / Consciousness / Extended Mind Theory",
+  "role": "Philosophy of Mind",
+  "awards": [
+    "Jean Nicod Prize (2009)",
+    "Fellow of the Australian Academy of Humanities"
+  ],
+  "works": [
+    "The Conscious Mind (1996)",
+    "Reality+: Virtual Worlds and the Philosophy of Mind (2022)",
+    "'Facing Up to the Problem of Consciousness' (1995)",
+    "The Character of Consciousness (2010)"
+  ],
+  "knownFor": [
+    "Hard problem of consciousness",
+    "Philosophical zombies",
+    "Extended mind thesis",
+    "Virtual reality as genuine reality",
+    "Panpsychism arguments"
+  ],
+  "coldOpen": "The easy problems of consciousness are about explaining cognitive functions: attention, memory, learning, language. Science can do that. The hard problem is why any of it is experienced at all. Why is there something it is like to be me? That question does not have a two-body answer. It requires a third body: the coordination between physical process and subjective experience.",
+  "bio": "Philosopher at NYU who coined 'the hard problem of consciousness' in 1994, crystallizing the distinction between explaining cognitive function and explaining subjective experience. His philosophical zombies thought experiment — beings physically identical to humans but with no inner experience — shows that physical description alone does not generate phenomenology. His more recent 'Reality+' argues that virtual experiences are fully real experiences, dissolving the boundary between physical and digital worlds.",
+  "whyMatters": "Chalmers identifies the third body that two-body materialism cannot explain: the subjective experience that coordinates between physical process and phenomenal reality. His hard problem is precisely a coordination problem — how does the physical layer produce the experience layer? Without an answer, AI systems that are functionally intelligent but phenomenally empty are not minds — they are very sophisticated two-body input-output systems. Coordination intelligence requires the experiential layer to be real."
+}

@@ -1,0 +1,34 @@
+{
+  "id": "11",
+  "name": "Claude Shannon",
+  "alias": "The Information Theorist",
+  "chapter": 2,
+  "tier": "A",
+  "status": "passed",
+  "tag": "legacy",
+  "flag": "new",
+  "affiliation": "Bell Labs · MIT",
+  "active": "1916 – 2001",
+  "jurisdiction": "Information Theory / Coordination Physics",
+  "role": "Information Theory",
+  "awards": [
+    "IEEE Medal of Honor",
+    "National Medal of Science",
+    "Kyoto Prize"
+  ],
+  "works": [
+    "A Mathematical Theory of Communication",
+    "Communication Theory of Secrecy Systems",
+    "Programming a Computer for Playing Chess"
+  ],
+  "knownFor": [
+    "Information theory",
+    "Shannon limit",
+    "Entropy",
+    "Error-correcting codes",
+    "Redundancy as coordination"
+  ],
+  "coldOpen": "A bit is not a zero or a one. A bit is the resolution of one unit of uncertainty between them. Information is not a thing. It is a relationship.",
+  "bio": "Proved that communication is a three-body problem: sender, receiver, and the channel between them. The channel capacity formula is not just engineering — it is the physics of coordination. Showed that redundancy is not waste but structured coordination with uncertainty.",
+  "whyMatters": "Shannon discovered the physics of coordination before the term existed. Every coordinating system — neural, organizational, technological — has Shannon limits. His insight that noise is a participant, not an enemy, is foundational to understanding how systems coordinate."
+}

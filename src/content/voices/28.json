@@ -1,0 +1,32 @@
+{
+  "id": "28",
+  "name": "Carlo Ratti",
+  "alias": "The Sensible City",
+  "chapter": 4,
+  "tier": "A",
+  "status": "alive",
+  "flag": "old",
+  "affiliation": "MIT Senseable City Lab",
+  "active": "1971 – present",
+  "jurisdiction": "Urban Intelligence / Real-Time Data Cities / Architecture",
+  "role": "MIT Senseable City Lab",
+  "awards": [
+    "Esquire Best and Brightest",
+    "Blueprint Magazine Top 25 Most Influential in Architecture"
+  ],
+  "works": [
+    "The City of Tomorrow (2016)",
+    "Copenhagen Wheel (2009)",
+    "Atlas of the Senseable City (2023)"
+  ],
+  "knownFor": [
+    "Senseable City Lab",
+    "Copenhagen Wheel e-bike",
+    "Real-time urban data skins",
+    "Digital urban infrastructure",
+    "Human mobility analytics"
+  ],
+  "coldOpen": "The city has always been a coordination machine. Streets coordinate movement. Markets coordinate exchange. What changes with sensors and data is that the city can now feel its own coordination in real time — and begin to respond. The city becomes nervous. The city becomes intelligent.",
+  "bio": "Architect and engineer who directs MIT's Senseable City Lab, studying how digital technologies transform urban environments. His Copenhagen Wheel makes a bicycle intelligent by coordinating rider effort with terrain and traffic. His broader work instruments cities to make visible the coordination flows — traffic, energy, social interaction — that constitute urban intelligence.",
+  "whyMatters": "Ratti demonstrates coordination intelligence at urban scale. His senseable city is a three-body system: physical infrastructure, real-time data layer, and the human behavior that responds to and reshapes both. He proves that intelligence in cities emerges not from smart components but from the coordination between them."
+}

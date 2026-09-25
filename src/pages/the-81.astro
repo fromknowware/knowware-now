@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import Ladder from '../components/Ladder.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+const chapters = await getCollection('chapters');
+const voices = await getCollection('voices');
+
+const sortedChapters = chapters.sort((a, b) => a.data.n - b.data.n);
+
+const chapterData = sortedChapters.map((ch) => ({
+  n: ch.data.n,
+  title: ch.data.title,
+  voices: voices
+    .filter((v) => v.data.chapter === ch.data.n)
+    .sort((a, b) => Number(a.data.id) - Number(b.data.id))
+    .map((v) => v.data),
+}));
+---
+<Base title="The 81" description="The 81 voices of Knowware — academics, practitioners, and visionaries.">
+  <section class="kw-section">
+    <p class="kw-label">The Manifest</p>
+    <h1 class="kw-h2">Eighty-one voices.</h1>
+    <p class="kw-body">
+      Three tiers — Academic, Practitioner, Visionary. Nine per chapter.
+      Dead and living. Named and anonymised. All placed where their thinking
+      bears most directly on coordination intelligence.
+    </p>
+
+    <div class="tier-legend">
+      <span class="kw-tier kw-tier--A">Academic</span>
+      <span class="mono tier-desc">The theorists — people who named the structures</span>
+      <span class="kw-tier kw-tier--P">Practitioner</span>
+      <span class="mono tier-desc">The builders — people who ran the systems</span>
+      <span class="kw-tier kw-tier--V">Visionary</span>
+      <span class="mono tier-desc">The seers — people who saw what was coming</span>
+    </div>
+  </section>
+
+  <Ladder chapters={chapterData} />
+</Base>
+
+<style>
+.tier-legend {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 16px;
+  align-items: center;
+  margin-top: 32px;
+  max-width: 480px;
+}
+.tier-desc { font-size: 12px; color: var(--sub); }
+</style>
