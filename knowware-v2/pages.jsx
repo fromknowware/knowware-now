@@ -201,82 +201,36 @@ function Cover({ setPage }) {
         <span style={{ textAlign: 'right' }}>{clock}</span>
       </div>
 
-      {/* Hero — left wordmark, right huge numeral "81" */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: mob ? '1fr' : '6fr 6fr',
-        alignItems: 'stretch',
-        borderBottom: '1px solid var(--ink)',
-        minHeight: mob ? 'auto' : '64vh',
-      }}>
-        <div style={{ padding: '48px 24px 32px',
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <p style={{
-            margin: 0,
-            fontSize: mob ? 15 : 17, lineHeight: 1.25,
-            letterSpacing: '-0.02em', fontStyle: 'italic',
-            color: 'var(--sub)',
-          }}>
-            You already know this.<br />You just haven't had a name for it.
+      {/* Cover hero — the bar field IS the cover */}
+      <div className="kw-hero-cover" data-dock-show="">
+        <div className="kw-field" style={{'--field-h': mob ? '200px' : '360px', '--sig-top': '41%'}}>
+          <div className="kw-field-sig" />
+        </div>
+        <h1 className="kw-hero-word">KNOWWARE</h1>
+        <div className="kw-hero-foot">
+          <p className="kw-hero-tag">
+            Systems of Intelligence<br />
+            <span style={{ color: 'var(--sub2)', fontSize: '0.85em' }}>Khayyam Wakil · MMXXVI · Ed. 01</span>
           </p>
-          <div className="mono" style={{ fontSize: 11, color: 'var(--sub)' }}>
-            KNOWWARE / SYSTEMS OF INTELLIGENCE
-          </div>
-          <h1 style={{
-            margin: 0,
-            fontSize: mob ? 'clamp(56px, 15vw, 100px)' : 'clamp(72px, 13vw, 220px)',
-            lineHeight: 0.82, letterSpacing: '-0.05em', fontWeight: 500,
-          }}>
-            Systems<br/>
-            <span style={{ fontWeight: 400 }}>of</span>&nbsp;Intelligence.
-          </h1>
-          <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
-            display: 'flex', justifyContent: 'space-between' }}>
-            <span>BY &nbsp;/&nbsp; KHAYYAM</span>
-            <span>MMXXVI · ED. 01</span>
-          </div>
-        </div>
-        <div style={{
-          borderLeft: mob ? 'none' : '1px solid var(--ink)',
-          borderTop: mob ? '1px solid var(--ink)' : 'none',
-          background: 'var(--paper)',
-          padding: '24px',
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-          position: 'relative', overflow: 'hidden',
-          containerType: 'inline-size',
-        }}>
-          <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
-            display: 'flex', justifyContent: 'space-between' }}>
-            <span>FIG. 01</span><span>SYNTHESES</span>
-          </div>
-          <div style={{
-            fontSize: 'min(92cqw, 460px)',
-            fontWeight: 500, letterSpacing: '-0.08em', lineHeight: 0.82,
-            textAlign: 'center', color: 'var(--ink)',
-            maxWidth: '100%', overflow: 'hidden',
-          }}>
-            81
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div className="mono" style={{ fontSize: 11, color: 'var(--ink)',
-              borderTop: '1px solid var(--rule)', paddingTop: 8,
-              letterSpacing: '-0.005em', lineHeight: 1.45 }}>
-              Not interviews — the Third Body in action.{' '}
-              <a href="#method" style={{ color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>
-                What does that mean? →
-              </a>
+          {!mob && (
+            <div className="kw-hero-cta">
+              <Btn filled href={(window.KW && window.KW.STRIPE) || '/order.html'}>Pre-order · $33 →</Btn>
+              <Btn href="#read">Read free →</Btn>
             </div>
-            <div className="mono" style={{ fontSize: 11, color: 'var(--sub)',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>ACROSS 3 TIERS · 9 CHAPTERS</span>
-              <button onClick={() => setPage('table')} style={{
-                background: 'var(--ink)', color: 'var(--paper)',
-                border: 'none', padding: '6px 10px', fontFamily: 'inherit',
-                fontSize: 11, cursor: 'pointer',
-              }}>See all →</button>
-            </div>
-          </div>
+          )}
         </div>
+      </div>
+      {/* Synthesis disclosure band */}
+      <div className="mono" style={{
+        borderBottom: '1px solid var(--rule)',
+        padding: mob ? '10px 16px' : '10px 24px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        gap: 16, flexWrap: 'wrap', fontSize: 11,
+      }}>
+        <span style={{ color: 'var(--ink)' }}>Not interviews — the Third Body in action.</span>
+        <a href="#method" style={{ color: 'var(--accent)', borderBottom: '1px solid var(--accent)', flexShrink: 0 }}>
+          What does that mean? →
+        </a>
       </div>
 
       {/* Domains marquee */}
