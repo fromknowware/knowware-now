@@ -22,6 +22,19 @@ const {
 
 const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — ${SITE_TAGLINE}`;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
+
+const path = Astro.url.pathname;
+function isActive(href: string) {
+  if (href === '/') return path === '/';
+  return path === href || path.startsWith(href + '/');
+}
+
+const NAV = [
+  { href: '/',           num: '01', label: 'Index'      },
+  { href: '/the-81',     num: '02', label: 'The 81'     },
+  { href: '/read',       num: '03', label: 'Manuscript' },
+  { href: '/contribute', num: '04', label: 'Contribute' },
+];
 ---
 <!doctype html>
 <html lang="en">
@@ -97,16 +110,18 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString
 </div>
 
 <!-- Nav -->
-<nav class="kw-nav" aria-label="Site">
+<nav class="kw-nav-shell" aria-label="Site">
   <a href="/" class="kw-nav-logo">
     <span class="kw-dot"></span>
     Knowware
   </a>
-  <div class="kw-nav-links">
-    <a href="/read">Read</a>
-    <a href="/the-81">The 81</a>
-    <a href="/order">Order</a>
-    <a href="/contribute">Contribute</a>
+  <div class="kw-nav-tabs">
+    {NAV.map(({ href, num, label }) => (
+      <a href={href} class={`kw-nav-tab${isActive(href) ? ' is-active' : ''}`}>
+        <span class="kw-nav-tab-num">{num}</span>
+        <span class="kw-nav-tab-label">{label}</span>
+      </a>
+    ))}
   </div>
 </nav>
 
@@ -114,12 +129,24 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString
 <slot />
 
 <!-- Footer -->
-<footer class="kw-footer">
-  <div class="kw-footer-word">Knowware</div>
-  <div class="kw-footer-meta">
-    <a href="/colophon">Colophon</a> · <a href="/rules">Rules</a><br />
-    © {new Date().getFullYear()} {PUBLISHER}<br />
-    No tracking. No cookies. No third-party pixels.
+<footer class="kw-foot">
+  <div class="kw-foot-main">
+    <div class="kw-foot-letter-col">
+      <p class="kw-foot-letter">Write us a letter.<br />An email is also a letter.</p>
+      <a href="mailto:hello@knowware.press" class="kw-foot-email">hello@knowware.press</a>
+    </div>
+    <div class="kw-foot-meta-col">
+      KNOWWARE / VOL. I<br />
+      MMXXVI · ED. 01<br />
+      MACHINE-COORDINATED.<br />
+      HUMAN-OPERATED.
+    </div>
+  </div>
+  <div class="kw-foot-colophon">
+    <span>Knowware / Systems of Intelligence</span>
+    <span>MMXXVI · Edition 01</span>
+    <span>~350 pp · 09 ch · 81 voices</span>
+    <span>knowware.press</span>
   </div>
 </footer>
 

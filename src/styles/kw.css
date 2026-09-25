@@ -261,26 +261,48 @@ article[data-kw-read] {
 .kw-tier--V { background: var(--tier-v); color: var(--tier-v-ink); }
 
 /* ============================================================
-   Nav / header
+   Nav / header — numbered tab system
    ============================================================ */
-.kw-nav {
-  display: flex; align-items: center; gap: 24px;
-  padding: 0 clamp(16px,3vw,48px);
-  height: 52px;
+.kw-nav-shell {
+  display: flex; align-items: stretch;
   border-bottom: 1px solid var(--rule);
+  height: 52px; overflow-x: auto;
 }
 .kw-nav-logo {
   font: 700 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
   letter-spacing: -.02em; text-transform: uppercase;
   display: flex; align-items: center; gap: 8px;
+  padding: 0 clamp(12px,2vw,24px);
+  border-right: 1px solid var(--rule);
+  flex-shrink: 0; white-space: nowrap;
+  color: var(--ink);
 }
-.kw-nav-links {
-  display: flex; gap: 20px; margin-left: auto;
-  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
-  letter-spacing: .01em;
+.kw-nav-logo:hover { opacity: 0.75; }
+.kw-nav-tabs { display: flex; margin-left: auto; }
+.kw-nav-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 16px;
+  border-left: 1px solid var(--rule);
+  color: var(--sub); text-decoration: none;
+  transition: background .12s, color .12s;
+  white-space: nowrap; flex-shrink: 0;
 }
-.kw-nav-links a { color: var(--sub); }
-.kw-nav-links a:hover { color: var(--ink); }
+.kw-nav-tab:hover { background: var(--accent-soft); color: var(--ink); }
+.kw-nav-tab.is-active { background: var(--ink); color: var(--paper); }
+.kw-nav-tab-num {
+  font: 500 9px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; color: inherit; opacity: 0.5;
+}
+.kw-nav-tab.is-active .kw-nav-tab-num { opacity: 0.6; }
+.kw-nav-tab-label {
+  font: 400 12px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.01em;
+}
+@media (max-width: 600px) {
+  .kw-nav-tab-label { display: none; }
+  .kw-nav-tab-num { opacity: 1 !important; }
+  .kw-nav-tab { padding: 0 12px; }
+}
 
 /* ============================================================
    Diagram (three-body)
@@ -324,19 +346,405 @@ article[data-kw-read] {
 }
 
 /* ============================================================
-   Footer
+   Footer — "Write us a letter" with 12-col colophon strip
    ============================================================ */
-.kw-footer {
-  padding: clamp(40px,6vw,80px) clamp(16px,3vw,48px);
+.kw-foot {
   border-top: 2px solid var(--ink);
-  display: flex; justify-content: space-between; align-items: flex-end;
-  gap: 24px; flex-wrap: wrap;
+  padding: clamp(40px,5vw,56px) clamp(16px,3vw,48px) clamp(24px,3vw,32px);
 }
-.kw-footer-word {
-  font: 800 clamp(32px,5vw,64px)/0.92 "Helvetica Neue", Helvetica, Arial, sans-serif;
-  letter-spacing: -.035em; text-transform: uppercase; color: var(--ink);
+.kw-foot-main {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+  margin-bottom: 48px;
 }
-.kw-footer-meta {
-  font: 400 11px/1.6 "JetBrains Mono", ui-monospace, monospace;
-  color: var(--sub); text-align: right;
+.kw-foot-letter-col { grid-column: 1 / span 9; }
+.kw-foot-meta-col {
+  grid-column: 10 / span 3;
+  font: 400 11px/1.7 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); text-transform: uppercase; letter-spacing: .04em;
+  align-self: end;
+}
+.kw-foot-letter {
+  font: 500 clamp(24px,3vw,48px)/1.1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.03em; margin: 0 0 16px; color: var(--ink);
+}
+.kw-foot-email {
+  font: 400 13px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--signal); border-bottom: 1px solid var(--signal);
+}
+.kw-foot-email:hover { opacity: 0.75; }
+.kw-foot-colophon {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub2);
+}
+.kw-foot-colophon span { grid-column: span 3; }
+@media (max-width: 680px) {
+  .kw-foot-main { grid-template-columns: 1fr; }
+  .kw-foot-letter-col { grid-column: 1; }
+  .kw-foot-meta-col { display: none; }
+  .kw-foot-colophon { grid-template-columns: 1fr 1fr; }
+  .kw-foot-colophon span { grid-column: span 1; }
+}
+
+/* ============================================================
+   Marquee animation
+   ============================================================ */
+@keyframes kw-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-33.33%); }
+}
+
+/* ============================================================
+   12-column Swiss grid
+   ============================================================ */
+.kw-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+  padding: 0 clamp(16px, 3vw, 48px);
+}
+
+/* ============================================================
+   Masthead strip — 6-col ledger above the hero
+   ============================================================ */
+.kw-masthead {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+}
+.kw-masthead-cell {
+  padding: 10px 16px;
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column; gap: 4px;
+  min-width: 90px;
+}
+.kw-masthead-cell:last-child { border-right: none; }
+.kw-masthead-lbl {
+  font: 500 9px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--sub2);
+}
+.kw-masthead-val {
+  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--ink);
+}
+
+/* ============================================================
+   Domains marquee strip
+   ============================================================ */
+.kw-marquee-wrap {
+  border-bottom: 1px solid var(--rule);
+  overflow: hidden; white-space: nowrap;
+}
+.kw-marquee-track {
+  display: inline-flex;
+  animation: kw-marquee 38s linear infinite;
+}
+.kw-marquee-item {
+  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .02em;
+  display: inline-flex; align-items: center;
+  gap: 10px; padding: 11px 22px;
+  border-right: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.kw-marquee-swatch {
+  width: 10px; height: 10px; flex-shrink: 0; display: inline-block;
+}
+.kw-marquee-code { color: var(--sub2); font-size: 10px; }
+
+/* ============================================================
+   Grid label (section prefix)
+   ============================================================ */
+.kw-grid-label {
+  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--sub);
+  align-self: start; padding-top: 2px;
+}
+
+/* ============================================================
+   Abstract text (26px in grid col 4-9)
+   ============================================================ */
+.kw-abstract-text {
+  font: 400 clamp(18px, 2vw, 26px)/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.018em; margin: 0; color: var(--ink);
+}
+
+/* ============================================================
+   Spine bar chart
+   ============================================================ */
+.kw-spine-bars {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 2px; align-items: end;
+  height: 260px;
+  border: 1px solid var(--rule);
+  padding: 12px;
+  background: var(--paper);
+}
+.kw-spine-bar {
+  background: var(--ink);
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 8px; color: var(--paper);
+  transition: background .15s;
+  text-decoration: none; overflow: hidden;
+}
+.kw-spine-bar:hover { background: var(--accent); }
+.kw-spine-ch {
+  font: 400 10px/1 "JetBrains Mono", ui-monospace, monospace; color: inherit;
+}
+.kw-spine-title {
+  font-size: 11px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: -.005em;
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; max-height: 100%;
+  color: inherit;
+}
+.kw-spine-caption {
+  display: flex; justify-content: space-between;
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); margin-top: 8px;
+}
+
+/* ============================================================
+   Thesis full-bleed band
+   ============================================================ */
+.kw-thesis {
+  background: var(--ink); color: var(--paper);
+  padding: clamp(40px, 5vw, 64px) clamp(16px, 3vw, 48px);
+  margin-top: 64px;
+}
+.kw-thesis-inner {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+}
+.kw-thesis-label {
+  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); grid-column: 1 / span 3;
+  align-self: start; padding-top: 4px;
+}
+.kw-thesis-text {
+  grid-column: 4 / span 9;
+  font: 400 clamp(22px, 2.8vw, 40px)/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.02em; margin: 0;
+}
+.kw-thesis-accent {
+  color: var(--accent); border-bottom: 2px solid var(--accent);
+}
+@media (max-width: 680px) {
+  .kw-thesis-inner { grid-template-columns: 1fr; }
+  .kw-thesis-label { grid-column: 1; margin-bottom: 16px; }
+  .kw-thesis-text { grid-column: 1; }
+}
+
+/* ============================================================
+   Structure stats — 6-col stat bar
+   ============================================================ */
+.kw-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.kw-stat-cell {
+  padding: 24px 14px 18px;
+  display: flex; flex-direction: column; gap: 10px;
+  min-width: 0; overflow: hidden;
+  border-right: 1px solid var(--rule);
+}
+.kw-stat-cell:last-child { border-right: none; }
+.kw-stat-n {
+  font: 500 clamp(36px, 4.4vw, 64px)/0.9 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.045em;
+}
+.kw-stat-l {
+  font: 400 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); text-transform: uppercase; letter-spacing: .05em;
+}
+@media (max-width: 680px) {
+  .kw-stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .kw-stat-cell:nth-child(3) { border-right: none; }
+  .kw-stat-cell:nth-child(4) { border-top: 1px solid var(--rule); }
+  .kw-stat-cell:nth-child(6) { border-right: none; }
+}
+
+/* ============================================================
+   Early readers — staggered pull quotes
+   ============================================================ */
+.kw-quotes-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px; row-gap: 40px;
+}
+.kw-quote {
+  margin: 0; border-top: 1px solid var(--ink); padding-top: 14px;
+}
+.kw-quote-text {
+  font: 400 clamp(18px, 2vw, 22px)/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.018em; margin: 0; color: var(--ink);
+}
+.kw-quote-attr {
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); margin-top: 12px;
+}
+@media (max-width: 680px) {
+  .kw-quotes-grid { grid-template-columns: 1fr; }
+  .kw-quote { grid-column: 1 !important; }
+}
+
+/* ============================================================
+   Grid section wrapper (label col 1-3 + content col 4-12)
+   ============================================================ */
+.kw-grid-section {
+  padding: clamp(40px, 5vw, 64px) 0;
+  border-bottom: 1px solid var(--rule);
+}
+@media (max-width: 680px) {
+  .kw-grid .kw-grid-label { grid-column: 1 / -1; margin-bottom: 8px; }
+}
+
+/* ============================================================
+   CastView — voice rows
+   ============================================================ */
+.cast-view { border-top: 1px solid var(--rule); }
+
+.cast-chapter { }
+
+.cast-ch-head {
+  display: flex; gap: 12px; align-items: center;
+  padding: 10px 48px 10px 16px;
+  background: var(--ink); color: var(--paper);
+  position: sticky; top: 52px; z-index: 10;
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .04em;
+}
+.cast-ch-num {
+  color: var(--signal); letter-spacing: .08em; flex-shrink: 0;
+}
+.cast-ch-title { flex: 1; }
+.cast-ch-count {
+  color: rgba(237,238,228,0.4); flex-shrink: 0; font-size: 10px;
+}
+
+.cast-row {
+  display: grid;
+  grid-template-columns: 8px 20px calc(50% - 28px) 1fr auto;
+  align-items: center;
+  border-bottom: 1px solid var(--rule);
+  min-height: 44px;
+  transition: background .1s;
+}
+.cast-row:hover { background: var(--accent-soft); }
+
+.cast-sliver { align-self: stretch; min-height: 44px; }
+
+.cast-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  justify-self: center; align-self: center;
+  flex-shrink: 0;
+}
+
+.cast-name-col {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px 10px 8px;
+  overflow: hidden; min-width: 0;
+}
+
+.cast-num {
+  font: 400 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub2); flex-shrink: 0;
+}
+.cast-name {
+  font: 500 13px/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.01em; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cast-badge {
+  display: inline-block; padding: 2px 5px;
+  font: 600 9px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em; text-transform: uppercase;
+  background: var(--sub2); color: var(--paper);
+  border-radius: 2px; flex-shrink: 0;
+}
+.cast-badge--origin { background: var(--accent); }
+
+.cast-role {
+  font: 400 11px/1.3 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); padding: 0 12px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cast-tier-lbl {
+  font: 400 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub2); padding: 0 16px;
+  letter-spacing: .04em; flex-shrink: 0;
+}
+
+@media (max-width: 680px) {
+  .cast-ch-head { padding: 10px 16px; top: 52px; }
+  .cast-row { grid-template-columns: 8px 20px 1fr auto; }
+  .cast-role { display: none; }
+  .cast-tier-lbl { padding: 0 8px; }
+}
+
+/* ============================================================
+   CastView dark header
+   ============================================================ */
+.cast-header {
+  background: var(--ink); color: var(--paper);
+  padding: 32px clamp(16px,3vw,48px);
+}
+.cast-header-title {
+  font: 700 clamp(24px,3vw,40px)/1.05 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.025em; margin: 0 0 8px;
+}
+.cast-header-sub {
+  font: 400 14px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: rgba(237,238,228,0.6); margin: 0 0 28px; max-width: 560px;
+}
+.cast-stats-row {
+  display: flex; flex-wrap: wrap; gap: 24px;
+  border-top: 1px solid rgba(237,238,228,0.15);
+  padding-top: 20px; margin-top: 4px;
+}
+.cast-stat {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.cast-stat-n {
+  font: 500 28px/0.9 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.03em;
+}
+.cast-stat-l {
+  font: 400 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: rgba(237,238,228,0.5);
+}
+
+/* ============================================================
+   CastView legend
+   ============================================================ */
+.cast-legend {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 16px 28px;
+  padding: 14px clamp(16px,3vw,48px);
+  border-bottom: 1px solid var(--rule);
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub);
+}
+.cast-legend-item {
+  display: flex; align-items: center; gap: 7px;
+}
+.cast-legend-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0; display: inline-block;
 }
