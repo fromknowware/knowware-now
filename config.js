@@ -4,5 +4,5 @@ window.KW = {
   PRICE_SAVED: 11.95,
   DEADLINE: new Date('2026-12-21T00:00:00Z'),
   DEADLINE_LABEL: 'SOLSTICE',
-  STRIPE: '#order',
+  STRIPE: '/order.html',
 };
