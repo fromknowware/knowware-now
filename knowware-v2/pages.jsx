@@ -57,13 +57,42 @@ function Shell({ page, setPage, children }) {
 
 function Foot() {
   return (
-    <footer style={{ borderTop: '1px solid var(--rule)', padding: '20px 32px',
-      display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 16,
-      fontSize: 12, color: 'var(--sub)' }}>
-      <div style={{ gridColumn: '1 / span 3' }} className="mono">Knowware / Systems of Intelligence</div>
-      <div style={{ gridColumn: '4 / span 3' }} className="mono">MMXXVI · Edition 01</div>
-      <div style={{ gridColumn: '7 / span 3' }} className="mono">~350 pp · 09 ch · 81 voices</div>
-      <div style={{ gridColumn: '10 / span 3', textAlign: 'right' }} className="mono">knowware.press</div>
+    <footer>
+      {/* Letter unit */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'end',
+        gap: 24, padding: '48px 32px 40px',
+        borderTop: '2px solid var(--ink)',
+      }}>
+        <div>
+          <div style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 500,
+            letterSpacing: '-0.04em', lineHeight: 1.05 }}>
+            Write us a letter.<br />
+            <span style={{ color: 'var(--sub)' }}>An email is also a letter.</span>
+          </div>
+          <a href="mailto:hello@knowware.press" className="mono" style={{
+            display: 'inline-block', marginTop: 18, fontSize: 12,
+            color: 'var(--accent)', borderBottom: '1px solid var(--accent)',
+            letterSpacing: '-0.005em',
+          }}>hello@knowware.press</a>
+        </div>
+        <div className="mono" style={{ fontSize: 10, color: 'var(--sub2)',
+          textAlign: 'right', lineHeight: 1.9, letterSpacing: '-0.005em' }}>
+          <div>KNOWWARE / VOL. I</div>
+          <div>MMXXVI · ED. 01</div>
+          <div>MACHINE-COORDINATED.</div>
+          <div>HUMAN-OPERATED.</div>
+        </div>
+      </div>
+      {/* Colophon line */}
+      <div style={{ borderTop: '1px solid var(--rule)', padding: '12px 32px',
+        display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 16,
+        fontSize: 11, color: 'var(--sub)' }} className="mono">
+        <div style={{ gridColumn: '1 / span 3' }}>Knowware / Systems of Intelligence</div>
+        <div style={{ gridColumn: '4 / span 3' }}>MMXXVI · Edition 01</div>
+        <div style={{ gridColumn: '7 / span 3' }}>~350 pp · 09 ch · 81 voices</div>
+        <div style={{ gridColumn: '10 / span 3', textAlign: 'right' }}>knowware.press</div>
+      </div>
     </footer>
   );
 }
