@@ -162,58 +162,60 @@ function getSym(name: string): string {
 
   <!-- ── ELEMENTS view ──────────────────────────────────────── -->
   <div class="elements-view" id="view-elements" hidden>
+    <div class="elements-scroll">
 
-    <!-- Chapter column headers -->
-    <div class="elements-ch-headers">
-      {sortedChapters.map(ch => (
-        <div class="elements-ch-hd mono">
-          <span class="elements-ch-num">ch{String(ch.data.n).padStart(2,'0')}</span>
-          <span class="elements-ch-title">{ch.data.title}</span>
-        </div>
-      ))}
+      <!-- Chapter column headers -->
+      <div class="elements-ch-headers">
+        {sortedChapters.map(ch => (
+          <div class="elements-ch-hd mono" title={ch.data.title}>
+            <span class="elements-ch-num">CH·{String(ch.data.n).padStart(2,'0')}</span>
+            <span class="elements-ch-title">{ch.data.title}</span>
+          </div>
+        ))}
+      </div>
+
+      <!-- 9×9 grid: columns = chapters, rows = voice within chapter -->
+      <div class="elements-grid">
+        {chapterData.map((ch) => (
+          <div class="elements-col">
+            {ch.voices.map((v) => {
+              const sym = getSym(v.name);
+              const bg  = TIER_COLOR[v.tier]  ?? 'var(--accent-soft)';
+              const ink = TIER_INK[v.tier]    ?? 'var(--ink)';
+              return (
+                <a
+                  class="el-cell"
+                  href={`/voices/${v.id}`}
+                  style={`background:${bg};border-color:${ink}`}
+                  title={v.name}
+                >
+                  <span class="el-top-row mono" style={`color:${ink}`}>
+                    <span>{String(v.id).padStart(2,'0')}</span>
+                    <span>{v.tier}</span>
+                  </span>
+                  <span class="el-sym" style={`color:rgba(0,0,0,0.16);`}>{sym}</span>
+                  <span class="el-bottom mono" style={`color:${ink}`}>{v.role?.split(',')[0] ?? '—'}</span>
+                </a>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <!-- Tier legend below elements grid -->
+      <div class="elements-legend">
+        <span class="elements-legend-item" style="background:var(--tier-a);border:1px solid var(--tier-a-ink)">
+          <span class="mono" style="color:var(--tier-a-ink);font-size:11px">A · Academic</span>
+        </span>
+        <span class="elements-legend-item" style="background:var(--tier-p);border:1px solid var(--tier-p-ink)">
+          <span class="mono" style="color:var(--tier-p-ink);font-size:11px">P · Practitioner</span>
+        </span>
+        <span class="elements-legend-item" style="background:var(--tier-v);border:1px solid var(--tier-v-ink)">
+          <span class="mono" style="color:var(--tier-v-ink);font-size:11px">V · Visionary</span>
+        </span>
+      </div>
+
     </div>
-
-    <!-- 9×9 grid: columns = chapters, rows = voice within chapter -->
-    <div class="elements-grid">
-      {chapterData.map((ch) => (
-        <div class="elements-col">
-          {ch.voices.map((v, rowIdx) => {
-            const sym = getSym(v.name);
-            const bg  = TIER_COLOR[v.tier]  ?? 'var(--accent-soft)';
-            const ink = TIER_INK[v.tier]    ?? 'var(--ink)';
-            return (
-              <a
-                class="el-cell"
-                href={`/voices/${v.id}`}
-                style={`background:${bg};border-color:${ink}`}
-                title={v.name}
-              >
-                <span class="el-top-row mono" style={`color:${ink}`}>
-                  <span>{String(v.id).padStart(2,'0')}</span>
-                  <span>{v.tier}</span>
-                </span>
-                <span class="el-sym" style="color:rgba(0,0,0,0.18)">{sym}</span>
-                <span class="el-bottom mono" style={`color:${ink}`}>{v.role?.split(',')[0] ?? '—'}</span>
-              </a>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-
-    <!-- Tier legend below elements grid -->
-    <div class="elements-legend">
-      <span class="elements-legend-item" style="background:var(--tier-a);border:1px solid var(--tier-a-ink)">
-        <span class="mono" style="color:var(--tier-a-ink);font-size:10px">A · Academic</span>
-      </span>
-      <span class="elements-legend-item" style="background:var(--tier-p);border:1px solid var(--tier-p-ink)">
-        <span class="mono" style="color:var(--tier-p-ink);font-size:10px">P · Practitioner</span>
-      </span>
-      <span class="elements-legend-item" style="background:var(--tier-v);border:1px solid var(--tier-v-ink)">
-        <span class="mono" style="color:var(--tier-v-ink);font-size:10px">V · Visionary</span>
-      </span>
-    </div>
-
   </div>
 
   <!-- ── GRAPH view ──────────────────────────────────────── -->
@@ -282,74 +284,78 @@ function getSym(name: string): string {
 }
 
 /* ── Elements grid ────────────────────────────── */
-.elements-view { padding: 24px; }
+.elements-view { padding: 20px 24px 32px; }
+.elements-scroll { overflow-x: auto; }
 
-.elements-ch-headers {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 3px; margin-bottom: 6px;
-}
-.elements-ch-hd {
-  display: flex; flex-direction: column; gap: 2px;
-  padding: 4px 6px;
-  border-bottom: 1px solid var(--rule);
-}
-.elements-ch-num { font-size: 9px; color: var(--signal); letter-spacing: 0.05em; }
-.elements-ch-title {
-  font-size: 8px; color: var(--sub);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-
+/* Fixed 130px column width — scroll rather than compress */
+.elements-ch-headers,
 .elements-grid {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 3px;
+  grid-template-columns: repeat(9, 130px);
+  gap: 4px;
+  min-width: calc(9 * 130px + 8 * 4px);
 }
-.elements-col { display: flex; flex-direction: column; gap: 3px; }
+
+.elements-ch-headers { margin-bottom: 6px; }
+
+.elements-ch-hd {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--rule);
+  min-width: 0;
+}
+.elements-ch-num {
+  font-size: 10px; color: var(--signal); letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.elements-ch-title {
+  font-size: 10px; color: var(--sub); line-height: 1.3;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  min-width: 0;
+}
+
+.elements-col { display: flex; flex-direction: column; gap: 4px; }
 
 .el-cell {
   display: flex; flex-direction: column; justify-content: space-between;
-  padding: 5px 6px;
+  padding: 8px 9px 7px;
   border: 1px solid;
   text-decoration: none;
-  height: 80px;
+  height: 108px;
   position: relative;
-  transition: transform .1s, z-index .1s;
+  transition: transform .12s, box-shadow .12s;
+  min-width: 0;
 }
 .el-cell:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
   z-index: 2;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.22);
 }
 .el-top-row {
   display: flex; justify-content: space-between;
-  font-size: 8px; letter-spacing: -0.01em; opacity: 0.8;
+  font-size: 10px; letter-spacing: 0.01em; opacity: 0.85;
 }
 .el-sym {
-  font-size: 22px; font-weight: 500;
+  font-size: 32px; font-weight: 500;
   letter-spacing: -0.03em; line-height: 1;
   align-self: center; text-align: center;
 }
 .el-bottom {
-  font-size: 7px; letter-spacing: -0.005em; opacity: 0.75;
+  font-size: 9px; letter-spacing: -0.005em; opacity: 0.8;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  text-align: center;
+  text-align: center; line-height: 1.2;
 }
 
 .elements-legend {
-  display: flex; gap: 8px; margin-top: 16px;
+  display: flex; gap: 8px; margin-top: 20px;
 }
 .elements-legend-item {
-  padding: 5px 10px;
+  padding: 6px 12px;
 }
 
-/* Mobile: elements view scrolls horizontally */
 @media (max-width: 900px) {
-  .elements-view { padding: 16px; overflow-x: auto; }
-  .elements-ch-headers,
-  .elements-grid { min-width: 540px; }
-  .el-cell { height: 60px; }
-  .el-sym { font-size: 16px; }
+  .elements-view { padding: 16px 16px 24px; }
 }
 
 /* ── Graph view ───────────────────────────────────────── */
