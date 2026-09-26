@@ -6,6 +6,7 @@ const chapters = await getCollection('chapters');
 const voices   = await getCollection('voices');
 
 const sortedChapters = chapters.sort((a, b) => a.data.n - b.data.n);
+const sortedVoices   = voices.sort((a, b) => Number(a.data.id) - Number(b.data.id));
 
 // Aggregate stats
 const total      = voices.length;
@@ -34,11 +35,25 @@ const TIER_LBL: Record<string, string> = {
   P: 'PRAC.',
   V: 'VIS.',
 };
+const TIER_INK: Record<string, string> = {
+  A: 'var(--tier-a-ink)',
+  P: 'var(--tier-p-ink)',
+  V: 'var(--tier-v-ink)',
+};
 const STATUS_COLOR: Record<string, string> = {
   alive:  '#1D9E75',
   passed: 'var(--sub2)',
   anon:   'oklch(0.60 0.15 270)',
 };
+
+const HONORIFICS = /^(dr|prof|mr|mrs|ms|sir|lady|lord)\.?\s+/i;
+function getSym(name: string): string {
+  if (!name || name.startsWith('Former') || name.startsWith('Anonymous')) return '—';
+  const clean = name.replace(HONORIFICS, '').trim();
+  const parts  = clean.split(/\s+/);
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 ---
 <Base
   title="The 81"
@@ -81,7 +96,7 @@ const STATUS_COLOR: Record<string, string> = {
     </div>
   </div>
 
-  <!-- Legend -->
+  <!-- Legend + view toggle -->
   <div class="cast-legend">
     <span class="cast-legend-item">
       <span class="cast-legend-dot" style="background:#1D9E75"></span> With us
@@ -109,10 +124,16 @@ const STATUS_COLOR: Record<string, string> = {
     <span class="cast-legend-item">
       <span class="cast-badge cast-badge--origin">ORIGIN</span> named the field
     </span>
+
+    <!-- View toggle (right-aligned) -->
+    <span class="cast-view-toggle" style="margin-left:auto">
+      <button class="cast-vtab is-active" id="btn-cast" data-view="cast">CAST</button>
+      <button class="cast-vtab" id="btn-elements" data-view="elements">ELEMENTS</button>
+    </span>
   </div>
 
-  <!-- Cast view -->
-  <div class="cast-view">
+  <!-- ── CAST view ───────────────────────────────────────────── -->
+  <div class="cast-view" id="view-cast">
     {chapterData.map((ch) => (
       <div class="cast-chapter">
         <div class="cast-ch-head mono">
@@ -121,7 +142,7 @@ const STATUS_COLOR: Record<string, string> = {
           <span class="cast-ch-count">{ch.voices.length} voices</span>
         </div>
         {ch.voices.map((v) => (
-          <div class="cast-row">
+          <a class="cast-row" href={`/voices/${v.id}`}>
             <span class="cast-sliver" style={`background:${TIER_COLOR[v.tier] ?? 'var(--sub2)'}`}></span>
             <span class="cast-dot" style={`background:${STATUS_COLOR[v.status] ?? 'var(--sub2)'}`}></span>
             <div class="cast-name-col">
@@ -132,10 +153,178 @@ const STATUS_COLOR: Record<string, string> = {
             </div>
             <span class="cast-role">{v.role ?? v.affiliation}</span>
             <span class="cast-tier-lbl">{TIER_LBL[v.tier]}</span>
-          </div>
+          </a>
         ))}
       </div>
     ))}
   </div>
 
+  <!-- ── ELEMENTS view ──────────────────────────────────────── -->
+  <div class="elements-view" id="view-elements" hidden>
+
+    <!-- Chapter column headers -->
+    <div class="elements-ch-headers">
+      {sortedChapters.map(ch => (
+        <div class="elements-ch-hd mono">
+          <span class="elements-ch-num">ch{String(ch.data.n).padStart(2,'0')}</span>
+          <span class="elements-ch-title">{ch.data.title}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- 9×9 grid: columns = chapters, rows = voice within chapter -->
+    <div class="elements-grid">
+      {chapterData.map((ch) => (
+        <div class="elements-col">
+          {ch.voices.map((v, rowIdx) => {
+            const sym = getSym(v.name);
+            const bg  = TIER_COLOR[v.tier]  ?? 'var(--accent-soft)';
+            const ink = TIER_INK[v.tier]    ?? 'var(--ink)';
+            return (
+              <a
+                class="el-cell"
+                href={`/voices/${v.id}`}
+                style={`background:${bg};border-color:${ink}`}
+                title={v.name}
+              >
+                <span class="el-top-row mono" style={`color:${ink}`}>
+                  <span>{String(v.id).padStart(2,'0')}</span>
+                  <span>{v.tier}</span>
+                </span>
+                <span class="el-sym" style="color:rgba(0,0,0,0.18)">{sym}</span>
+                <span class="el-bottom mono" style={`color:${ink}`}>{v.role?.split(',')[0] ?? '—'}</span>
+              </a>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+
+    <!-- Tier legend below elements grid -->
+    <div class="elements-legend">
+      <span class="elements-legend-item" style="background:var(--tier-a);border:1px solid var(--tier-a-ink)">
+        <span class="mono" style="color:var(--tier-a-ink);font-size:10px">A · Academic</span>
+      </span>
+      <span class="elements-legend-item" style="background:var(--tier-p);border:1px solid var(--tier-p-ink)">
+        <span class="mono" style="color:var(--tier-p-ink);font-size:10px">P · Practitioner</span>
+      </span>
+      <span class="elements-legend-item" style="background:var(--tier-v);border:1px solid var(--tier-v-ink)">
+        <span class="mono" style="color:var(--tier-v-ink);font-size:10px">V · Visionary</span>
+      </span>
+    </div>
+
+  </div>
+
 </Base>
+
+<style>
+/* ── View toggle ──────────────────────────────── */
+.cast-view-toggle { display: flex; gap: 1px; }
+.cast-vtab {
+  background: none; border: 1px solid var(--rule);
+  padding: 5px 10px; cursor: pointer;
+  font: 500 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: 0.05em; color: var(--sub);
+  transition: background .1s, color .1s;
+}
+.cast-vtab:hover { color: var(--ink); border-color: var(--ink); }
+.cast-vtab.is-active {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+
+/* ── Elements grid ────────────────────────────── */
+.elements-view { padding: 24px; }
+
+.elements-ch-headers {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 3px; margin-bottom: 6px;
+}
+.elements-ch-hd {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.elements-ch-num { font-size: 9px; color: var(--signal); letter-spacing: 0.05em; }
+.elements-ch-title {
+  font-size: 8px; color: var(--sub);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.elements-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 3px;
+}
+.elements-col { display: flex; flex-direction: column; gap: 3px; }
+
+.el-cell {
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 5px 6px;
+  border: 1px solid;
+  text-decoration: none;
+  height: 80px;
+  position: relative;
+  transition: transform .1s, z-index .1s;
+}
+.el-cell:hover {
+  transform: scale(1.05);
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.el-top-row {
+  display: flex; justify-content: space-between;
+  font-size: 8px; letter-spacing: -0.01em; opacity: 0.8;
+}
+.el-sym {
+  font-size: 22px; font-weight: 500;
+  letter-spacing: -0.03em; line-height: 1;
+  align-self: center; text-align: center;
+}
+.el-bottom {
+  font-size: 7px; letter-spacing: -0.005em; opacity: 0.75;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: center;
+}
+
+.elements-legend {
+  display: flex; gap: 8px; margin-top: 16px;
+}
+.elements-legend-item {
+  padding: 5px 10px;
+}
+
+/* Mobile: elements view scrolls horizontally */
+@media (max-width: 900px) {
+  .elements-view { padding: 16px; overflow-x: auto; }
+  .elements-ch-headers,
+  .elements-grid { min-width: 540px; }
+  .el-cell { height: 60px; }
+  .el-sym { font-size: 16px; }
+}
+</style>
+
+<script>
+  const btnCast = document.getElementById('btn-cast');
+  const btnElem = document.getElementById('btn-elements');
+  const viewCast = document.getElementById('view-cast');
+  const viewElem = document.getElementById('view-elements');
+
+  function setView(v: string) {
+    const isCast = v === 'cast';
+    btnCast?.classList.toggle('is-active', isCast);
+    btnElem?.classList.toggle('is-active', !isCast);
+    if (viewCast) viewCast.hidden = !isCast;
+    if (viewElem) viewElem.hidden = isCast;
+    try { sessionStorage.setItem('kw-81-view', v); } catch {}
+  }
+
+  btnCast?.addEventListener('click', () => setView('cast'));
+  btnElem?.addEventListener('click', () => setView('elements'));
+
+  // Restore saved view
+  try {
+    const saved = sessionStorage.getItem('kw-81-view');
+    if (saved === 'elements') setView('elements');
+  } catch {}
+</script>

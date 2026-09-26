@@ -331,7 +331,10 @@ article[data-kw-read] {
   display: grid;
   grid-template-columns: 40px 1fr auto;
   gap: 12px; align-items: start;
+  text-decoration: none; color: inherit; cursor: pointer;
+  transition: background .1s;
 }
+.kw-voice-card:hover { background: var(--accent-soft); margin: 0 -24px; padding-left: 24px; padding-right: 24px; }
 .kw-voice-num {
   font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub2); padding-top: 2px;
@@ -644,6 +647,8 @@ article[data-kw-read] {
   border-bottom: 1px solid var(--rule);
   min-height: 44px;
   transition: background .1s;
+  text-decoration: none; color: inherit;
+  cursor: pointer;
 }
 .cast-row:hover { background: var(--accent-soft); }
 
