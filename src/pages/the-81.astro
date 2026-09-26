@@ -448,7 +448,11 @@ function getSym(name: string): string {
     if (viewCast)  viewCast.hidden  = v !== 'cast';
     if (viewElem)  viewElem.hidden  = v !== 'elements';
     if (viewGraph) viewGraph.hidden = v !== 'graph';
-    if (v === 'graph') initGraph();
+    if (v === 'graph') {
+      initGraph(); // starts loop (or resumes if already inited)
+    } else {
+      graphLoopCtrl?.stop(); // pause sim when leaving graph view
+    }
     try { sessionStorage.setItem('kw-81-view', v); } catch {}
   }
 
@@ -463,11 +467,10 @@ function getSym(name: string): string {
   } catch {}
 
   // ── Graph simulation ────────────────────────────────────
-  let graphInited = false;
+  let graphLoopCtrl: { start: () => void; stop: () => void } | null = null;
 
   function initGraph() {
-    if (graphInited) return;
-    graphInited = true;
+    if (graphLoopCtrl) { graphLoopCtrl.start(); return; }
 
     const dataEl = document.getElementById('graph-data');
     if (!dataEl) return;
@@ -541,13 +544,37 @@ function getSym(name: string): string {
       return [80, 170, 110];
     }
 
-    const tick = () => {
-      requestAnimationFrame(tick);
+    let rafId = 0;
+    let running = false;
+
+    function startLoop() {
+      if (running) return;
+      running = true;
+      step();
+    }
+    function stopLoop() {
+      running = false;
+      cancelAnimationFrame(rafId);
+    }
+
+    // After settling, draw at 20fps instead of 60fps to save CPU
+    let lastDraw = 0;
+
+    const step = () => {
+      if (!running) return;
+      rafId = requestAnimationFrame(step);
       if (!simReady) return;
+
+      const now = performance.now();
+      const settled = frame > 600;
+      // Throttle to ~20fps once settled
+      if (settled && now - lastDraw < 50) return;
+      lastDraw = now;
 
       frame++;
       const t = frame * 0.0028;
       const alpha = frame < 300 ? 0.4 : frame < 600 ? 0.1 : 0.02;
+      const tick = step; // alias for readability below
       const MIN_DIST = R * 2 + 6;
 
       // Repulsion + hard collision
@@ -660,7 +687,8 @@ function getSym(name: string): string {
       });
     };
 
-    requestAnimationFrame(tick);
+    graphLoopCtrl = { start: startLoop, stop: stopLoop };
+    startLoop();
 
     // Hit test
     function hitTest(e: MouseEvent | Touch): number | null {
