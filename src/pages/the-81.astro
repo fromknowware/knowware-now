@@ -129,6 +129,7 @@ function getSym(name: string): string {
     <span class="cast-view-toggle" style="margin-left:auto">
       <button class="cast-vtab is-active" id="btn-cast" data-view="cast">CAST</button>
       <button class="cast-vtab" id="btn-elements" data-view="elements">ELEMENTS</button>
+      <button class="cast-vtab" id="btn-graph" data-view="graph">GRAPH</button>
     </span>
   </div>
 
@@ -161,59 +162,109 @@ function getSym(name: string): string {
 
   <!-- ── ELEMENTS view ──────────────────────────────────────── -->
   <div class="elements-view" id="view-elements" hidden>
+    <div class="elements-scroll">
 
-    <!-- Chapter column headers -->
-    <div class="elements-ch-headers">
-      {sortedChapters.map(ch => (
-        <div class="elements-ch-hd mono">
-          <span class="elements-ch-num">ch{String(ch.data.n).padStart(2,'0')}</span>
-          <span class="elements-ch-title">{ch.data.title}</span>
-        </div>
-      ))}
+      <!-- Chapter column headers -->
+      <div class="elements-ch-headers">
+        {sortedChapters.map(ch => (
+          <div class="elements-ch-hd mono" title={ch.data.title}>
+            <span class="elements-ch-num">CH·{String(ch.data.n).padStart(2,'0')}</span>
+            <span class="elements-ch-title">{ch.data.title}</span>
+          </div>
+        ))}
+      </div>
+
+      <!-- 9×9 grid: columns = chapters, rows = voice within chapter -->
+      <div class="elements-grid">
+        {chapterData.map((ch) => (
+          <div class="elements-col">
+            {ch.voices.map((v) => {
+              const sym = getSym(v.name);
+              const bg  = TIER_COLOR[v.tier]  ?? 'var(--accent-soft)';
+              const ink = TIER_INK[v.tier]    ?? 'var(--ink)';
+              return (
+                <a
+                  class="el-cell"
+                  href={`/voices/${v.id}`}
+                  style={`background:${bg};border-color:${ink}`}
+                  title={v.name}
+                >
+                  <span class="el-top-row mono" style={`color:${ink}`}>
+                    <span>{String(v.id).padStart(2,'0')}</span>
+                    <span>{v.tier}</span>
+                  </span>
+                  <span class="el-sym" style={`color:rgba(0,0,0,0.16);`}>{sym}</span>
+                  <span class="el-bottom mono" style={`color:${ink}`}>{v.role?.split(',')[0] ?? '—'}</span>
+                </a>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <!-- Tier legend below elements grid -->
+      <div class="elements-legend">
+        <span class="elements-legend-item" style="background:var(--tier-a);border:1px solid var(--tier-a-ink)">
+          <span class="mono" style="color:var(--tier-a-ink);font-size:11px">A · Academic</span>
+        </span>
+        <span class="elements-legend-item" style="background:var(--tier-p);border:1px solid var(--tier-p-ink)">
+          <span class="mono" style="color:var(--tier-p-ink);font-size:11px">P · Practitioner</span>
+        </span>
+        <span class="elements-legend-item" style="background:var(--tier-v);border:1px solid var(--tier-v-ink)">
+          <span class="mono" style="color:var(--tier-v-ink);font-size:11px">V · Visionary</span>
+        </span>
+      </div>
+
     </div>
-
-    <!-- 9×9 grid: columns = chapters, rows = voice within chapter -->
-    <div class="elements-grid">
-      {chapterData.map((ch) => (
-        <div class="elements-col">
-          {ch.voices.map((v, rowIdx) => {
-            const sym = getSym(v.name);
-            const bg  = TIER_COLOR[v.tier]  ?? 'var(--accent-soft)';
-            const ink = TIER_INK[v.tier]    ?? 'var(--ink)';
-            return (
-              <a
-                class="el-cell"
-                href={`/voices/${v.id}`}
-                style={`background:${bg};border-color:${ink}`}
-                title={v.name}
-              >
-                <span class="el-top-row mono" style={`color:${ink}`}>
-                  <span>{String(v.id).padStart(2,'0')}</span>
-                  <span>{v.tier}</span>
-                </span>
-                <span class="el-sym" style="color:rgba(0,0,0,0.18)">{sym}</span>
-                <span class="el-bottom mono" style={`color:${ink}`}>{v.role?.split(',')[0] ?? '—'}</span>
-              </a>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-
-    <!-- Tier legend below elements grid -->
-    <div class="elements-legend">
-      <span class="elements-legend-item" style="background:var(--tier-a);border:1px solid var(--tier-a-ink)">
-        <span class="mono" style="color:var(--tier-a-ink);font-size:10px">A · Academic</span>
-      </span>
-      <span class="elements-legend-item" style="background:var(--tier-p);border:1px solid var(--tier-p-ink)">
-        <span class="mono" style="color:var(--tier-p-ink);font-size:10px">P · Practitioner</span>
-      </span>
-      <span class="elements-legend-item" style="background:var(--tier-v);border:1px solid var(--tier-v-ink)">
-        <span class="mono" style="color:var(--tier-v-ink);font-size:10px">V · Visionary</span>
-      </span>
-    </div>
-
   </div>
+
+  <!-- ── GRAPH view ──────────────────────────────────────── -->
+  <div class="graph-view" id="view-graph" hidden>
+    <!-- Legend row -->
+    <div class="graph-legend mono">
+      <span class="graph-legend-item">
+        <span class="graph-dot" style="border-color:rgba(100,140,220,0.8)"></span> Academic
+      </span>
+      <span class="graph-legend-item">
+        <span class="graph-dot" style="border-color:rgba(210,110,70,0.8)"></span> Practitioner
+      </span>
+      <span class="graph-legend-item">
+        <span class="graph-dot" style="border-color:rgba(80,170,110,0.8)"></span> Visionary
+      </span>
+      <span id="graph-hint" style="margin-left:auto;color:var(--sub2)">Click nodes to select · build connections</span>
+    </div>
+
+    <!-- Canvas + sidebar -->
+    <div class="graph-layout">
+      <div class="graph-canvas-wrap" id="graph-container">
+        <canvas id="graph-canvas" style="width:100%;height:auto;display:block;touch-action:none"></canvas>
+      </div>
+      <div class="graph-sidebar" id="graph-sidebar">
+        <div class="graph-sb-section">
+          <p class="mono graph-sb-label">SELECTED · <span id="graph-sel-count">0</span></p>
+          <div id="graph-sb-selected">
+            <p class="graph-sb-empty">Click any node in the graph to select it.</p>
+          </div>
+        </div>
+        <div class="graph-sb-section" id="graph-sb-connections-section" style="display:none">
+          <p class="mono graph-sb-label">CONNECTIONS · <span id="graph-conn-count">0</span></p>
+          <div id="graph-sb-connections"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice data for graph sim -->
+  <script id="graph-data" type="application/json" set:html={JSON.stringify(
+    sortedVoices.map(v => ({
+      n: Number(v.data.id),
+      name: v.data.name,
+      tier: v.data.tier,
+      ch: v.data.chapter,
+      role: v.data.role ?? '',
+      slug: v.data.id,
+    }))
+  )} />
 
 </Base>
 
@@ -233,98 +284,495 @@ function getSym(name: string): string {
 }
 
 /* ── Elements grid ────────────────────────────── */
-.elements-view { padding: 24px; }
+.elements-view { padding: 20px 24px 32px; }
+.elements-scroll { overflow-x: auto; }
 
-.elements-ch-headers {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 3px; margin-bottom: 6px;
-}
-.elements-ch-hd {
-  display: flex; flex-direction: column; gap: 2px;
-  padding: 4px 6px;
-  border-bottom: 1px solid var(--rule);
-}
-.elements-ch-num { font-size: 9px; color: var(--signal); letter-spacing: 0.05em; }
-.elements-ch-title {
-  font-size: 8px; color: var(--sub);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-
+/* Fixed 130px column width — scroll rather than compress */
+.elements-ch-headers,
 .elements-grid {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 3px;
+  grid-template-columns: repeat(9, 130px);
+  gap: 4px;
+  min-width: calc(9 * 130px + 8 * 4px);
 }
-.elements-col { display: flex; flex-direction: column; gap: 3px; }
+
+.elements-ch-headers { margin-bottom: 6px; }
+
+.elements-ch-hd {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--rule);
+  min-width: 0;
+}
+.elements-ch-num {
+  font-size: 10px; color: var(--signal); letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.elements-ch-title {
+  font-size: 10px; color: var(--sub); line-height: 1.3;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  min-width: 0;
+}
+
+.elements-col { display: flex; flex-direction: column; gap: 4px; }
 
 .el-cell {
   display: flex; flex-direction: column; justify-content: space-between;
-  padding: 5px 6px;
+  padding: 8px 9px 7px;
   border: 1px solid;
   text-decoration: none;
-  height: 80px;
+  height: 108px;
   position: relative;
-  transition: transform .1s, z-index .1s;
+  transition: transform .12s, box-shadow .12s;
+  min-width: 0;
 }
 .el-cell:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
   z-index: 2;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.22);
 }
 .el-top-row {
   display: flex; justify-content: space-between;
-  font-size: 8px; letter-spacing: -0.01em; opacity: 0.8;
+  font-size: 10px; letter-spacing: 0.01em; opacity: 0.85;
 }
 .el-sym {
-  font-size: 22px; font-weight: 500;
+  font-size: 32px; font-weight: 500;
   letter-spacing: -0.03em; line-height: 1;
   align-self: center; text-align: center;
 }
 .el-bottom {
-  font-size: 7px; letter-spacing: -0.005em; opacity: 0.75;
+  font-size: 9px; letter-spacing: -0.005em; opacity: 0.8;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  text-align: center;
+  text-align: center; line-height: 1.2;
 }
 
 .elements-legend {
-  display: flex; gap: 8px; margin-top: 16px;
+  display: flex; gap: 8px; margin-top: 20px;
 }
 .elements-legend-item {
-  padding: 5px 10px;
+  padding: 6px 12px;
 }
 
-/* Mobile: elements view scrolls horizontally */
 @media (max-width: 900px) {
-  .elements-view { padding: 16px; overflow-x: auto; }
-  .elements-ch-headers,
-  .elements-grid { min-width: 540px; }
-  .el-cell { height: 60px; }
-  .el-sym { font-size: 16px; }
+  .elements-view { padding: 16px 16px 24px; }
+}
+
+/* ── Graph view ───────────────────────────────────────── */
+.graph-view { padding: 20px 24px; }
+
+.graph-legend {
+  font-size: 10px; color: var(--sub);
+  display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.graph-legend-item { display: flex; gap: 6px; align-items: center; }
+.graph-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1.5px solid; display: inline-block; background: var(--paper);
+}
+
+.graph-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  border: 1px solid var(--rule);
+}
+.graph-canvas-wrap {
+  background: var(--paper);
+  border-right: 1px solid var(--rule);
+  position: relative;
+}
+.graph-sidebar {
+  background: var(--paper);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.graph-sb-section {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  flex: 1; overflow-y: auto;
+}
+.graph-sb-label {
+  font-size: 9px; letter-spacing: 0.06em; color: var(--sub);
+  margin: 0 0 10px;
+}
+.graph-sb-empty {
+  font-size: 12px; color: var(--sub2); line-height: 1.6; margin: 0;
+}
+.graph-sb-voice {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.graph-sb-voice:last-child { border-bottom: none; }
+.graph-sb-voice:hover .graph-sb-vname { color: var(--signal); }
+.graph-sb-vnum {
+  font: 500 9px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--sub); display: block; margin-bottom: 3px;
+}
+.graph-sb-vname {
+  font: 600 13px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.01em; color: var(--ink);
+  display: block; margin-bottom: 2px;
+  transition: color .1s;
+}
+.graph-sb-vrole {
+  font-size: 11px; color: var(--sub); display: block;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .graph-layout { grid-template-columns: 1fr; }
+  .graph-canvas-wrap { border-right: none; border-bottom: 1px solid var(--rule); }
+  .graph-sidebar { min-height: 0; max-height: 260px; }
 }
 </style>
 
 <script>
-  const btnCast = document.getElementById('btn-cast');
-  const btnElem = document.getElementById('btn-elements');
+  const btnCast  = document.getElementById('btn-cast');
+  const btnElem  = document.getElementById('btn-elements');
+  const btnGraph = document.getElementById('btn-graph');
   const viewCast = document.getElementById('view-cast');
   const viewElem = document.getElementById('view-elements');
+  const viewGraph = document.getElementById('view-graph');
 
-  function setView(v: string) {
-    const isCast = v === 'cast';
-    btnCast?.classList.toggle('is-active', isCast);
-    btnElem?.classList.toggle('is-active', !isCast);
-    if (viewCast) viewCast.hidden = !isCast;
-    if (viewElem) viewElem.hidden = isCast;
+  type View = 'cast' | 'elements' | 'graph';
+
+  function setView(v: View) {
+    btnCast?.classList.toggle('is-active',  v === 'cast');
+    btnElem?.classList.toggle('is-active',  v === 'elements');
+    btnGraph?.classList.toggle('is-active', v === 'graph');
+    if (viewCast)  viewCast.hidden  = v !== 'cast';
+    if (viewElem)  viewElem.hidden  = v !== 'elements';
+    if (viewGraph) viewGraph.hidden = v !== 'graph';
+    if (v === 'graph') {
+      initGraph(); // starts loop (or resumes if already inited)
+    } else {
+      graphLoopCtrl?.stop(); // pause sim when leaving graph view
+    }
     try { sessionStorage.setItem('kw-81-view', v); } catch {}
   }
 
-  btnCast?.addEventListener('click', () => setView('cast'));
-  btnElem?.addEventListener('click', () => setView('elements'));
+  btnCast?.addEventListener('click',  () => setView('cast'));
+  btnElem?.addEventListener('click',  () => setView('elements'));
+  btnGraph?.addEventListener('click', () => setView('graph'));
 
   // Restore saved view
   try {
-    const saved = sessionStorage.getItem('kw-81-view');
-    if (saved === 'elements') setView('elements');
+    const saved = sessionStorage.getItem('kw-81-view') as View | null;
+    if (saved === 'elements' || saved === 'graph') setView(saved);
   } catch {}
+
+  // ── Graph simulation ────────────────────────────────────
+  let graphLoopCtrl: { start: () => void; stop: () => void } | null = null;
+
+  function initGraph() {
+    if (graphLoopCtrl) { graphLoopCtrl.start(); return; }
+
+    const dataEl = document.getElementById('graph-data');
+    if (!dataEl) return;
+    const voices: { n: number; name: string; tier: string; ch: number; role: string; slug: string }[] =
+      JSON.parse(dataEl.textContent || '[]');
+
+    // Build edges: chapter co-membership
+    const byChapter: Record<number, number[]> = {};
+    voices.forEach(v => {
+      if (!byChapter[v.ch]) byChapter[v.ch] = [];
+      byChapter[v.ch].push(v.n);
+    });
+    const rawEdges: [number, number][] = [];
+    Object.values(byChapter).forEach(ns => {
+      for (let i = 0; i < ns.length; i++)
+        for (let j = i + 1; j < ns.length; j++)
+          rawEdges.push([ns[i], ns[j]]);
+    });
+    const seen = new Set<string>();
+    const edges = rawEdges.filter(([a, b]) => {
+      const k = `${Math.min(a,b)}-${Math.max(a,b)}`;
+      if (seen.has(k)) return false;
+      seen.add(k); return true;
+    });
+    const adjMap: Record<number, number[]> = {};
+    edges.forEach(([a, b]) => {
+      if (!adjMap[a]) adjMap[a] = [];
+      if (!adjMap[b]) adjMap[b] = [];
+      adjMap[a].push(b); adjMap[b].push(a);
+    });
+
+    const container = document.getElementById('graph-container') as HTMLElement;
+    const canvas    = document.getElementById('graph-canvas') as HTMLCanvasElement;
+    if (!container || !canvas) return;
+
+    const R = 13;
+    type Node = { n: number; v: typeof voices[0]; x: number; y: number; vx: number; vy: number; phase: number };
+    let nodes: Node[] = [];
+    let posById: Record<number, Node> = {};
+    let simReady = false;
+    let frame = 0;
+    let w = 0, h = 0;
+
+    // Pinned / hovered state
+    let pinnedSet = new Set<number>();
+    let hoveredN: number | null = null;
+
+    const ro = new ResizeObserver(entries => {
+      w = entries[0].contentRect.width;
+      h = Math.round(w * 0.65);
+      if (!simReady) {
+        simReady = true;
+        nodes = voices.map((v, i) => ({
+          n: v.n, v,
+          x: w/2 + (Math.random()-0.5)*w*0.55,
+          y: h/2 + (Math.random()-0.5)*h*0.45,
+          vx: 0, vy: 0,
+          phase: (i / 81) * Math.PI * 2,
+        }));
+        posById = {};
+        nodes.forEach(nd => { posById[nd.n] = nd; });
+        frame = 0;
+      }
+    });
+    ro.observe(container);
+
+    // Tier colours
+    function tierRGB(tier: string): [number,number,number] {
+      if (tier === 'A') return [100, 140, 220];
+      if (tier === 'P') return [210, 110, 70];
+      return [80, 170, 110];
+    }
+
+    let rafId = 0;
+    let running = false;
+
+    function startLoop() {
+      if (running) return;
+      running = true;
+      step();
+    }
+    function stopLoop() {
+      running = false;
+      cancelAnimationFrame(rafId);
+    }
+
+    // After settling, draw at 20fps instead of 60fps to save CPU
+    let lastDraw = 0;
+
+    const step = () => {
+      if (!running) return;
+      rafId = requestAnimationFrame(step);
+      if (!simReady) return;
+
+      const now = performance.now();
+      const settled = frame > 600;
+      // Throttle to ~20fps once settled
+      if (settled && now - lastDraw < 50) return;
+      lastDraw = now;
+
+      frame++;
+      const t = frame * 0.0028;
+      const alpha = frame < 300 ? 0.4 : frame < 600 ? 0.1 : 0.02;
+      const tick = step; // alias for readability below
+      const MIN_DIST = R * 2 + 6;
+
+      // Repulsion + hard collision
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const dx = b.x - a.x, dy = b.y - a.y;
+          const dist2 = dx*dx + dy*dy || 0.01;
+          const dist = Math.sqrt(dist2);
+          const force = (1200 / dist2) * alpha;
+          const fx = (dx/dist)*force, fy = (dy/dist)*force;
+          a.vx -= fx; a.vy -= fy;
+          b.vx += fx; b.vy += fy;
+          if (dist < MIN_DIST) {
+            const overlap = (MIN_DIST - dist) / 2;
+            const nx = dx/dist, ny = dy/dist;
+            a.x -= nx*overlap; a.y -= ny*overlap;
+            b.x += nx*overlap; b.y += ny*overlap;
+          }
+        }
+      }
+
+      // Spring
+      edges.forEach(([an, bn]) => {
+        const a = posById[an], b = posById[bn];
+        if (!a || !b) return;
+        const dx = b.x-a.x, dy = b.y-a.y;
+        const dist = Math.max(Math.sqrt(dx*dx+dy*dy), 1);
+        const force = ((dist - 120) / dist) * 0.04 * alpha;
+        a.vx += dx*force; a.vy += dy*force;
+        b.vx -= dx*force; b.vy -= dy*force;
+      });
+
+      nodes.forEach(nd => {
+        nd.vx += (w/2 - nd.x) * 0.002 * alpha;
+        nd.vy += (h/2 - nd.y) * 0.002 * alpha;
+        const driftStr = frame > 300 ? 0.15 : 0;
+        nd.vx += Math.cos(t + nd.phase) * driftStr;
+        nd.vy += Math.sin(t + nd.phase * 1.3) * driftStr;
+        nd.vx *= 0.85; nd.vy *= 0.85;
+        const spd = Math.sqrt(nd.vx*nd.vx + nd.vy*nd.vy);
+        if (spd > 12) { nd.vx *= 12/spd; nd.vy *= 12/spd; }
+        nd.x = Math.max(R+8, Math.min(w-R-8, nd.x + nd.vx));
+        nd.y = Math.max(R+8, Math.min(h-R-26, nd.y + nd.vy));
+      });
+
+      // Resize canvas if needed
+      if (canvas.width !== Math.round(w)) canvas.width = Math.round(w);
+      if (canvas.height !== Math.round(h)) canvas.height = Math.round(h);
+
+      const ctx = canvas.getContext('2d')!;
+      const bg = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#fafaf9';
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      const focusNs = new Set([...pinnedSet, ...(hoveredN !== null ? [hoveredN] : [])]);
+      const nbrs = new Set<number>();
+      focusNs.forEach(fn => { (adjMap[fn] || []).forEach(n => nbrs.add(n)); });
+      focusNs.forEach(fn => nbrs.delete(fn));
+      const hasFocus = focusNs.size > 0;
+
+      // Draw edges
+      edges.forEach(([an, bn]) => {
+        const a = posById[an], b = posById[bn];
+        if (!a || !b) return;
+        const isActive = pinnedSet.has(an) || pinnedSet.has(bn) || an === hoveredN || bn === hoveredN;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = isActive ? 'rgba(210,35,35,0.75)' : 'rgba(0,0,0,0.055)';
+        ctx.lineWidth   = isActive ? 1.5 : 0.7;
+        ctx.stroke();
+      });
+
+      // Draw nodes
+      nodes.forEach(nd => {
+        const isPinned  = pinnedSet.has(nd.n);
+        const isHovered = nd.n === hoveredN;
+        const isNbr     = nbrs.has(nd.n);
+        const isDim     = hasFocus && !isPinned && !isHovered && !isNbr;
+        const [r, g, b] = tierRGB(nd.v.tier);
+
+        const stroke = isDim
+          ? `rgba(${r},${g},${b},0.2)`
+          : isPinned  ? 'rgba(200,30,30,0.95)'
+          : isHovered ? `rgb(${Math.round(r*.6)},${Math.round(g*.6)},${Math.round(b*.6)})`
+          : isNbr     ? `rgba(${r},${g},${b},0.95)`
+          :             `rgba(${r},${g},${b},0.8)`;
+
+        const lw  = isPinned ? 2.5 : isHovered ? 2 : isNbr ? 1.6 : 1.3;
+        const rad = isPinned ? R+5 : isHovered ? R+3 : isNbr ? R+1 : R-2;
+
+        ctx.beginPath();
+        ctx.arc(nd.x, nd.y, rad, 0, Math.PI*2);
+        ctx.fillStyle = bg;
+        ctx.fill();
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = lw;
+        ctx.stroke();
+
+        if (!isDim) {
+          const label = nd.v.name.split(' ').pop()!;
+          ctx.fillStyle = (isPinned || isHovered) ? 'rgba(180,20,20,0.9)' : 'rgba(0,0,0,0.6)';
+          ctx.font = (isPinned || isHovered)
+            ? '600 10px "JetBrains Mono", monospace'
+            : '9px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(label, nd.x, nd.y + rad + 11);
+        }
+      });
+    };
+
+    graphLoopCtrl = { start: startLoop, stop: stopLoop };
+    startLoop();
+
+    // Hit test
+    function hitTest(e: MouseEvent | Touch): number | null {
+      const rect = canvas.getBoundingClientRect();
+      const mx = ('clientX' in e ? e.clientX : (e as Touch).clientX) - rect.left;
+      const my = ('clientY' in e ? e.clientY : (e as Touch).clientY) - rect.top;
+      const scaleX = w / rect.width, scaleY = h / rect.height;
+      const px = mx * scaleX, py = my * scaleY;
+      const HIT_R = 20;
+      let hit: number | null = null;
+      nodes.forEach(nd => {
+        const dx = nd.x - px, dy = nd.y - py;
+        if (dx*dx + dy*dy < HIT_R*HIT_R) hit = nd.n;
+      });
+      return hit;
+    }
+
+    function updateSidebar() {
+      const selCount = document.getElementById('graph-sel-count');
+      const sbSel    = document.getElementById('graph-sb-selected');
+      const connSec  = document.getElementById('graph-sb-connections-section');
+      const connCount = document.getElementById('graph-conn-count');
+      const sbConn   = document.getElementById('graph-sb-connections');
+      const hint     = document.getElementById('graph-hint');
+      if (!sbSel || !selCount) return;
+
+      const connectedNs = new Set<number>();
+      pinnedSet.forEach(fn => { (adjMap[fn] || []).forEach(n => { if (!pinnedSet.has(n)) connectedNs.add(n); }); });
+
+      selCount.textContent = String(pinnedSet.size);
+      if (hint) hint.textContent = pinnedSet.size > 0
+        ? `${pinnedSet.size} selected · ${connectedNs.size} connections · click to add/remove`
+        : 'Click nodes to select · build connections';
+
+      if (pinnedSet.size === 0) {
+        sbSel.innerHTML = '<p class="graph-sb-empty">Click any node in the graph to select it.</p>';
+        if (connSec) connSec.style.display = 'none';
+      } else {
+        sbSel.innerHTML = [...pinnedSet].map(n => {
+          const v = voices.find(vv => vv.n === n);
+          if (!v) return '';
+          return `<a class="graph-sb-voice" href="/voices/${v.slug}">
+            <span class="graph-sb-vnum">${String(v.n).padStart(3,'0')} · ${v.tier}</span>
+            <span class="graph-sb-vname">${v.name}</span>
+            <span class="graph-sb-vrole">${v.role}</span>
+          </a>`;
+        }).join('');
+        if (connSec) connSec.style.display = '';
+        if (connCount) connCount.textContent = String(connectedNs.size);
+        if (sbConn) sbConn.innerHTML = [...connectedNs].sort((a,b)=>a-b).map(n => {
+          const v = voices.find(vv => vv.n === n);
+          if (!v) return '';
+          return `<a class="graph-sb-voice" href="/voices/${v.slug}">
+            <span class="graph-sb-vnum">${String(v.n).padStart(3,'0')} · ${v.tier}</span>
+            <span class="graph-sb-vname">${v.name}</span>
+            <span class="graph-sb-vrole">${v.role}</span>
+          </a>`;
+        }).join('');
+      }
+    }
+
+    canvas.addEventListener('mousemove', e => {
+      hoveredN = hitTest(e);
+      canvas.style.cursor = hoveredN !== null ? 'pointer' : 'default';
+    });
+    canvas.addEventListener('mouseleave', () => { hoveredN = null; });
+    canvas.addEventListener('click', e => {
+      const hit = hitTest(e);
+      if (hit !== null) {
+        if (pinnedSet.has(hit)) pinnedSet.delete(hit); else pinnedSet.add(hit);
+        updateSidebar();
+      }
+    });
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      hoveredN = hitTest(e.touches[0]);
+    }, { passive: false });
+    canvas.addEventListener('touchend', e => {
+      e.preventDefault();
+      const hit = hitTest(e.changedTouches[0]);
+      if (hit !== null) {
+        if (pinnedSet.has(hit)) pinnedSet.delete(hit); else pinnedSet.add(hit);
+        updateSidebar();
+      }
+    }, { passive: false });
+  }
 </script>

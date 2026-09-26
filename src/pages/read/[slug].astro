@@ -44,77 +44,132 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
     <Content />
   </article>
 
-  <!-- Diagram -->
-  {chapter.data.diagram && (
-    <div class="kw-section">
-      <div class="kw-diagram">
-        <p class="kw-diagram-title">{chapter.data.diagram.title}</p>
-        <p class="kw-diagram-caption">{chapter.data.diagram.caption}</p>
-        <svg class="diagram-svg" viewBox="0 0 500 360" aria-hidden="true">
-          <!-- Arcs -->
-          {chapter.data.diagram.arcs.map((arc) => {
-            const fromNode = chapter.data.diagram!.nodes.find(n => n.id === arc.from);
-            const toNode = chapter.data.diagram!.nodes.find(n => n.id === arc.to);
-            if (!fromNode || !toNode) return null;
-            const fx = 80 + fromNode.pos[0] * 160;
-            const fy = 60 + fromNode.pos[1] * 120;
-            const tx = 80 + toNode.pos[0] * 160;
-            const ty = 60 + toNode.pos[1] * 120;
-            const mx = (fx + tx) / 2;
-            const my = (fy + ty) / 2;
-            const isLatent = arc.kind === 'latent';
-            return (
-              <g>
-                <line
-                  x1={fx} y1={fy} x2={tx} y2={ty}
-                  stroke={isLatent ? 'var(--signal)' : 'var(--ink)'}
-                  stroke-width={isLatent ? '1' : '1.5'}
-                  stroke-dasharray={isLatent ? '4 3' : undefined}
-                  opacity={isLatent ? '0.4' : '1'}
-                />
-                {arc.label && !isLatent && (
-                  <text
-                    x={mx} y={my - 6}
-                    font-family="JetBrains Mono, monospace"
-                    font-size="8"
-                    fill="var(--sub)"
-                    text-anchor="middle"
-                  >{arc.label}</text>
-                )}
-              </g>
-            );
-          })}
-          <!-- Nodes -->
-          {chapter.data.diagram.nodes.map((node) => {
-            const x = 80 + node.pos[0] * 160;
-            const y = 60 + node.pos[1] * 120;
-            const isLatent = node.latent;
-            return (
-              <g>
-                <circle
-                  cx={x} cy={y} r={isLatent ? '20' : '24'}
-                  fill={isLatent ? 'var(--accent-soft)' : 'var(--paper)'}
-                  stroke={isLatent ? 'var(--signal)' : 'var(--ink)'}
-                  stroke-width={isLatent ? '1' : '2'}
-                  stroke-dasharray={isLatent ? '4 3' : undefined}
-                />
-                {node.label.split('\n').map((line, li) => (
-                  <text
-                    x={x} y={y + (li - (node.label.split('\n').length - 1) / 2) * 11}
-                    font-family="JetBrains Mono, monospace"
-                    font-size="9"
-                    fill={isLatent ? 'var(--signal)' : 'var(--ink)'}
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                  >{line}</text>
-                ))}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-    </div>
-  )}
+  <!-- Diagram — full-bleed dark coordination section -->
+  {chapter.data.diagram && (() => {
+    const diag = chapter.data.diagram!;
+    const visible = diag.nodes.filter(n => !n.latent);
+    const latent  = diag.nodes.filter(n => n.latent);
+    // SVG geometry — matches original: W=620, H=300
+    const W = 620, H = 300;
+    const colX = [70, W / 2, W - 70];
+    const rowY = [60, H / 2, H - 60];
+    const px = (n: typeof diag.nodes[0]) => colX[n.pos[0]];
+    const py = (n: typeof diag.nodes[0]) => rowY[n.pos[1]];
+    return (
+      <section class="ch-diag-section">
+        <div class="ch-diag-header mono">
+          <span>WHAT THIS CHAPTER COORDINATES</span>
+          <span class="ch-diag-fig">FIG · CAUSAL DIAGRAM</span>
+        </div>
+
+        <!-- Node boxes row -->
+        <div class="ch-diag-node-row">
+          {visible.map((node, i) => (
+            <>
+              <div class="ch-diag-node">
+                <span class="ch-diag-node-id mono">{node.id}</span>
+                <span class="ch-diag-node-lbl">{node.label.replace('\n', ' ')}</span>
+              </div>
+              {i < visible.length - 1 && (
+                <span class="ch-diag-arrow">→</span>
+              )}
+            </>
+          ))}
+        </div>
+
+        <!-- Latent node -->
+        {latent.length > 0 && (
+          <div class="ch-diag-latent">
+            <span class="mono ch-diag-latent-label">LATENT /</span>
+            {latent.map(n => (
+              <span class="ch-diag-latent-node">{n.label.replace('\n', ' ')}</span>
+            ))}
+            <span class="ch-diag-latent-note">— the missing third body</span>
+          </div>
+        )}
+
+        <p class="ch-diag-caption">{diag.caption}</p>
+
+        <!-- SVG causal graph — full width, curved bezier arcs -->
+        <div class="ch-diag-svg-wrap">
+          <p class="mono ch-diag-svg-label">CAUSAL GRAPH · {diag.title.toUpperCase()}</p>
+          <svg viewBox={`0 0 ${W} ${H}`} width="100%" aria-hidden="true" style="display:block;overflow:visible">
+            {diag.arcs.map((arc, i) => {
+              const fn = diag.nodes.find(n => n.id === arc.from);
+              const tn = diag.nodes.find(n => n.id === arc.to);
+              if (!fn || !tn) return null;
+              const ax = px(fn), ay = py(fn), bx = px(tn), by = py(tn);
+              const dx = bx - ax, dy = by - ay;
+              const len = Math.max(Math.sqrt(dx*dx + dy*dy), 1);
+              const c = 0.14 + (i % 3) * 0.04;
+              const nx2 = -dy/len, ny2 = dx/len;
+              const mx = (ax+bx)/2 + nx2*len*c;
+              const my = (ay+by)/2 + ny2*len*c;
+              const R2 = 36;
+              const t1 = R2/len, t2 = 1 - R2/len;
+              const d = `M ${ax+dx*t1} ${ay+dy*t1} Q ${mx} ${my} ${ax+dx*t2} ${ay+dy*t2}`;
+              const isLatent = arc.kind === 'latent';
+              return (
+                <g>
+                  <path
+                    d={d}
+                    fill="none"
+                    stroke={isLatent ? 'oklch(0.55 0.1 250)' : 'oklch(0.75 0.05 250)'}
+                    stroke-width={isLatent ? '1' : '1.5'}
+                    stroke-dasharray={isLatent ? '4 3' : undefined}
+                    marker-end={isLatent ? undefined : 'url(#arr)'}
+                  />
+                  {arc.label && !isLatent && (
+                    <text
+                      x={mx} y={my - 7}
+                      font-family="JetBrains Mono, monospace"
+                      font-size="8"
+                      fill="oklch(0.55 0.08 250)"
+                      text-anchor="middle"
+                    >{arc.label}</text>
+                  )}
+                </g>
+              );
+            })}
+            <!-- Defs for arrowhead -->
+            <defs>
+              <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="oklch(0.75 0.05 250)" />
+              </marker>
+            </defs>
+            <!-- Nodes -->
+            {diag.nodes.map(node => {
+              const x = px(node), y = py(node);
+              const isLatent = node.latent;
+              const lines = node.label.split('\n');
+              return (
+                <g>
+                  <circle
+                    cx={x} cy={y} r={isLatent ? '22' : '30'}
+                    fill={isLatent ? 'oklch(0.14 0.04 250)' : 'oklch(0.18 0.05 250)'}
+                    stroke={isLatent ? 'oklch(0.42 0.07 250)' : 'oklch(0.68 0.07 250)'}
+                    stroke-width={isLatent ? '1' : '1.5'}
+                    stroke-dasharray={isLatent ? '4 3' : undefined}
+                  />
+                  {lines.map((line, li) => (
+                    <text
+                      x={x}
+                      y={y + (li - (lines.length - 1) / 2) * 12}
+                      font-family="JetBrains Mono, monospace"
+                      font-size="8.5"
+                      fill={isLatent ? 'oklch(0.62 0.09 250)' : 'oklch(0.90 0.03 250)'}
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                    >{line}</text>
+                  ))}
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      </section>
+    );
+  })()}
 
   <!-- Chapter voices -->
   <section class="kw-section">
@@ -164,7 +219,6 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   letter-spacing: var(--read-track);
   margin: 0 0 1.4em;
 }
-.diagram-svg { width: 100%; max-width: 500px; height: auto; display: block; }
 .voice-cold-open {
   font: 400 13px/1.6 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); margin: 10px 0 0;
@@ -179,4 +233,76 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   letter-spacing: -.01em; color: var(--ink); max-width: 300px;
 }
 .chapter-nav-link:hover { color: var(--accent); }
+
+/* ── Causal diagram section ────────────────────────────── */
+.ch-diag-section {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(32px,5vw,56px) clamp(20px,5vw,64px) clamp(40px,6vw,64px);
+}
+.ch-diag-header {
+  font-size: 10px; letter-spacing: 0.06em;
+  color: oklch(0.65 0.1 250);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 24px;
+}
+.ch-diag-fig { color: oklch(0.45 0.06 250); }
+
+.ch-diag-node-row {
+  display: flex; align-items: stretch; gap: 0;
+  overflow-x: auto; padding-bottom: 4px;
+  margin-bottom: 16px;
+}
+.ch-diag-node {
+  border: 1px solid oklch(0.32 0.05 250);
+  padding: 14px 20px; flex-shrink: 0;
+  background: oklch(0.14 0.04 250); min-width: 100px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ch-diag-node-id {
+  font-size: 9px; color: oklch(0.55 0.1 250); letter-spacing: 0.05em;
+}
+.ch-diag-node-lbl {
+  font: 500 14px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -0.01em; color: var(--paper);
+  white-space: nowrap;
+}
+.ch-diag-arrow {
+  display: flex; align-items: center;
+  padding: 0 10px; color: oklch(0.55 0.1 250);
+  font-size: 16px; flex-shrink: 0;
+}
+
+.ch-diag-latent {
+  padding-top: 14px; margin-top: 0;
+  border-top: 1px solid oklch(0.25 0.04 250);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.ch-diag-latent-label {
+  font-size: 9px; color: oklch(0.55 0.1 250); letter-spacing: 0.05em;
+}
+.ch-diag-latent-node {
+  border: 1px dashed oklch(0.40 0.05 250);
+  padding: 8px 14px;
+  font: 400 13px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: oklch(0.78 0.04 250); letter-spacing: -0.01em;
+}
+.ch-diag-latent-note {
+  font-size: 11px; color: oklch(0.50 0.06 250);
+}
+
+.ch-diag-caption {
+  font-size: 12px; color: oklch(0.52 0.06 250);
+  line-height: 1.6; margin: 0 0 20px;
+}
+
+.ch-diag-svg-wrap {
+  border-top: 1px solid oklch(0.25 0.04 250);
+  padding-top: 18px;
+}
+.ch-diag-svg-label {
+  font-size: 9px; letter-spacing: 0.04em;
+  color: oklch(0.50 0.08 250); margin: 0 0 10px;
+}
 </style>
