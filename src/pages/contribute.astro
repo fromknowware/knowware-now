@@ -27,53 +27,68 @@ import Field from '../components/Field.astro';
   </section>
 
   <!-- Claim form -->
-  <section class="kw-section" id="claim">
-    <p class="kw-label">Submit a voice</p>
+  <section class="kw-section" id="claim" aria-labelledby="claim-h">
+    <h2 class="kw-label" id="claim-h">Submit a voice</h2>
+    <p class="form-note" id="form-note">Every field is required unless marked optional.</p>
     <form
       id="claim-form"
       action="/api/claim"
       method="POST"
       class="claim-form"
+      novalidate
+      aria-describedby="form-note"
     >
       <div class="field-group">
         <label for="your-name" class="field-label">Your name</label>
-        <input type="text" id="your-name" name="yourName" required class="field-input" placeholder="How it should appear in the colophon" />
+        <p class="field-hint" id="your-name-hint">As it should appear in the colophon.</p>
+        <input type="text" id="your-name" name="yourName" required maxlength="120" autocomplete="name" class="field-input" aria-describedby="your-name-hint your-name-err" />
+        <p class="field-error" id="your-name-err"></p>
       </div>
       <div class="field-group">
         <label for="your-email" class="field-label">Your email</label>
-        <input type="email" id="your-email" name="email" required class="field-input" placeholder="For correspondence only — not published" />
+        <p class="field-hint" id="your-email-hint">For correspondence only. Never published.</p>
+        <input type="email" id="your-email" name="email" required maxlength="254" autocomplete="email" inputmode="email" spellcheck="false" class="field-input" aria-describedby="your-email-hint your-email-err" />
+        <p class="field-error" id="your-email-err"></p>
       </div>
       <div class="field-group">
         <label for="voice-name" class="field-label">Nominee's name</label>
-        <input type="text" id="voice-name" name="voiceName" required class="field-input" placeholder="Full name" />
+        <input type="text" id="voice-name" name="voiceName" required maxlength="160" autocomplete="off" class="field-input" aria-describedby="voice-name-err" />
+        <p class="field-error" id="voice-name-err"></p>
       </div>
       <div class="field-group">
-        <label for="voice-role" class="field-label">Role / affiliation</label>
-        <input type="text" id="voice-role" name="voiceRole" required class="field-input" placeholder="Brief role or affiliation" />
+        <label for="voice-role" class="field-label">Nominee's role or affiliation</label>
+        <input type="text" id="voice-role" name="voiceRole" required maxlength="240" autocomplete="off" class="field-input" aria-describedby="voice-role-err" />
+        <p class="field-error" id="voice-role-err"></p>
       </div>
       <div class="field-group">
         <label for="why" class="field-label">Why this voice?</label>
-        <textarea id="why" name="why" required class="field-input field-textarea" rows="5" placeholder="One paragraph on why this voice belongs in the book. Be specific about what they've said or written."></textarea>
+        <p class="field-hint" id="why-hint">One paragraph. Be specific about what they have said or written.</p>
+        <textarea id="why" name="why" required maxlength="2000" class="field-input field-textarea" rows="5" aria-describedby="why-hint why-err"></textarea>
+        <p class="field-error" id="why-err"></p>
       </div>
       <div class="field-group">
         <label for="chapter" class="field-label">Suggested chapter (optional)</label>
         <select id="chapter" name="chapter" class="field-input">
-          <option value="">— choose if you have a view —</option>
-          <option value="1">01 — The Coordination Intelligence Revolution</option>
-          <option value="2">02 — The Dawn of Systems Intelligence</option>
-          <option value="3">03 — Architecture of Systems Intelligence</option>
-          <option value="4">04 — Systems Intelligence in Action</option>
-          <option value="5">05 — Human-Systems Intelligence Interaction</option>
-          <option value="6">06 — Consciousness as Pattern Recognition</option>
-          <option value="7">07 — Engineering Reality</option>
-          <option value="8">08 — Beyond Human Intelligence</option>
-          <option value="9">09 — No Way Know-How</option>
+          <option value="">No preference</option>
+          <option value="1">01 · The Coordination Intelligence Revolution</option>
+          <option value="2">02 · The Dawn of Systems Intelligence</option>
+          <option value="3">03 · Architecture of Systems Intelligence</option>
+          <option value="4">04 · Systems Intelligence in Action</option>
+          <option value="5">05 · Human-Systems Intelligence Interaction</option>
+          <option value="6">06 · Consciousness as Pattern Recognition</option>
+          <option value="7">07 · Engineering Reality</option>
+          <option value="8">08 · Beyond Human Intelligence</option>
+          <option value="9">09 · No Way Know-How</option>
         </select>
+      </div>
+      <div class="field-trap" aria-hidden="true">
+        <label for="company">Company</label>
+        <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
       </div>
       <button type="submit" class="kw-btn kw-btn--filled" style="margin-top:8px">
         Submit nomination →
       </button>
-      <p id="form-status" class="form-status" aria-live="polite" hidden></p>
+      <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
     </form>
   </section>
 </Base>
@@ -96,11 +111,22 @@ import Field from '../components/Field.astro';
   border: 1px solid var(--rule-strong);
   padding: 10px 14px;
   font: 400 14px/1.4 "JetBrains Mono", ui-monospace, monospace;
-  outline: none;
   transition: border-color 0.15s;
   width: 100%;
 }
 .field-input:focus { border-color: var(--signal); }
+.field-input[aria-invalid="true"] { border-color: var(--error); border-width: 2px; }
+.form-note { font-size: 14px; color: var(--sub); margin: 0 0 20px; }
+.field-hint { font-size: 13px; color: var(--sub); margin: 0; line-height: 1.4; }
+.field-error {
+  font: 500 13px/1.4 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--error); margin: 0;
+}
+.field-error:empty { display: none; }
+.field-error::before { content: "Error: "; font-weight: 700; }
+.field-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-status:empty { display: none; }
+.form-status.is-error { color: var(--error); }
 .field-textarea { resize: vertical; min-height: 120px; }
 .form-status {
   font: 400 13px/1.4 "JetBrains Mono", ui-monospace, monospace;
@@ -113,13 +139,67 @@ import Field from '../components/Field.astro';
 const form = document.getElementById('claim-form') as HTMLFormElement | null;
 const status = document.getElementById('form-status') as HTMLElement | null;
 
+const MESSAGES: Record<string, string> = {
+  yourName: 'Enter your name.',
+  email: 'Enter a valid email address, like name@example.com.',
+  voiceName: 'Enter the nominee\'s name.',
+  voiceRole: 'Enter the nominee\'s role or affiliation.',
+  why: 'Tell us why this voice belongs in the book.',
+};
+
+function fieldFor(name: string) {
+  return form?.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | null;
+}
+
+function setError(name: string, message: string) {
+  const el = fieldFor(name);
+  if (!el) return;
+  const err = document.getElementById(`${el.id}-err`);
+  if (message) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
+  if (err) err.textContent = message;
+}
+
+function validate(): string[] {
+  const bad: string[] = [];
+  for (const name of Object.keys(MESSAGES)) {
+    const el = fieldFor(name);
+    if (!el) continue;
+    el.value = el.value.trim();
+    const ok = el.checkValidity();
+    setError(name, ok ? '' : MESSAGES[name]);
+    if (!ok) bad.push(name);
+  }
+  return bad;
+}
+
+function setStatus(text: string, isError = false) {
+  if (!status) return;
+  status.textContent = text;
+  status.classList.toggle('is-error', isError);
+}
+
+for (const name of Object.keys(MESSAGES)) {
+  fieldFor(name)?.addEventListener('blur', (e) => {
+    const el = e.target as HTMLInputElement;
+    if (el.getAttribute('aria-invalid') === 'true') setError(name, el.checkValidity() ? '' : MESSAGES[name]);
+  });
+}
+
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (!form || !status) return;
+  if (!form) return;
+
+  const bad = validate();
+  if (bad.length) {
+    setStatus(`${bad.length === 1 ? 'One field needs' : `${bad.length} fields need`} attention.`, true);
+    fieldFor(bad[0])?.focus();
+    return;
+  }
 
   const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
   btn.disabled = true;
-  btn.textContent = 'Sending…';
+  btn.textContent = 'Submitting…';
+  setStatus('Submitting your nomination…');
 
   try {
     const res = await fetch('/api/claim', {
@@ -127,16 +207,18 @@ form?.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(Object.fromEntries(new FormData(form))),
     });
-    const data = await res.json();
-    status.hidden = false;
-    if (res.ok) {
-      status.textContent = 'Submitted. The author will be in touch if accepted.';
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
+      setStatus('Nomination submitted. The author will be in touch if it is accepted.');
       form.reset();
     } else {
-      status.textContent = data.error ?? 'Something went wrong. Please try again.';
+      const fields: string[] = Array.isArray(data.fields) ? data.fields : [];
+      fields.forEach((f) => setError(f, MESSAGES[f] ?? 'Check this field.'));
+      if (fields[0]) fieldFor(fields[0])?.focus();
+      setStatus(data.error ?? 'The nomination was not submitted. Try again in a moment.', true);
     }
   } catch {
-    status.textContent = 'Network error. Please try again.';
+    setStatus('The nomination was not submitted because the connection failed. Check your connection and try again.', true);
   } finally {
     btn.disabled = false;
     btn.textContent = 'Submit nomination →';

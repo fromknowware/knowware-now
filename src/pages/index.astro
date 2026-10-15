@@ -65,7 +65,7 @@ const QUOTES = [
     </div>
     <div class="kw-masthead-cell">
       <span class="kw-masthead-lbl">UTC</span>
-      <span class="kw-masthead-val mono" id="kw-clock">—</span>
+      <span class="kw-masthead-val mono" id="kw-clock">--:--Z</span>
     </div>
   </div>
 
@@ -89,6 +89,7 @@ const QUOTES = [
   <Disclosure />
 
   <!-- Domains marquee -->
+  <div class="kw-marquee">
   <div class="kw-marquee-wrap" aria-hidden="true">
     <div class="kw-marquee-track">
       {marqueeItems.map((d, i) => (
@@ -100,6 +101,8 @@ const QUOTES = [
       ))}
     </div>
   </div>
+  <button type="button" class="kw-motion-btn" id="kw-motion-btn">Pause motion</button>
+  </div>
 
   <!-- Body sections wrapper -->
   <div class="kw-cover-body">
@@ -110,7 +113,7 @@ const QUOTES = [
       <p class="kw-abstract-text" style="grid-column: 4 / span 6">
         A field guide for anyone who must survive what is coming — and the
         tools, markets, and institutions they'll have to think with. Built
-        from <strong style="font-weight:500;color:var(--accent)">eighty-one syntheses</strong>
+        from <strong style="font-weight:500;color: var(--signal-ink)">eighty-one syntheses</strong>
         with academics, practitioners, and visionaries who are quietly redrawing the maps.
       </p>
       <div class="kw-abstract-ctas" style="grid-column: 10 / span 3">
@@ -166,21 +169,21 @@ const QUOTES = [
     <div class="kw-grid" style="margin-top:64px">
       <span class="kw-grid-label" style="grid-column: 1 / span 3">03 · Structure</span>
       <div style="grid-column: 4 / span 9">
-        <div class="kw-stats-grid">
+        <dl class="kw-spec">
           {[
-            ['09', 'Chapters'],
-            ['81', 'Syntheses'],
-            ['03', 'Tiers'],
-            ['~60', 'Diagrams'],
-            ['~350', 'Pages'],
-            ['03', 'Years'],
-          ].map(([n, l]) => (
-            <div class="kw-stat-cell">
-              <span class="kw-stat-n">{n}</span>
-              <span class="kw-stat-l">{l}</span>
+            ['Chapters', '09'],
+            ['Syntheses', '81'],
+            ['Tiers', '03'],
+            ['Diagrams', '~60'],
+            ['Pages', '~350'],
+            ['Years in the making', '03'],
+          ].map(([l, n]) => (
+            <div class="kw-spec-row">
+              <dt>{l}</dt>
+              <dd>{n}</dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </div>
 
@@ -253,13 +256,37 @@ const QUOTES = [
 </style>
 
 <script>
-  // Live UTC clock in masthead
-  const el = document.getElementById('kw-clock');
-  if (el) {
-    const tick = () => {
-      el.textContent = new Date().toISOString().replace('T', ' ').slice(0, 19) + 'Z';
-    };
-    tick();
-    setInterval(tick, 1000);
+  // Masthead UTC clock + marquee share one pause control (WCAG 2.2.2).
+  const root = document.documentElement;
+  const clock = document.getElementById('kw-clock');
+  const btn = document.getElementById('kw-motion-btn');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let paused = reduce;
+  try {
+    const saved = localStorage.getItem('kw-motion');
+    if (saved) paused = saved === 'paused';
+  } catch {}
+
+  const tick = () => {
+    if (clock) clock.textContent = new Date().toISOString().slice(11, 16) + 'Z';
+  };
+
+  function apply() {
+    root.classList.toggle('kw-motion-paused', paused);
+    if (btn) {
+      btn.textContent = paused ? 'Play motion' : 'Pause motion';
+    }
   }
+
+  tick();
+  apply();
+  setInterval(() => { if (!paused) tick(); }, 15000);
+
+  btn?.addEventListener('click', () => {
+    paused = !paused;
+    try { localStorage.setItem('kw-motion', paused ? 'paused' : 'playing'); } catch {}
+    if (!paused) tick();
+    apply();
+  });
 </script>

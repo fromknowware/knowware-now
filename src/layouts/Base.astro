@@ -1,4 +1,7 @@
 ---
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '@fontsource/jetbrains-mono/latin-600.css';
 import '../styles/kw.css';
 import { SITE_NAME, SITE_TAGLINE, SITE_URL, AUTHOR, PUBLISHER, OG_IMAGE, STRIPE_URL, PRICE_SAVING } from '../config';
 
@@ -95,18 +98,20 @@ const NAV = [
     ]
   })} />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script is:inline>
+    try { var t = localStorage.getItem('kw-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
+
 </head>
 <body>
 
+<a href="#main" class="kw-skip">Skip to content</a>
+
 <!-- Dock bar -->
-<div id="kw-dock" role="complementary" aria-label="Pre-order">
+<div id="kw-dock" role="region" aria-label="Pre-order">
   <span id="kw-dock-countdown"></span>
-  <span id="kw-dock-sep" style="margin: 0 10px; color: rgba(237,238,228,0.25)">·</span>
-  <span style="color: rgba(237,238,228,0.55)">{PRICE_SAVING}</span>
+  <span id="kw-dock-sep" aria-hidden="true" style="margin: 0 10px">·</span>
+  <span id="kw-dock-saving" style="color: rgba(237,238,228,0.72)">{PRICE_SAVING}</span>
   <a href={STRIPE_URL} id="kw-dock-cta">Pre-order · $33 →</a>
 </div>
 
@@ -118,16 +123,21 @@ const NAV = [
   </a>
   <div class="kw-nav-tabs">
     {NAV.map(({ href, num, label }) => (
-      <a href={href} class={`kw-nav-tab${isActive(href) ? ' is-active' : ''}`}>
+      <a href={href} class={`kw-nav-tab${isActive(href) ? ' is-active' : ''}`} aria-current={isActive(href) ? 'page' : undefined}>
         <span class="kw-nav-tab-num">{num}</span>
         <span class="kw-nav-tab-label">{label}</span>
       </a>
     ))}
+    <button type="button" class="kw-theme-btn" id="kw-theme-btn" aria-label="Switch theme">
+      <span class="kw-theme-name mono" id="kw-theme-name">Light</span>
+    </button>
   </div>
 </nav>
 
 <!-- Page content -->
-<slot />
+<main id="main" tabindex="-1">
+  <slot />
+</main>
 
 <!-- Footer -->
 <footer class="kw-foot">
