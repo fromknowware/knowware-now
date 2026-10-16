@@ -4,7 +4,7 @@
 // one entry per canonical story, never empty content, both <published> and
 // <updated>, stable ids, and a cap on length.
 import type { APIRoute } from 'astro';
-import { SITE_NAME, SITE_URL, AUTHOR } from '../config';
+import { SITE_NAME, SITE_URL, AUTHOR, PUBLISHER } from '../config';
 import {
   FEED_CAP, GRADE_LABEL, LAYER_LABEL, SELECTION_NOTE,
   eventLine, formatDate, getPublishedStories, isoTimestamp, type Story,
@@ -12,6 +12,7 @@ import {
 
 const FEED_URL = `${SITE_URL}/feed.xml`;
 const STORIES_URL = `${SITE_URL}/stories`;
+const LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
 
 /** XML-escape, and drop characters XML 1.0 cannot carry. */
 function esc(value: string): string {
@@ -99,7 +100,8 @@ export const GET: APIRoute = async () => {
   <updated>${feedUpdated}</updated>
   <generator uri="https://astro.build/" version="1.0">knowware-stories-feed/1.0 (astro)</generator>
   <author><name>${esc(AUTHOR)}</name><uri>${SITE_URL}</uri></author>
-  <rights>${esc(`© 2026 ${AUTHOR}. Each entry cites its sources; facts belong to those sources.`)}</rights>
+  <link rel="license" type="text/html" href="${LICENSE_URL}" />
+  <rights>${esc(`© 2026 ${AUTHOR} / ${PUBLISHER}. Licensed CC BY 4.0. Each entry cites its sources; facts belong to those sources.`)}</rights>
 ${stories.map(entryXml).join('\n')}
 </feed>
 `;
