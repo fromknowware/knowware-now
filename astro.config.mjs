@@ -8,7 +8,7 @@ export default defineConfig({
   output: 'static',
   compressHTML: true,
   integrations: [
-    sitemap({ filter: (page) => !/\/read\/\d{2}\/full\/?$/.test(page) }),
+    sitemap({ filter: (page) => !/\/read\/(\d{2}|x)\/full\/?$/.test(page) }),
     securityHeaders(),
     readerGate(),
   ],

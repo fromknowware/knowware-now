@@ -8,7 +8,7 @@ import { TOKEN_RE, readCookie, sha256 } from '../../../lib/server/guard.js';
 
 export async function onRequestGet({ request, env, params }) {
   const slug = String(params.slug);
-  const html = /^0[1-9]$/.test(slug) ? chapters[slug] : undefined;
+  const html = /^(0[1-9]|x)$/.test(slug) ? chapters[slug] : undefined;
   if (!html) return new Response('Not found', { status: 404, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 
   const token = readCookie(request, 'kw_reader');

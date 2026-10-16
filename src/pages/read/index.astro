@@ -1,4 +1,5 @@
 ---
+import { chapterNum } from '../../lib/chapters';
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
@@ -15,13 +16,13 @@ const totalMinutes = manuscript.reduce((sum, e) => sum + e.data.readMinutes, 0);
     <p class="kw-notice" id="read-notice" role="status" hidden></p>
     <p class="kw-body" style="margin-bottom: 40px">
       Every chapter opens with a scene where coordination intelligence became visible in the world.
-      The opening of each is right here. One email unlocks all nine in full, about {Math.round(totalMinutes / 60)} hours of reading.
+      The opening of each is right here. One email unlocks all nine and the capstone in full, about {Math.round(totalMinutes / 60)} hours of reading.
     </p>
 
     <div class="read-list">
       {sorted.map((ch) => (
         <a href={`/read/${ch.id}`} class="read-item">
-          <span class="read-num mono">{String(ch.data.n).padStart(2, '0')}</span>
+          <span class="read-num mono">{chapterNum(ch.data.n)}</span>
           <div class="read-body">
             <p class="read-opener">{ch.data.opener}</p>
             <p class="read-title">{ch.data.title} · {minutes[ch.data.n]} min</p>

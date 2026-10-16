@@ -1,11 +1,12 @@
 ---
+import { isCapstone } from '../lib/chapters';
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
 const chapters = await getCollection('chapters');
 const voices   = await getCollection('voices');
 
-const sortedChapters = chapters.sort((a, b) => a.data.n - b.data.n);
+const sortedChapters = chapters.filter((c) => !isCapstone(c.data.n)).sort((a, b) => a.data.n - b.data.n);
 const sortedVoices   = voices.sort((a, b) => Number(a.data.id) - Number(b.data.id));
 
 // Aggregate stats
