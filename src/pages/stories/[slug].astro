@@ -3,8 +3,9 @@ import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import StoriesNote from '../../components/StoriesNote.astro';
 import StoryBadges from '../../components/StoryBadges.astro';
+import ShareStory from '../../components/ShareStory.astro';
 import { SITE_NAME, SITE_URL, AUTHOR, PUBLISHER } from '../../config';
-import { getPublishedStories, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate } from '../../lib/stories';
+import { getPublishedStories, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, shareText } from '../../lib/stories';
 
 export async function getStaticPaths() {
   const stories = await getPublishedStories();
@@ -95,6 +96,8 @@ const jsonLd = {
         ))}
       </ol>
     </section>
+
+    <ShareStory text={shareText(story)} url={PAGE_URL} title={d.headline} />
 
     <StoriesNote />
   </article>

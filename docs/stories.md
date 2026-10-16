@@ -33,3 +33,25 @@ The body is the full cited write-up. Cite with `[[1]](#src-1)`, numbered in `sou
 
 The feed carries the newest 100 entries. Feed readers get entries with `published`
 and `updated` dates, stable ids (the story URL), and never empty content.
+
+## Sharing
+
+Each story page has a "Share this story" block with one prepared text (headline, missing
+layer, evidence grade, and any simulation or alleged flag, plus the link). Readers can use
+the native share sheet or copy the text. It runs in the reader's browser only.
+
+The same text is published at `/stories/share.json` and is used to post from the author's
+own accounts through [Zernio](https://zernio.com):
+
+```bash
+# needs ZERNIO_API_KEY for anything that talks to Zernio
+node scripts/zernio-share.mjs --list-accounts
+node scripts/zernio-share.mjs <slug> --platforms linkedin            # dry run, prints the request
+node scripts/zernio-share.mjs <slug> --platforms linkedin --send     # saves a DRAFT in Zernio
+node scripts/zernio-share.mjs <slug> --platforms linkedin --send --at 2026-10-20T09:00:00 --tz America/Denver
+```
+
+- Only stories already live on the site can be sent (the text is read from `share.json`).
+- `--send` with no other flag creates a draft, approved in the Zernio dashboard. `--now` publishes immediately.
+- The GitHub Action "Share a story via Zernio" runs the same script by hand (`workflow_dispatch` only). It needs a `ZERNIO_API_KEY` repository secret.
+- The build fails if a share text would exceed 280 characters, so every story fits X.

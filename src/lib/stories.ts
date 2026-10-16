@@ -1,5 +1,6 @@
 // Shared helpers for the /stories log and its Atom feed.
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { SITE_URL } from '../config';
 
 export type Story = CollectionEntry<'stories'>;
 
@@ -44,6 +45,34 @@ export function eventLine(s: Story): string {
 
 export function primarySources(s: Story) {
   return s.data.sources.filter((x) => x.primary);
+}
+
+export function storyUrl(s: Story): string {
+  return `${SITE_URL}/stories/${s.id}`;
+}
+
+// X counts any link as 23 characters; every other network allows more.
+const SHARE_LIMIT = 280;
+const LINK_WEIGHT = 23;
+
+/**
+ * The one share text for a story, used by the on-page buttons and by
+ * scripts/zernio-share.mjs. Shares are where context gets stripped, so the
+ * grade and any simulation or allegation flag travel with the headline.
+ */
+export function shareText(s: Story): string {
+  const d = s.data;
+  const flags = [d.simulation ? 'Simulation' : '', d.alleged ? 'Alleged' : ''].filter(Boolean);
+  const text = [
+    d.headline,
+    `Missing layer: ${LAYER_LABEL[d.missingLayer]}. Evidence grade ${d.grade}${flags.length ? `, ${flags.join(', ').toLowerCase()}` : ''}.`,
+    storyUrl(s),
+  ].join('\n\n');
+  const weighted = text.length - storyUrl(s).length + LINK_WEIGHT;
+  if (weighted > SHARE_LIMIT) {
+    throw new Error(`stories: share text for "${s.id}" is ${weighted} characters (limit ${SHARE_LIMIT}). Shorten the headline.`);
+  }
+  return text;
 }
 
 function canonicalUrl(u: string): string {

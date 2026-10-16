@@ -1,0 +1,75 @@
+---
+// Per-story sharing. Runs entirely in the reader's browser: navigator.share
+// and the clipboard only, as the colophon promises. No third-party requests.
+interface Props {
+  text: string;
+  url: string;
+  title: string;
+}
+const { text, url, title } = Astro.props;
+---
+<section class="st-share" aria-labelledby="st-share-h" data-share data-url={url} data-title={title}>
+  <h2 class="kw-label" id="st-share-h">Share this story</h2>
+  <p class="st-share-text" data-share-text>{text}</p>
+  <p class="st-share-actions">
+    <button type="button" class="kw-btn kw-btn--filled" data-share-native hidden>Share…</button>
+    <button type="button" class="kw-btn" data-share-copy>Copy text</button>
+    <span class="st-share-status mono" role="status" data-share-status></span>
+  </p>
+  <p class="st-share-note mono">Sharing happens in your browser. Nothing is sent to us or anyone else.</p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-share]').forEach((root) => {
+    const textEl = root.querySelector<HTMLElement>('[data-share-text]');
+    const nativeBtn = root.querySelector<HTMLButtonElement>('[data-share-native]');
+    const copyBtn = root.querySelector<HTMLButtonElement>('[data-share-copy]');
+    const status = root.querySelector<HTMLElement>('[data-share-status]');
+    if (!textEl || !copyBtn || !status) return;
+    const text = textEl.textContent ?? '';
+    const say = (msg: string) => {
+      status.textContent = msg;
+      window.setTimeout(() => { if (status.textContent === msg) status.textContent = ''; }, 4000);
+    };
+
+    if (nativeBtn && typeof navigator.share === 'function') {
+      nativeBtn.hidden = false;
+      nativeBtn.addEventListener('click', async () => {
+        try {
+          await navigator.share({ title: root.dataset.title, text: text.replace(root.dataset.url ?? '', '').trim(), url: root.dataset.url });
+        } catch (e) {
+          if ((e as DOMException).name !== 'AbortError') say('Sharing failed. Try Copy text.');
+        }
+      });
+    }
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        say('Copied.');
+      } catch {
+        const range = document.createRange();
+        range.selectNodeContents(textEl);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+        say('Press Ctrl or Cmd+C to copy.');
+      }
+    });
+  });
+</script>
+
+<style>
+  .st-share { margin: 0 0 32px; padding-top: 20px; border-top: 1px solid var(--rule); }
+  .st-share .kw-label { margin-bottom: 12px; }
+  .st-share-text {
+    max-width: 60ch; margin: 0 0 16px; padding: 14px 16px;
+    border: 1px solid var(--rule); background: var(--paper);
+    font-size: 15px; line-height: 1.55; white-space: pre-line; overflow-wrap: anywhere;
+  }
+  .st-share-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 0 0 12px; }
+  .st-share-actions [hidden] { display: none !important; }
+  .st-share-actions .kw-btn--filled { color: #EDEEE4; }
+  .st-share-status { min-height: 1em; font-size: 12px; color: var(--sub); }
+  .st-share-note { margin: 0; font-size: 12px; line-height: 1.5; color: var(--sub); }
+</style>

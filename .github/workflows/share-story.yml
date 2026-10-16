@@ -1,0 +1,47 @@
+name: Share a story via Zernio
+
+# Manual only. Nothing is ever posted automatically: a person starts this run,
+# picks the story and platforms, and the default mode saves a DRAFT in Zernio
+# for approval there.
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Story slug (the file name in src/content/stories, without .md). Must already be live.'
+        required: true
+        type: string
+      platforms:
+        description: 'Comma-separated Zernio platform names, for example linkedin,twitter'
+        required: true
+        type: string
+      mode:
+        description: 'draft saves for approval in Zernio; now publishes immediately'
+        required: true
+        type: choice
+        default: draft
+        options: [draft, now]
+
+jobs:
+  share:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+
+      - name: Send to Zernio
+        env:
+          ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
+          SLUG: ${{ inputs.slug }}
+          PLATFORMS: ${{ inputs.platforms }}
+          MODE: ${{ inputs.mode }}
+        run: |
+          if [ "$MODE" = "now" ]; then FLAG="--now"; else FLAG=""; fi
+          node scripts/zernio-share.mjs "$SLUG" --platforms "$PLATFORMS" --send $FLAG
