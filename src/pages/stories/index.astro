@@ -45,6 +45,7 @@ const jsonLd = {
       <div><dt>Grade C</dt><dd>{GRADE_LABEL.C}</dd></div>
     </dl>
     <StoriesNote />
+    <p class="st-license">Entry text is licensed <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>. The facts belong to the sources each entry cites.</p>
   </section>
 
   <section class="kw-section st-list" aria-labelledby="st-list-h">
@@ -72,6 +73,8 @@ const jsonLd = {
 <style>
   .st-head { padding-bottom: clamp(28px, 4vw, 48px); }
   .st-title { max-width: 18ch; }
+  .st-license { margin: 12px 0 0; max-width: 78ch; font: 400 12px/1.5 "JetBrains Mono", ui-monospace, monospace; color: var(--sub); }
+  .st-license a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   .st-links { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 28px; }
   .st-links .kw-btn--filled { color: #EDEEE4; }
   .st-legend { display: grid; gap: 8px; margin: 0; max-width: 78ch; font-size: 14px; line-height: 1.5; }
