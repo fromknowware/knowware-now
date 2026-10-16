@@ -1,0 +1,16 @@
+---
+// One line on how stories are chosen and graded. Carried by every /stories page.
+// Deliberately not the asterisk footnote: stories are not synthesized.
+import { SELECTION_NOTE } from '../lib/stories';
+---
+<p class="st-note">{SELECTION_NOTE} <a href="/method">How the book works</a></p>
+
+<style>
+  .st-note {
+    font: 400 12px/1.5 "JetBrains Mono", ui-monospace, monospace;
+    letter-spacing: 0; color: var(--sub);
+    margin: 28px 0 0; padding-top: 12px; max-width: 78ch;
+    border-top: 1px solid var(--rule);
+  }
+  .st-note a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+</style>

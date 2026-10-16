@@ -1,0 +1,114 @@
+---
+// Per-story sharing. Nothing loads from any network until the reader clicks:
+// the buttons use navigator.share and the clipboard, and the network links are
+// plain anchors to each network's own share page. No scripts, pixels or
+// cookies from third parties.
+interface Props {
+  text: string;     // the prepared post (headline, layer, grade, link)
+  url: string;      // canonical story URL
+  title: string;
+  summary: string;  // used as the email body
+  card: string;     // path to the social card PNG
+  cardAlt: string;
+}
+const { text, url, title, summary, card, cardAlt } = Astro.props;
+const q = encodeURIComponent;
+const networks = [
+  { name: 'X', href: `https://x.com/intent/post?text=${q(text)}` },
+  { name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${q(url)}` },
+  { name: 'Bluesky', href: `https://bsky.app/intent/compose?text=${q(text)}` },
+];
+const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
+---
+<section class="st-share" aria-labelledby="st-share-h" data-share data-url={url} data-title={title}>
+  <h2 class="kw-label" id="st-share-h">Share this story</h2>
+
+  <figure class="st-share-card">
+    <img src={card} width="1200" height="630" alt={cardAlt} loading="lazy" decoding="async" />
+    <figcaption class="mono">The card that appears when this story is shared. <a href={card} download>Save the image</a></figcaption>
+  </figure>
+
+  <p class="st-share-text" data-share-text>{text}</p>
+
+  <p class="st-share-row">
+    <button type="button" class="kw-btn kw-btn--filled" data-share-native hidden>Share…</button>
+    <button type="button" class="kw-btn" data-share-copy="link">Copy link</button>
+    <button type="button" class="kw-btn" data-share-copy="text">Copy post text</button>
+    <span class="st-share-status mono" role="status" data-share-status></span>
+  </p>
+
+  <ul class="st-share-row st-share-nets" aria-label="Post to">
+    {networks.map((n) => (
+      <li><a class="kw-btn" href={n.href} target="_blank" rel="noopener noreferrer">{n.name}<span class="sr-only"> (opens in a new tab)</span></a></li>
+    ))}
+    <li><a class="kw-btn" href={mail}>Email</a></li>
+  </ul>
+
+  <p class="st-share-note mono">The links open each network's own share page in a new tab. Nothing is sent to us or loaded from them until you click.</p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-share]').forEach((root) => {
+    const textEl = root.querySelector<HTMLElement>('[data-share-text]');
+    const nativeBtn = root.querySelector<HTMLButtonElement>('[data-share-native]');
+    const status = root.querySelector<HTMLElement>('[data-share-status]');
+    if (!textEl || !status) return;
+    const url = root.dataset.url ?? '';
+    const text = textEl.textContent ?? '';
+    let timer = 0;
+    const say = (msg: string) => {
+      status.textContent = msg;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => { status.textContent = ''; }, 4000);
+    };
+
+    if (nativeBtn && typeof navigator.share === 'function') {
+      nativeBtn.hidden = false;
+      nativeBtn.addEventListener('click', async () => {
+        try {
+          await navigator.share({ title: root.dataset.title, text: text.replace(url, '').trim(), url });
+        } catch (e) {
+          if ((e as DOMException).name !== 'AbortError') say('Sharing failed. Try Copy link.');
+        }
+      });
+    }
+
+    root.querySelectorAll<HTMLButtonElement>('[data-share-copy]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const isLink = btn.dataset.shareCopy === 'link';
+        try {
+          await navigator.clipboard.writeText(isLink ? url : text);
+          say(isLink ? 'Link copied.' : 'Post text copied.');
+        } catch {
+          const range = document.createRange();
+          range.selectNodeContents(textEl);
+          const sel = window.getSelection();
+          sel?.removeAllRanges();
+          sel?.addRange(range);
+          say('Copying was blocked. The text is selected: press Ctrl or Cmd+C.');
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .st-share { margin: 0 0 32px; padding-top: 20px; border-top: 1px solid var(--rule); }
+  .st-share .kw-label { margin-bottom: 12px; }
+  .st-share-card { margin: 0 0 18px; max-width: 560px; }
+  .st-share-card img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
+  .st-share-card figcaption { margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--sub); }
+  .st-share-card figcaption a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .st-share-text {
+    max-width: 60ch; margin: 0 0 16px; padding: 14px 16px;
+    border: 1px solid var(--rule); background: var(--paper);
+    font-size: 15px; line-height: 1.55; white-space: pre-line; overflow-wrap: anywhere;
+  }
+  .st-share-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 0 0 12px; padding: 0; list-style: none; }
+  .st-share-row [hidden] { display: none !important; }
+  .st-share-row .kw-btn--filled { color: #EDEEE4; }
+  .st-share-nets .kw-btn { text-decoration: none; color: var(--ink); }
+  .st-share-nets .kw-btn:hover { color: var(--bg); }
+  .st-share-status { min-height: 1em; font-size: 12px; line-height: 1.4; color: var(--sub); }
+  .st-share-note { margin: 4px 0 0; font-size: 12px; line-height: 1.5; color: var(--sub); max-width: 78ch; }
+</style>

@@ -4,6 +4,7 @@ import type { APIRoute } from 'astro';
 import { getCollection, getEntry } from 'astro:content';
 import { chapterNum } from '../lib/chapters';
 import { MARKDOWN_PAGES } from '../lib/markdown-pages.mjs';
+import { getPublishedStories, eventLine } from '../lib/stories';
 import { SITE_URL, SITE_NAME, AUTHOR, CHECKOUT_OPEN, CONTACT_EMAIL } from '../config';
 import { ENDPOINTS, PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS } from '../lib/agents';
 
@@ -15,6 +16,7 @@ export const GET: APIRoute = async () => {
     if (!p) continue;
     items.push(`- [Chapter ${chapterNum(c.data.n)}: ${p.data.title}](${SITE_URL}/read/${c.id}.md): free preview, about ${p.data.words} of ${p.data.totalWords} words`);
   }
+  const stories = await getPublishedStories();
   const page = (path: string) => MARKDOWN_PAGES.find((m) => m.path === path)!;
   const link = (path: string, note: string) => `- [${page(path).label}](${SITE_URL}/${page(path).file}): ${note}`;
 
@@ -42,6 +44,11 @@ export const GET: APIRoute = async () => {
     link('/rules', 'the editorial rules'),
     link('/colophon', 'how the site is made; no analytics, no tracking'),
     link('/read', 'the manuscript index'),
+    '',
+    '## Stories',
+    '',
+    link('/stories', 'a running, cited log of real cases where systems acted and nobody held the knowing; not synthesized'),
+    ...stories.map((s) => `- [${s.data.headline}](${SITE_URL}/stories/${s.id}.md): ${eventLine(s)}`),
     '',
     '## For agents',
     '',
