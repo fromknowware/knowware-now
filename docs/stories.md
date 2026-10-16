@@ -47,19 +47,3 @@ image), one prepared post text, the native share sheet where the browser has one
 Copy post text, and plain links to X, LinkedIn, Bluesky and email. Nothing loads from any
 network until a reader clicks, and there are no third-party scripts or pixels. If the
 clipboard is blocked the text is selected for manual copy.
-
-The same text is published at `/stories/share.json` and is used to post from the author's
-own accounts through [Zernio](https://zernio.com):
-
-```bash
-# needs ZERNIO_API_KEY for anything that talks to Zernio
-node scripts/zernio-share.mjs --list-accounts
-node scripts/zernio-share.mjs <slug> --platforms linkedin            # dry run, prints the request
-node scripts/zernio-share.mjs <slug> --platforms linkedin --send     # saves a DRAFT in Zernio
-node scripts/zernio-share.mjs <slug> --platforms linkedin --send --at 2026-10-20T09:00:00 --tz America/Denver
-```
-
-- Only stories already live on the site can be sent (the text is read from `share.json`).
-- `--send` with no other flag creates a draft, approved in the Zernio dashboard. `--now` publishes immediately.
-- The GitHub Action "Share a story via Zernio" runs the same script by hand (`workflow_dispatch` only). It needs a `ZERNIO_API_KEY` repository secret.
-- The build fails if a share text would exceed 280 characters, so every story fits X.

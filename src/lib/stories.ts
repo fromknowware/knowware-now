@@ -56,8 +56,7 @@ const SHARE_LIMIT = 280;
 const LINK_WEIGHT = 23;
 
 /**
- * The one share text for a story, used by the on-page buttons and by
- * scripts/zernio-share.mjs. Shares are where context gets stripped, so the
+ * The one share text for a story, used by the on-page share block. Shares are where context gets stripped, so the
  * grade and any simulation or allegation flag travel with the headline.
  */
 export function shareText(s: Story): string {
