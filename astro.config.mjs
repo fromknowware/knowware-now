@@ -21,5 +21,8 @@ export default defineConfig({
     '/rules.html': '/rules',
     '/colophon.html': '/colophon',
     '/contribute.html': '/contribute',
+    // Browsers and feed readers get a real 301 from public/_redirects on
+    // Cloudflare Pages; this is the static fallback elsewhere.
+    '/feed': '/feed.xml',
   },
 });

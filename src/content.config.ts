@@ -65,8 +65,66 @@ const manuscriptCollection = defineCollection({
   }),
 });
 
+// A running, cited log of real stories. Entries are added by committing a file.
+// The schema enforces the editorial rules so a bad entry fails the build:
+// primary source required, grade C never published, at most two sentences of
+// thesis framing, simulations and allegations flagged.
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const PARTIAL_DATE = /^\d{4}(-\d{2}(-\d{2})?)?$/;
+
+const storySource = z.object({
+  label: z.string().min(3),
+  publisher: z.string().min(2),
+  url: z.url().refine((u) => u.startsWith('https://'), 'source links must be https'),
+  date: z.string().regex(PARTIAL_DATE).optional(),
+  primary: z.boolean().default(false),
+});
+
+const storyCollection = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/stories' }),
+  schema: z.object({
+    headline: z.string().min(10),
+    // When the event happened. Partial dates allowed (YYYY, YYYY-MM, YYYY-MM-DD).
+    eventDate: z.string().regex(PARTIAL_DATE),
+    // Optional wording for the date line when the date is a disclosure, not the event.
+    eventDateLabel: z.string().optional(),
+    added: z.string().regex(ISO_DATE),
+    updated: z.string().regex(ISO_DATE).optional(),
+    // One factual paragraph, taken only from the cited sources.
+    summary: z.string().min(80),
+    missingLayer: z.enum(['knowing', 'context', 'accountability', 'meaning', 'third-party']),
+    missingLayerLine: z.string().min(20),
+    why: z.string().min(40).refine(
+      (s) => (s.match(/[.!?](\s|$)/g) ?? []).length <= 2,
+      'why: at most two sentences',
+    ),
+    grade: z.enum(['A', 'B', 'C']),
+    simulation: z.boolean().default(false),
+    alleged: z.boolean().default(false),
+    // Places where sources disagree, or what the entry deliberately does not claim.
+    caveats: z.array(z.string().min(10)).default([]),
+    tags: z.array(z.string().regex(/^[a-z0-9-]+$/)).default([]),
+    sources: z.array(storySource).min(1),
+    draft: z.boolean().default(false),
+  }).superRefine((s, ctx) => {
+    if (!s.sources.some((x) => x.primary)) {
+      ctx.addIssue({ code: 'custom', path: ['sources'], message: 'at least one source must be marked primary' });
+    }
+    if (s.grade === 'C' && !s.draft) {
+      ctx.addIssue({ code: 'custom', path: ['grade'], message: 'grade C leads must stay draft: true until verified' });
+    }
+    if (s.simulation && !/simulat/i.test(s.summary)) {
+      ctx.addIssue({ code: 'custom', path: ['summary'], message: 'simulation: true entries must say "simulation" in the summary' });
+    }
+    if (s.alleged && !/alleg/i.test(s.summary)) {
+      ctx.addIssue({ code: 'custom', path: ['summary'], message: 'alleged: true entries must use "alleged" in the summary' });
+    }
+  }),
+});
+
 export const collections = {
   chapters: chapterCollection,
   voices: voiceCollection,
   manuscript: manuscriptCollection,
+  stories: storyCollection,
 };
