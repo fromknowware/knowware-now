@@ -13,7 +13,7 @@ Most of the sources below are secondary or vendor-adjacent; where a primary sour
 | Content negotiation (`Accept: text/markdown`) | Not done | [Cloudflare Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents) is a zone feature for Pro, Business and Enterprise plans that converts HTML at the edge. If the zone is on a plan that has it, flip it on later; it composes with the `.md` files. A Pages Function in front of every request to negotiate would add invocations to every page view for no gain. |
 | `Content-Signal` in robots.txt | Adopt, flagged | The [Content Signals](https://blog.cloudflare.com/content-signals-policy/) vocabulary is `search`, `ai-input`, `ai-train`. Set to `search=yes, ai-input=yes, ai-train=no`, matching "read and quote for the principal; no training". A stated preference, not a licence. **Author decision.** |
 | Stripe Checkout (test mode, flagged off) | Adopt (PR 3) | The only payment path a solo author on Stripe can run today. The agent fetches a link; a human pays. |
-| Remote MCP server | See PR 2 | |
+| Remote MCP server | Decided in a later PR of this stack | A stateless remote MCP server is plausible on a Pages Function (the 2026-07-28 revision removed the session handshake). Whether it is worth shipping is argued in the PR that adds it. |
 
 ## Considered and not adopted
 
