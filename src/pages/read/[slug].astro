@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import SceneHead from '../../components/SceneHead.astro';
 import Field from '../../components/Field.astro';
 import ReaderGate from '../../components/ReaderGate.astro';
+import SynthesisNote from '../../components/SynthesisNote.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { SITE_URL } from '../../config';
 
@@ -46,6 +47,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   <article class="kw-section kw-prose kw-preview" data-kw-read aria-labelledby="preview-h">
     <h2 class="sr-only" id="preview-h">Chapter opening</h2>
     {preview.data.dek && <p class="kw-prose-dek">{preview.data.dek}</p>}
+    <SynthesisNote variant="chapter" />
     <div class="kw-preview-body">
       <Preview />
     </div>
@@ -204,6 +206,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   <section class="kw-section">
     <p class="kw-label">Nine Voices · Chapter {String(chapter.data.n).padStart(2,'0')}</p>
     <h2 class="kw-h3">{chapter.data.title}</h2>
+    <SynthesisNote variant="chapter" />
     <div class="voice-list">
       {chapterVoices.map((v) => (
         <a class="kw-voice-card" href={`/voices/${v.data.id}`}>
@@ -212,9 +215,9 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
             <p class="kw-voice-name">{v.data.name}</p>
             <p class="kw-voice-role">{v.data.role}</p>
             {v.data.coldOpen && (
-              <blockquote class="voice-cold-open">
-                "{v.data.coldOpen}"
-              </blockquote>
+              <p class="voice-cold-open">
+                <span class="voice-synth-tag">Synthesized, not a quote:</span> {v.data.coldOpen}
+              </p>
             )}
           </div>
           <span class={`kw-tier kw-tier--${v.data.tier}`}>{tierLabel[v.data.tier]}</span>
@@ -245,7 +248,9 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   font: 400 13px/1.6 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); margin: 10px 0 0;
   background: var(--accent-soft); padding: 10px 14px;
+  border: 1px dashed var(--sub);
 }
+.voice-synth-tag { font-weight: 600; color: var(--ink); }
 .chapter-nav {
   display: flex; justify-content: space-between; gap: 24px;
 }

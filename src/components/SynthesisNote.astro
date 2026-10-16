@@ -1,0 +1,30 @@
+---
+// Point-of-use disclosure: the 81 voices are syntheses, never quotes.
+interface Props {
+  name?: string;
+  variant?: 'voice' | 'chapter' | 'band';
+}
+const { name, variant = 'voice' } = Astro.props;
+---
+<p class={`kw-synth-note kw-synth-note--${variant}`}>
+  {variant === 'voice' && name ? (
+    <>Written for Knowware from {name}'s published work and public talks. Not a quote, and not an interview.</>
+  ) : (
+    <>Words attributed to the 81 voices are syntheses written for this book from their published work, not quotes or interview transcripts.</>
+  )}
+  {' '}<a href="/method">How the syntheses are made →</a>
+</p>
+
+<style>
+  .kw-synth-note {
+    font-size: 13px; line-height: 1.5; color: var(--sub);
+    max-width: 68ch; margin: 12px 0 0;
+  }
+  .kw-synth-note a {
+    color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+  .kw-synth-note--chapter { margin: 0 0 1.6em; }
+  .kw-synth-note--band { color: var(--band-sub); }
+  .kw-synth-note--band a { color: var(--band-accent); }
+</style>

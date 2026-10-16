@@ -886,9 +886,10 @@ article[data-kw-read] {
   font: 700 clamp(24px,3vw,40px)/1.05 "Helvetica Neue", Helvetica, Arial, sans-serif;
   letter-spacing: -.025em; margin: 0 0 8px;
 }
+.cast-header-link { color: var(--band-accent); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 .cast-header-sub {
   font: 400 14px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: var(--band-sub); margin: 0 0 28px; max-width: 560px;
+  color: var(--band-sub); margin: 0 0 28px; max-width: 640px;
 }
 .cast-stats-row {
   display: flex; flex-wrap: wrap; gap: 6px 22px;

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import SynthesisNote from '../../components/SynthesisNote.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -50,14 +51,14 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
 ---
 <Base
   title={`${voice.name} — Dossier`}
-  description={voice.coldOpen ?? voice.bio ?? `Voice №${voice.id} of 81 in Knowware.`}
+  description={`${voice.name}, ${voice.role}. One of 81 synthesized voices in Knowware, written from published work. Not an interview.`}
   ogType="article"
 >
 
 <!-- Sticky top bar -->
 <div class="dos-topbar mono">
   <span class="dos-breadcrumb">
-    DOSSIER · №{voice.id} OF {String(total).padStart(2,'0')} · {tierLbl.toUpperCase()} · ch{chapterSlug}
+    DOSSIER · №{voice.id} OF {String(total).padStart(2,'0')} · {tierLbl.toUpperCase()} · ch{chapterSlug} · SYNTHESIZED VOICE
   </span>
   <div class="dos-nav-btns">
     {prevId && <a href={`/voices/${prevId}`} class="dos-nav-btn" aria-label="Previous voice" rel="prev">←</a>}
@@ -102,12 +103,13 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   </div>
 </div>
 
-<!-- Cold open -->
+<!-- Cold open: a synthesis, never presented as a quote -->
 {voice.coldOpen && (
-  <div class="dos-cold-open">
-    <div class="dos-section-lbl mono">COLD OPEN</div>
-    <blockquote class="dos-quote">"{voice.coldOpen}"</blockquote>
-  </div>
+  <section class="dos-cold-open" aria-labelledby="synth-h">
+    <h2 class="dos-section-lbl mono" id="synth-h">SYNTHESIZED VOICE · NOT A QUOTE</h2>
+    <p class="dos-quote">{voice.coldOpen}</p>
+    <SynthesisNote name={voice.name} />
+  </section>
 )}
 
 <!-- Bio + right panel -->
@@ -288,8 +290,8 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   padding: 48px 40px;
 }
 .dos-section-lbl {
-  font-size: 11px; color: var(--sub);
-  letter-spacing: 0.06em; margin-bottom: 20px;
+  font-size: 11px; font-weight: 400; color: var(--sub);
+  letter-spacing: 0.06em; margin: 0 0 20px;
 }
 .dos-quote {
   font: 400 clamp(20px,3vw,32px)/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -297,6 +299,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   margin: 0; max-width: 82ch;
   color: var(--ink);
   background: var(--accent-soft);
+  border: 1px dashed var(--sub);
   padding: 24px 28px;
 }
 

@@ -4,6 +4,7 @@
 import Base from '../../../layouts/Base.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { SITE_URL } from '../../../config';
+import SynthesisNote from '../../../components/SynthesisNote.astro';
 
 export async function getStaticPaths() {
   const chapters = await getCollection('chapters');
@@ -34,6 +35,7 @@ const fmt = (x: number) => x.toLocaleString('en-US');
     <h1 class="kw-h2">{full.data.title || chapter.data.title}</h1>
     {full.data.dek && <p class="kw-prose-dek">{full.data.dek}</p>}
     <p class="kw-full-meta mono">{fmt(full.data.totalWords)} words · about {full.data.readMinutes} min</p>
+    <SynthesisNote variant="chapter" />
   </header>
 
   <article class="kw-section kw-prose" data-kw-read>
