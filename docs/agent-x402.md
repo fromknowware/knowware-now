@@ -18,7 +18,7 @@ x402 has no notion of a human principal; whoever holds the wallet pays. Knowware
 ## What it does not do
 - **No mainnet.** `NETWORK` is the constant `eip155:84532`; there is no setting for another network. Going to mainnet is a code change.
 - **No print, no pre-order bundle.** They need a shipping address; x402 carries none. They stay on the Stripe link.
-- **Not verified live.** I tested against `scripts/mock-facilitator.mjs`, which checks nothing cryptographic. I did not create a wallet, sign a real EIP-3009 authorization, or call the real facilitator, so signature handling, the facilitator's response details and `settlement_pending` are unexercised. First real test: Base Sepolia, testnet USDC from a faucet, `https://x402.org/facilitator`.
+- **Not verified live.** A step-by-step real Base Sepolia test is in `docs/agent-x402-live-test.md`, with a client that signs a real EIP-3009 authorization (`examples/x402-pay.mjs`). So far I tested against `scripts/mock-facilitator.mjs`, which checks nothing cryptographic. I did not create a wallet, sign a real EIP-3009 authorization, or call the real facilitator, so signature handling, the facilitator's response details and `settlement_pending` are unexercised. First real test: Base Sepolia, testnet USDC from a faucet, `https://x402.org/facilitator`.
 - **No fulfilment.** A paid digital order is a KV record and a Stripe-style order id; the author must email the files at launch.
 
 ## To switch it on (testnet)
