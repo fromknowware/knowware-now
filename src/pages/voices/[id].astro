@@ -200,6 +200,10 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   </div>
 )}
 
+<p class="dos-corrections">
+  Named on this page and want a correction or removal? <a href="/corrections">Tell us</a>.
+</p>
+
 <!-- Bottom nav -->
 <div class="dos-bottom-nav">
   <a href="/the-81" class="kw-btn">← All 81</a>
@@ -351,6 +355,8 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   display: inline-flex; align-items: center; gap: 10px;
 }
 .dos-cls-sym { font-size: 24px; font-weight: 600; }
+.dos-corrections { margin: 0; padding: 20px 40px 0; font-size: 13px; color: var(--sub); }
+.dos-corrections a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .dos-ctas { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
 .dos-cta {
   display: flex; align-items: center; justify-content: space-between;
