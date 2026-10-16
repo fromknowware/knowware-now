@@ -22,7 +22,7 @@ const style = [
 
 const cls = ['kw-field', variant ? `kw-field--${variant}` : '', extraClass].filter(Boolean).join(' ');
 ---
-<div class={cls} style={style || undefined}>
+<div class={cls} style={style || undefined} aria-hidden="true">
   <div class="kw-field-sig"></div>
   {caption && <p class="kw-field-caption">{caption}</p>}
 </div>

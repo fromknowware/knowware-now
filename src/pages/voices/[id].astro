@@ -60,8 +60,8 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
     DOSSIER · №{voice.id} OF {String(total).padStart(2,'0')} · {tierLbl.toUpperCase()} · ch{chapterSlug}
   </span>
   <div class="dos-nav-btns">
-    {prevId && <a href={`/voices/${prevId}`} class="dos-nav-btn">←</a>}
-    {nextId && <a href={`/voices/${nextId}`} class="dos-nav-btn">→</a>}
+    {prevId && <a href={`/voices/${prevId}`} class="dos-nav-btn" aria-label="Previous voice" rel="prev">←</a>}
+    {nextId && <a href={`/voices/${nextId}`} class="dos-nav-btn" aria-label="Next voice" rel="next">→</a>}
   </div>
   <a href="/the-81" class="dos-back-btn mono">← Back to The 81</a>
 </div>
@@ -74,7 +74,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
     <span class="dos-mono-num mono" style={`color:${tierInk}`}>
       {voice.id} · {voice.tier}
     </span>
-    <span class="dos-mono-sym" style="color:rgba(0,0,0,0.15)">{voiceSym}</span>
+    <span class="dos-mono-sym" aria-hidden="true" style={`color:${tierInk}`}>{voiceSym}</span>
     <span class="dos-mono-tier mono" style={`color:${tierInk}`}>{tierLbl.toUpperCase()}</span>
   </div>
 
@@ -123,7 +123,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
     )}
     {voice.whyMatters && (
       <>
-        <div class="dos-section-lbl mono" style="color:var(--signal);margin-top:32px">WHY THIS VOICE MATTERS TO KNOWWARE</div>
+        <div class="dos-section-lbl mono" style="color: var(--signal-ink);margin-top:32px">WHY THIS VOICE MATTERS TO KNOWWARE</div>
         <div class="dos-why-matters">{voice.whyMatters}</div>
       </>
     )}
@@ -137,7 +137,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
         <div class="dos-panel-hd mono">OUTSTANDING NOTES</div>
         <ul class="dos-bullet-list">
           {voice.awards.map(a => (
-            <li><span class="dos-bullet-dot" style="color:var(--signal)">◦</span>{a}</li>
+            <li><span class="dos-bullet-dot" style="color: var(--signal-ink)">◦</span>{a}</li>
           ))}
         </ul>
       </div>
@@ -146,12 +146,12 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
     <div class="dos-panel-section">
       <div class="dos-panel-hd mono">CLASSIFICATION</div>
       <div class="dos-classification" style={`background:${tierBg};border:1px solid ${tierInk}`}>
-        <span class="dos-cls-sym" style="color:var(--ink)">{voiceSym}</span>
+        <span class="dos-cls-sym" aria-hidden="true" style={`color:${tierInk}`}>{voiceSym}</span>
         <div>
-          <div class="mono" style={`font-size:9px;color:${tierInk};letter-spacing:0.06em`}>
+          <div class="mono" style={`font-size:11px;color:${tierInk};letter-spacing:0.06em`}>
             {tierLbl.toUpperCase()} · TIER {voice.tier}
           </div>
-          <div class="mono" style="font-size:9px;color:var(--sub)">ch{chapterSlug}</div>
+          <div class="mono" style={`font-size:11px;color:${tierInk}`}>ch{chapterSlug}</div>
         </div>
       </div>
     </div>
@@ -173,7 +173,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   <div class="dos-section">
     <div class="dos-section-hd">
       <div class="dos-section-lbl mono">METHODS &amp; FRAMEWORKS</div>
-      <span class="mono" style="font-size:9px;color:var(--sub2)">{voice.knownFor.length} entries</span>
+      <span class="mono" style="font-size:11px;color:var(--sub2)">{voice.knownFor.length} entries</span>
     </div>
     <div class="dos-tags">
       {voice.knownFor.map(t => <span class="dos-tag mono">{t}</span>)}
@@ -218,20 +218,21 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   gap: 16px; align-items: center;
 }
 .dos-breadcrumb {
-  font-size: 10px; color: var(--sub);
+  font-size: 11px; color: var(--sub);
   letter-spacing: 0.04em;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .dos-nav-btns { display: flex; gap: 6px; }
 .dos-nav-btn {
   background: none; border: 1px solid var(--rule);
-  padding: 6px 8px; font-size: 10px; color: var(--sub);
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 32px; min-height: 32px; font-size: 14px; color: var(--sub);
 }
 .dos-nav-btn:hover { border-color: var(--ink); color: var(--ink); }
 .dos-back-btn {
   background: var(--ink); color: var(--paper);
   border: none; padding: 7px 12px; cursor: pointer;
-  font-size: 10px; letter-spacing: 0.04em;
+  font-size: 11px; letter-spacing: 0.04em;
   white-space: nowrap;
 }
 .dos-back-btn:hover { background: var(--sub); }
@@ -249,20 +250,20 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   justify-content: space-between;
   padding: 20px;
 }
-.dos-mono-num { font-size: 9px; letter-spacing: 0.05em; }
+.dos-mono-num { font-size: 11px; letter-spacing: 0.05em; }
 .dos-mono-sym {
   font-size: 88px; font-weight: 600;
   letter-spacing: -0.06em; line-height: 1;
   text-align: center; user-select: none;
 }
-.dos-mono-tier { font-size: 8px; text-align: center; letter-spacing: 0.06em; }
+.dos-mono-tier { font-size: 11px; text-align: center; letter-spacing: 0.06em; }
 
 .dos-id-meta {
   padding: 32px 40px;
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .dos-alias {
-  font-size: 11px; color: var(--signal);
+  font-size: 11px; color: var(--signal-ink);
   letter-spacing: 0.02em; margin: 0 0 10px;
 }
 .dos-name {
@@ -276,7 +277,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   border-top: 1px solid var(--rule);
 }
 .dos-meta-key {
-  font-size: 9px; color: var(--sub);
+  font-size: 11px; color: var(--sub);
   letter-spacing: 0.06em; margin-bottom: 3px;
 }
 .dos-meta-val { font-size: 12px; line-height: 1.4; letter-spacing: -0.005em; }
@@ -287,7 +288,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   padding: 48px 40px;
 }
 .dos-section-lbl {
-  font-size: 9px; color: var(--sub);
+  font-size: 11px; color: var(--sub);
   letter-spacing: 0.06em; margin-bottom: 20px;
 }
 .dos-quote {
@@ -295,8 +296,8 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   letter-spacing: -0.015em;
   margin: 0; max-width: 82ch;
   color: var(--ink);
-  border-left: 3px solid var(--signal);
-  padding-left: 28px;
+  background: var(--accent-soft);
+  padding: 24px 28px;
 }
 
 /* ── Body grid ──────────────────────────────── */
@@ -315,7 +316,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
 }
 .dos-why-matters {
   background: var(--accent-soft);
-  border-left: 3px solid var(--signal);
+  border: 1px solid var(--signal);
   padding: 16px 20px; font-size: 15px; line-height: 1.6;
   color: var(--ink); max-width: 70ch;
 }
@@ -325,7 +326,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
 }
 .dos-panel-section {}
 .dos-panel-hd {
-  font-size: 9px; color: var(--sub); letter-spacing: 0.06em;
+  font-size: 11px; color: var(--sub); letter-spacing: 0.06em;
   margin-bottom: 12px;
   border-bottom: 1px solid var(--rule); padding-bottom: 8px;
 }
@@ -348,7 +349,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 16px; font-size: 11px; letter-spacing: 0.02em;
 }
-.dos-cta--signal { background: var(--signal); color: var(--paper); }
+.dos-cta--signal { background: var(--signal); color: #EDEEE4; }
 .dos-cta--signal:hover { opacity: 0.9; }
 .dos-cta--ink { background: var(--ink); color: var(--paper); }
 .dos-cta--ink:hover { background: var(--sub); }
@@ -369,7 +370,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   padding: 5px 10px;
   border: 1px solid var(--rule); color: var(--ink);
 }
-.dos-tag:hover { border-color: var(--signal); color: var(--signal); }
+.dos-tag:hover { border-color: var(--signal); color: var(--signal-ink); }
 .dos-works-list {
   list-style: none; margin: 0; padding: 0;
   display: flex; flex-direction: column;
@@ -380,7 +381,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   font-size: 14px; line-height: 1.4;
 }
 .dos-works-list li:last-child { border-bottom: none; }
-.dos-work-num { font-size: 10px; color: var(--sub); flex-shrink: 0; }
+.dos-work-num { font-size: 11px; color: var(--sub); flex-shrink: 0; }
 
 /* ── Bottom nav ─────────────────────────────── */
 .dos-bottom-nav {
@@ -395,7 +396,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
     grid-template-columns: 1fr auto auto;
     gap: 8px;
   }
-  .dos-breadcrumb { font-size: 9px; }
+  .dos-breadcrumb { font-size: 11px; }
   .dos-back-btn { padding: 7px 10px; }
 
   .dos-id-card { grid-template-columns: 1fr; }

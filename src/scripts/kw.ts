@@ -28,9 +28,31 @@ function initDock() {
   window.addEventListener('scroll', check, { passive: true });
 }
 
+const THEMES = ['light', 'dark', 'warm'] as const;
+const THEME_LABEL: Record<string, string> = { light: 'Light', dark: 'Dark', warm: 'Warm' };
+
+function currentTheme(): string {
+  return document.documentElement.getAttribute('data-theme') || 'light';
+}
+
 function initTheme() {
-  const saved = localStorage.getItem('kw-theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('kw-theme-btn');
+  const name = document.getElementById('kw-theme-name');
+  if (!btn || !name) return;
+  const paint = () => {
+    const t = currentTheme();
+    name.textContent = THEME_LABEL[t] ?? 'Light';
+    btn.setAttribute('aria-label', `Theme: ${THEME_LABEL[t] ?? 'Light'}. Switch theme`);
+  };
+  paint();
+  btn.addEventListener('click', () => {
+    const i = THEMES.indexOf(currentTheme() as typeof THEMES[number]);
+    const next = THEMES[(i + 1) % THEMES.length];
+    if (next === 'light') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('kw-theme', next); } catch {}
+    paint();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -40,10 +40,11 @@ const TIER_INK: Record<string, string> = {
   P: 'var(--tier-p-ink)',
   V: 'var(--tier-v-ink)',
 };
+const STATUS_LBL: Record<string, string> = { alive: 'With us', passed: 'Beyond', anon: 'Anonymous' };
 const STATUS_COLOR: Record<string, string> = {
-  alive:  '#1D9E75',
-  passed: 'var(--sub2)',
-  anon:   'oklch(0.60 0.15 270)',
+  alive:  'var(--status-alive)',
+  passed: 'transparent',
+  anon:   'var(--status-anon)',
 };
 
 const HONORIFICS = /^(dr|prof|mr|mrs|ms|sir|lady|lord)\.?\s+/i;
@@ -99,15 +100,15 @@ function getSym(name: string): string {
   <!-- Legend + view toggle -->
   <div class="cast-legend">
     <span class="cast-legend-item">
-      <span class="cast-legend-dot" style="background:#1D9E75"></span> With us
+      <span class="cast-dot cast-dot--alive" style="background:var(--status-alive)" aria-hidden="true"></span> With us
     </span>
     <span class="cast-legend-item">
-      <span class="cast-legend-dot" style="background:var(--sub2)"></span> Beyond
+      <span class="cast-dot cast-dot--passed" aria-hidden="true"></span> Beyond
     </span>
     <span class="cast-legend-item">
-      <span class="cast-legend-dot" style="background:oklch(0.60 0.15 270)"></span> Anonymous
+      <span class="cast-dot cast-dot--anon" style="background:var(--status-anon)" aria-hidden="true"></span> Anonymous
     </span>
-    <span style="margin-left:16px; color:var(--rule-strong)">·</span>
+    <span aria-hidden="true" style="margin-left:16px; color:var(--rule-strong)">·</span>
     <span class="cast-legend-item">
       <span class="kw-tier kw-tier--A">A</span> Academic
     </span>
@@ -117,7 +118,7 @@ function getSym(name: string): string {
     <span class="cast-legend-item">
       <span class="kw-tier kw-tier--V">V</span> Visionary
     </span>
-    <span style="margin-left:16px; color:var(--rule-strong)">·</span>
+    <span aria-hidden="true" style="margin-left:16px; color:var(--rule-strong)">·</span>
     <span class="cast-legend-item">
       <span class="cast-badge">LEGACY</span> established corpus
     </span>
@@ -126,10 +127,10 @@ function getSym(name: string): string {
     </span>
 
     <!-- View toggle (right-aligned) -->
-    <span class="cast-view-toggle" style="margin-left:auto">
-      <button class="cast-vtab is-active" id="btn-cast" data-view="cast">CAST</button>
-      <button class="cast-vtab" id="btn-elements" data-view="elements">ELEMENTS</button>
-      <button class="cast-vtab" id="btn-graph" data-view="graph">GRAPH</button>
+    <span class="cast-view-toggle" style="margin-left:auto" role="group" aria-label="View">
+      <button type="button" class="cast-vtab is-active" id="btn-cast" data-view="cast" aria-pressed="true">CAST</button>
+      <button type="button" class="cast-vtab" id="btn-elements" data-view="elements" aria-pressed="false">ELEMENTS</button>
+      <button type="button" class="cast-vtab" id="btn-graph" data-view="graph" aria-pressed="false">GRAPH</button>
     </span>
   </div>
 
@@ -145,7 +146,7 @@ function getSym(name: string): string {
         {ch.voices.map((v) => (
           <a class="cast-row" href={`/voices/${v.id}`}>
             <span class="cast-sliver" style={`background:${TIER_COLOR[v.tier] ?? 'var(--sub2)'}`}></span>
-            <span class="cast-dot" style={`background:${STATUS_COLOR[v.status] ?? 'var(--sub2)'}`}></span>
+            <span class={`cast-dot cast-dot--${v.status}`} style={`background:${STATUS_COLOR[v.status] ?? 'var(--sub2)'}`}><span class="sr-only">{STATUS_LBL[v.status] ?? ''}</span></span>
             <div class="cast-name-col">
               <span class="cast-num">{String(v.id).padStart(3,'0')}</span>
               <span class="cast-name">{v.name}</span>
@@ -187,14 +188,14 @@ function getSym(name: string): string {
                   class="el-cell"
                   href={`/voices/${v.id}`}
                   style={`background:${bg};border-color:${ink}`}
-                  title={v.name}
+                  title={v.role ? `${v.name}, ${v.role}` : v.name}
                 >
                   <span class="el-top-row mono" style={`color:${ink}`}>
                     <span>{String(v.id).padStart(2,'0')}</span>
                     <span>{v.tier}</span>
                   </span>
-                  <span class="el-sym" style={`color:rgba(0,0,0,0.16);`}>{sym}</span>
-                  <span class="el-bottom mono" style={`color:${ink}`}>{v.role?.split(',')[0] ?? '—'}</span>
+                  <span class="el-sym" aria-hidden="true" style={`color:${ink}`}>{sym}</span>
+                  <span class="el-bottom" style={`color:${ink}`}>{v.name}</span>
                 </a>
               );
             })}
@@ -223,21 +224,29 @@ function getSym(name: string): string {
     <!-- Legend row -->
     <div class="graph-legend mono">
       <span class="graph-legend-item">
-        <span class="graph-dot" style="border-color:rgba(100,140,220,0.8)"></span> Academic
+        <span class="graph-dot" style="border-color:var(--graph-a)" aria-hidden="true"></span> Academic, solid ring
       </span>
       <span class="graph-legend-item">
-        <span class="graph-dot" style="border-color:rgba(210,110,70,0.8)"></span> Practitioner
+        <span class="graph-dot graph-dot--dash" style="border-color:var(--graph-p)" aria-hidden="true"></span> Practitioner, dashed ring
       </span>
       <span class="graph-legend-item">
-        <span class="graph-dot" style="border-color:rgba(80,170,110,0.8)"></span> Visionary
+        <span class="graph-dot graph-dot--dot" style="border-color:var(--graph-v)" aria-hidden="true"></span> Visionary, dotted ring
       </span>
-      <span id="graph-hint" style="margin-left:auto;color:var(--sub2)">Click nodes to select · build connections</span>
+      <label class="graph-find">
+        <span class="graph-find-lbl">Find a voice</span>
+        <input type="text" id="graph-find" list="graph-voices" placeholder="Type a name" autocomplete="off" />
+      </label>
+      <span id="graph-hint" style="margin-left:auto;color:var(--sub)">Click nodes to select · build connections</span>
     </div>
 
     <!-- Canvas + sidebar -->
     <div class="graph-layout">
       <div class="graph-canvas-wrap" id="graph-container">
-        <canvas id="graph-canvas" style="width:100%;height:auto;display:block;touch-action:none"></canvas>
+        <canvas id="graph-canvas" style="width:100%;height:auto;display:block;touch-action:none" tabindex="0" role="application" aria-label="Voice network. Left and right arrows move between voices, Enter selects, Escape clears."></canvas>
+        <p class="sr-only" id="graph-live" aria-live="polite"></p>
+        <datalist id="graph-voices">
+          {sortedVoices.map(v => <option value={v.data.name} />)}
+        </datalist>
       </div>
       <div class="graph-sidebar" id="graph-sidebar">
         <div class="graph-sb-section">
@@ -274,7 +283,7 @@ function getSym(name: string): string {
 .cast-vtab {
   background: none; border: 1px solid var(--rule);
   padding: 5px 10px; cursor: pointer;
-  font: 500 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: 0.05em; color: var(--sub);
   transition: background .1s, color .1s;
 }
@@ -305,11 +314,11 @@ function getSym(name: string): string {
   min-width: 0;
 }
 .elements-ch-num {
-  font-size: 10px; color: var(--signal); letter-spacing: 0.08em;
+  font-size: 11px; color: var(--signal-ink); letter-spacing: 0.08em;
   font-weight: 600;
 }
 .elements-ch-title {
-  font-size: 10px; color: var(--sub); line-height: 1.3;
+  font-size: 11px; color: var(--sub); line-height: 1.3;
   overflow: hidden; display: -webkit-box;
   -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   min-width: 0;
@@ -322,7 +331,7 @@ function getSym(name: string): string {
   padding: 8px 9px 7px;
   border: 1px solid;
   text-decoration: none;
-  height: 108px;
+  min-height: 108px;
   position: relative;
   transition: transform .12s, box-shadow .12s;
   min-width: 0;
@@ -334,17 +343,19 @@ function getSym(name: string): string {
 }
 .el-top-row {
   display: flex; justify-content: space-between;
-  font-size: 10px; letter-spacing: 0.01em; opacity: 0.85;
+  font-size: 11px; letter-spacing: 0.01em; opacity: 0.85;
 }
 .el-sym {
-  font-size: 32px; font-weight: 500;
+  font-size: 30px; font-weight: 600;
   letter-spacing: -0.03em; line-height: 1;
   align-self: center; text-align: center;
 }
 .el-bottom {
-  font-size: 9px; letter-spacing: -0.005em; opacity: 0.8;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  text-align: center; line-height: 1.2;
+  font: 500 11px/1.25 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -0.005em;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  text-align: center;
 }
 
 .elements-legend {
@@ -362,13 +373,24 @@ function getSym(name: string): string {
 .graph-view { padding: 20px 24px; }
 
 .graph-legend {
-  font-size: 10px; color: var(--sub);
+  font-size: 11px; color: var(--sub);
   display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
   margin-bottom: 14px;
 }
 .graph-legend-item { display: flex; gap: 6px; align-items: center; }
+.graph-find { display: flex; align-items: center; gap: 8px; }
+.graph-find-lbl { color: var(--sub); }
+.graph-find input {
+  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid var(--rule); padding: 7px 10px; min-width: 180px;
+}
+.graph-find input:focus-visible { border-color: var(--focus); }
+.cast-vtab { min-height: 32px; }
+.graph-dot--dash { border-style: dashed !important; }
+.graph-dot--dot { border-style: dotted !important; }
 .graph-dot {
-  width: 10px; height: 10px; border-radius: 50%;
+  width: 11px; height: 11px; border-radius: 50%;
   border: 1.5px solid; display: inline-block; background: var(--paper);
 }
 
@@ -393,11 +415,11 @@ function getSym(name: string): string {
   flex: 1; overflow-y: auto;
 }
 .graph-sb-label {
-  font-size: 9px; letter-spacing: 0.06em; color: var(--sub);
+  font-size: 11px; letter-spacing: 0.06em; color: var(--sub);
   margin: 0 0 10px;
 }
 .graph-sb-empty {
-  font-size: 12px; color: var(--sub2); line-height: 1.6; margin: 0;
+  font-size: 12px; color: var(--sub); line-height: 1.6; margin: 0;
 }
 .graph-sb-voice {
   padding: 10px 0;
@@ -408,9 +430,9 @@ function getSym(name: string): string {
   color: inherit;
 }
 .graph-sb-voice:last-child { border-bottom: none; }
-.graph-sb-voice:hover .graph-sb-vname { color: var(--signal); }
+.graph-sb-voice:hover .graph-sb-vname { color: var(--signal-ink); }
 .graph-sb-vnum {
-  font: 500 9px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); display: block; margin-bottom: 3px;
 }
 .graph-sb-vname {
@@ -445,6 +467,9 @@ function getSym(name: string): string {
     btnCast?.classList.toggle('is-active',  v === 'cast');
     btnElem?.classList.toggle('is-active',  v === 'elements');
     btnGraph?.classList.toggle('is-active', v === 'graph');
+    btnCast?.setAttribute('aria-pressed',  String(v === 'cast'));
+    btnElem?.setAttribute('aria-pressed',  String(v === 'elements'));
+    btnGraph?.setAttribute('aria-pressed', String(v === 'graph'));
     if (viewCast)  viewCast.hidden  = v !== 'cast';
     if (viewElem)  viewElem.hidden  = v !== 'elements';
     if (viewGraph) viewGraph.hidden = v !== 'graph';
@@ -506,6 +531,8 @@ function getSym(name: string): string {
     const canvas    = document.getElementById('graph-canvas') as HTMLCanvasElement;
     if (!container || !canvas) return;
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const esc = (t: string) => t.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]!));
     const R = 13;
     type Node = { n: number; v: typeof voices[0]; x: number; y: number; vx: number; vy: number; phase: number };
     let nodes: Node[] = [];
@@ -537,12 +564,6 @@ function getSym(name: string): string {
     });
     ro.observe(container);
 
-    // Tier colours
-    function tierRGB(tier: string): [number,number,number] {
-      if (tier === 'A') return [100, 140, 220];
-      if (tier === 'P') return [210, 110, 70];
-      return [80, 170, 110];
-    }
 
     let rafId = 0;
     let running = false;
@@ -611,7 +632,7 @@ function getSym(name: string): string {
       nodes.forEach(nd => {
         nd.vx += (w/2 - nd.x) * 0.002 * alpha;
         nd.vy += (h/2 - nd.y) * 0.002 * alpha;
-        const driftStr = frame > 300 ? 0.15 : 0;
+        const driftStr = (frame > 300 && !reduceMotion) ? 0.15 : 0;
         nd.vx += Math.cos(t + nd.phase) * driftStr;
         nd.vy += Math.sin(t + nd.phase * 1.3) * driftStr;
         nd.vx *= 0.85; nd.vy *= 0.85;
@@ -626,7 +647,14 @@ function getSym(name: string): string {
       if (canvas.height !== Math.round(h)) canvas.height = Math.round(h);
 
       const ctx = canvas.getContext('2d')!;
-      const bg = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#fafaf9';
+      const rootCS = getComputedStyle(document.documentElement);
+      const bg  = rootCS.getPropertyValue('--paper').trim() || '#fafaf9';
+      const ink = rootCS.getPropertyValue('--ink').trim() || '#191938';
+      const tierColor: Record<string, string> = {
+        A: rootCS.getPropertyValue('--graph-a').trim(),
+        P: rootCS.getPropertyValue('--graph-p').trim(),
+        V: rootCS.getPropertyValue('--graph-v').trim(),
+      };
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
@@ -644,9 +672,11 @@ function getSym(name: string): string {
         const isActive = pinnedSet.has(an) || pinnedSet.has(bn) || an === hoveredN || bn === hoveredN;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-        ctx.strokeStyle = isActive ? 'rgba(210,35,35,0.75)' : 'rgba(0,0,0,0.055)';
+        ctx.globalAlpha = isActive ? 0.8 : 0.09;
+        ctx.strokeStyle = isActive ? 'rgb(210,35,35)' : ink;
         ctx.lineWidth   = isActive ? 1.5 : 0.7;
         ctx.stroke();
+        ctx.globalAlpha = 1;
       });
 
       // Draw nodes
@@ -655,16 +685,10 @@ function getSym(name: string): string {
         const isHovered = nd.n === hoveredN;
         const isNbr     = nbrs.has(nd.n);
         const isDim     = hasFocus && !isPinned && !isHovered && !isNbr;
-        const [r, g, b] = tierRGB(nd.v.tier);
+        const stroke = isPinned ? 'rgb(200,30,30)' : (tierColor[nd.v.tier] || ink);
+        const alpha  = isDim ? 0.25 : 1;
 
-        const stroke = isDim
-          ? `rgba(${r},${g},${b},0.2)`
-          : isPinned  ? 'rgba(200,30,30,0.95)'
-          : isHovered ? `rgb(${Math.round(r*.6)},${Math.round(g*.6)},${Math.round(b*.6)})`
-          : isNbr     ? `rgba(${r},${g},${b},0.95)`
-          :             `rgba(${r},${g},${b},0.8)`;
-
-        const lw  = isPinned ? 2.5 : isHovered ? 2 : isNbr ? 1.6 : 1.3;
+        const lw  = isPinned ? 2.5 : isHovered ? 2.4 : isNbr ? 1.8 : 1.5;
         const rad = isPinned ? R+5 : isHovered ? R+3 : isNbr ? R+1 : R-2;
 
         ctx.beginPath();
@@ -673,16 +697,22 @@ function getSym(name: string): string {
         ctx.fill();
         ctx.strokeStyle = stroke;
         ctx.lineWidth = lw;
+        ctx.globalAlpha = alpha;
+        ctx.setLineDash(nd.v.tier === 'P' ? [4, 3] : nd.v.tier === 'V' ? [1.5, 2.5] : []);
         ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
 
         if (!isDim) {
           const label = nd.v.name.split(' ').pop()!;
-          ctx.fillStyle = (isPinned || isHovered) ? 'rgba(180,20,20,0.9)' : 'rgba(0,0,0,0.6)';
+          ctx.globalAlpha = (isPinned || isHovered) ? 1 : 0.75;
+          ctx.fillStyle = (isPinned || isHovered) ? 'rgb(180,20,20)' : ink;
           ctx.font = (isPinned || isHovered)
-            ? '600 10px "JetBrains Mono", monospace'
-            : '9px "JetBrains Mono", monospace';
+            ? '600 11px "JetBrains Mono", monospace'
+            : '11px "JetBrains Mono", monospace';
           ctx.textAlign = 'center';
-          ctx.fillText(label, nd.x, nd.y + rad + 11);
+          ctx.fillText(label, nd.x, nd.y + rad + 12);
+          ctx.globalAlpha = 1;
         }
       });
     };
@@ -732,8 +762,8 @@ function getSym(name: string): string {
           if (!v) return '';
           return `<a class="graph-sb-voice" href="/voices/${v.slug}">
             <span class="graph-sb-vnum">${String(v.n).padStart(3,'0')} · ${v.tier}</span>
-            <span class="graph-sb-vname">${v.name}</span>
-            <span class="graph-sb-vrole">${v.role}</span>
+            <span class="graph-sb-vname">${esc(v.name)}</span>
+            <span class="graph-sb-vrole">${esc(v.role)}</span>
           </a>`;
         }).join('');
         if (connSec) connSec.style.display = '';
@@ -743,12 +773,51 @@ function getSym(name: string): string {
           if (!v) return '';
           return `<a class="graph-sb-voice" href="/voices/${v.slug}">
             <span class="graph-sb-vnum">${String(v.n).padStart(3,'0')} · ${v.tier}</span>
-            <span class="graph-sb-vname">${v.name}</span>
-            <span class="graph-sb-vrole">${v.role}</span>
+            <span class="graph-sb-vname">${esc(v.name)}</span>
+            <span class="graph-sb-vrole">${esc(v.role)}</span>
           </a>`;
         }).join('');
       }
     }
+
+    const live = document.getElementById('graph-live');
+    const announce = (n: number | null) => {
+      if (!live) return;
+      const v = n === null ? null : voices.find(vv => vv.n === n);
+      live.textContent = v ? `${v.name}, ${v.role || 'voice'}${pinnedSet.has(v.n) ? ', selected' : ''}` : '';
+    };
+    const togglePin = (n: number) => {
+      if (pinnedSet.has(n)) pinnedSet.delete(n); else pinnedSet.add(n);
+      updateSidebar();
+      announce(n);
+    };
+    canvas.addEventListener('keydown', e => {
+      const ids = voices.map(v => v.n);
+      const i = hoveredN === null ? -1 : ids.indexOf(hoveredN);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        hoveredN = ids[(i + 1) % ids.length]; announce(hoveredN);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        hoveredN = ids[(i - 1 + ids.length) % ids.length]; announce(hoveredN);
+      } else if ((e.key === 'Enter' || e.key === ' ') && hoveredN !== null) {
+        e.preventDefault();
+        togglePin(hoveredN);
+      } else if (e.key === 'Escape') {
+        pinnedSet.clear(); hoveredN = null; updateSidebar(); announce(null);
+      }
+    });
+    const findInput = document.getElementById('graph-find') as HTMLInputElement | null;
+    findInput?.addEventListener('change', () => {
+      const q = findInput.value.trim().toLowerCase();
+      const v = voices.find(vv => vv.name.toLowerCase() === q)
+        ?? voices.find(vv => vv.name.toLowerCase().includes(q));
+      if (v && q) {
+        pinnedSet.add(v.n); hoveredN = v.n;
+        updateSidebar(); announce(v.n);
+        findInput.value = '';
+      }
+    });
 
     canvas.addEventListener('mousemove', e => {
       hoveredN = hitTest(e);
