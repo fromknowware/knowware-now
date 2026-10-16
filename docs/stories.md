@@ -36,9 +36,17 @@ and `updated` dates, stable ids (the story URL), and never empty content.
 
 ## Sharing
 
-Each story page has a "Share this story" block with one prepared text (headline, missing
-layer, evidence grade, and any simulation or alleged flag, plus the link). Readers can use
-the native share sheet or copy the text. It runs in the reader's browser only.
+Every story gets a 1200x630 social card, generated at build from the entry
+(`src/lib/story-card.ts`, satori + resvg, JetBrains Mono from `@fontsource`, so it renders the
+same on every machine). It is the story's `og:image` and `twitter:image`, with alt text, and
+shows the headline, missing layer, evidence grade and any simulation or alleged flag, so the
+caveats travel with the link. Cards live at `/stories/cards/<slug>.png`.
+
+Each story page has a "Share this story" block: the card preview (with a link to save the
+image), one prepared post text, the native share sheet where the browser has one, Copy link,
+Copy post text, and plain links to X, LinkedIn, Bluesky and email. Nothing loads from any
+network until a reader clicks, and there are no third-party scripts or pixels. If the
+clipboard is blocked the text is selected for manual copy.
 
 The same text is published at `/stories/share.json` and is used to post from the author's
 own accounts through [Zernio](https://zernio.com):
