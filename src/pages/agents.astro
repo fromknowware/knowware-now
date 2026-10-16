@@ -113,7 +113,11 @@ const CAPABILITIES = [
               <option value="30d">30 days</option>
             </select>
           </div>
-          <p class="ag-fine">Read-only: full chapters and nothing else. You can revoke it any time. You are the human principal for everything this token does.</p>
+          <div class="ag-check" id="ag-checkout-wrap" hidden>
+            <input id="ag-checkout" type="checkbox" />
+            <label for="ag-checkout">Also let this agent request a checkout link for me. Test mode: no real money moves, and I complete any payment myself.</label>
+          </div>
+          <p class="ag-fine">Reads full chapters and nothing else, unless you tick the box above. You can revoke it any time. You are the human principal for everything this token does.</p>
           <button type="submit" class="kw-btn kw-btn--filled" id="ag-submit">Mint token →</button>
         </form>
 
@@ -137,8 +141,15 @@ const CAPABILITIES = [
     <p class="kw-label">3 · Buying the book</p>
     <h2 class="ag-h" id="buy-h">{CHECKOUT_OPEN ? 'You fetch the link. A person pays.' : 'Not open yet.'}</h2>
     <p class="kw-body">
-      The pre-order ({PRICE_PREORDER}, print and digital, ships December 21, 2026) is not live. Nothing can be bought here yet, by a person or an agent. When it opens, the safe path is a checkout link that you request for your person and that they complete. This site does not accept autonomous agent payments: no payment protocol that lets an agent spend on its own is ready for a solo author on Stripe, and a book should not be the first thing to try.
+      The pre-order ({PRICE_PREORDER}, print and digital, ships December 21, 2026) is not live. Nothing can be bought here yet, by a person or an agent. This site does not accept autonomous agent payments: no payment protocol that lets an agent spend on its own is ready for a solo author on Stripe, and a book should not be the first thing to try. The path that is built works like this, and runs in Stripe test mode only until the author switches it on:
     </p>
+    <ol class="ag-list">
+      <li>The person mints you a token with the checkout box ticked (it only appears when checkout is on; <code>GET /api/agent/status</code> says whether it is).</li>
+      <li>You call <code>POST /api/agent/checkout</code> with <code>Authorization: Bearer …</code>, an <code>Idempotency-Key</code> header (8 to 64 characters), and <code>{'{"product":"preorder","quantity":1,"note":"why, in a line"}'}</code>. Price, quantity and currency are fixed server-side.</li>
+      <li>You get a Stripe-hosted <code>checkout_url</code>. You hand it to the person. They pay on Stripe's page. You never see or enter card details.</li>
+      <li>You may poll <code>GET /api/agent/orders/&lt;order_id&gt;</code> for the outcome.</li>
+    </ol>
+    <p class="kw-body">Each order records three things: the human it is for, the agent (name and operator), and your context note.</p>
   </section>
 
   <section class="kw-section ag-body" aria-labelledby="terms-h" id="terms">
@@ -189,10 +200,10 @@ const CAPABILITIES = [
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error('list');
       list.replaceChildren();
-      for (const t of data.tokens as Array<{ id: string; name: string; operator: string; expiresAt: string }>) {
+      for (const t of data.tokens as Array<{ id: string; name: string; operator: string; expiresAt: string; scopes: string[] }>) {
         const li = document.createElement('li');
         const text = document.createElement('span');
-        text.textContent = `${t.name} · ${t.operator} · expires ${fmt(t.expiresAt)}`;
+        text.textContent = `${t.name} · ${t.operator} · ${t.scopes.includes('checkout') ? 'read + checkout link' : 'read'} · expires ${fmt(t.expiresAt)}`;
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'kw-btn ag-revoke';
@@ -220,6 +231,10 @@ const CAPABILITIES = [
 
   if (signedIn) {
     refresh();
+    // Checkout is a runtime switch; ask the server whether it is on.
+    fetch('/api/agent/status').then((r) => r.json()).then((d) => {
+      if (d && d.checkout === 'test') $('ag-checkout-wrap').hidden = false;
+    }).catch(() => {});
     const form = $<HTMLFormElement>('ag-mint');
     const err = (field: string, msg: string) => {
       $(`ag-err-${field}`).textContent = msg;
@@ -240,7 +255,7 @@ const CAPABILITIES = [
         const res = await fetch('/api/agent/tokens', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name.value, operator: operator.value, lifetime: $<HTMLSelectElement>('ag-lifetime').value, scopes: ['read'] }),
+          body: JSON.stringify({ name: name.value, operator: operator.value, lifetime: $<HTMLSelectElement>('ag-lifetime').value, scopes: $<HTMLInputElement>('ag-checkout').checked ? ['read', 'checkout'] : ['read'] }),
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.ok) {
@@ -313,6 +328,10 @@ const CAPABILITIES = [
   .ag-field input[aria-invalid="true"] { border-width: 2px; border-color: var(--error); }
   .ag-err { margin: 6px 0 0; min-height: 0; font-size: 13px; color: var(--error); }
   .ag-err:empty { display: none; }
+  .ag-check { display: flex; gap: 10px; align-items: flex-start; }
+  .ag-check[hidden] { display: none; }
+  .ag-check input { margin-top: 4px; width: 18px; height: 18px; flex: none; accent-color: var(--signal-ink); }
+  .ag-check label { font: 400 14px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); }
   .ag-fine { margin: 0; font-size: 14px; line-height: 1.5; color: var(--sub); max-width: 56ch; }
   .ag-result { margin-top: 24px; padding: 16px; border: 2px solid var(--signal-ink); display: grid; gap: 12px; max-width: 520px; }
   .ag-result[hidden], #ag-signedin[hidden], #ag-signedout[hidden], #ag-nojs[hidden], #ag-none[hidden] { display: none; }

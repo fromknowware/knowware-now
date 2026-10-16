@@ -103,3 +103,10 @@ test('timingSafeEqualHex compares by value and length', () => {
   assert.equal(timingSafeEqualHex('abcd', 'abc'), false);
   assert.equal(timingSafeEqualHex('abcd', undefined), false);
 });
+
+test('a checkout-scoped token cannot be minted while checkout is off', async () => {
+  const off = await mintToken({ CLAIMS: fakeKV() }, reader, { ...input, scopes: ['read', 'checkout'] });
+  assert.ok(off.error);
+  const on = await mintToken({ CLAIMS: fakeKV(), AGENT_CHECKOUT: 'test' }, reader, { ...input, scopes: ['read', 'checkout'] });
+  assert.deepEqual(on.scopes, ['read', 'checkout']);
+});
