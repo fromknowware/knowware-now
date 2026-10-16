@@ -1,0 +1,134 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import StoriesNote from '../../components/StoriesNote.astro';
+import StoryBadges from '../../components/StoryBadges.astro';
+import ShareStory from '../../components/ShareStory.astro';
+import { SITE_NAME, SITE_URL, AUTHOR, PUBLISHER } from '../../config';
+import { getPublishedStories, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, shareText } from '../../lib/stories';
+
+export async function getStaticPaths() {
+  const stories = await getPublishedStories();
+  return stories.map((story) => ({ params: { slug: story.id }, props: { story } }));
+}
+
+const { story } = Astro.props;
+const d = story.data;
+const { Content } = await render(story);
+const PAGE_URL = `${SITE_URL}/stories/${story.id}`;
+const DESCRIPTION = d.summary.length > 220 ? `${d.summary.slice(0, 217).replace(/\s+\S*$/, '')}…` : d.summary;
+const CARD_URL = `${SITE_URL}/stories/cards/${story.id}.png`;
+const CARD_ALT = `Knowware story: ${d.headline}. Evidence grade ${d.grade}. Missing layer: ${LAYER_LABEL[d.missingLayer]}.`;
+const updated = d.updated && d.updated !== d.added ? d.updated : undefined;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.headline,
+  description: d.summary,
+  datePublished: d.added,
+  ...(updated ? { dateModified: updated } : {}),
+  inLanguage: 'en',
+  mainEntityOfPage: PAGE_URL,
+  author: { '@type': 'Person', name: AUTHOR },
+  publisher: { '@type': 'Organization', name: PUBLISHER },
+  isPartOf: { '@type': 'CollectionPage', name: `${SITE_NAME} stories`, url: `${SITE_URL}/stories` },
+  citation: d.sources.map((s) => ({
+    '@type': 'WebPage',
+    name: s.label,
+    url: s.url,
+    publisher: { '@type': 'Organization', name: s.publisher },
+    ...(s.date ? { datePublished: s.date } : {}),
+  })),
+};
+---
+<Base title={d.headline} description={DESCRIPTION} ogType="article" canonical={PAGE_URL} ogImage={CARD_URL} ogImageAlt={CARD_ALT}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <article class="kw-section st-story" aria-labelledby="st-h">
+    <p class="st-back mono"><a href="/stories">← All stories</a></p>
+    <p class="kw-label">Story · Grade {d.grade}</p>
+    <h1 class="kw-h2 st-title" id="st-h">{d.headline}</h1>
+    <p class="st-meta mono">
+      <span>Event: {eventLine(story)}</span>
+      <span>Added: {formatDate(d.added)}</span>
+      {updated && <span>Updated: {formatDate(updated)}</span>}
+      <StoryBadges grade={d.grade} simulation={d.simulation} alleged={d.alleged} />
+    </p>
+
+    <section class="st-block st-brief" aria-labelledby="st-brief-h">
+      <h2 class="kw-label" id="st-brief-h">In brief</h2>
+      <p class="st-summary">{d.summary}</p>
+    </section>
+
+    <div class="st-frame">
+      <section class="st-block" aria-labelledby="st-layer-h">
+        <h2 class="kw-label" id="st-layer-h">Missing layer: {LAYER_LABEL[d.missingLayer]}</h2>
+        <p class="st-line">{d.missingLayerLine}</p>
+      </section>
+      <section class="st-block" aria-labelledby="st-why-h">
+        <h2 class="kw-label" id="st-why-h">Why it matters to the thesis</h2>
+        <p class="st-line">{d.why}</p>
+      </section>
+    </div>
+
+    {d.caveats.length > 0 && (
+      <section class="st-block" aria-labelledby="st-care-h">
+        <h2 class="kw-label" id="st-care-h">Read with care</h2>
+        <ul class="st-caveats">
+          {d.caveats.map((c) => <li>{c}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <div class="kw-prose st-prose">
+      <Content />
+    </div>
+
+    <section class="st-block st-sources" aria-labelledby="st-src-h">
+      <h2 class="kw-label" id="st-src-h">Sources</h2>
+      <p class="st-grade-line"><strong>Grade {d.grade}.</strong> {GRADE_LABEL[d.grade]}.</p>
+      <ol class="st-src-list">
+        {d.sources.map((s, i) => (
+          <li id={`src-${i + 1}`}>
+            <span class="st-src-org">{s.publisher}</span>,
+            <cite>{s.label}</cite>{s.date ? `, ${formatDate(s.date)}` : ''}{s.primary ? ' (primary source)' : ''}.
+            <a href={s.url} rel="noopener">{s.url.replace('https://', '')}</a>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <ShareStory text={shareText(story)} url={PAGE_URL} title={d.headline} summary={d.summary} card={`/stories/cards/${story.id}.png`} cardAlt={CARD_ALT} />
+
+    <StoriesNote />
+  </article>
+</Base>
+
+<style>
+  .st-story { border-bottom: none; }
+  .st-back { margin: 0 0 28px; font-size: 13px; }
+  .st-back a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
+  .st-title { max-width: 24ch; margin-bottom: 18px; }
+  .st-meta { display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; margin: 0 0 32px; font-size: 12px; line-height: 1.4; color: var(--sub); }
+  .st-block { margin: 0 0 32px; }
+  .st-block .kw-label { margin-bottom: 12px; }
+  .st-brief { padding-top: 20px; border-top: 2px solid var(--ink); }
+  .st-summary { max-width: 68ch; margin: 0; font-size: calc(17px * var(--read-scale)); line-height: var(--read-lh); letter-spacing: var(--read-track); }
+  .st-frame { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(20px, 4vw, 56px); max-width: 1000px; }
+  .st-line { margin: 0; max-width: 52ch; font-size: 18px; line-height: 1.5; letter-spacing: -.01em; }
+  .st-caveats { margin: 0; padding-left: 1.3em; max-width: 68ch; font-size: 15px; line-height: 1.6; color: var(--sub); }
+  .st-caveats li { margin-bottom: 8px; }
+  .st-prose { margin: 40px 0 32px; padding-top: 8px; border-top: 1px solid var(--rule); }
+  .st-sources { padding-top: 20px; border-top: 1px solid var(--rule); }
+  .st-grade-line { margin: 0 0 12px; font-size: 14px; color: var(--sub); }
+  .st-grade-line strong { color: var(--ink); }
+  .st-src-list { margin: 0; padding-left: 1.6em; max-width: 68ch; font-size: 14px; line-height: 1.6; color: var(--sub); }
+  .st-src-list li { margin-bottom: 10px; }
+  .st-src-org { color: var(--ink); font-weight: 600; }
+  .st-src-list a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .st-src-list li:target { background: var(--accent-soft); }
+  @media (max-width: 760px) {
+    .st-frame { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

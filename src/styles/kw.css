@@ -427,10 +427,15 @@ article[data-kw-read] {
 @media (max-width: 600px) {
   .kw-nav-tab-label { display: none; }
   .kw-nav-tab-num { opacity: 1 !important; }
-  .kw-nav-tab { padding: 0 7px; }
-  /* Six numbered tabs plus the theme button must fit at 375px without scrolling. */
+  .kw-nav-tab { padding: 0 5px; }
+  /* Seven numbered tabs plus the theme button must fit at 375px without scrolling. */
   .kw-nav-logo { padding: 0 10px; gap: 6px; }
   .kw-theme-btn { padding: 0 10px; }
+}
+/* On the narrowest phones keep the dot and drop the word (it is still read aloud). */
+@media (max-width: 340px) {
+  .kw-nav-logo-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .kw-nav-logo { padding: 0 12px; }
 }
 
 /* ============================================================
