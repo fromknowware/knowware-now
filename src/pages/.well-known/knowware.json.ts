@@ -23,7 +23,7 @@ export const GET: APIRoute = async () => {
     },
     terms: { url: TERMS_URL, version: TERMS_VERSION, summary: TERMS, license: 'all-rights-reserved (may change)' },
     ai_use: { content_signal: CONTENT_SIGNAL, robots: `${SITE_URL}/robots.txt`, training: 'not permitted' },
-    discovery: { mcp: `${SITE_URL}/mcp`, llms_txt: ENDPOINTS.llms, llms_full_txt: ENDPOINTS.llmsFull, agents_page: ENDPOINTS.agentsPage, agents_markdown: ENDPOINTS.agentsMarkdown },
+    discovery: { mcp: `${SITE_URL}/mcp`, llms_txt: ENDPOINTS.llms, llms_full_txt: ENDPOINTS.llmsFull, agents_page: ENDPOINTS.agentsPage, agents_txt: `${SITE_URL}/agents.txt`, agents_markdown: ENDPOINTS.agentsMarkdown },
     reading: {
       public: {
         auth: 'none',
@@ -55,9 +55,24 @@ export const GET: APIRoute = async () => {
       note: CHECKOUT_OPEN
         ? 'Agents may request a checkout link; a human completes payment.'
         : 'The pre-order checkout is not open yet. Nothing can be bought, by a person or an agent.',
-      autonomous_payment: 'not_supported',
-      human_completes_payment: true,
+      autonomous_payment: 'only_with_a_human_pay_mandate_on_testnet_when_switched_on',
+      human_completes_payment: 'for stripe_checkout; for x402 the person authorized one capped purchase in advance',
       runtime_status: `${SITE_URL}/api/agent/status`,
+      rails: [
+        { id: 'stripe_checkout', status: CHECKOUT_OPEN ? 'open' : 'off (test mode only when switched on)', human_completes_payment: true, products: ['preorder'], scope: 'checkout' },
+        {
+          id: 'x402',
+          status: 'off (Base Sepolia testnet only when switched on; not verified against a live facilitator)',
+          protocol: 'x402 v2, exact scheme, EIP-3009',
+          network: 'eip155:84532',
+          asset: 'USDC (testnet)',
+          products: ['digital edition, $11.95'],
+          scope: 'pay',
+          human_mandate: 'The person ticks "pay" when minting the token: one purchase of the digital edition, expiring with the token. x402 itself carries no human mandate.',
+          endpoint: `${SITE_URL}/api/agent/x402/digital`,
+          not_supported: 'print and the pre-order bundle (they need a shipping address)',
+        },
+      ],
       request_checkout: {
         method: 'POST',
         url: `${SITE_URL}/api/agent/checkout`,

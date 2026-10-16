@@ -423,14 +423,20 @@ article[data-kw-read] {
   min-height: 44px;
 }
 .kw-theme-btn:hover { background: var(--accent-soft); color: var(--ink); }
-.kw-theme-name { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.kw-theme-btn { justify-content: center; min-width: 44px; padding: 0 14px; }
+/* One icon per theme, chosen by the same attribute the inline script sets before paint. */
+.kw-theme-icon { display: none; }
+.kw-theme-icon--light { display: block; }
+html[data-theme="dark"] .kw-theme-icon--light, html[data-theme="warm"] .kw-theme-icon--light { display: none; }
+html[data-theme="dark"] .kw-theme-icon--dark { display: block; }
+html[data-theme="warm"] .kw-theme-icon--warm { display: block; }
 @media (max-width: 600px) {
   .kw-nav-tab-label { display: none; }
   .kw-nav-tab-num { opacity: 1 !important; }
   .kw-nav-tab { padding: 0 7px; }
   /* Six numbered tabs plus the theme button must fit at 375px without scrolling. */
   .kw-nav-logo { padding: 0 10px; gap: 6px; }
-  .kw-theme-btn { padding: 0 10px; }
+  .kw-theme-btn { padding: 0 10px; min-width: 40px; }
 }
 
 /* ============================================================

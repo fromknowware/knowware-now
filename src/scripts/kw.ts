@@ -37,12 +37,12 @@ function currentTheme(): string {
 
 function initTheme() {
   const btn = document.getElementById('kw-theme-btn');
-  const name = document.getElementById('kw-theme-name');
-  if (!btn || !name) return;
+  if (!btn) return;
+  // The icon follows data-theme in CSS; the label is for assistive tech and the tooltip.
   const paint = () => {
     const t = currentTheme();
-    name.textContent = THEME_LABEL[t] ?? 'Light';
     btn.setAttribute('aria-label', `Theme: ${THEME_LABEL[t] ?? 'Light'}. Switch theme`);
+    btn.setAttribute('title', `Theme: ${THEME_LABEL[t] ?? 'Light'}. Click to switch`);
   };
   paint();
   btn.addEventListener('click', () => {

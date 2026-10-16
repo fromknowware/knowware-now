@@ -110,3 +110,9 @@ test('a checkout-scoped token cannot be minted while checkout is off', async () 
   const on = await mintToken({ CLAIMS: fakeKV(), AGENT_CHECKOUT: 'test' }, reader, { ...input, scopes: ['read', 'checkout'] });
   assert.deepEqual(on.scopes, ['read', 'checkout']);
 });
+
+test('a pay-scoped token cannot be minted unless x402 testnet is on', async () => {
+  assert.ok((await mintToken({ CLAIMS: fakeKV() }, reader, { ...input, scopes: ['read', 'pay'] })).error);
+  const on = await mintToken({ CLAIMS: fakeKV(), X402_MODE: 'testnet' }, reader, { ...input, scopes: ['read', 'pay'] });
+  assert.deepEqual(on.scopes, ['read', 'pay']);
+});

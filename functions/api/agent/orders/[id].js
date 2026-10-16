@@ -4,7 +4,7 @@ import { agentJson, authenticateAgent } from '../../../../lib/server/agent.js';
 
 export async function onRequest({ request, env, params }) {
   if (request.method !== 'GET') return json({ ok: false, error: 'Method not allowed.' }, 405, { Allow: 'GET' });
-  const auth = await authenticateAgent(request, env, 'checkout');
+  const auth = await authenticateAgent(request, env, ['checkout', 'pay']);
   if (auth.response) return auth.response;
   const id = String(params.id);
   const order = /^ord_[0-9a-f]{16}$/.test(id) ? JSON.parse((await env.CLAIMS.get(`order:${id}`)) || 'null') : null;

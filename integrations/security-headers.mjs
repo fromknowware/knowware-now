@@ -84,6 +84,9 @@ ${Object.entries(pageHeaders).map(([k, v]) => `  ${k}: ${v}`).join('\n')}
 /llms.txt
   Content-Type: text/plain; charset=utf-8
 
+/agents.txt
+  Content-Type: text/plain; charset=utf-8
+
 /llms-full.txt
   Content-Type: text/plain; charset=utf-8
 

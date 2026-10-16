@@ -46,6 +46,7 @@ export const GET: APIRoute = async () => {
     '## For agents',
     '',
     link('/agents', 'what agents can do here, with a human principal'),
+    `- [Short version](${SITE_URL}/agents.txt): the rules and links in a few plain lines, for small models`,
     `- [Manifest](${ENDPOINTS.manifest}): machine-readable endpoints, terms and the human-principal requirement`,
     `- [Full public text](${ENDPOINTS.llmsFull}): the pages above concatenated in one file`,
     `- [MCP server](${SITE_URL}/mcp): remote, stateless; tools list_chapters, read_preview, define_term, and read_chapter with a token`,
