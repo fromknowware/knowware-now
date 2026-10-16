@@ -49,6 +49,7 @@ const NAV = [
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
   {noindex && <meta name="robots" content="noindex" />}
+  <link rel="alternate" type="application/atom+xml" title={`${SITE_NAME} Stories`} href={`${SITE_URL}/feed.xml`} />
 
   <!-- Theme color -->
   <meta name="theme-color" content="#EDEEE4" media="(prefers-color-scheme: light)" />
