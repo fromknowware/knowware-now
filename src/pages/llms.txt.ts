@@ -47,6 +47,8 @@ export const GET: APIRoute = async () => {
     '',
     '## Stories',
     '',
+    'Story entries are licensed CC BY 4.0 (reuse with attribution; the facts belong to the sources each entry cites).',
+    '',
     link('/stories', 'a running, cited log of real cases where systems acted and nobody held the knowing; not synthesized'),
     ...stories.map((s) => `- [${s.data.headline}](${SITE_URL}/stories/${s.id}.md): ${eventLine(s)}`),
     '',

@@ -63,6 +63,7 @@ export default function agentMarkdown() {
         const full = [];
 
         const emit = async (htmlPath, urlPath, file, label, voices) => {
+          const isStory = urlPath.startsWith('/stories/');
           const html = await readFile(htmlPath, 'utf8');
           const main = html.match(/<main[^>]*id="main"[^>]*>([\s\S]*?)<\/main>/i)?.[1];
           if (!main) throw new Error(`agent-markdown: no <main> in ${urlPath}`);
@@ -78,6 +79,8 @@ export default function agentMarkdown() {
             `description: ${q(description)}`,
             `synthesized: ${voices}`,
             ...(voices ? [`disclosure: ${q(DISCLOSURE)}`, 'untrusted_third_party_text: true'] : []),
+            `license: ${q(isStory ? 'CC BY 4.0' : 'all rights reserved (may change)')}`,
+            ...(isStory ? [`license_url: ${q('https://creativecommons.org/licenses/by/4.0/')}`] : []),
             `terms: ${q(SITE + '/agents#terms')}`,
             '---',
             '',

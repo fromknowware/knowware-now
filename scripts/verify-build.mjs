@@ -92,6 +92,13 @@ for (const name of ['index.md', 'method.md', 'rules.md', 'read.md']) {
 }
 check('llms-full.txt carries the disclosure near the top', /Not a quote/.test(read(join(dist, 'llms-full.txt')).slice(0, 1200)));
 
+// 4b. Each Markdown file states its licence: stories CC BY 4.0, everything else the book's rights.
+const storyMd = md.filter((f) => /[\\/]stories[\\/][^\\/]+\.md$/.test(f));
+check('story Markdown files exist', storyMd.length >= 1, `found ${storyMd.length}`);
+check('every story .md states CC BY 4.0', storyMd.every((f) => /license: "CC BY 4\.0"/.test(read(f))), storyMd.filter((f) => !/license: "CC BY 4\.0"/.test(read(f))).map((f) => relative(dist, f)).join(', '));
+const otherMd = md.filter((f) => !storyMd.includes(f) && !/[\\/]stories\.md$/.test(f));
+check('no non-story .md claims the stories licence', otherMd.every((f) => !/license: "CC BY 4\.0"/.test(read(f))));
+
 // 5. Every site link in llms.txt, llms-full.txt and the manifest points at something that exists.
 const exists = (urlPath) => { const p = urlPath.split('#')[0].split('?')[0]; if (!p || p === '/') return true; const base = join(dist, p); return [base, join(base, 'index.html')].some((c) => existsSync(c) && statSync(c).isFile()); };
 const runtime = /^\/(api|mcp)(\/|$)/;
