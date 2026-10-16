@@ -19,5 +19,12 @@ export const CHAPTERS_COUNT = 9;
 // Stripe payment link — set when live
 export const STRIPE_URL = '/order';
 
+// Whether a real checkout exists. While false, no machine-readable offer is
+// published (no schema.org Offer, no "available" signal) and the agent
+// checkout endpoint stays in test mode. Flip only with live Stripe wired up.
+export const CHECKOUT_OPEN = false;
+
+export const CONTACT_EMAIL = 'hello@knowware.press';
+
 export const OG_IMAGE = `${SITE_URL}/assets/og-knowware.png`;
 export const OG_COVER = `${SITE_URL}/assets/og-knowware-cover.png`;

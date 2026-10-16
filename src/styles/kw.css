@@ -427,7 +427,10 @@ article[data-kw-read] {
 @media (max-width: 600px) {
   .kw-nav-tab-label { display: none; }
   .kw-nav-tab-num { opacity: 1 !important; }
-  .kw-nav-tab { padding: 0 12px; }
+  .kw-nav-tab { padding: 0 7px; }
+  /* Six numbered tabs plus the theme button must fit at 375px without scrolling. */
+  .kw-nav-logo { padding: 0 10px; gap: 6px; }
+  .kw-theme-btn { padding: 0 10px; }
 }
 
 /* ============================================================

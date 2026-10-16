@@ -3,7 +3,8 @@ import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-600.css';
 import '../styles/kw.css';
-import { SITE_NAME, SITE_TAGLINE, SITE_URL, AUTHOR, PUBLISHER, OG_IMAGE, STRIPE_URL, PRICE_SAVING } from '../config';
+import { SITE_NAME, SITE_TAGLINE, SITE_URL, AUTHOR, PUBLISHER, OG_IMAGE, STRIPE_URL, PRICE_SAVING, CHECKOUT_OPEN } from '../config';
+import { markdownHrefFor } from '../lib/markdown-pages.mjs';
 
 interface Props {
   title?: string;
@@ -27,6 +28,7 @@ const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — ${SITE
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
 
 const path = Astro.url.pathname;
+const markdownHref = markdownHrefFor(path);
 function isActive(href: string) {
   if (href === '/') return path === '/';
   return path === href || path.startsWith(href + '/');
@@ -38,6 +40,7 @@ const NAV = [
   { href: '/read',       num: '03', label: 'Manuscript' },
   { href: '/contribute', num: '04', label: 'Contribute' },
   { href: '/method',     num: '05', label: 'Method'     },
+  { href: '/agents',     num: '06', label: 'Agents'     },
 ];
 ---
 <!doctype html>
@@ -49,6 +52,8 @@ const NAV = [
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
   {noindex && <meta name="robots" content="noindex" />}
+  {markdownHref && <link rel="alternate" type="text/markdown" href={markdownHref} />}
+  <link rel="describedby" type="text/plain" href="/llms.txt" />
 
   <!-- Theme color -->
   <meta name="theme-color" content="#EDEEE4" media="(prefers-color-scheme: light)" />
@@ -92,7 +97,10 @@ const NAV = [
         "image": ogImage,
         "description": description,
         "datePublished": "2026-12-21",
-        "inLanguage": "en"
+        "inLanguage": "en",
+        // No Offer until a real checkout exists: a price marked available
+        // for a book nobody can order would be a false signal to agents.
+        ...(CHECKOUT_OPEN ? { "offers": { "@type": "Offer", "price": "33.00", "priceCurrency": "USD", "availability": "https://schema.org/PreOrder", "url": `${SITE_URL}/order` } } : {})
       },
       { "@type": "WebSite", "name": SITE_NAME, "url": SITE_URL }
     ]
