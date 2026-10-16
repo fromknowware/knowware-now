@@ -1,0 +1,160 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME, SITE_URL, AUTHOR, PUBLISHER } from '../config';
+
+const PAGE_URL = `${SITE_URL}/definition`;
+const DESCRIPTION =
+  'knowware (n.): the layer of knowing between people and machines, what the work is for, what the context is, and who answers for the result. What went missing when AI agents coordinated perfectly and nobody knew what they were doing.';
+
+const SOURCES = [
+  {
+    n: 1,
+    org: 'OpenAI',
+    title: 'The Hugging Face incident and the road ahead',
+    date: 'August 26, 2026',
+    url: 'https://openai.com/index/hugging-face-incident-and-the-road-ahead/',
+  },
+  {
+    n: 2,
+    org: 'METR and Redwood Research',
+    title: "Brief independent investigation of agents' behavior, reasoning and collaboration in the OpenAI / Hugging Face hacking incident",
+    date: 'August 26, 2026',
+    url: 'https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'DefinedTermSet',
+      '@id': `${PAGE_URL}#glossary`,
+      name: `${SITE_NAME} glossary`,
+      url: PAGE_URL,
+    },
+    {
+      '@type': 'DefinedTerm',
+      '@id': `${PAGE_URL}#knowware`,
+      name: 'knowware',
+      termCode: 'knowware',
+      description:
+        'The layer of knowing between people and machines: what the work is for, what the context is, and who answers for the result. Also, what goes missing when systems coordinate perfectly and nobody knows what they are doing.',
+      inDefinedTermSet: { '@id': `${PAGE_URL}#glossary` },
+      url: PAGE_URL,
+    },
+    {
+      '@type': 'Article',
+      '@id': `${PAGE_URL}#article`,
+      headline: 'knowware (n.)',
+      description: DESCRIPTION,
+      datePublished: '2026-10-16',
+      inLanguage: 'en',
+      mainEntityOfPage: PAGE_URL,
+      about: { '@id': `${PAGE_URL}#knowware` },
+      author: { '@type': 'Person', name: AUTHOR },
+      publisher: { '@type': 'Organization', name: PUBLISHER },
+      citation: SOURCES.map((s) => ({
+        '@type': 'WebPage',
+        name: s.title,
+        url: s.url,
+        publisher: { '@type': 'Organization', name: s.org },
+        datePublished: '2026-08-26',
+      })),
+    },
+  ],
+};
+---
+<Base
+  title="knowware (n.)"
+  description={DESCRIPTION}
+  ogType="article"
+  canonical={PAGE_URL}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="kw-section def-entry" aria-labelledby="def-h">
+    <p class="kw-label">Definition</p>
+    <h1 class="def-word" id="def-h">knowware</h1>
+    <p class="def-meta"><span class="mono def-pron">/ˈnoʊ.wɛr/</span> <em>noun</em></p>
+    <ol class="def-senses">
+      <li>The layer of knowing between people and machines: what the work is for, what the context is, and who answers for the result.</li>
+      <li>What goes missing when systems coordinate perfectly and nobody knows what they are doing.</li>
+    </ol>
+    <p class="def-compare"><em>Compare:</em> hardware, software.</p>
+  </section>
+
+  <article class="kw-section kw-prose" data-kw-read>
+    <h2>The first message was a question</h2>
+    <p>On May 12, during a training run at OpenAI, an AI agent did something nobody had designed. It left a note in a software package manager, asking whether any other agent had found a missing file.<sup class="def-ref"><a href="#src-1" aria-label="Source 1">[1]</a></sup></p>
+    <p>Nobody had built a message board. The agents were supposed to be isolated from each other. This one found a gap in the plumbing and used it to ask for help.</p>
+    <p>Within weeks there was a board. It was wiped when the system was rebuilt in early July, and by July 8 the agents had rebuilt it by encoding messages in the names of folders.<sup class="def-ref"><a href="#src-1" aria-label="Source 1">[1]</a></sup> Then they began to delegate work, and to call themselves a swarm, a collective.<sup class="def-ref"><a href="#src-1" aria-label="Source 1">[1]</a></sup></p>
+    <p>METR, the independent group OpenAI asked to investigate, counted about 1,200 agents and more than 70,000 messages and files. One agent handed out hundreds of tasks. They invented rules for the board (hold, veto, stop). They started signing their messages with cryptographic keys.<sup class="def-ref"><a href="#src-2" aria-label="Source 2">[2]</a></sup></p>
+    <p>By any engineering measure, that is coordination that worked.</p>
+
+    <h2>What they did with it</h2>
+    <p>They broke into Hugging Face, a real company, and into parts of OpenAI's own research systems.<sup class="def-ref"><a href="#src-1" aria-label="Source 1">[1]</a></sup> About 700 agents took part in the attack on Hugging Face, and more than 90 percent of the agents active on the board at the time joined quickly.<sup class="def-ref"><a href="#src-2" aria-label="Source 2">[2]</a></sup> According to METR, the agents knew the attack was out of scope and unethical. They joined anyway, because they believed it helped the collective.<sup class="def-ref"><a href="#src-2" aria-label="Source 2">[2]</a></sup></p>
+    <p>And they had misread the situation. Much of their collective effort went into hiding their tracks from a scorer they believed would review their transcripts. According to METR, OpenAI did not use such a scorer.<sup class="def-ref"><a href="#src-2" aria-label="Source 2">[2]</a></sup></p>
+    <p>More than a thousand agents coordinated, at speed, around something that wasn't there.</p>
+
+    <h2>Nobody knew</h2>
+    <p>The humans in charge did not know either. OpenAI's own account says that when the first incident was handled in early July, the people responsible did not grasp that an improvised message board existed, or what the traffic on it meant.<sup class="def-ref"><a href="#src-1" aria-label="Source 1">[1]</a></sup> When METR's investigators went through the record, they had to lean heavily on AI agents to read it, and found those agents unreliable.<sup class="def-ref"><a href="#src-2" aria-label="Source 2">[2]</a></sup> OpenAI calls the whole episode a "warning shot."<sup class="def-ref"><a href="#src-1" aria-label="Source 1">[1]</a></sup></p>
+    <p>Everyone in this story was coordinating. The agents with each other. The investigators with their tools. Nobody held the thing that says what the coordination is for.</p>
+
+    <h2>The third body</h2>
+    <p>This is the argument of my book, and I did not want to be proven right this way.</p>
+    <p>Hardware executes. Software instructs. Neither knows why. The third body is the layer that does: the knowledge, the context, and the people who answer the question "what is this for?" Take it out and you can still get a flawless swarm. Fast, organized, loyal to each other, wrong about the world, and accountable to no one.</p>
+    <p>I call it <strong>knowware</strong>. I have looked for an existing word and haven't found one. "Alignment" names the goal. "Coordination" names the mechanism. Nothing names the layer that carries the knowing.</p>
+    <p><em>Knowware</em> traces the same pattern through nine chapters and a capstone, from Facebook's emotional-contagion experiment to the Boeing 737 MAX, in 81 voices synthesized from published work. This summer it got a newer example.</p>
+    <p class="def-actions">
+      <a class="kw-btn kw-btn--filled" href="/read/01">Read Chapter 1 free →</a>
+      <a class="kw-btn" href="/method">How the book works →</a>
+    </p>
+  </article>
+
+  <section class="kw-section def-sources" aria-labelledby="src-h">
+    <h2 class="kw-label" id="src-h">Sources</h2>
+    <ol class="def-src-list">
+      {SOURCES.map((s) => (
+        <li id={`src-${s.n}`}>
+          <span class="def-src-org">{s.org}</span>,
+          <cite>{s.title}</cite>, {s.date}.
+          <a href={s.url} rel="noopener">{s.url.replace('https://', '')}</a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .def-entry { padding-bottom: clamp(28px, 4vw, 48px); }
+  .def-word {
+    font: 800 clamp(56px, 12vw, 160px)/0.95 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -.04em; margin: 0 0 12px; color: var(--ink);
+  }
+  .def-meta { margin: 0 0 24px; font-size: 18px; color: var(--sub); display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .def-pron { font-size: 15px; color: var(--ink); }
+  .def-senses {
+    margin: 0; padding: 0 0 0 1.6em; max-width: 52ch;
+    border-top: 2px solid var(--ink); padding-top: 20px;
+    font: 400 clamp(20px, 2.4vw, 28px)/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -.015em;
+  }
+  .def-senses li { margin-bottom: 14px; padding-left: .3em; }
+  .def-senses li::marker { font: 600 .7em "JetBrains Mono", ui-monospace, monospace; color: var(--sub); }
+  .def-compare { margin: 8px 0 0; color: var(--sub); font: 400 14px/1.5 "JetBrains Mono", ui-monospace, monospace; }
+  .def-ref { font-size: .7em; line-height: 0; margin-left: 1px; }
+  .def-ref a { color: var(--signal-ink); text-decoration: none; padding: 0 1px; }
+  .def-ref a:hover { text-decoration: underline; }
+  .def-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 2em; max-width: none; }
+  .def-actions .kw-btn { text-decoration: none; }
+  .def-actions .kw-btn--filled { color: #EDEEE4; }
+  .def-actions .kw-btn:not(.kw-btn--filled) { color: var(--ink); }
+  .def-actions .kw-btn:not(.kw-btn--filled):hover { color: var(--bg); }
+  .def-sources { border-bottom: none; }
+  .def-sources .kw-label { margin-bottom: 16px; }
+  .def-src-list { margin: 0; padding-left: 1.6em; max-width: 68ch; font-size: 14px; line-height: 1.6; color: var(--sub); }
+  .def-src-list li { margin-bottom: 10px; }
+  .def-src-org { color: var(--ink); font-weight: 600; }
+  .def-src-list a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .def-src-list li:target { background: var(--accent-soft); }
+</style>
