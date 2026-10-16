@@ -44,7 +44,7 @@ const tierLbl  = TIER_LBL[voice.tier] ?? voice.tier;
 
 const statusLbl = voice.status === 'alive' ? 'Living · Active'
                 : voice.status === 'passed' ? 'Legacy · Passed'
-                : 'Anonymous';
+                : 'Composite · not a real person';
 
 const voiceSym   = sym(voice.name);
 const chapterSlug = String(voice.chapter).padStart(2, '0');

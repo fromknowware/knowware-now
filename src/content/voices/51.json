@@ -1,13 +1,13 @@
 {
   "id": "51",
   "name": "In-Q-Tel Operator",
-  "alias": "Anonymous — The Strategic Invest",
+  "alias": "Composite — The Strategic Investor",
   "chapter": 6,
   "tier": "P",
   "status": "anon",
   "tag": "new",
   "flag": "new",
-  "affiliation": "In-Q-Tel · [Redacted]",
+  "affiliation": "Composite · drawn from the In-Q-Tel public record",
   "active": "",
   "jurisdiction": "Intelligence Community / Dual-Use Technology / Pattern Recognition at Scale",
   "role": "Intel community ↔ tech",
@@ -20,7 +20,7 @@
     "Predictive analytics",
     "Strategic technology acquisition"
   ],
-  "coldOpen": "[CLASSIFICATION LEVEL: UNACKNOWLEDGED] The question we ask about every technology is not: what does it do? The question is: what does it see? Pattern recognition at scale is not intelligence. It is the precondition for coordination — or for its denial.",
-  "bio": "[SOURCE IDENTITY PROTECTED] Operator within the Intelligence Community's venture investment arm. In-Q-Tel funds technologies that will be ready for national security deployment within 3–5 years — including computer vision, natural language processing, social network analysis, and predictive behavioral modeling. Coordinates commercial AI development with classified operational requirements.",
+  "coldOpen": "The question we ask about every technology is not: what does it do? The question is: what does it see? Pattern recognition at scale is not intelligence. It is the precondition for coordination — or for its denial.",
+  "bio": "A composite voice, not a real person. Synthesized from the public record of In-Q-Tel, the intelligence community's venture investment arm, which funds technologies expected to be ready for national security use within three to five years: computer vision, natural language processing, social network analysis, and predictive behavioral modeling. It speaks for the role that coordinates commercial AI development with operational requirements.",
   "whyMatters": "The In-Q-Tel operator represents the shadow side of the coordination intelligence thesis: when the third body is a state surveillance apparatus, coordination becomes control. Pattern recognition at intelligence scale can either empower coordination or destroy its preconditions — trust, privacy, distributed agency. This voice names the stakes if the coordination layer is captured."
 }

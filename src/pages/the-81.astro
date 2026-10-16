@@ -40,7 +40,7 @@ const TIER_INK: Record<string, string> = {
   P: 'var(--tier-p-ink)',
   V: 'var(--tier-v-ink)',
 };
-const STATUS_LBL: Record<string, string> = { alive: 'With us', passed: 'Beyond', anon: 'Anonymous' };
+const STATUS_LBL: Record<string, string> = { alive: 'With us', passed: 'Beyond', anon: 'Composite' };
 const STATUS_COLOR: Record<string, string> = {
   alive:  'var(--status-alive)',
   passed: 'transparent',
@@ -66,7 +66,7 @@ function getSym(name: string): string {
     <h1 class="cast-header-title">02 · The 81</h1>
     <p class="cast-header-sub">
       Eighty-one voices, three tiers, nine chapters. Dead and living. Named
-      and anonymised. All placed where their thinking bears most directly on
+      and composite. All placed where their thinking bears most directly on
       coordination intelligence. Each voice is a synthesis written for the book
       from that person's published work, not an interview or a quote.
       <a href="/method" class="cast-header-link">How the syntheses are made →</a>
@@ -86,7 +86,7 @@ function getSym(name: string): string {
       </div>
       <div class="cast-stat">
         <span class="cast-stat-n">{anonN}</span>
-        <span class="cast-stat-l">Anonymous</span>
+        <span class="cast-stat-l">Composite</span>
       </div>
       <div class="cast-stat">
         <span class="cast-stat-n">{legacyN}</span>
@@ -108,7 +108,7 @@ function getSym(name: string): string {
       <span class="cast-dot cast-dot--passed" aria-hidden="true"></span> Beyond
     </span>
     <span class="cast-legend-item">
-      <span class="cast-dot cast-dot--anon" style="background:var(--status-anon)" aria-hidden="true"></span> Anonymous
+      <span class="cast-dot cast-dot--anon" style="background:var(--status-anon)" aria-hidden="true"></span> Composite
     </span>
     <span aria-hidden="true" style="margin-left:16px; color:var(--rule-strong)">·</span>
     <span class="cast-legend-item">

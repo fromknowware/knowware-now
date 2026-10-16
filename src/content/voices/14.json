@@ -1,12 +1,12 @@
 {
   "id": "14",
   "name": "Former NSA Technical Director",
-  "alias": "Anonymous — The Signals Intercept",
+  "alias": "Composite — The Signals Intercept",
   "chapter": 2,
   "tier": "P",
   "status": "anon",
   "flag": "old",
-  "affiliation": "NSA · [Redacted]",
+  "affiliation": "Composite · drawn from the NSA public record",
   "active": "",
   "jurisdiction": "Signals Intelligence / Bulk Coordination Architecture",
   "role": "Signals Intelligence",
@@ -20,6 +20,6 @@
     "The gap between collection and understanding"
   ],
   "coldOpen": "We built the largest coordination machine in history. We could see every signal. What we could not do was understand what it meant. Collection without sense-making is not intelligence. It is noise at industrial scale.",
-  "bio": "Served as a senior technical architect at NSA during the era of bulk collection programs. Designed infrastructure that coordinated signals intercepts across global networks at a scale no civilian system had attempted. Retired with a classified record and an unclassified warning: mass coordination of data without interpretive context produces surveillance, not intelligence.",
+  "bio": "A composite voice, not a real person. Synthesized from the public record of NSA technical leadership during the era of bulk collection programs, when infrastructure coordinated signals intercepts across global networks at a scale no civilian system had attempted. The warning it carries is the book's reading of that record: mass coordination of data without interpretive context produces surveillance, not intelligence.",
   "whyMatters": "This dossier represents the state's attempt to solve coordination intelligence through sheer collection scale. It failed — not technically, but epistemically. The signals intercept story proves Knowware's thesis: two-body systems (data + collection) without the third body (meaning) produce power without wisdom."
 }
