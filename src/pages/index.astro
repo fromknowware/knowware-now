@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Field from '../components/Field.astro';
 import Disclosure from '../components/Disclosure.astro';
-import { STRIPE_URL, PRICE_PREORDER } from '../config';
+import { ORDER_HREF, ORDER_CTA } from '../config';
 
 const DOMAINS = [
   { label: 'AI',          code: 'AI',  color: 'oklch(0.88 0.09 20)'  },
@@ -79,7 +79,7 @@ const QUOTES = [
         <span style="color: var(--sub2); font-size: 0.85em">Khayyam Wakil · MMXXVI · Ed. 01</span>
       </p>
       <div class="kw-hero-cta">
-        <a href={STRIPE_URL} class="kw-btn kw-btn--filled">Pre-order · {PRICE_PREORDER} →</a>
+        <a href={ORDER_HREF} class="kw-btn kw-btn--filled">{ORDER_CTA}</a>
         <a href="/read" class="kw-btn">Read free →</a>
       </div>
     </div>

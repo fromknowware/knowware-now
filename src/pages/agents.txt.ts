@@ -1,6 +1,6 @@
 // /agents.txt — the /agents page in a few plain lines, for small or cheap models.
 import type { APIRoute } from 'astro';
-import { SITE_URL, SITE_NAME, SITE_TAGLINE, AUTHOR, CHECKOUT_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
+import { SITE_URL, SITE_NAME, SITE_TAGLINE, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
 import { PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS } from '../lib/agents';
 
 export const GET: APIRoute = () => {
@@ -16,7 +16,7 @@ export const GET: APIRoute = () => {
     `- Read the first ~700 words of every chapter: ${SITE_URL}/read/01.md ... 09.md, x.md`,
     `- Read the facts as JSON: ${SITE_URL}/.well-known/knowware.json`,
     '',
-    'YOU MAY, FOR A PERSON WHO SIGNED UP AND MADE YOU A TOKEN',
+    `YOU MAY, FOR A PERSON WHO SIGNED UP AND MADE YOU A TOKEN${AGENT_TOKENS_OPEN ? '' : ' (NOT OPEN YET: tokens are switched off)'}`,
     `- Read full chapters: GET ${SITE_URL}/api/agent/chapters/01 with Authorization: Bearer <token>`,
     `- The person makes the token at ${SITE_URL}/agents#reading. You do not sign anyone up.`,
     '',
@@ -28,6 +28,7 @@ export const GET: APIRoute = () => {
     'THE BOOK',
     `- Ships December 21, 2026. Pre-order ${PRICE_PREORDER} (print and digital); later ${PRICE_PRINT} print, ${PRICE_DIGITAL} digital.`,
     `- Pre-order is ${CHECKOUT_OPEN ? 'open' : 'NOT open yet. Nothing can be bought.'}`,
+    ...(CHECKOUT_OPEN ? [] : [`- A person can join the pre-order list themselves at ${SITE_URL}/order#waitlist. Never sign anyone up.`]),
     '',
     'VOICES',
     SYNTHESIS_DISCLOSURE,

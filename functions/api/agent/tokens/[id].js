@@ -3,7 +3,7 @@
 
 import { json } from '../../../../lib/server/guard.js';
 import {
-  agentJson, authenticateAgent, browserGuard, principalHash, revokeById, verifiedReader,
+  agentJson, authenticateAgent, browserGuard, principalHash, revokeById, tokensClosed, tokensOpen, verifiedReader,
 } from '../../../../lib/server/agent.js';
 
 export async function onRequest({ request, env, params }) {
@@ -11,12 +11,14 @@ export async function onRequest({ request, env, params }) {
   const id = String(params.id);
 
   if (id === 'self') {
-    const auth = await authenticateAgent(request, env, 'read');
+    // An agent may always revoke its own token, even while tokens are switched off.
+    const auth = await authenticateAgent(request, env, 'read', { allowWhenClosed: true });
     if (auth.response) return auth.response;
     const ok = await revokeById(env, auth.agent.prin, auth.agent.id);
     return agentJson({ ok, revoked: ok ? auth.agent.id : null });
   }
 
+  if (!tokensOpen(env)) return tokensClosed();
   const blocked = browserGuard(request);
   if (blocked) return blocked;
   const who = await verifiedReader(request, env);

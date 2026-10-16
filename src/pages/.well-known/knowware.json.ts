@@ -2,7 +2,7 @@
 // offers, where, on what terms, and who has to be in the room.
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { SITE_URL, SITE_NAME, AUTHOR, CHECKOUT_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../../config';
+import { SITE_URL, SITE_NAME, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../../config';
 import { CONTENT_SIGNAL, ENDPOINTS, LICENSES, PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS, TERMS_URL, TERMS_VERSION } from '../../lib/agents';
 
 export const GET: APIRoute = async () => {
@@ -31,7 +31,8 @@ export const GET: APIRoute = async () => {
         pages: ['definition', 'method', 'rules', 'colophon'].map((p) => `${SITE_URL}/${p}.md`),
       },
       authorized: {
-        status: 'live',
+        status: AGENT_TOKENS_OPEN ? 'live' : 'not_open',
+        note: AGENT_TOKENS_OPEN ? undefined : 'Built and tested but switched off until confirmation emails are set up. GET /api/agent/status reports tokens: on|off at runtime.',
         auth: 'Authorization: Bearer <agent token>, minted on the website by a signed-up person (the human principal)',
         mint_token: `${SITE_URL}/agents#reading`,
         list_chapters: `${SITE_URL}/api/agent/chapters`,
@@ -56,6 +57,7 @@ export const GET: APIRoute = async () => {
         ? 'Agents may request a checkout link; a human completes payment.'
         : 'The pre-order checkout is not open yet. Nothing can be bought, by a person or an agent.',
       autonomous_payment: 'only_with_a_human_pay_mandate_on_testnet_when_switched_on',
+      waiting_list: { url: `${SITE_URL}/order#waitlist`, note: 'For a person to join themselves. Agents must not sign anyone up.' },
       human_completes_payment: 'for stripe_checkout; for x402 the person authorized one capped purchase in advance',
       runtime_status: `${SITE_URL}/api/agent/status`,
       rails: [

@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Field from '../components/Field.astro';
-import { SITE_URL, SITE_NAME, SITE_TAGLINE, AUTHOR, PUBLISHER, EDITION, CHECKOUT_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
+import { SITE_URL, SITE_NAME, SITE_TAGLINE, AUTHOR, PUBLISHER, EDITION, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
 import { ENDPOINTS, PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS, TERMS_VERSION, CONTENT_SIGNAL } from '../lib/agents';
 
 const DESCRIPTION =
@@ -10,7 +10,7 @@ const DESCRIPTION =
 const CAPABILITIES = [
   { what: 'Discover the site', human: 'No', status: 'Live', where: 'llms.txt, manifest', href: '/llms.txt' },
   { what: 'Read pages and chapter previews', human: 'No', status: 'Live', where: 'Markdown files', href: '/read/01.md' },
-  { what: 'Read full chapters', human: 'Yes: a signed-up reader mints you a token', status: 'Live', where: 'Token-gated API', href: '#reading' },
+  { what: 'Read full chapters', human: 'Yes: a signed-up reader mints you a token', status: AGENT_TOKENS_OPEN ? 'Live' : 'Not open yet', where: 'Token-gated API', href: '#reading' },
   { what: 'Buy the book', human: 'Yes: a person completes payment', status: CHECKOUT_OPEN ? 'Test mode' : 'Not open', where: 'Checkout link', href: '#buying' },
 ];
 const RECORD = [
@@ -102,6 +102,7 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
   <section class="kw-section ag-body" aria-labelledby="read-h" id="reading">
     <p class="kw-label">2 · Full chapters, for a person who signed up</p>
     <h2 class="ag-h" id="read-h">Your person unlocks you.</h2>
+    {!AGENT_TOKENS_OPEN && <p class="ag-callout">Not open yet. The token-gated chapter API is built and tested but switched off until confirmation emails are set up. The free chapter previews are open now. What follows is how it will work.</p>}
     <p class="kw-body">
       The full chapters are free, for one email. The person you act for signs up on <a href="/read">the manuscript page</a>, then comes back here and mints you a token. Do not sign anyone up yourself and do not ask for their email to do it for you.
     </p>
@@ -115,6 +116,10 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
 
     <div class="ag-console" id="ag-console" aria-labelledby="mint-h">
       <h3 class="ag-h3" id="mint-h">Mint a token for your agent</h3>
+      <div id="ag-closed" hidden>
+        <p class="kw-body"><strong>Agent tokens are not open yet.</strong> Nothing to mint today. The full chapters are still free for a person who signs up on <a href="/read">the manuscript page</a>, and every chapter opening is readable without an account.</p>
+      </div>
+
       <p class="kw-body" id="ag-nojs">A person mints the token on this page, in a browser. It needs JavaScript and a signed-up reader.</p>
 
       <div id="ag-signedout" hidden>
@@ -186,6 +191,7 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
       <li>You get a Stripe-hosted <code>checkout_url</code>. You hand it to the person. They pay on Stripe's page. You never see or enter card details.</li>
       <li>You may poll <code>GET /api/agent/orders/&lt;order_id&gt;</code> for the outcome.</li>
     </ol>
+    <p class="kw-body">Until a real checkout exists, the pre-order is a waiting list. If your person wants to know when it opens, tell them about <a href="/order#waitlist">the pre-order list</a>. They join it themselves; do not add anyone's email for them.</p>
     <p class="kw-body">Each order records three things: the human it is for, the agent (name and operator), and your context note.</p>
 
     <h3 class="ag-h3" id="x402">Second rail: x402 and USDC (testnet, off)</h3>
@@ -249,7 +255,6 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
   const signedIn = document.cookie.split('; ').includes('kw_reader_ui=1');
   const status = $('ag-status');
   $('ag-nojs').hidden = true;
-  $(signedIn ? 'ag-signedin' : 'ag-signedout').hidden = false;
 
   const MESSAGES: Record<string, string> = {
     rate_limited: 'Too many tokens minted from this connection. Try again in an hour.',
@@ -303,7 +308,7 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
     $('ag-signedout').hidden = false;
   }
 
-  if (signedIn) {
+  function startSignedIn() {
     refresh();
     // Checkout is a runtime switch; ask the server whether it is on.
     fetch('/api/agent/status').then((r) => r.json()).then((d) => {
@@ -361,6 +366,12 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
       }
     });
   }
+
+  // Tokens are a runtime switch. Closed (or unreachable) means the panels stay hidden.
+  fetch('/api/agent/status').then((r) => r.json()).then((d) => {
+    if (!d || d.tokens !== 'on') { $('ag-closed').hidden = false; return; }
+    if (signedIn) { $('ag-signedin').hidden = false; startSignedIn(); } else { $('ag-signedout').hidden = false; }
+  }).catch(() => { $('ag-closed').hidden = false; });
 </script>
 
 <style>
@@ -412,7 +423,7 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
   .ag-check label { font: 400 14px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); }
   .ag-fine { margin: 0; font-size: 14px; line-height: 1.5; color: var(--sub); max-width: 56ch; }
   .ag-result { margin-top: 24px; padding: 16px; border: 2px solid var(--signal-ink); display: grid; gap: 12px; max-width: 520px; }
-  .ag-result[hidden], #ag-unverified[hidden], #ag-signedin[hidden], #ag-signedout[hidden], #ag-nojs[hidden], #ag-none[hidden] { display: none; }
+  .ag-result[hidden], #ag-closed[hidden], #ag-unverified[hidden], #ag-signedin[hidden], #ag-signedout[hidden], #ag-nojs[hidden], #ag-none[hidden] { display: none; }
   .ag-tokens { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   .ag-tokens li { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--rule); font-size: 14px; }
   .ag-tokens li span { overflow-wrap: anywhere; min-width: 0; }

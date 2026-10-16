@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CONTACT_EMAIL } from '../../config';
+---
+<Base title="You're on the list" description="You are on the Knowware pre-order list." noindex>
+  <section class="kw-section" aria-labelledby="listed-h">
+    <p class="kw-label">Pre-order list</p>
+    <h1 class="kw-h2" id="listed-h">You're on the list.</h1>
+    <p class="kw-body">We will write to you once, the day pre-orders open. Nothing else, and nothing shared. To be removed, write to <a href={`mailto:${CONTACT_EMAIL}`} style="color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)">{CONTACT_EMAIL}</a>.</p>
+    <p class="kw-body" style="margin-top:16px"><a href="/read" style="color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)">Read Chapter 1 free →</a></p>
+  </section>
+</Base>

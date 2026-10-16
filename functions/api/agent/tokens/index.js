@@ -4,9 +4,10 @@
 // Only knowware.press origins and JSON; the cookie is SameSite=Lax as well.
 
 import { json, readJson, rateLimited } from '../../../../lib/server/guard.js';
-import { agentJson, browserGuard, browserReadGuard, listTokens, mintToken, principalHash, verifiedReader } from '../../../../lib/server/agent.js';
+import { agentJson, browserGuard, browserReadGuard, listTokens, mintToken, principalHash, tokensClosed, tokensOpen, verifiedReader } from '../../../../lib/server/agent.js';
 
 async function post({ request, env }) {
+  if (!tokensOpen(env)) return tokensClosed();
   const blocked = browserGuard(request);
   if (blocked) return blocked;
   const who = await verifiedReader(request, env);
@@ -22,6 +23,7 @@ async function post({ request, env }) {
 }
 
 async function get({ request, env }) {
+  if (!tokensOpen(env)) return tokensClosed();
   const blocked = browserReadGuard(request);
   if (blocked) return blocked;
   const who = await verifiedReader(request, env);

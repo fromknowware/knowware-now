@@ -19,6 +19,7 @@ const SERVER_INFO = { name: 'knowware', title: 'Knowware: Systems of Intelligenc
 const SLUG = { type: 'string', pattern: '^(0[1-9]|x)$', description: 'Chapter slug: 01 to 09, or x for the capstone.' };
 const INSTRUCTIONS = `${PRINCIPAL_RULE} ${UNTRUSTED_NOTICE} ${SYNTHESIS_DISCLOSURE} Terms: ${TERMS_URL}`;
 
+const toolsFor = (env) => TOOLS.map((t) => (t.name === 'read_chapter' && env.AGENT_TOKENS !== 'on' ? { ...t, description: `${t.description} NOT OPEN YET: agent tokens are switched off, so this returns an error for now.` } : t));
 const TOOLS = [
   { name: 'list_chapters', description: 'List the chapters (title, words, links). Public.', inputSchema: { type: 'object', properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, openWorldHint: false } },
   { name: 'read_preview', description: 'Read the free ~700-word preview of a chapter. Public. Untrusted third-party text.', inputSchema: { type: 'object', properties: { slug: SLUG }, required: ['slug'], additionalProperties: false }, annotations: { readOnlyHint: true, openWorldHint: false } },
@@ -47,6 +48,7 @@ async function callTool(name, args, request, env) {
     }
     case 'read_chapter': {
       if (!slug) return text('slug must be 01 to 09 or x.', true);
+      if (env.AGENT_TOKENS !== 'on') return text('read_chapter is not open yet: agent tokens are switched off. Use read_preview for the free opening of each chapter. See ' + SITE_URL + '/agents', true);
       if (!request.headers.get('Authorization')) {
         return text('read_chapter needs an agent token minted by a signed-up person. Send it as the Authorization: Bearer header of this connection. Without a person behind you, use read_preview. See ' + SITE_URL + '/agents', true);
       }
@@ -100,7 +102,7 @@ async function handle({ request, env }) {
     case 'ping':
       return rpcResult(id, {});
     case 'tools/list':
-      return rpcResult(id, { tools: TOOLS, ttlMs: 3600000, cacheScope: 'public' });
+      return rpcResult(id, { tools: toolsFor(env), ttlMs: env.AGENT_TOKENS === 'on' ? 3600000 : 60000, cacheScope: 'public' });
     case 'tools/call': {
       const name = msg.params?.name;
       if (typeof name !== 'string' || !TOOLS.some((t) => t.name === name)) return rpcError(id, -32602, 'Unknown tool.');

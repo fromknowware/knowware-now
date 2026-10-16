@@ -44,6 +44,7 @@ jobs:
         run: |
           cat > .dev.vars <<'VARS'
           AGENT_REQUIRE_VERIFIED_EMAIL=false
+          AGENT_TOKENS=on
           AGENT_CHECKOUT=test
           STRIPE_SECRET_KEY=sk_test_mockmockmockmock
           STRIPE_WEBHOOK_SECRET=whsec_local_test_secret
@@ -63,7 +64,7 @@ jobs:
           cat wrangler.log; exit 1
       - name: Abuse suites
         run: |
-          for s in test-agent-api test-agent-checkout test-mcp test-agent-x402; do echo "== $s"; bash ./scripts/$s.sh; done
+          for s in test-agent-api test-agent-checkout test-mcp test-agent-x402 test-waitlist; do echo "== $s"; bash ./scripts/$s.sh; done
       - name: Fuzz
         run: |
           node scripts/fuzz-agent-api.mjs http://localhost:8788 --n 3000 --seed 1

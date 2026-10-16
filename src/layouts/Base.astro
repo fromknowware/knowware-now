@@ -3,7 +3,7 @@ import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-600.css';
 import '../styles/kw.css';
-import { SITE_NAME, SITE_TAGLINE, SITE_URL, AUTHOR, PUBLISHER, OG_IMAGE, STRIPE_URL, PRICE_SAVING, CHECKOUT_OPEN } from '../config';
+import { SITE_NAME, SITE_TAGLINE, SITE_URL, AUTHOR, PUBLISHER, OG_IMAGE, ORDER_HREF, ORDER_CTA, PRICE_SAVING, CHECKOUT_OPEN } from '../config';
 import { markdownHrefFor } from '../lib/markdown-pages.mjs';
 
 interface Props {
@@ -125,7 +125,7 @@ const NAV = [
   <span id="kw-dock-countdown"></span>
   <span id="kw-dock-sep" aria-hidden="true" style="margin: 0 10px">·</span>
   <span id="kw-dock-saving" style="color: rgba(237,238,228,0.72)">{PRICE_SAVING}</span>
-  <a href={STRIPE_URL} id="kw-dock-cta">Pre-order · $33 →</a>
+  <a href={ORDER_HREF} id="kw-dock-cta">{ORDER_CTA}</a>
 </div>
 
 <!-- Nav -->

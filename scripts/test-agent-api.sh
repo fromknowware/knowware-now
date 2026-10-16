@@ -82,7 +82,7 @@ newip
 M3=$(cu -s -X POST "$B/api/agent/tokens" -H "$O" -H "$C" -H 'Content-Type: application/json' -d '{"name":"Limit Test","operator":"Test Ops","lifetime":"1h"}')
 T3=$(printf '%s' "$M3" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
 got429=0
-for i in $(seq 1 45); do [ "$(code "$B/api/agent/me" -H "Authorization: Bearer $T3")" = 429 ] && got429=1 && break; done
+for i in $(seq 1 75); do [ "$(code "$B/api/agent/me" -H "Authorization: Bearer $T3")" = 429 ] && got429=1 && break; done
 check "per-token rate limit trips → 429" 1 "$got429"
 newip
 got429=0

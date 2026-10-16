@@ -42,7 +42,7 @@ Bugs found by this checking, all fixed: unconfirmed email accepted as a principa
 4. **x402 is not verified against the live facilitator.** See `docs/agent-x402-live-test.md`. Until that test is done, treat the rail as unproven.
 5. **A confirmed email proves control of an inbox, not identity.** That is the bar here. It depends on `RESEND_API_KEY` working.
 6. **Prompt injection cannot be prevented from our side.** Chapter text is the author's, and it quotes synthesized voices; we label it as untrusted data at every layer, but a downstream agent still decides how to treat it.
-7. **Order data is personal data held indefinitely.** Orders (email, agent, note) live in KV with no TTL so the author can fulfil them. There is no automated deletion; to erase one person, delete the keys listed below on request.
+7. **Order data and the waiting list are personal data held indefinitely.** Orders (email, agent, note) live in KV with no TTL so the author can fulfil them. There is no automated deletion; to erase one person, delete the keys listed below on request.
 8. **Single shared secrets:** `ADMIN_TOKEN`, `STRIPE_WEBHOOK_SECRET`, `RATE_SALT`. Rotate by changing the Cloudflare secret; there is no overlap window for the webhook secret (Stripe supports a rolling secret in the Dashboard).
 9. **The Workers Builds check is red on `main`** and there are no per-branch previews; the Preview environment must use a separate KV namespace (see PR notes), or test data lands in production.
 10. **Dependencies:** `npm audit` reports two moderate issues in `satori` (the story-card image builder from the stories feature, build time only). Not from the agent work.
@@ -63,7 +63,9 @@ wrangler kv key list --binding CLAIMS --prefix agent: --remote | python3 -c "imp
 
 **Rotate secrets:** change `ADMIN_TOKEN`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_SECRET_KEY` in Cloudflare; roll the webhook secret in the Stripe Dashboard first, then update Cloudflare.
 
-**Erase one person:** delete `reader:<hash>` entries for them (hash of the token; use the person's email to find `subscriber:<sha256(email)>`), `agentidx:<sha256(email)[0:32]>:*`, and their `order:*` records (list `order:` and match `principal.email`).
+**Erase one person from the waiting list:** delete `waitlist:<sha256(lowercased email)>`.
+
+**Erase one person elsewhere:** delete `reader:<hash>` entries for them (hash of the token; use the person's email to find `subscriber:<sha256(email)>`), `agentidx:<sha256(email)[0:32]>:*`, and their `order:*` records (list `order:` and match `principal.email`).
 
 **Something returned a 500:** the log line is `unhandled <METHOD> <path> <ErrorClass>`. No request data is logged. Reproduce with the fuzzer seed or the abuse scripts.
 

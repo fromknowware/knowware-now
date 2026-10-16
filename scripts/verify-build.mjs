@@ -124,6 +124,17 @@ check('no schema.org Offer while CHECKOUT_OPEN is false', checkoutOpen || !hasOf
 check('manifest purchase status matches CHECKOUT_OPEN', manifest.purchase.status === (checkoutOpen ? 'open' : 'not_open'));
 check('llms.txt does not claim the pre-order is open while it is not', checkoutOpen || /not open yet/.test(read(join(dist, 'llms.txt'))));
 
+// 6b. While there is no checkout, nothing links to a pre-order that does not exist.
+const orderHtml = read(join(dist, 'order/index.html'));
+const homeHtml = read(join(dist, 'index.html'));
+check('while checkout is off, no page offers a priced "Pre-order · $" button', checkoutOpen || ![orderHtml, homeHtml].some((h) => /Pre-order · \$/.test(h)));
+check('while checkout is off, pre-order buttons lead to the waiting list, never to /order itself', checkoutOpen || (/id="kw-dock-cta"/.test(homeHtml) && /href="\/order#waitlist"[^>]*id="kw-dock-cta"/.test(homeHtml) && !/href="\/order"[^>]*(id="kw-dock-cta"|class="kw-btn kw-btn--filled")/.test(homeHtml)));
+check('/order has the waiting-list form posting to /api/waitlist', /id="waitlist"/.test(orderHtml) && /action="\/api\/waitlist"/.test(orderHtml) && /name="company"/.test(orderHtml));
+check('/order/listed exists and is noindex', existsSync(join(dist, 'order/listed/index.html')) && /name="robots" content="noindex"/.test(read(join(dist, 'order/listed/index.html'))));
+const tokensOpen = /AGENT_TOKENS_OPEN\s*=\s*true/.test(read(join(root, 'src/config.ts')));
+check('manifest authorized-reading status matches AGENT_TOKENS_OPEN', manifest.reading.authorized.status === (tokensOpen ? 'live' : 'not_open'));
+check('while tokens are off, /agents and agents.txt say so', tokensOpen || (/Not open yet/.test(read(join(dist, 'agents/index.html'))) && /NOT OPEN YET/.test(read(join(dist, 'agents.txt')))));
+
 // 7. Policy and discovery files.
 const robots = read(join(dist, 'robots.txt'));
 check('robots.txt states ai-train=no', /Content-Signal:[^\n]*ai-train=no/.test(robots));

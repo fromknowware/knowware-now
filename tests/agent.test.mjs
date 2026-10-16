@@ -20,7 +20,7 @@ const req = (token, extra = {}) =>
 const input = { name: 'Test Agent', operator: 'Test Ops', lifetime: '1h', scopes: ['read'] };
 
 test('a minted token authenticates and carries its principal', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   const t = await mintToken(env, reader, input);
   assert.match(t.token, /^kwa_[A-Za-z0-9_-]{43}$/);
   const auth = await authenticateAgent(req(t.token), env, 'read');
@@ -29,7 +29,7 @@ test('a minted token authenticates and carries its principal', async () => {
 });
 
 test('only the hash of a token is stored', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   const t = await mintToken(env, reader, input);
   const all = JSON.stringify([...env.CLAIMS.m.entries()]);
   assert.equal(all.includes(t.token), false);
@@ -37,7 +37,7 @@ test('only the hash of a token is stored', async () => {
 });
 
 test('an expired token is refused even if KV still holds it', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   const t = await mintToken(env, reader, input);
   const key = `agent:${await sha256(t.token)}`;
   const rec = JSON.parse(env.CLAIMS.m.get(key));
@@ -48,14 +48,14 @@ test('an expired token is refused even if KV still holds it', async () => {
 });
 
 test('a read token cannot be used for a checkout scope', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   const t = await mintToken(env, reader, input);
   const auth = await authenticateAgent(req(t.token), env, 'checkout');
   assert.equal(auth.response.status, 403);
 });
 
 test('revoking removes the token and its index entry', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   const t = await mintToken(env, reader, input);
   const prin = await principalHash(reader.email);
   assert.equal((await listTokens(env, prin)).length, 1);
@@ -65,33 +65,33 @@ test('revoking removes the token and its index entry', async () => {
 });
 
 test("another person cannot revoke someone else's token", async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   const t = await mintToken(env, reader, input);
   assert.equal(await revokeById(env, await principalHash('other@example.com'), t.id), false);
   assert.ok((await authenticateAgent(req(t.token), env, 'read')).agent);
 });
 
 test('a person holds at most MAX_ACTIVE tokens', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   for (let i = 0; i < MAX_ACTIVE; i++) assert.ok((await mintToken(env, reader, input)).token);
   assert.equal((await mintToken(env, reader, input)).status, 409);
 });
 
 test('labels with markup, control characters or no operator are refused', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   for (const bad of [{ name: '<b>x</b>' }, { name: 'a\nb' }, { operator: '' }, { name: 'x' }]) {
     assert.ok((await mintToken(env, reader, { ...input, ...bad })).error, JSON.stringify(bad));
   }
 });
 
 test('checkout scope is not granted unless asked for, and unknown scopes fail', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   assert.deepEqual((await mintToken(env, reader, { ...input, scopes: undefined })).scopes, ['read']);
   assert.ok((await mintToken(env, reader, { ...input, scopes: ['root'] })).error);
 });
 
 test('bad tokens are counted and eventually blocked before lookup', async () => {
-  const env = { CLAIMS: fakeKV() };
+  const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
   let last;
   for (let i = 0; i < 22; i++) last = await authenticateAgent(req('kwa_' + 'A'.repeat(43)), env, 'read');
   assert.equal(last.response.status, 429);
@@ -105,14 +105,14 @@ test('timingSafeEqualHex compares by value and length', () => {
 });
 
 test('a checkout-scoped token cannot be minted while checkout is off', async () => {
-  const off = await mintToken({ CLAIMS: fakeKV() }, reader, { ...input, scopes: ['read', 'checkout'] });
+  const off = await mintToken({ CLAIMS: fakeKV(), AGENT_TOKENS: 'on' }, reader, { ...input, scopes: ['read', 'checkout'] });
   assert.ok(off.error);
   const on = await mintToken({ CLAIMS: fakeKV(), AGENT_CHECKOUT: 'test' }, reader, { ...input, scopes: ['read', 'checkout'] });
   assert.deepEqual(on.scopes, ['read', 'checkout']);
 });
 
 test('a pay-scoped token cannot be minted unless x402 testnet is on', async () => {
-  assert.ok((await mintToken({ CLAIMS: fakeKV() }, reader, { ...input, scopes: ['read', 'pay'] })).error);
+  assert.ok((await mintToken({ CLAIMS: fakeKV(), AGENT_TOKENS: 'on' }, reader, { ...input, scopes: ['read', 'pay'] })).error);
   const on = await mintToken({ CLAIMS: fakeKV(), X402_MODE: 'testnet' }, reader, { ...input, scopes: ['read', 'pay'] });
   assert.deepEqual(on.scopes, ['read', 'pay']);
 });
@@ -121,7 +121,7 @@ import { verifiedReader } from '../lib/server/agent.js';
 
 test('agent tokens need a confirmed email: an unconfirmed sign-up is refused', async () => {
   const cookieFor = async (rec) => {
-    const env = { CLAIMS: fakeKV() };
+    const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
     const token = 'A'.repeat(43);
     env.CLAIMS.m.set(`reader:${await sha256(token)}`, JSON.stringify(rec));
     return { env, request: new Request('https://knowware.press/api/agent/tokens', { headers: { Cookie: `kw_reader=${token}` } }) };
@@ -138,6 +138,18 @@ test('agent tokens need a confirmed email: an unconfirmed sign-up is refused', a
   dev.env.AGENT_REQUIRE_VERIFIED_EMAIL = 'false';
   assert.ok((await verifiedReader(dev.request, dev.env)).reader);
 
-  const nobody = await verifiedReader(new Request('https://knowware.press/'), { CLAIMS: fakeKV() });
+  const nobody = await verifiedReader(new Request('https://knowware.press/'), { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' });
   assert.equal(nobody.response.status, 401);
+});
+
+test('with AGENT_TOKENS off, every token path is closed (503) except an agent revoking itself', async () => {
+  const on = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
+  const t = await mintToken(on, reader, input);
+  const off = { ...on, AGENT_TOKENS: undefined };
+  const closed = await authenticateAgent(req(t.token), off, 'read');
+  assert.equal(closed.response.status, 503);
+  assert.equal((await closed.response.json()).error, 'agent_tokens_not_open');
+  const ownRevoke = await authenticateAgent(req(t.token), off, 'read', { allowWhenClosed: true });
+  assert.ok(ownRevoke.agent);
+  assert.equal((await authenticateAgent(req(t.token), { ...on, AGENT_TOKENS: 'yes' }, 'read')).response.status, 503); // only the exact value "on" opens it
 });
