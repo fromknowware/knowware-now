@@ -109,7 +109,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
     <h2 class="dos-section-lbl mono" id="synth-h">SYNTHESIZED VOICE · NOT A QUOTE</h2>
     <div class="dos-quote">
       <p class="dos-quote-text">{voice.coldOpen}<sup class="kw-ast" aria-hidden="true">*</sup></p>
-      <SynthesisNote name={voice.name} />
+      <SynthesisNote name={voice.name} anon={voice.status === 'anon'} />
     </div>
   </section>
 )}
