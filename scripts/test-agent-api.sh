@@ -2,6 +2,7 @@
 # Abuse-tests the agent API against a local `wrangler pages dev dist --kv CLAIMS`.
 # Usage: scripts/test-agent-api.sh [base-url]   (default http://localhost:8788)
 # Makes no external calls. Creates throwaway readers in the local KV.
+# Needs AGENT_REQUIRE_VERIFIED_EMAIL=false in .dev.vars (local dev only): no email is sent here to confirm.
 set -u
 B="${1:-http://localhost:8788}"
 O="Origin: $B"

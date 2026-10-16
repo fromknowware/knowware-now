@@ -3,6 +3,7 @@
 # with .dev.vars set for the mock (see docs/agent-checkout-setup.md) and
 # `node scripts/mock-stripe.mjs` running. Makes no calls to Stripe.
 # Usage: STRIPE_WEBHOOK_SECRET=whsec_local_test_secret scripts/test-agent-checkout.sh [base-url] [mock-url]
+# Needs AGENT_REQUIRE_VERIFIED_EMAIL=false in .dev.vars (local dev only): no email is sent here to confirm.
 set -u
 B="${1:-http://localhost:8788}"; MOCK="${2:-http://127.0.0.1:12111}"
 O="Origin: $B"

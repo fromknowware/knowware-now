@@ -3,7 +3,7 @@
 
 import { json } from '../../../../lib/server/guard.js';
 import {
-  agentJson, authenticateAgent, browserGuard, principalHash, readerFromCookie, revokeById,
+  agentJson, authenticateAgent, browserGuard, principalHash, revokeById, verifiedReader,
 } from '../../../../lib/server/agent.js';
 
 export async function onRequest({ request, env, params }) {
@@ -19,8 +19,8 @@ export async function onRequest({ request, env, params }) {
 
   const blocked = browserGuard(request);
   if (blocked) return blocked;
-  const reader = await readerFromCookie(request, env);
-  if (!reader) return agentJson({ ok: false, error: 'sign_in_required' }, 401);
-  const ok = await revokeById(env, await principalHash(reader.email), id);
+  const who = await verifiedReader(request, env);
+  if (who.response) return who.response;
+  const ok = await revokeById(env, await principalHash(who.reader.email), id);
   return ok ? agentJson({ ok: true, revoked: id }) : agentJson({ ok: false, error: 'not_found' }, 404);
 }

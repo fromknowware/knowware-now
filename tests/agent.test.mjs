@@ -116,3 +116,28 @@ test('a pay-scoped token cannot be minted unless x402 testnet is on', async () =
   const on = await mintToken({ CLAIMS: fakeKV(), X402_MODE: 'testnet' }, reader, { ...input, scopes: ['read', 'pay'] });
   assert.deepEqual(on.scopes, ['read', 'pay']);
 });
+
+import { verifiedReader } from '../lib/server/agent.js';
+
+test('agent tokens need a confirmed email: an unconfirmed sign-up is refused', async () => {
+  const cookieFor = async (rec) => {
+    const env = { CLAIMS: fakeKV() };
+    const token = 'A'.repeat(43);
+    env.CLAIMS.m.set(`reader:${await sha256(token)}`, JSON.stringify(rec));
+    return { env, request: new Request('https://knowware.press/api/agent/tokens', { headers: { Cookie: `kw_reader=${token}` } }) };
+  };
+  const unconfirmed = await cookieFor({ email: 'victim@example.com', createdAt: 'x' });
+  const r = await verifiedReader(unconfirmed.request, unconfirmed.env);
+  assert.equal(r.response.status, 403);
+  assert.equal((await r.response.json()).error, 'email_not_verified');
+
+  const confirmed = await cookieFor({ email: 'victim@example.com', createdAt: 'x', verifiedAt: '2026-10-16T00:00:00Z' });
+  assert.equal((await verifiedReader(confirmed.request, confirmed.env)).reader.email, 'victim@example.com');
+
+  const dev = await cookieFor({ email: 'victim@example.com', createdAt: 'x' });
+  dev.env.AGENT_REQUIRE_VERIFIED_EMAIL = 'false';
+  assert.ok((await verifiedReader(dev.request, dev.env)).reader);
+
+  const nobody = await verifiedReader(new Request('https://knowware.press/'), { CLAIMS: fakeKV() });
+  assert.equal(nobody.response.status, 401);
+});

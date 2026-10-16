@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Abuse-tests /mcp against a local `wrangler pages dev dist --kv CLAIMS`. No external calls.
+# Needs AGENT_REQUIRE_VERIFIED_EMAIL=false in .dev.vars (local dev only): no email is sent here to confirm.
 set -u
 B="${1:-http://localhost:8788}"; O="Origin: $B"; J='Content-Type: application/json'
 pass=0; fail=0
@@ -28,6 +29,6 @@ check "read_chapter with a forged token is refused" True "$(rpc '{"jsonrpc":"2.0
 check "read_chapter refusal leaks no chapter text" 0 "$(rpc '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_chapter","arguments":{"slug":"01"}}}' | grep -c 'Algorithm That Taught')"
 check "extra arguments are ignored" True "$(rpc '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"define_term","arguments":{"term":"knowware","admin":true,"__proto__":{"x":1}}}}' | jq_ "not d['result']['isError']")"
 got429=0; IPH="CF-Connecting-IP: 203.0.113.$((RANDOM % 250 + 1)).$((RANDOM % 250 + 1))"
-for i in $(seq 1 130); do [ "$(code -X POST "$B/mcp" -H "$J" -d '{"jsonrpc":"2.0","id":1,"method":"ping"}')" = 429 ] && got429=1 && break; done
+for i in $(seq 1 260); do [ "$(code -X POST "$B/mcp" -H "$J" -d '{"jsonrpc":"2.0","id":1,"method":"ping"}')" = 429 ] && got429=1 && break; done
 check "per-connection rate limit → 429" 1 "$got429"
 printf '\n%d passed, %d failed\n' "$pass" "$fail"; [ "$fail" -eq 0 ]

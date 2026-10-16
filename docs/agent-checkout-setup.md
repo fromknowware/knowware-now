@@ -22,13 +22,17 @@ Set these on the **Preview** environment first, then Production when ready. The 
 | `STRIPE_WEBHOOK_SECRET` | `whsec_…` | Secret |
 | `STRIPE_PRICE_PREORDER` | `price_…` | Plaintext |
 | `STRIPE_SHIP_COUNTRIES` | optional, default `US` | Plaintext |
+| `RESEND_API_KEY` | needed so readers get the confirmation link (see below); already used by the reader sign-up email | Secret |
 | `RATE_SALT` | any long random string (existing recommendation; also salts the new limits) | Secret |
 
 With `AGENT_CHECKOUT` unset, `POST /api/agent/checkout` returns 503 `checkout_not_open`, `/api/stripe/webhook` returns 404, and tokens cannot be minted with the `checkout` scope. `GET /api/agent/status` says which.
 
+### Agent tokens need a confirmed email
+Sign-up gives a reading cookie to anyone who types an address, so it does not prove who is at the keyboard. Agent tokens name that address as the human principal, so minting, listing and revoking them require the person to have **opened the link in the confirmation email** (the same link that lets them read on another device). Until then `/agents` shows "Confirm your email first" and the API returns `403 email_not_verified`. This needs `RESEND_API_KEY` to be working in that environment. `AGENT_REQUIRE_VERIFIED_EMAIL=false` turns the check off for local development only; never set it in Preview or Production.
+
 ## 3. Try it (test mode)
 
-1. Sign up on `/read`, open `/agents`, tick "Also let this agent request a checkout link", mint a token.
+1. Sign up on `/read`, open the link in the email you receive, then open `/agents`, tick "Also let this agent request a checkout link", mint a token.
 2. `examples/agent-client.mjs` (see its header) discovers the site, reads a preview, reads a chapter, and requests a checkout URL.
 3. Open the URL as the person. Pay with Stripe's published test card `4242 4242 4242 4242`, any future expiry, any CVC. Never use a real card.
 4. The webhook marks the order `paid`; the agent sees it at `GET /api/agent/orders/<id>`.
@@ -36,6 +40,13 @@ With `AGENT_CHECKOUT` unset, `POST /api/agent/checkout` returns 503 `checkout_no
 ## 4. Orders
 
 Each order is a KV record `order:<id>` in `CLAIMS` with: the human (principal id and email), the agent (name and operator), the context note, amount, Stripe session id, status. The same facts are in the Stripe Checkout Session metadata (`principal_id`, `agent_name`, `agent_operator`, `context_note`), so they show in the Stripe Dashboard next to the payment. The shipping address stays in Stripe; it is not copied.
+
+## 4b. Seeing the orders: `ADMIN_TOKEN`
+Optional. Set `ADMIN_TOKEN` (a random secret of at least 32 characters, as a **Secret**) in Cloudflare to switch on `GET /api/admin/orders`:
+```bash
+curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.press/api/admin/orders?status=paid"
+```
+It lists agent orders (Stripe test mode and x402 testnet) with the human, the agent (name and operator), the context note, status, amount and, for x402, the transaction hash; `status` and `cursor` are optional. Unset, the endpoint returns 404. It is never called from a browser, compares the token in constant time after hashing, and locks a connection out after 10 wrong guesses in 10 minutes.
 
 ## 5. Decision for the author: who handles agent orders?
 

@@ -52,7 +52,7 @@ curl -s https://<preview>/api/agent/status     # expect "x402":"testnet"
 ```
 
 ## 4. Mint a token the way a person would
-1. On the preview, open `/read/01`, sign up with an email you control.
+1. On the preview, open `/read/01`, sign up with an email you control, **and open the confirmation link in the email** (agent tokens need a confirmed address; the Preview environment needs `RESEND_API_KEY` for the email to be sent).
 2. Open `/agents`, scroll to "Mint a token for your agent": name `x402 test`, operator `you`, lifetime 1 hour, **tick "Also let this agent pay for the digital edition ($11.95, one purchase)"**. (The box appears only because step 3 turned the rail on.) Copy the token; it is shown once.
 ```bash
 export KNOWWARE_AGENT_TOKEN=kwa_…

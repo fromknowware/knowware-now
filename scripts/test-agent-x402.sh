@@ -2,6 +2,7 @@
 # Tests the x402 testnet rail against local `wrangler pages dev dist --kv CLAIMS`
 # with X402_MODE=testnet, X402_PAY_TO and X402_FACILITATOR_URL pointing at
 # `node scripts/mock-facilitator.mjs`. No network, no wallet, no real facilitator.
+# Needs AGENT_REQUIRE_VERIFIED_EMAIL=false in .dev.vars (local dev only): no email is sent here to confirm.
 set -u
 B="${1:-http://localhost:8788}"; MOCKF="${2:-http://127.0.0.1:12112}"
 O="Origin: $B"; J='Content-Type: application/json'

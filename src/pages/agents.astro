@@ -121,6 +121,10 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
         <p class="kw-body">You are not signed up on this device. <a href="/read#unlock">Sign up with your email</a> (free), then return here.</p>
       </div>
 
+      <div id="ag-unverified" hidden>
+        <p class="kw-body"><strong>Confirm your email first.</strong> You are signed up on this device, but agent tokens name you as the person who authorized them, so we need to know the address is yours. Open the link in the email we sent you (it also opens on this device), then return here.</p>
+      </div>
+
       <div id="ag-signedin" hidden>
         <form id="ag-mint" class="ag-form" novalidate>
           <div class="ag-field">
@@ -251,6 +255,7 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
     rate_limited: 'Too many tokens minted from this connection. Try again in an hour.',
     sign_in_required: 'Sign up on the manuscript page first, then return here.',
     forbidden: 'This request was refused. Reload the page and try again.',
+    email_not_verified: 'Confirm your email first: open the link we emailed you, then try again.',
   };
   const say = (code?: string) => (code && MESSAGES[code]) || code || 'Could not mint a token. Try again.';
 
@@ -262,6 +267,11 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
     try {
       const res = await fetch('/api/agent/tokens', { headers: { Accept: 'application/json' } });
       const data = await res.json();
+      if (res.status === 403 && data.error === 'email_not_verified') {
+        $('ag-signedin').hidden = true;
+        $('ag-unverified').hidden = false;
+        return;
+      }
       if (!res.ok || !data.ok) throw new Error('list');
       list.replaceChildren();
       for (const t of data.tokens as Array<{ id: string; name: string; operator: string; expiresAt: string; scopes: string[] }>) {
@@ -402,7 +412,7 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
   .ag-check label { font: 400 14px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); }
   .ag-fine { margin: 0; font-size: 14px; line-height: 1.5; color: var(--sub); max-width: 56ch; }
   .ag-result { margin-top: 24px; padding: 16px; border: 2px solid var(--signal-ink); display: grid; gap: 12px; max-width: 520px; }
-  .ag-result[hidden], #ag-signedin[hidden], #ag-signedout[hidden], #ag-nojs[hidden], #ag-none[hidden] { display: none; }
+  .ag-result[hidden], #ag-unverified[hidden], #ag-signedin[hidden], #ag-signedout[hidden], #ag-nojs[hidden], #ag-none[hidden] { display: none; }
   .ag-tokens { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   .ag-tokens li { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--rule); font-size: 14px; }
   .ag-tokens li span { overflow-wrap: anywhere; min-width: 0; }

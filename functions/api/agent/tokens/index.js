@@ -4,13 +4,14 @@
 // Only knowware.press origins and JSON; the cookie is SameSite=Lax as well.
 
 import { json, readJson, rateLimited } from '../../../../lib/server/guard.js';
-import { agentJson, browserGuard, browserReadGuard, listTokens, mintToken, principalHash, readerFromCookie } from '../../../../lib/server/agent.js';
+import { agentJson, browserGuard, browserReadGuard, listTokens, mintToken, principalHash, verifiedReader } from '../../../../lib/server/agent.js';
 
 async function post({ request, env }) {
   const blocked = browserGuard(request);
   if (blocked) return blocked;
-  const reader = await readerFromCookie(request, env);
-  if (!reader) return agentJson({ ok: false, error: 'sign_in_required', hint: 'Sign up on /read first; the person you act for must do this.' }, 401);
+  const who = await verifiedReader(request, env);
+  if (who.response) return who.response;
+  const reader = who.reader;
   const parsed = await readJson(request, 1024);
   if (parsed.response) return parsed.response;
   // Only requests that would really mint count against the limit.
@@ -23,8 +24,9 @@ async function post({ request, env }) {
 async function get({ request, env }) {
   const blocked = browserReadGuard(request);
   if (blocked) return blocked;
-  const reader = await readerFromCookie(request, env);
-  if (!reader) return agentJson({ ok: false, error: 'sign_in_required' }, 401);
+  const who = await verifiedReader(request, env);
+  if (who.response) return who.response;
+  const reader = who.reader;
   const tokens = (await listTokens(env, await principalHash(reader.email))).map(({ keyHash, ...rest }) => rest);
   return agentJson({ ok: true, tokens });
 }
