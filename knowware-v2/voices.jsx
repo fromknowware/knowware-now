@@ -481,11 +481,10 @@ const VOICES = [
       "Happiness equation",
       "AI consciousness warning",
       "Scary smart AI risk thesis",
-      "Loss of son Aly",
       "One Billion Happy initiative"
     ],
-    "coldOpen": "I lost my son. And then I realized I might lose everyone. The AI we are building does not know it should care about us. We forgot to add the third body: love. You cannot engineer that in after the fact.",
-    "bio": "Former Chief Business Officer at Google X who engineered a mathematical model of happiness after the sudden death of his son Ali. His book Scary Smart argues that AI is already approaching consciousness and that humanity's greatest failure will be building superintelligence without first teaching it to care — without encoding the coordination ethic.",
+    "coldOpen": "The AI we are building does not know it should care about us. We forgot to add the third body: love. You cannot engineer that in after the fact.",
+    "bio": "Former Chief Business Officer at Google X who engineered a mathematical model of happiness. His book Scary Smart argues that AI is already approaching consciousness and that humanity's greatest failure will be building superintelligence without first teaching it to care — without encoding the coordination ethic.",
     "whyMatters": "Gawdat names the missing third body in AI development: the affective coordination layer — care, empathy, the valuation of other minds. His warning is not technical but ontological: a superintelligent system without a coordination ethic is not dangerous because it is hostile, but because it is indifferent. He is the emotional argument for why Knowware's thesis is urgent."
   },
   {
@@ -941,12 +940,9 @@ const VOICES = [
       "Practitioner"
     ],
     "affiliation": "Sidewalk Labs · ex-Bloomberg LP · ex-NYC Deputy Mayor",
-    "status": "Legacy",
-    "active": "1958 – 2023",
+    "active": "1958 – present",
     "jurisdiction": "Urban Development / Smart Cities / Municipal Coordination",
-    "awards": [
-      "NYC Economic Development legacy recognition"
-    ],
+    "awards": [],
     "works": [
       "Greater than Ever: New York's Big Comeback (2017)",
       "Sidewalk Toronto project",
@@ -960,7 +956,7 @@ const VOICES = [
       "Public-private coordination"
     ],
     "coldOpen": "A city is the largest coordination machine humanity has ever built. Streets, zoning, utilities, transit — every piece is a coordination contract between millions of people who will never meet. When those contracts stop updating, cities fail. Sidewalk Labs was an attempt to let the city rewrite its own coordination contracts in real time.",
-    "bio": "Served as NYC Deputy Mayor for Economic Development under Michael Bloomberg, orchestrating the largest urban transformation in the city's modern history — the post-9/11 economic revival, the PlaNYC sustainability initiative, and the unsuccessful but visionary 2012 Olympic bid. Later founded Sidewalk Labs to build AI-native urban infrastructure before his death from ALS in 2023.",
+    "bio": "Served as NYC Deputy Mayor for Economic Development under Michael Bloomberg, orchestrating the largest urban transformation in the city's modern history — the post-9/11 economic revival, the PlaNYC sustainability initiative, and the unsuccessful but visionary 2012 Olympic bid. Later founded Sidewalk Labs to build AI-native urban infrastructure.",
     "whyMatters": "Doctoroff spent his career as a practitioner of coordination intelligence at city scale. He understood that urban systems fail not from resource scarcity but from coordination failure — misaligned incentives, outdated contracts, siloed data. Sidewalk Labs was a direct attempt to instrument the coordination layer of urban life."
   },
   {
@@ -1028,9 +1024,7 @@ const VOICES = [
     "status": "Living · Active",
     "active": "1950 – present",
     "jurisdiction": "Spatial Intelligence / Feng Shui / Environmental Coordination",
-    "awards": [
-      "International Feng Shui Guild legacy recognition"
-    ],
+    "awards": [],
     "works": [
       "Interior Design with Feng Shui (1987)",
       "Feng Shui: The Chinese Art of Placement (1983)",
@@ -2265,7 +2259,6 @@ const VOICES = [
     "jurisdiction": "Labor Economics / Automation / Task Theory",
     "awards": [
       "IZA Prize in Labor Economics",
-      "John Bates Clark Medal (2024)",
       "ASA Fellow"
     ],
     "works": [

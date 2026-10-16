@@ -3289,7 +3289,7 @@ function MethodPage({ setPage }) {
             letterSpacing: '-0.02em',
             fontStyle: 'italic',
           }}>
-            "No human interviewer sat across from Stuart Russell, Melanie Mitchell,
+            "No human interviewer sat across from Stuart Russell, Margaret Mitchell,
             or Judea Pearl. Instead, their published thinking — decades of papers,
             lectures, debates, and books — was coordinated through an AI system that
             found emergent patterns none of them articulated alone."
