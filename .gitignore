@@ -9,3 +9,4 @@ dist/
 .astro/
 .cache/
 lib/generated/
+.dev.vars

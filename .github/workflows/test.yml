@@ -1,0 +1,74 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Actions are pinned to commit SHAs (tag in the comment) so a moved tag cannot change what runs.
+jobs:
+  unit-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+      - run: npm ci
+      - name: Unit and property tests
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Build invariants (gated text, CSP, disclosure, links, secrets, source rules)
+        run: node scripts/verify-build.mjs
+
+  integration:
+    # Runs the real Pages Functions locally with mock Stripe and a mock x402 facilitator:
+    # the four abuse suites and the fuzzer. No network access to Stripe, chains or facilitators.
+    runs-on: ubuntu-latest
+    needs: unit-and-build
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: Local test configuration (mock keys only)
+        run: |
+          cat > .dev.vars <<'VARS'
+          AGENT_REQUIRE_VERIFIED_EMAIL=false
+          AGENT_TOKENS=on
+          AGENT_CHECKOUT=test
+          STRIPE_SECRET_KEY=sk_test_mockmockmockmock
+          STRIPE_WEBHOOK_SECRET=whsec_local_test_secret
+          STRIPE_PRICE_PREORDER=price_test_local123
+          STRIPE_API_BASE=http://127.0.0.1:12111
+          X402_MODE=testnet
+          X402_PAY_TO=0x209693Bc6afc0C5328bA36FaF03C514EF312287C
+          X402_FACILITATOR_URL=http://127.0.0.1:12112/facilitator
+          ADMIN_TOKEN=local-admin-token-for-tests-0123456789abcdef
+          VARS
+      - name: Start mocks and the Pages dev server
+        run: |
+          node scripts/mock-stripe.mjs &
+          node scripts/mock-facilitator.mjs &
+          npx --yes wrangler@4.86.0 pages dev dist --kv CLAIMS --port 8788 > wrangler.log 2>&1 &
+          for i in $(seq 1 60); do curl -fs http://localhost:8788/api/agent/status >/dev/null && exit 0; sleep 2; done
+          cat wrangler.log; exit 1
+      - name: Abuse suites
+        run: |
+          for s in test-agent-api test-agent-checkout test-mcp test-agent-x402 test-waitlist; do echo "== $s"; bash ./scripts/$s.sh; done
+      - name: Fuzz
+        run: |
+          node scripts/fuzz-agent-api.mjs http://localhost:8788 --n 3000 --seed 1
+          node scripts/fuzz-agent-api.mjs http://localhost:8788 --n 3000 --seed 2
+      - name: Server log on failure
+        if: failure()
+        run: cat wrangler.log

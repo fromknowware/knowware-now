@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CONTACT_EMAIL } from '../../config';
+---
+<Base title="Thank you" description="Your Knowware order was received." noindex>
+  <section class="kw-section">
+    <p class="kw-label">Order</p>
+    <h1 class="kw-h2">Thank you.</h1>
+    <p class="kw-body">Stripe has your payment. Knowware ships on December 21, 2026. If this was a test-mode checkout, no money moved.</p>
+    <p class="kw-body" style="margin-top:16px">Questions: <a href={`mailto:${CONTACT_EMAIL}`} style="color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)">{CONTACT_EMAIL}</a></p>
+  </section>
+</Base>

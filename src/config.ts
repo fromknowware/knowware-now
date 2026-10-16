@@ -19,5 +19,21 @@ export const CHAPTERS_COUNT = 9;
 // Stripe payment link — set when live
 export const STRIPE_URL = '/order';
 
+// Whether a real checkout exists. While false, no machine-readable offer is
+// published (no schema.org Offer, no "available" signal) and the agent
+// checkout endpoint stays in test mode. Flip only with live Stripe wired up.
+export const CHECKOUT_OPEN = false;
+
+// Agent tokens (and so the full-chapter API for agents) need working confirmation
+// emails. Until the author has set AGENT_TOKENS=on and RESEND_API_KEY in Cloudflare,
+// the site says "not open yet" everywhere. Flip this with the runtime flag.
+export const AGENT_TOKENS_OPEN = false;
+
+// While there is no checkout, every pre-order button leads to the waiting list.
+export const ORDER_HREF = CHECKOUT_OPEN ? STRIPE_URL : '/order#waitlist';
+export const ORDER_CTA = CHECKOUT_OPEN ? `Pre-order · ${PRICE_PREORDER} →` : 'Pre-order list →';
+
+export const CONTACT_EMAIL = 'hello@knowware.press';
+
 export const OG_IMAGE = `${SITE_URL}/assets/og-knowware.png`;
 export const OG_COVER = `${SITE_URL}/assets/og-knowware-cover.png`;
