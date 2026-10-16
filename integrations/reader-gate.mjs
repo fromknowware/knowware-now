@@ -33,6 +33,17 @@ export default function readerGate() {
         await mkdir(generated, { recursive: true });
         await writeFile(join(generated, 'full-chapters.js'), `export default ${JSON.stringify(chapters)};\n`);
         logger.info('10 full chapters moved behind /read/:slug/full');
+
+        // Full Markdown for the token-gated agent API, produced by
+        // src/pages/gated/chapters.json.ts. Same rule: never left in dist.
+        const gatedDir = join(fileURLToPath(dir), 'gated');
+        const md = JSON.parse(await readFile(join(gatedDir, 'chapters.json'), 'utf8'));
+        if (Object.keys(md).length !== 10) {
+          throw new Error(`reader-gate: expected 10 Markdown chapters, found ${Object.keys(md).length}`);
+        }
+        await writeFile(join(generated, 'chapters-md.js'), `export default ${JSON.stringify(md)};\n`);
+        await rm(gatedDir, { recursive: true, force: true });
+        logger.info('10 full chapters (Markdown) moved behind /api/agent/chapters');
       },
     },
   };

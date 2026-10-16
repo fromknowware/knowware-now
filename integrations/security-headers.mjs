@@ -77,6 +77,24 @@ ${Object.entries(pageHeaders).map(([k, v]) => `  ${k}: ${v}`).join('\n')}
 
 /.well-known/security.txt
   Content-Type: text/plain; charset=utf-8
+
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/agents.txt
+  Content-Type: text/plain; charset=utf-8
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+
+/.well-known/knowware.json
+  Content-Type: application/json; charset=utf-8
+
+/feed.xml
+  Content-Type: application/atom+xml; charset=utf-8
 `;
         await writeFile(join(root, '_headers'), headers);
         logger.info(`_headers written (${hashes.size} inline script hash${hashes.size === 1 ? '' : 'es'})`);

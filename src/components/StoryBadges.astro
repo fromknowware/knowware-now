@@ -1,0 +1,24 @@
+---
+// Evidence grade plus the two flags readers must never miss.
+interface Props {
+  grade: 'A' | 'B' | 'C';
+  simulation?: boolean;
+  alleged?: boolean;
+}
+const { grade, simulation = false, alleged = false } = Astro.props;
+---
+<span class="st-badges">
+  <span class="st-badge st-badge--grade">Grade {grade}</span>
+  {simulation && <span class="st-badge">Simulation</span>}
+  {alleged && <span class="st-badge">Alleged</span>}
+</span>
+
+<style>
+  .st-badges { display: inline-flex; gap: 6px; flex-wrap: wrap; vertical-align: middle; }
+  .st-badge {
+    font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+    letter-spacing: .06em; text-transform: uppercase;
+    padding: 5px 7px; border: 1px solid var(--ink); color: var(--ink);
+  }
+  .st-badge--grade { background: var(--ink); color: var(--bg); }
+</style>
