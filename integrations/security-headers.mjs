@@ -2,7 +2,7 @@
 // The CSP allows only same-origin scripts plus sha256 hashes of the exact
 // inline scripts Astro emitted, so any injected inline script is blocked.
 import { createHash } from 'node:crypto';
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,9 +20,13 @@ async function htmlFiles(dir) {
 }
 
 export default function securityHeaders() {
+  let projectRoot;
   return {
     name: 'knowware-security-headers',
     hooks: {
+      'astro:config:done': ({ config }) => {
+        projectRoot = fileURLToPath(config.root);
+      },
       'astro:build:done': async ({ dir, logger }) => {
         const root = fileURLToPath(dir);
         const hashes = new Set();
@@ -49,15 +53,24 @@ export default function securityHeaders() {
           'upgrade-insecure-requests',
         ].join('; ');
 
+        const pageHeaders = {
+          'Content-Security-Policy': csp,
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'DENY',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()',
+          'Cross-Origin-Opener-Policy': 'same-origin',
+          'Cross-Origin-Resource-Policy': 'same-origin',
+        };
+
+        // Pages Functions responses don't get _headers, so functions import these.
+        const generated = join(projectRoot, 'lib/generated');
+        await mkdir(generated, { recursive: true });
+        await writeFile(join(generated, 'page-headers.js'), `export default ${JSON.stringify(pageHeaders, null, 2)};\n`);
+
         const headers = `/*
-  Content-Security-Policy: ${csp}
-  Strict-Transport-Security: max-age=31536000; includeSubDomains
-  X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()
-  Cross-Origin-Opener-Policy: same-origin
-  Cross-Origin-Resource-Policy: same-origin
+${Object.entries(pageHeaders).map(([k, v]) => `  ${k}: ${v}`).join('\n')}
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable

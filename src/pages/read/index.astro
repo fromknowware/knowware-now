@@ -4,23 +4,27 @@ import { getCollection } from 'astro:content';
 
 const chapters = await getCollection('chapters');
 const sorted = chapters.sort((a, b) => a.data.n - b.data.n);
+const manuscript = await getCollection('manuscript', (e) => e.data.kind === 'full');
+const minutes = Object.fromEntries(manuscript.map((e) => [e.data.n, e.data.readMinutes]));
+const totalMinutes = manuscript.reduce((sum, e) => sum + e.data.readMinutes, 0);
 ---
-<Base title="Read" description="Nine chapters on coordination intelligence. Read free.">
+<Base title="Read" description="Nine chapters on coordination intelligence. Read the opening of each free, and unlock every chapter in full with one email.">
   <section class="kw-section">
     <p class="kw-label">Read Free</p>
     <h1 class="kw-h2">Nine chapters.</h1>
+    <p class="kw-notice" id="read-notice" role="status" hidden></p>
     <p class="kw-body" style="margin-bottom: 40px">
-      Each chapter opens with a scene — a moment where coordination intelligence became visible in the world.
-      Read in order, or start wherever the system pulls you.
+      Every chapter opens with a scene where coordination intelligence became visible in the world.
+      The opening of each is right here. One email unlocks all nine in full, about {Math.round(totalMinutes / 60)} hours of reading.
     </p>
 
     <div class="read-list">
       {sorted.map((ch) => (
-        <a href={`/read/${ch.slug}`} class="read-item">
+        <a href={`/read/${ch.id}`} class="read-item">
           <span class="read-num mono">{String(ch.data.n).padStart(2, '0')}</span>
           <div class="read-body">
             <p class="read-opener">{ch.data.opener}</p>
-            <p class="read-title">{ch.data.title}</p>
+            <p class="read-title">{ch.data.title} · {minutes[ch.data.n]} min</p>
           </div>
           <span class="read-arrow mono">→</span>
         </a>
@@ -37,7 +41,12 @@ const sorted = chapters.sort((a, b) => a.data.n - b.data.n);
   border-bottom: 1px solid var(--rule);
   transition: background 0.1s;
 }
-.read-item:hover { background: var(--accent-soft); margin: 0 -48px; padding-left: 48px; padding-right: 48px; }
+.read-item:hover { background: var(--accent-soft); box-shadow: -24px 0 0 var(--accent-soft), 24px 0 0 var(--accent-soft); }
+.kw-notice {
+  font-size: 15px; line-height: 1.5; max-width: 60ch;
+  background: var(--accent-soft); color: var(--ink);
+  padding: 12px 16px; margin: 0 0 24px;
+}
 .read-num {
   font-size: 11px; color: var(--signal-ink); letter-spacing: .08em; flex-shrink: 0; width: 28px;
 }
@@ -52,3 +61,18 @@ const sorted = chapters.sort((a, b) => a.data.n - b.data.n);
 }
 .read-arrow { color: var(--sub2); font-size: 13px; flex-shrink: 0; }
 </style>
+
+<script>
+  const NOTICES: Record<string, string> = {
+    'link=expired': 'That sign-in link has expired. Open any chapter and enter your email to unlock again.',
+    'link=invalid': 'That sign-in link is not valid. Open any chapter and enter your email to unlock.',
+    'signed-out=1': 'You are signed out on this device. Your email still works if you sign up again.',
+  };
+  const params = new URLSearchParams(window.location.search);
+  const key = Object.keys(NOTICES).find((k) => { const [name, value] = k.split('='); return params.get(name) === value; });
+  const notice = document.getElementById('read-notice');
+  if (key && notice) {
+    notice.textContent = NOTICES[key];
+    notice.hidden = false;
+  }
+</script>

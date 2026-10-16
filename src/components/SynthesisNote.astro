@@ -1,0 +1,23 @@
+---
+// The asterisk footnote that travels with any screenshot of a synthesized line.
+interface Props {
+  name: string;
+  anon?: boolean;
+  link?: boolean;
+}
+const { name, anon = false, link = true } = Astro.props;
+const source = anon ? 'the public record' : `${name}'s published work`;
+---
+<p class="kw-ast-note">
+  <span aria-hidden="true">* </span>Synthesized for Knowware from {source}. Not a quote. {link ? <a href="/method">knowware.press/method</a> : <span>knowware.press/method</span>}
+</p>
+
+<style>
+  .kw-ast-note {
+    font: 400 12px/1.45 "JetBrains Mono", ui-monospace, monospace;
+    letter-spacing: 0; color: var(--sub);
+    margin: 14px 0 0; padding-top: 10px;
+    border-top: 1px dashed var(--sub);
+  }
+  .kw-ast-note a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+</style>

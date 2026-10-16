@@ -2,16 +2,20 @@
 import Base from '../../layouts/Base.astro';
 import SceneHead from '../../components/SceneHead.astro';
 import Field from '../../components/Field.astro';
-import { getCollection, render } from 'astro:content';
+import ReaderGate from '../../components/ReaderGate.astro';
+import SynthesisNote from '../../components/SynthesisNote.astro';
+import { getCollection, getEntry, render } from 'astro:content';
 import { SITE_URL } from '../../config';
 
 export async function getStaticPaths() {
   const chapters = await getCollection('chapters');
-  return chapters.map((ch) => ({ params: { slug: ch.slug }, props: { chapter: ch } }));
+  return chapters.map((ch) => ({ params: { slug: ch.id }, props: { chapter: ch } }));
 }
 
 const { chapter } = Astro.props;
-const { Content } = await render(chapter);
+const preview = await getEntry('manuscript', `${chapter.id}-preview`);
+if (!preview) throw new Error(`Missing manuscript preview for chapter ${chapter.id}`);
+const { Content: Preview } = await render(preview);
 
 // Load voices for this chapter
 const voices = await getCollection('voices');
@@ -24,7 +28,7 @@ const tierLabel: Record<string, string> = { A: 'Academic', P: 'Practitioner', V:
 // Prev / next
 const all = await getCollection('chapters');
 const sorted = all.sort((a, b) => a.data.n - b.data.n);
-const idx = sorted.findIndex((c) => c.slug === chapter.slug);
+const idx = sorted.findIndex((c) => c.id === chapter.id);
 const prev = idx > 0 ? sorted[idx - 1] : null;
 const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
 ---
@@ -32,17 +36,31 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   title={chapter.data.opener}
   description={`Chapter ${String(chapter.data.n).padStart(2,'0')} of Knowware: ${chapter.data.opener}`}
   ogType="article"
-  canonical={`${SITE_URL}/read/${chapter.slug}`}
+  canonical={`${SITE_URL}/read/${chapter.id}`}
 >
   <SceneHead n={chapter.data.n} opener={chapter.data.opener} />
 
   <!-- Field divider -->
   <Field height="180px" sigTop="50%" />
 
-  <!-- Scene prose -->
-  <article class="kw-section kw-scene-prose" data-kw-read>
-    <Content />
+  <!-- Chapter opening (free preview) -->
+  <article class="kw-section kw-prose kw-preview" data-kw-read aria-labelledby="preview-h">
+    <h2 class="sr-only" id="preview-h">Chapter opening</h2>
+    {preview.data.dek && <p class="kw-prose-dek">{preview.data.dek}</p>}
+    <div class="kw-preview-body">
+      <Preview />
+    </div>
   </article>
+
+  <ReaderGate
+    slug={chapter.id}
+    n={chapter.data.n}
+    previewWords={preview.data.words}
+    totalWords={preview.data.totalWords}
+    readMinutes={preview.data.readMinutes}
+  />
+
+  <Field height="96px" sigTop="50%" />
 
   <!-- Diagram — full-bleed dark coordination section -->
   {chapter.data.diagram && (() => {
@@ -195,9 +213,10 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
             <p class="kw-voice-name">{v.data.name}</p>
             <p class="kw-voice-role">{v.data.role}</p>
             {v.data.coldOpen && (
-              <blockquote class="voice-cold-open">
-                "{v.data.coldOpen}"
-              </blockquote>
+              <div class="voice-cold-open">
+                <p class="voice-cold-open-text">{v.data.coldOpen}<sup class="kw-ast" aria-hidden="true">*</sup></p>
+                <SynthesisNote name={v.data.name} anon={v.data.status === 'anon'} link={false} />
+              </div>
             )}
           </div>
           <span class={`kw-tier kw-tier--${v.data.tier}`}>{tierLabel[v.data.tier]}</span>
@@ -209,13 +228,13 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   <!-- Prev / next -->
   <nav class="kw-section chapter-nav" aria-label="Chapter navigation">
     {prev ? (
-      <a href={`/read/${prev.slug}`} class="chapter-nav-link">
+      <a href={`/read/${prev.id}`} class="chapter-nav-link">
         <span class="mono" style="font-size:11px;color:var(--sub)">← Ch. {String(prev.data.n).padStart(2,'0')}</span>
         <span>{prev.data.opener}</span>
       </a>
     ) : <span />}
     {next ? (
-      <a href={`/read/${next.slug}`} class="chapter-nav-link" style="text-align:right">
+      <a href={`/read/${next.id}`} class="chapter-nav-link" style="text-align:right">
         <span class="mono" style="font-size:11px;color:var(--sub)">Ch. {String(next.data.n).padStart(2,'0')} →</span>
         <span>{next.data.opener}</span>
       </a>
@@ -224,18 +243,14 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
 </Base>
 
 <style>
-.kw-scene-prose p {
-  max-width: 640px;
-  font-size: calc(17px * var(--read-scale));
-  line-height: var(--read-lh);
-  letter-spacing: var(--read-track);
-  margin: 0 0 1.4em;
-}
 .voice-cold-open {
   font: 400 13px/1.6 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); margin: 10px 0 0;
   background: var(--accent-soft); padding: 10px 14px;
+  border: 1px dashed var(--sub);
 }
+.voice-cold-open-text { margin: 0; }
+.kw-ast { font-size: .85em; font-weight: 600; vertical-align: super; line-height: 0; margin-left: 2px; color: var(--ink); }
 .chapter-nav {
   display: flex; justify-content: space-between; gap: 24px;
 }
