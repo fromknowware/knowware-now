@@ -9,6 +9,7 @@ export const MARKDOWN_PAGES = [
   { path: '/rules',      file: 'rules.md',      label: 'Editorial rules',       voices: true  },
   { path: '/colophon',   file: 'colophon.md',   label: 'Colophon',              voices: false },
   { path: '/read',       file: 'read.md',       label: 'Manuscript index',      voices: true  },
+  { path: '/stories',    file: 'stories.md',    label: 'Stories',               voices: false },
   { path: '/agents',     file: 'agents.md',     label: 'For agents',            voices: false },
 ];
 
@@ -17,5 +18,7 @@ export function markdownHrefFor(pathname) {
   const hit = MARKDOWN_PAGES.find((p) => p.path === clean);
   if (hit) return `/${hit.file}`;
   const chapter = clean.match(/^\/read\/(0[1-9]|x)$/);
-  return chapter ? `/read/${chapter[1]}.md` : null;
+  if (chapter) return `/read/${chapter[1]}.md`;
+  const story = clean.match(/^\/stories\/([a-z0-9][a-z0-9-]*)$/);
+  return story && story[1] !== 'cards' ? `/stories/${story[1]}.md` : null;
 }
