@@ -92,6 +92,9 @@ ${Object.entries(pageHeaders).map(([k, v]) => `  ${k}: ${v}`).join('\n')}
 
 /.well-known/knowware.json
   Content-Type: application/json; charset=utf-8
+
+/feed.xml
+  Content-Type: application/atom+xml; charset=utf-8
 `;
         await writeFile(join(root, '_headers'), headers);
         logger.info(`_headers written (${hashes.size} inline script hash${hashes.size === 1 ? '' : 'es'})`);

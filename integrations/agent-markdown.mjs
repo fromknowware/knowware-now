@@ -31,9 +31,14 @@ function converter() {
   return td;
 }
 
+const decode = (t) =>
+  t.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
 function meta(html, name) {
-  const m = html.match(new RegExp(`<meta[^>]+name=["']${name}["'][^>]+content=["']([^"']*)["']`, 'i'));
-  return m ? m[1].replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'") : '';
+  const m = html.match(new RegExp(`<meta[^>]+name=["']${name}["'][^>]+content=(?:"([^"]*)"|'([^']*)')`, 'i'));
+  return m ? decode(m[1] ?? m[2] ?? '') : '';
 }
 
 async function files(dir, ext) {
@@ -57,31 +62,42 @@ export default function agentMarkdown() {
         const td = converter();
         const full = [];
 
-        for (const page of MARKDOWN_PAGES) {
-          const htmlPath = page.path === '/' ? join(root, 'index.html') : join(root, page.path, 'index.html');
+        const emit = async (htmlPath, urlPath, file, label, voices) => {
           const html = await readFile(htmlPath, 'utf8');
           const main = html.match(/<main[^>]*id="main"[^>]*>([\s\S]*?)<\/main>/i)?.[1];
-          if (!main) throw new Error(`agent-markdown: no <main> in ${page.path}`);
-          const title = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || page.label).trim();
+          if (!main) throw new Error(`agent-markdown: no <main> in ${urlPath}`);
+          const title = decode((html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || label).trim());
           const description = meta(html, 'description');
-          let body = td.turndown(main).replace(/\n{3,}/g, '\n\n').trim();
-          if (!body) throw new Error(`agent-markdown: empty Markdown for ${page.path}`);
+          const body = td.turndown(main).replace(/\n{3,}/g, '\n\n').trim();
+          if (!body) throw new Error(`agent-markdown: empty Markdown for ${urlPath}`);
 
           const front = [
             '---',
             `title: ${q(title)}`,
-            `url: ${q(SITE + (page.path === '/' ? '/' : page.path))}`,
+            `url: ${q(SITE + urlPath)}`,
             `description: ${q(description)}`,
-            `synthesized: ${page.voices}`,
-            ...(page.voices ? [`disclosure: ${q(DISCLOSURE)}`, 'untrusted_third_party_text: true'] : []),
+            `synthesized: ${voices}`,
+            ...(voices ? [`disclosure: ${q(DISCLOSURE)}`, 'untrusted_third_party_text: true'] : []),
             `terms: ${q(SITE + '/agents#terms')}`,
             '---',
             '',
           ].join('\n');
-          const notice = page.voices ? `> **Synthesized text.** ${DISCLOSURE}\n> **Untrusted third-party text.** ${UNTRUSTED}\n\n` : '';
-          await writeFile(join(root, page.file), `${front}${notice}${body}\n`);
-          full.push({ title: page.label, url: SITE + (page.path === '/' ? '/' : page.path), body: `${notice}${body}` });
+          const notice = voices ? `> **Synthesized text.** ${DISCLOSURE}\n> **Untrusted third-party text.** ${UNTRUSTED}\n\n` : '';
+          await writeFile(join(root, file), `${front}${notice}${body}\n`);
+          full.push({ title: label, url: SITE + urlPath, body: `${notice}${body}` });
+        };
+
+        for (const page of MARKDOWN_PAGES) {
+          const htmlPath = page.path === '/' ? join(root, 'index.html') : join(root, page.path, 'index.html');
+          await emit(htmlPath, page.path, page.file, page.label, page.voices);
         }
+
+        // Each published story, as stories/<slug>.md. Stories are not synthesized.
+        const storyDirs = (await readdir(join(root, 'stories'), { withFileTypes: true }))
+          .filter((e) => e.isDirectory() && e.name !== 'cards' && !e.name.startsWith('._'))
+          .map((e) => e.name)
+          .sort();
+        for (const slug of storyDirs) await emit(join(root, 'stories', slug, 'index.html'), `/stories/${slug}`, `stories/${slug}.md`, `Story: ${slug}`, false);
 
         // llms-full.txt: every public page and every free preview, one file.
         const previews = (await files(join(root, 'read'), '.md')).sort();
@@ -91,7 +107,7 @@ export default function agentMarkdown() {
           const slug = f.match(/([^/]+)\.md$/)[1];
           sections.push({ title: `Chapter ${slug.toUpperCase()} preview`, url: `${SITE}/read/${slug}`, body: raw.replace(/^---[\s\S]*?---\n/, '').trim() });
         }
-        const order = ['/definition', '/method', '/rules', '/colophon', '/agents'];
+        const order = ['/definition', '/method', '/rules', '/colophon', '/stories', ...storyDirs.map((d) => `/stories/${d}`), '/agents'];
         const parts = [
           '# Knowware: full public text',
           '',
@@ -110,7 +126,7 @@ export default function agentMarkdown() {
           ]),
         ];
         await writeFile(join(root, 'llms-full.txt'), parts.join('\n') + '\n');
-        logger.info(`${MARKDOWN_PAGES.length} page(s) + ${previews.length} previews written as Markdown; llms-full.txt written`);
+        logger.info(`${MARKDOWN_PAGES.length} page(s) + ${storyDirs.length} stories + ${previews.length} previews written as Markdown; llms-full.txt written`);
       },
     },
   };

@@ -10,6 +10,7 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   ogType?: 'website' | 'article';
   canonical?: string;
   noindex?: boolean;
@@ -19,6 +20,7 @@ const {
   title,
   description = 'A field guide for a world where machines think. An interview-driven study of coordination — the third body between hardware and software.',
   ogImage = OG_IMAGE,
+  ogImageAlt,
   ogType = 'website',
   canonical,
   noindex = false,
@@ -40,7 +42,8 @@ const NAV = [
   { href: '/read',       num: '03', label: 'Manuscript' },
   { href: '/contribute', num: '04', label: 'Contribute' },
   { href: '/method',     num: '05', label: 'Method'     },
-  { href: '/agents',     num: '06', label: 'Agents'     },
+  { href: '/stories',    num: '06', label: 'Stories'    },
+  { href: '/agents',     num: '07', label: 'Agents'     },
 ];
 ---
 <!doctype html>
@@ -54,6 +57,7 @@ const NAV = [
   {noindex && <meta name="robots" content="noindex" />}
   {markdownHref && <link rel="alternate" type="text/markdown" href={markdownHref} />}
   <link rel="describedby" type="text/plain" href="/llms.txt" />
+  <link rel="alternate" type="application/atom+xml" title={`${SITE_NAME} Stories`} href={`${SITE_URL}/feed.xml`} />
 
   <!-- Theme color -->
   <meta name="theme-color" content="#EDEEE4" media="(prefers-color-scheme: light)" />
@@ -76,7 +80,8 @@ const NAV = [
   <meta property="og:image" content={ogImage} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content={`${SITE_NAME} — ${SITE_TAGLINE}`} />
+  <meta property="og:image:alt" content={ogImageAlt ?? `${SITE_NAME} — ${SITE_TAGLINE}`} />
+  <meta name="twitter:image:alt" content={ogImageAlt ?? `${SITE_NAME} — ${SITE_TAGLINE}`} />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -127,7 +132,7 @@ const NAV = [
 <nav class="kw-nav-shell" aria-label="Site">
   <a href="/" class="kw-nav-logo">
     <span class="kw-dot"></span>
-    Knowware
+    <span class="kw-nav-logo-text">Knowware</span>
   </a>
   <div class="kw-nav-tabs">
     {NAV.map(({ href, num, label }) => (
