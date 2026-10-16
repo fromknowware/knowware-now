@@ -6,7 +6,7 @@ import { manuscriptLoader } from './loaders/manuscript';
 const chapterCollection = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/chapters' }),
   schema: z.object({
-    n: z.number().int().min(1).max(9),
+    n: z.number().int().min(1).max(10),
     title: z.string(),
     opener: z.string(),
     diagram: z.object({
@@ -55,7 +55,7 @@ const voiceCollection = defineCollection({
 const manuscriptCollection = defineCollection({
   loader: manuscriptLoader(),
   schema: z.object({
-    n: z.number().int().min(1).max(9),
+    n: z.number().int().min(1).max(10),
     kind: z.enum(['preview', 'full']),
     title: z.string(),
     dek: z.string(),

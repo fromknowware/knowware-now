@@ -1,4 +1,5 @@
 ---
+import { chapterNum } from '../lib/chapters';
 interface Props {
   slug: string;
   n: number;
@@ -7,18 +8,18 @@ interface Props {
   readMinutes: number;
 }
 const { slug, n, previewWords, totalWords, readMinutes } = Astro.props;
-const nn = String(n).padStart(2, '0');
+const nn = chapterNum(n);
 const remaining = Math.max(0, totalWords - previewWords);
 const fmt = (x: number) => x.toLocaleString('en-US');
 const fullHref = `/read/${slug}/full`;
 ---
-<section class="kw-gate kw-band" id="unlock" aria-labelledby="gate-h" data-full-href={fullHref} data-chapter={nn}>
+<section class="kw-gate kw-band" id="unlock" aria-labelledby="gate-h" data-full-href={fullHref} data-chapter={slug}>
   <div class="kw-gate-inner">
     <div class="kw-gate-copy">
       <p class="kw-gate-eyebrow mono">Chapter {nn} · {fmt(remaining)} words left · about {readMinutes} min in full</p>
       <h2 class="kw-gate-h" id="gate-h">Keep reading. It's free.</h2>
       <p class="kw-gate-body">
-        One email unlocks all nine chapters in full. Enter the same email on any other
+        One email unlocks every chapter in full, including the capstone. Enter the same email on any other
         device to keep reading there. No paywall, no tracking.
       </p>
     </div>
@@ -30,7 +31,7 @@ const fullHref = `/read/${slug}/full`;
       </div>
 
       <form class="kw-gate-form" method="post" action="/api/reader" novalidate aria-describedby="gate-h">
-        <input type="hidden" name="chapter" value={nn} />
+        <input type="hidden" name="chapter" value={slug} />
         <div class="kw-gate-field">
           <label for={`gate-email-${nn}`} class="kw-gate-label">Email</label>
           <input

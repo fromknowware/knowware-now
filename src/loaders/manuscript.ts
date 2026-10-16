@@ -10,14 +10,17 @@ const PREVIEW_TARGET_WORDS = 700;
 const WORDS_PER_MINUTE = 230;
 
 const pad = (n: number) => String(n).padStart(2, '0');
+// File and id key per chapter; the capstone lives at chX and slugs as 'x'.
+const srcKey = (n: number) => (n === 10 ? 'X' : pad(n));
+const idKey = (n: number) => (n === 10 ? 'x' : pad(n));
 const countWords = (text: string) => (text.replace(/[#>*_`[\]()-]/g, ' ').match(/\S+/g) ?? []).length;
 const isHeading = (block: string) => /^#{1,6}\s/.test(block.trim());
 const isRule = (block: string) => /^(-{3,}|\*{3,}|_{3,})$/.test(block.trim());
 
 async function fetchChapter(n: number, logger: { warn: (m: string) => void }): Promise<string> {
-  const file = join(CACHE_DIR, `ch${pad(n)}.md`);
+  const file = join(CACHE_DIR, `ch${srcKey(n)}.md`);
   try {
-    const res = await fetch(`${SOURCE}/ch${pad(n)}/text/chapter-${pad(n)}.md`, { signal: AbortSignal.timeout(15000) });
+    const res = await fetch(`${SOURCE}/ch${srcKey(n)}/text/chapter-${srcKey(n)}.md`, { signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const text = await res.text();
     await mkdir(CACHE_DIR, { recursive: true });
@@ -26,10 +29,10 @@ async function fetchChapter(n: number, logger: { warn: (m: string) => void }): P
   } catch (err) {
     try {
       const cached = await readFile(file, 'utf8');
-      logger.warn(`chapter ${pad(n)}: using cached manuscript (${(err as Error).message})`);
+      logger.warn(`chapter ${srcKey(n)}: using cached manuscript (${(err as Error).message})`);
       return cached;
     } catch {
-      throw new Error(`chapter ${pad(n)}: manuscript unavailable and no cache (${(err as Error).message})`);
+      throw new Error(`chapter ${srcKey(n)}: manuscript unavailable and no cache (${(err as Error).message})`);
     }
   }
 }
@@ -78,12 +81,12 @@ export function manuscriptLoader(): Loader {
     name: 'knowware-manuscript',
     load: async ({ store, logger, parseData, renderMarkdown, generateDigest }) => {
       store.clear();
-      for (let n = 1; n <= 9; n++) {
+      for (let n = 1; n <= 10; n++) {
         const raw = await fetchChapter(n, logger);
         const ch = splitChapter(raw);
         const readMinutes = Math.max(1, Math.round(ch.totalWords / WORDS_PER_MINUTE));
         for (const kind of ['preview', 'full'] as const) {
-          const id = `${pad(n)}-${kind}`;
+          const id = `${idKey(n)}-${kind}`;
           const body = kind === 'preview' ? ch.previewMd : ch.fullMd;
           const data = await parseData({
             id,
@@ -100,7 +103,7 @@ export function manuscriptLoader(): Loader {
           store.set({ id, data, body, rendered: await renderMarkdown(body), digest: generateDigest(body) });
         }
       }
-      logger.info('manuscript: 9 chapters loaded');
+      logger.info('manuscript: 9 chapters and the capstone loaded');
     },
   };
 }

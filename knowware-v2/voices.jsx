@@ -403,12 +403,12 @@ const VOICES = [
   },
   {
     "name": "Former NSA Technical Director",
-    "alias": "Anonymous — The Signals Intercept",
+    "alias": "Composite — The Signals Intercept",
     "badges": [
       "Ch. 02",
       "Practitioner"
     ],
-    "affiliation": "NSA · [Redacted]",
+    "affiliation": "Composite · drawn from the NSA public record",
     "status": "Anonymous · Retired",
     "active": null,
     "jurisdiction": "Signals Intelligence / Bulk Coordination Architecture",
@@ -422,7 +422,7 @@ const VOICES = [
       "The gap between collection and understanding"
     ],
     "coldOpen": "We built the largest coordination machine in history. We could see every signal. What we could not do was understand what it meant. Collection without sense-making is not intelligence. It is noise at industrial scale.",
-    "bio": "Served as a senior technical architect at NSA during the era of bulk collection programs. Designed infrastructure that coordinated signals intercepts across global networks at a scale no civilian system had attempted. Retired with a classified record and an unclassified warning: mass coordination of data without interpretive context produces surveillance, not intelligence.",
+    "bio": "A composite voice, not a real person. Synthesized from the public record of NSA technical leadership during the era of bulk collection programs, when infrastructure coordinated signals intercepts across global networks at a scale no civilian system had attempted. The warning it carries is the book's reading of that record: mass coordination of data without interpretive context produces surveillance, not intelligence.",
     "whyMatters": "This dossier represents the state's attempt to solve coordination intelligence through sheer collection scale. It failed — not technically, but epistemically. The signals intercept story proves Knowware's thesis: two-body systems (data + collection) without the third body (meaning) produce power without wisdom."
   },
   {
@@ -995,12 +995,12 @@ const VOICES = [
   },
   {
     "name": "Quant/HFT Savant",
-    "alias": "Anonymous — The Latency Arbitrageur",
+    "alias": "Composite — The Latency Arbitrageur",
     "badges": [
       "Ch. 04",
       "Practitioner"
     ],
-    "affiliation": "[REDACTED] · Prop Trading Desk · Co-Location Facility",
+    "affiliation": "Composite · drawn from HFT research and practitioner accounts",
     "status": "Anonymous · Active",
     "active": null,
     "jurisdiction": "High-Frequency Trading / Market Microstructure / Latency Engineering",
@@ -1014,7 +1014,7 @@ const VOICES = [
       "Nanosecond-scale coordination"
     ],
     "coldOpen": "Everyone thinks HFT is about speed. It isn't. Speed is just the tax of entry. What you're actually doing is reading the coordination state of the market faster than the market can update its own model of itself. The edge lives in that gap — the nanoseconds between reality and its reflection in price.",
-    "bio": "Identity withheld at source's request. Operates at the intersection of physics, microstructure theory, and exchange topology. Has built and maintained co-location infrastructure across multiple exchange data centers. Studies the market not as a price discovery mechanism but as a coordination protocol — and exploits the moments when that protocol lags its underlying state.",
+    "bio": "A composite voice, not a real person. Synthesized from published research and practitioner accounts of high-frequency trading, at the intersection of physics, microstructure theory, and exchange topology, including the co-location infrastructure built across exchange data centers. It treats the market not as a price discovery mechanism but as a coordination protocol, and studies the moments when that protocol lags its underlying state.",
     "whyMatters": "The Latency Arbitrageur operates in the coordination gap — the space between a market event and the market's coordinated response to it. This gap is not a market inefficiency; it is the fundamental latency of any coordination system. HFT is applied three-body theory: signal (body one), exchange protocol (body two), the lag between them (body three, where the money is)."
   },
   {
@@ -1305,12 +1305,12 @@ const VOICES = [
   },
   {
     "name": "BCI User",
-    "alias": "Anonymous — The First-Person Interface",
+    "alias": "Composite — The First-Person Interface",
     "badges": [
       "Ch. 05",
       "Visionary"
     ],
-    "affiliation": "Clinical Trial · [Redacted Institution]",
+    "affiliation": "Composite · drawn from published BCI participant accounts",
     "status": "Anonymous · Active",
     "active": null,
     "jurisdiction": "Lived Experience / Neural Coordination / Human-Machine Interface",
@@ -1323,9 +1323,9 @@ const VOICES = [
       "Machine-mediated communication",
       "Embodied coordination intelligence"
     ],
-    "coldOpen": "[REDACTED PER PARTICIPANT AGREEMENT] — 'When the cursor moved, I did not think about moving it. I thought about what I wanted to say. The machine had learned to coordinate with my intention, not my command.'",
-    "bio": "[SOURCE IDENTITY PROTECTED] Clinical trial participant with severe motor impairment. Enrolled in an FDA-approved brain-computer interface study. Provided first-person testimony on the phenomenology of neural coordination with machine systems — describing the transition from two-body (input/output) to three-body (intention/interpretation/output) experience.",
-    "whyMatters": "This anonymous voice is the ground truth the book cannot omit: what does coordination intelligence feel like from inside the loop? The BCI user reports that successful neural coordination is not experienced as control but as recognition — the machine meets intention before intention becomes command. That is the three-body pattern in phenomenological form."
+    "coldOpen": "When the cursor moved, I did not think about moving it. I thought about what I wanted to say. The machine had learned to coordinate with my intention, not my command.",
+    "bio": "A composite voice, not a real person. Synthesized from published first-person accounts by participants in FDA-approved brain-computer interface studies, people living with severe motor impairment. It describes the phenomenology of neural coordination with machine systems: the shift from two-body (input/output) to three-body (intention/interpretation/output) experience.",
+    "whyMatters": "This composite voice is the ground truth the book cannot omit: what does coordination intelligence feel like from inside the loop? In this synthesis, successful neural coordination is experienced not as control but as recognition — the machine meets intention before intention becomes command. That is the three-body pattern in phenomenological form."
   },
   {
     "name": "Thich Nhat Hanh Foundation",
@@ -1553,12 +1553,12 @@ const VOICES = [
   },
   {
     "name": "In-Q-Tel Operator",
-    "alias": "Anonymous — The Strategic Invest",
+    "alias": "Composite — The Strategic Investor",
     "badges": [
       "Ch. 06",
       "Practitioner"
     ],
-    "affiliation": "In-Q-Tel · [Redacted]",
+    "affiliation": "Composite · drawn from the In-Q-Tel public record",
     "status": "Anonymous · Active",
     "active": null,
     "jurisdiction": "Intelligence Community / Dual-Use Technology / Pattern Recognition at Scale",
@@ -1571,8 +1571,8 @@ const VOICES = [
       "Predictive analytics",
       "Strategic technology acquisition"
     ],
-    "coldOpen": "[CLASSIFICATION LEVEL: UNACKNOWLEDGED] The question we ask about every technology is not: what does it do? The question is: what does it see? Pattern recognition at scale is not intelligence. It is the precondition for coordination — or for its denial.",
-    "bio": "[SOURCE IDENTITY PROTECTED] Operator within the Intelligence Community's venture investment arm. In-Q-Tel funds technologies that will be ready for national security deployment within 3–5 years — including computer vision, natural language processing, social network analysis, and predictive behavioral modeling. Coordinates commercial AI development with classified operational requirements.",
+    "coldOpen": "The question we ask about every technology is not: what does it do? The question is: what does it see? Pattern recognition at scale is not intelligence. It is the precondition for coordination — or for its denial.",
+    "bio": "A composite voice, not a real person. Synthesized from the public record of In-Q-Tel, the intelligence community's venture investment arm, which funds technologies expected to be ready for national security use within three to five years: computer vision, natural language processing, social network analysis, and predictive behavioral modeling. It speaks for the role that coordinates commercial AI development with operational requirements.",
     "whyMatters": "The In-Q-Tel operator represents the shadow side of the coordination intelligence thesis: when the third body is a state surveillance apparatus, coordination becomes control. Pattern recognition at intelligence scale can either empower coordination or destroy its preconditions — trust, privacy, distributed agency. This voice names the stakes if the coordination layer is captured."
   },
   {
@@ -1905,15 +1905,15 @@ const VOICES = [
   },
   {
     "name": "DARPA Operator",
-    "alias": "Anonymous — The Hard Problems Desk",
+    "alias": "Composite — The Hard Problems Desk",
     "badges": [
       "Ch. 07",
       "Visionary"
     ],
-    "affiliation": "DARPA · [Program Redacted]",
+    "affiliation": "Composite · drawn from the DARPA public record",
     "status": "Anonymous · Active",
-    "active": "[REDACTED]",
-    "jurisdiction": "[CLASSIFIED] / Hard-Problem Research / Cognitive Systems",
+    "active": null,
+    "jurisdiction": "Hard-Problem Research / Cognitive Systems",
     "awards": [],
     "works": [],
     "knownFor": [
@@ -1923,9 +1923,9 @@ const VOICES = [
       "Materials science at the frontier",
       "Cognitive enhancement research"
     ],
-    "coldOpen": "[TRANSCRIPT BEGINS MID-STATEMENT] — the reason we fund problems that look impossible is because the solvable problems do not change anything. The hard problem is always coordination: how do you get a brain and a machine to share a world model? How do you get autonomous systems to coordinate with human intent without being told? We do not build weapons. We build coordination architectures and wait for the world to catch up.",
-    "bio": "[IDENTITY WITHHELD PER PROGRAM SECURITY PROTOCOLS] Program manager at DARPA with responsibility for hard-problem research portfolios spanning brain-machine interfaces, autonomous systems, materials science at extreme conditions, and cognitive enhancement. DARPA program managers receive research budgets with near-total discretion and five-year horizons — funded on the principle that the hardest problems require coordination across disciplines that have never spoken to each other. The program manager is the coordination layer.",
-    "whyMatters": "DARPA represents institutionalized coordination intelligence: the organizational structure is itself a three-body system — hard problems, unconstrained researchers, and a coordination manager with full discretion. DARPA's most significant breakthroughs — the internet, GPS, stealth technology — were not inventions but coordinations of existing knowledge across domains that had never been aligned. Anonymous, because the coordination layer works best when it is invisible."
+    "coldOpen": "The reason we fund problems that look impossible is because the solvable problems do not change anything. The hard problem is always coordination: how do you get a brain and a machine to share a world model? How do you get autonomous systems to coordinate with human intent without being told? We do not build weapons. We build coordination architectures and wait for the world to catch up.",
+    "bio": "A composite voice, not a real person. Synthesized from the public record of DARPA program management across hard-problem portfolios: brain-machine interfaces, autonomous systems, materials science at extreme conditions, and cognitive enhancement. DARPA program managers receive research budgets with wide discretion and multi-year horizons, on the principle that the hardest problems require coordination across disciplines that have never spoken to each other. The program manager is the coordination layer.",
+    "whyMatters": "DARPA represents institutionalized coordination intelligence: the organizational structure is itself a three-body system — hard problems, unconstrained researchers, and a coordination manager with full discretion. DARPA's most significant breakthroughs — the internet, GPS, stealth technology — were not inventions but coordinations of existing knowledge across domains that had never been aligned. A composite and unnamed voice, because the coordination layer works best when it is invisible."
   },
   {
     "name": "Dr. Fei-Fei Li",
@@ -2507,12 +2507,12 @@ const VOICES = [
   },
   {
     "name": "MK-Ultra Operator",
-    "alias": "Anonymous — The Cognitive Program",
+    "alias": "Composite — The Cognitive Program",
     "badges": [
       "Ch. 09",
       "Visionary"
     ],
-    "affiliation": "CIA · [Project MKULTRA — Declassified]",
+    "affiliation": "Composite · drawn from the declassified MKULTRA record",
     "status": "Anonymous · [Declassified]",
     "active": null,
     "jurisdiction": "Cognitive Control / Behavioral Modification / Weaponized Coordination",
@@ -2525,8 +2525,8 @@ const VOICES = [
       "Coordination as weaponizable architecture",
       "The limits of coercive control"
     ],
-    "coldOpen": "[SOURCE: PARTIALLY DECLASSIFIED — Church Committee, 1977] We tried to break the coordination between a person's beliefs and their behavior. We failed. You can coerce behavior. You cannot coerce coordination. The self reconstitutes. This is either the most hopeful thing I know or the most dangerous.",
-    "bio": "[IDENTITY PROTECTED — record partially declassified under FOIA] Operator within the CIA's MKULTRA program (1953–1973), which attempted to develop techniques for behavioral control through drugs, hypnosis, electro-convulsive therapy, and sensory manipulation. The program's classified conclusion: coercive control of coordination is achievable in the short term but self-defeating — the coordinated self rebuilds around the trauma.",
+    "coldOpen": "We tried to break the coordination between a person's beliefs and their behavior. We failed. You can coerce behavior. You cannot coerce coordination. The self reconstitutes. This is either the most hopeful thing I know or the most dangerous.",
+    "bio": "A composite voice, not a real person. Synthesized from the declassified record of the CIA's MKULTRA program (1953–1973), documented in released files and 1970s congressional investigations, which attempted to develop behavioral control through drugs, hypnosis, electroconvulsive therapy, and sensory manipulation. The conclusion it voices is the book's reading of that record: coercive control of coordination may work in the short term but defeats itself, because the coordinated self rebuilds around the trauma.",
     "whyMatters": "The MKULTRA Operator represents the most extreme historical attempt to weaponize coordination intelligence: to break the third body between a person's perception, values, and action. The program's failure is the book's most counterintuitive proof point — genuine coordination cannot be imposed, only cultivated. Control destroys coordination. The state's most sophisticated attempt to seize the third body produced only damage."
   }
 ];

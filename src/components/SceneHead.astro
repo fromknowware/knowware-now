@@ -1,11 +1,12 @@
 ---
+import { chapterNum } from '../lib/chapters';
 // Chapter scene header — number + title
 interface Props {
   n: number;
   opener: string;
 }
 const { n, opener } = Astro.props;
-const num = String(n).padStart(2, '0');
+const num = chapterNum(n);
 ---
 <header class="kw-scene-head">
   <p class="kw-label">Chapter {num}</p>

@@ -1,4 +1,5 @@
 ---
+import { chapterNum } from '../../lib/chapters';
 import Base from '../../layouts/Base.astro';
 import SceneHead from '../../components/SceneHead.astro';
 import Field from '../../components/Field.astro';
@@ -34,7 +35,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
 ---
 <Base
   title={chapter.data.opener}
-  description={`Chapter ${String(chapter.data.n).padStart(2,'0')} of Knowware: ${chapter.data.opener}`}
+  description={`Chapter ${chapterNum(chapter.data.n)} of Knowware: ${chapter.data.opener}`}
   ogType="article"
   canonical={`${SITE_URL}/read/${chapter.id}`}
 >
@@ -201,9 +202,10 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
     );
   })()}
 
-  <!-- Chapter voices -->
+  <!-- Chapter voices (the capstone has none of its own) -->
+  {chapterVoices.length > 0 && (
   <section class="kw-section">
-    <p class="kw-label">Nine Voices · Chapter {String(chapter.data.n).padStart(2,'0')}</p>
+    <p class="kw-label">Nine Voices · Chapter {chapterNum(chapter.data.n)}</p>
     <h2 class="kw-h3">{chapter.data.title}</h2>
     <div class="voice-list">
       {chapterVoices.map((v) => (
@@ -224,18 +226,19 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
       ))}
     </div>
   </section>
+  )}
 
   <!-- Prev / next -->
   <nav class="kw-section chapter-nav" aria-label="Chapter navigation">
     {prev ? (
       <a href={`/read/${prev.id}`} class="chapter-nav-link">
-        <span class="mono" style="font-size:11px;color:var(--sub)">← Ch. {String(prev.data.n).padStart(2,'0')}</span>
+        <span class="mono" style="font-size:11px;color:var(--sub)">← Ch. {chapterNum(prev.data.n)}</span>
         <span>{prev.data.opener}</span>
       </a>
     ) : <span />}
     {next ? (
       <a href={`/read/${next.id}`} class="chapter-nav-link" style="text-align:right">
-        <span class="mono" style="font-size:11px;color:var(--sub)">Ch. {String(next.data.n).padStart(2,'0')} →</span>
+        <span class="mono" style="font-size:11px;color:var(--sub)">Ch. {chapterNum(next.data.n)} →</span>
         <span>{next.data.opener}</span>
       </a>
     ) : <span />}

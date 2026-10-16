@@ -11,7 +11,8 @@ import {
 
 const ACCESS_TTL_S = 60 * 60 * 24 * 400;
 const CONSENT_TEXT = 'Also email me when new chapters and the print edition are ready.';
-const FULL_PATH_RE = /^\/read\/0[1-9]\/full$/;
+const CHAPTER_RE = /^(0[1-9]|x)$/;
+const FULL_PATH_RE = /^\/read\/(0[1-9]|x)\/full$/;
 
 function accessCookies(token, maxAge = ACCESS_TTL_S) {
   return [
@@ -41,7 +42,7 @@ async function sendWelcome(env, email, link, nn) {
         to: [email],
         subject: 'Your Knowware chapters are unlocked',
         text: [
-          'All nine chapters of Knowware are unlocked for you.',
+          'Every chapter of Knowware, including the capstone, is unlocked for you.',
           '',
           `Continue Chapter ${nn}:`,
           link,
@@ -98,7 +99,8 @@ async function handlePost({ request, env }) {
     data = parsed.data;
   }
 
-  const chapter = /^0[1-9]$/.test(String(data.chapter)) ? String(data.chapter) : '01';
+  const requested = String(data.chapter).toLowerCase();
+  const chapter = CHAPTER_RE.test(requested) ? requested : '01';
   const next = `/read/${chapter}/full`;
   const backToGate = () => redirect(`/read/${chapter}/#unlock`, [], 303);
 

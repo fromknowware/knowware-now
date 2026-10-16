@@ -17,7 +17,7 @@ export default function readerGate() {
         const readDir = join(fileURLToPath(dir), 'read');
         const chapters = {};
         for (const entry of await readdir(readDir, { withFileTypes: true })) {
-          if (!entry.isDirectory() || !/^0[1-9]$/.test(entry.name)) continue;
+          if (!entry.isDirectory() || !/^(0[1-9]|x)$/.test(entry.name)) continue;
           const fullDir = join(readDir, entry.name, 'full');
           try {
             chapters[entry.name] = await readFile(join(fullDir, 'index.html'), 'utf8');
@@ -26,13 +26,13 @@ export default function readerGate() {
           }
           await rm(fullDir, { recursive: true, force: true });
         }
-        if (Object.keys(chapters).length !== 9) {
-          throw new Error(`reader-gate: expected 9 full chapters, found ${Object.keys(chapters).length}`);
+        if (Object.keys(chapters).length !== 10) {
+          throw new Error(`reader-gate: expected 10 full chapters (9 + capstone), found ${Object.keys(chapters).length}`);
         }
         const generated = join(projectRoot, 'lib/generated');
         await mkdir(generated, { recursive: true });
         await writeFile(join(generated, 'full-chapters.js'), `export default ${JSON.stringify(chapters)};\n`);
-        logger.info('9 full chapters moved behind /read/:slug/full');
+        logger.info('10 full chapters moved behind /read/:slug/full');
       },
     },
   };

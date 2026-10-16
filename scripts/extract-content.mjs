@@ -63,10 +63,11 @@ mkdirSync(voicesDir,   { recursive: true });
 // ── Write chapter .md files ──────────────────────────────────────────────────
 
 for (const [key, teaser] of Object.entries(TEASERS)) {
-  if (key === 'X') continue; // epilogue — not a numbered chapter
-  const n = parseInt(key, 10);
-  const slug = key; // "01", "02", …
-  const title = CHAPTER_TITLES[String(n)] ?? '';
+  // 'X' is the capstone that closes the loop on the nine chapters; it sorts as n = 10.
+  const isCapstone = key === 'X';
+  const n = isCapstone ? 10 : parseInt(key, 10);
+  const slug = isCapstone ? 'x' : key; // "01" … "09", "x"
+  const title = isCapstone ? 'The Grand Coordination' : (CHAPTER_TITLES[String(n)] ?? '');
 
   const frontmatter = {
     n,

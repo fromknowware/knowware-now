@@ -1,4 +1,5 @@
 ---
+import { chapterNum } from '../../../lib/chapters';
 // Built like any page, then moved out of the static output by the
 // reader-gate integration and served only to signed-up readers.
 import Base from '../../../layouts/Base.astro';
@@ -19,7 +20,7 @@ const all = (await getCollection('chapters')).sort((a, b) => a.data.n - b.data.n
 const idx = all.findIndex((c) => c.id === chapter.id);
 const prev = idx > 0 ? all[idx - 1] : null;
 const next = idx < all.length - 1 ? all[idx + 1] : null;
-const nn = String(chapter.data.n).padStart(2, '0');
+const nn = chapterNum(chapter.data.n);
 const fmt = (x: number) => x.toLocaleString('en-US');
 ---
 <Base
@@ -43,13 +44,13 @@ const fmt = (x: number) => x.toLocaleString('en-US');
   <nav class="kw-section kw-full-nav" aria-label="Chapters">
     {prev ? (
       <a href={`/read/${prev.id}/full`} class="kw-full-nav-link">
-        <span class="mono kw-full-nav-k">← Chapter {String(prev.data.n).padStart(2, '0')}</span>
+        <span class="mono kw-full-nav-k">← Chapter {chapterNum(prev.data.n)}</span>
         <span>{prev.data.title}</span>
       </a>
     ) : <span />}
     {next ? (
       <a href={`/read/${next.id}/full`} class="kw-full-nav-link kw-full-nav-link--next">
-        <span class="mono kw-full-nav-k">Chapter {String(next.data.n).padStart(2, '0')} →</span>
+        <span class="mono kw-full-nav-k">Chapter {chapterNum(next.data.n)} →</span>
         <span>{next.data.title}</span>
       </a>
     ) : <span />}
