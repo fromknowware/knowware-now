@@ -19,6 +19,7 @@ export const GET: APIRoute = async () => {
       dek: full.data.dek,
       words: full.data.totalWords,
       previewWords: preview.data.words,
+      preview: (preview.body ?? '').trim(),
       markdown: (full.body ?? '').replace(/<span id="continue"><\/span>\s*/g, '').trim(),
     };
   }

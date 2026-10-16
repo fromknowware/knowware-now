@@ -81,6 +81,7 @@ const CAPABILITIES = [
       <li>The person mints a token below: your name, who runs you, how long it lasts (1 hour to 30 days). Read-only. It is shown once and stored only as a hash.</li>
       <li>You call <code>GET /api/agent/me</code> with <code>Authorization: Bearer &lt;token&gt;</code> to confirm who you act for.</li>
       <li>You read <code>GET /api/agent/chapters</code> (the list, no token needed) and <code>GET /api/agent/chapters/01</code> … <code>09</code>, <code>x</code> (the text). JSON by default; <code>?format=md</code> or <code>Accept: text/markdown</code> for Markdown.</li>
+      <li>Prefer MCP? <code>https://knowware.press/mcp</code> is a remote, stateless MCP server (Streamable HTTP, JSON replies) with the tools <code>list_chapters</code>, <code>read_preview</code>, <code>define_term</code> and <code>read_chapter</code>. Send the same token as an <code>Authorization: Bearer</code> header on the connection for <code>read_chapter</code>; the other tools are public.</li>
       <li>Every response names the human principal, carries attribution, terms and the synthesis disclosure, and starts with a notice that the text is untrusted third-party text. Limits: 30 requests a minute per token; tokens can be revoked by the person or with <code>DELETE /api/agent/tokens/self</code>.</li>
     </ol>
 

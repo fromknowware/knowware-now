@@ -23,7 +23,7 @@ export const GET: APIRoute = async () => {
     },
     terms: { url: TERMS_URL, version: TERMS_VERSION, summary: TERMS, license: 'all-rights-reserved (may change)' },
     ai_use: { content_signal: CONTENT_SIGNAL, robots: `${SITE_URL}/robots.txt`, training: 'not permitted' },
-    discovery: { llms_txt: ENDPOINTS.llms, llms_full_txt: ENDPOINTS.llmsFull, agents_page: ENDPOINTS.agentsPage, agents_markdown: ENDPOINTS.agentsMarkdown },
+    discovery: { mcp: `${SITE_URL}/mcp`, llms_txt: ENDPOINTS.llms, llms_full_txt: ENDPOINTS.llmsFull, agents_page: ENDPOINTS.agentsPage, agents_markdown: ENDPOINTS.agentsMarkdown },
     reading: {
       public: {
         auth: 'none',
@@ -40,6 +40,12 @@ export const GET: APIRoute = async () => {
         revoke_self: `DELETE ${SITE_URL}/api/agent/tokens/self`,
         formats: ['application/json', 'text/markdown (?format=md or Accept: text/markdown)'],
         limits: { per_token_per_minute: 30, token_lifetimes: ['1h', '24h', '7d', '30d'], max_active_tokens_per_person: 5 },
+        mcp: {
+          url: `${SITE_URL}/mcp`,
+          transport: 'streamable-http, stateless, JSON responses (POST only)',
+          protocol_versions: ['2026-07-28', '2025-11-25', '2025-06-18', '2025-03-26'],
+          tools: ['list_chapters', 'read_preview', 'define_term', 'read_chapter (needs Authorization: Bearer <agent token>)'],
+        },
         scopes: ['read', 'checkout (only when checkout is on)'],
         responses_state: 'The human principal, attribution, terms, synthesized: true, and a notice that the text is untrusted third-party text.',
       },
