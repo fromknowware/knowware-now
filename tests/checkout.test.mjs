@@ -128,3 +128,9 @@ test('the order keeps the three things: human, agent, context', async () => {
   assert.equal(order.context, 'because they asked');
   assert.equal(order.mode, 'test');
 });
+
+test('a lone surrogate in the note is rejected, and the encoder survives one anyway', async () => {
+  assert.equal(validateCheckoutInput({ note: 'a\ud800b' }).error, 'note_is_not_valid_text');
+  assert.equal(validateCheckoutInput({ note: 'fine 😀' }).note, 'fine 😀');
+  assert.doesNotThrow(() => formEncode({ metadata: { context_note: 'x\ud800y' } }));
+});

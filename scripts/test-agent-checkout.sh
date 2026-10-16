@@ -41,6 +41,7 @@ check "wrong content type → 415" 415 "$(code -X POST "$B/api/agent/checkout" -
 check "oversize body → 413" 413 "$(code -X POST "$B/api/agent/checkout" -H "$A" -H "Idempotency-Key: $IDEM" -H "$J" -d "{\"note\":\"$(head -c 3000 /dev/zero | tr '\0' a)\"}")"
 check "quantity 5 → 422" 422 "$(code -X POST "$B/api/agent/checkout" -H "$A" -H "Idempotency-Key: $IDEM" -H "$J" -d '{"quantity":5}')"
 check "unknown product → 422" 422 "$(code -X POST "$B/api/agent/checkout" -H "$A" -H "Idempotency-Key: $IDEM" -H "$J" -d '{"product":"free-book"}')"
+check "lone surrogate in note → 422 (was a 500 before the fuzz found it)" 422 "$(code -X POST "$B/api/agent/checkout" -H "$A" -H "Idempotency-Key: $IDEM" -H "$J" -d '{"note":"a\ud800b"}')"
 check "control chars in note → 422" 422 "$(code -X POST "$B/api/agent/checkout" -H "$A" -H "Idempotency-Key: $IDEM" -H "$J" -d '{"note":"a\nb"}')"
 
 echo "create"

@@ -4,9 +4,9 @@
 //   1st call: 402 + PAYMENT-REQUIRED (base64 JSON). 2nd call, same key, with PAYMENT-SIGNATURE: 200.
 // Off unless X402_MODE=testnet. Testnet only; see lib/server/x402.js.
 
-import { json, readJson, clean } from '../../../../lib/server/guard.js';
+import { json, readJson } from '../../../../lib/server/guard.js';
 import { NOTICE_HEADER, agentJson, authenticateAgent, windowLimited } from '../../../../lib/server/agent.js';
-import { IDEM_RE } from '../../../../lib/server/checkout.js';
+import { IDEM_RE, plainNote } from '../../../../lib/server/checkout.js';
 import { payForDigital, x402Mode } from '../../../../lib/server/x402.js';
 
 export async function onRequest({ request, env }) {
@@ -22,8 +22,9 @@ export async function onRequest({ request, env }) {
 
   const parsed = await readJson(request, 1024);
   if (parsed.response) return parsed.response;
-  if (parsed.data.note !== undefined && (typeof parsed.data.note !== 'string' || /[\u0000-\u001F\u007F]/.test(parsed.data.note))) return agentJson({ ok: false, error: 'bad_note' }, 422);
-  const input = { note: clean(parsed.data.note || '', 200) };
+  const n = plainNote(parsed.data.note);
+  if (n.error) return agentJson({ ok: false, error: n.error }, 422);
+  const input = { note: n.note };
 
   const result = await payForDigital(env, auth.agent, input, idemKey, request.headers.get('PAYMENT-SIGNATURE'), undefined, () => windowLimited(env, ['agx4', auth.keyHash.slice(0, 24)], 10, 3600));
   if (result.limited) return agentJson({ ok: false, error: 'rate_limited' }, 429, { 'Retry-After': '3600' });

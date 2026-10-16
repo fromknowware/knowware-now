@@ -12,6 +12,7 @@ import {
 } from '../lib/site-facts.mjs';
 import { json, originAllowed, readJson } from '../lib/server/guard.js';
 import { authenticateAgent, ipKey, principalBlock, windowLimited } from '../lib/server/agent.js';
+import { guard } from '../lib/server/shield.js';
 
 const VERSIONS = ['2026-07-28', '2025-11-25', '2025-06-18', '2025-03-26'];
 const SERVER_INFO = { name: 'knowware', title: 'Knowware: Systems of Intelligence', version: '1.0.0' };
@@ -70,7 +71,7 @@ async function callTool(name, args, request, env) {
   }
 }
 
-export async function onRequest({ request, env }) {
+async function handle({ request, env }) {
   if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed.' }, 405, { Allow: 'POST' });
   // MCP asks servers to validate Origin; browsers have no business here.
   if (request.headers.get('Origin') && !originAllowed(request)) return json({ ok: false, error: 'forbidden' }, 403);
@@ -111,3 +112,4 @@ export async function onRequest({ request, env }) {
   }
 }
 
+export const onRequest = guard(handle);
