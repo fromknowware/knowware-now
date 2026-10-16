@@ -1,7 +1,9 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const chapterCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '*.md', base: './src/content/chapters' }),
   schema: z.object({
     n: z.number().int().min(1).max(9),
     title: z.string(),
@@ -26,7 +28,7 @@ const chapterCollection = defineCollection({
 });
 
 const voiceCollection = defineCollection({
-  type: 'data',
+  loader: glob({ pattern: '*.json', base: './src/content/voices' }),
   schema: z.object({
     id: z.string(),
     name: z.string(),

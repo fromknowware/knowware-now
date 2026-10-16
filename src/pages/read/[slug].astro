@@ -7,7 +7,7 @@ import { SITE_URL } from '../../config';
 
 export async function getStaticPaths() {
   const chapters = await getCollection('chapters');
-  return chapters.map((ch) => ({ params: { slug: ch.slug }, props: { chapter: ch } }));
+  return chapters.map((ch) => ({ params: { slug: ch.id }, props: { chapter: ch } }));
 }
 
 const { chapter } = Astro.props;
@@ -24,7 +24,7 @@ const tierLabel: Record<string, string> = { A: 'Academic', P: 'Practitioner', V:
 // Prev / next
 const all = await getCollection('chapters');
 const sorted = all.sort((a, b) => a.data.n - b.data.n);
-const idx = sorted.findIndex((c) => c.slug === chapter.slug);
+const idx = sorted.findIndex((c) => c.id === chapter.id);
 const prev = idx > 0 ? sorted[idx - 1] : null;
 const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
 ---
@@ -32,7 +32,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   title={chapter.data.opener}
   description={`Chapter ${String(chapter.data.n).padStart(2,'0')} of Knowware: ${chapter.data.opener}`}
   ogType="article"
-  canonical={`${SITE_URL}/read/${chapter.slug}`}
+  canonical={`${SITE_URL}/read/${chapter.id}`}
 >
   <SceneHead n={chapter.data.n} opener={chapter.data.opener} />
 
@@ -209,13 +209,13 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   <!-- Prev / next -->
   <nav class="kw-section chapter-nav" aria-label="Chapter navigation">
     {prev ? (
-      <a href={`/read/${prev.slug}`} class="chapter-nav-link">
+      <a href={`/read/${prev.id}`} class="chapter-nav-link">
         <span class="mono" style="font-size:11px;color:var(--sub)">← Ch. {String(prev.data.n).padStart(2,'0')}</span>
         <span>{prev.data.opener}</span>
       </a>
     ) : <span />}
     {next ? (
-      <a href={`/read/${next.slug}`} class="chapter-nav-link" style="text-align:right">
+      <a href={`/read/${next.id}`} class="chapter-nav-link" style="text-align:right">
         <span class="mono" style="font-size:11px;color:var(--sub)">Ch. {String(next.data.n).padStart(2,'0')} →</span>
         <span>{next.data.opener}</span>
       </a>

@@ -16,7 +16,7 @@ const sorted = chapters.sort((a, b) => a.data.n - b.data.n);
 
     <div class="read-list">
       {sorted.map((ch) => (
-        <a href={`/read/${ch.slug}`} class="read-item">
+        <a href={`/read/${ch.id}`} class="read-item">
           <span class="read-num mono">{String(ch.data.n).padStart(2, '0')}</span>
           <div class="read-body">
             <p class="read-opener">{ch.data.opener}</p>

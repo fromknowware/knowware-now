@@ -5,6 +5,7 @@ import securityHeaders from './integrations/security-headers.mjs';
 export default defineConfig({
   site: 'https://knowware.press',
   output: 'static',
+  compressHTML: true,
   integrations: [sitemap(), securityHeaders()],
   build: {
     format: 'directory',
