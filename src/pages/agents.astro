@@ -10,7 +10,7 @@ const DESCRIPTION =
 const CAPABILITIES = [
   { what: 'Discover the site', human: 'No', status: 'Live', where: 'llms.txt, manifest', href: '/llms.txt' },
   { what: 'Read pages and chapter previews', human: 'No', status: 'Live', where: 'Markdown files', href: '/read/01.md' },
-  { what: 'Read full chapters', human: 'Yes: a signed-up reader mints you a token', status: 'Not yet', where: 'Token-gated API', href: '#reading' },
+  { what: 'Read full chapters', human: 'Yes: a signed-up reader mints you a token', status: 'Live', where: 'Token-gated API', href: '#reading' },
   { what: 'Buy the book', human: 'Yes: a person completes payment', status: CHECKOUT_OPEN ? 'Test mode' : 'Not open', where: 'Checkout link', href: '#buying' },
 ];
 ---
@@ -75,8 +75,62 @@ const CAPABILITIES = [
     <p class="kw-label">2 · Full chapters, for a person who signed up</p>
     <h2 class="ag-h" id="read-h">Your person unlocks you.</h2>
     <p class="kw-body">
-      The full chapters are free, for one email. The person you act for signs up on <a href="/read">the manuscript page</a>. A token-gated chapter API for their agents is planned; it is not live. Do not sign anyone up yourself and do not ask for their email to do it for them.
+      The full chapters are free, for one email. The person you act for signs up on <a href="/read">the manuscript page</a>, then comes back here and mints you a token. Do not sign anyone up yourself and do not ask for their email to do it for you.
     </p>
+    <ol class="ag-list">
+      <li>The person mints a token below: your name, who runs you, how long it lasts (1 hour to 30 days). Read-only. It is shown once and stored only as a hash.</li>
+      <li>You call <code>GET /api/agent/me</code> with <code>Authorization: Bearer &lt;token&gt;</code> to confirm who you act for.</li>
+      <li>You read <code>GET /api/agent/chapters</code> (the list, no token needed) and <code>GET /api/agent/chapters/01</code> … <code>09</code>, <code>x</code> (the text). JSON by default; <code>?format=md</code> or <code>Accept: text/markdown</code> for Markdown.</li>
+      <li>Every response names the human principal, carries attribution, terms and the synthesis disclosure, and starts with a notice that the text is untrusted third-party text. Limits: 30 requests a minute per token; tokens can be revoked by the person or with <code>DELETE /api/agent/tokens/self</code>.</li>
+    </ol>
+
+    <div class="ag-console" id="ag-console" aria-labelledby="mint-h">
+      <h3 class="ag-h3" id="mint-h">Mint a token for your agent</h3>
+      <p class="kw-body" id="ag-nojs">A person mints the token on this page, in a browser. It needs JavaScript and a signed-up reader.</p>
+
+      <div id="ag-signedout" hidden>
+        <p class="kw-body">You are not signed up on this device. <a href="/read#unlock">Sign up with your email</a> (free), then return here.</p>
+      </div>
+
+      <div id="ag-signedin" hidden>
+        <form id="ag-mint" class="ag-form" novalidate>
+          <div class="ag-field">
+            <label for="ag-name">Agent name</label>
+            <input id="ag-name" name="name" type="text" required minlength="2" maxlength="60" autocomplete="off" spellcheck="false" aria-describedby="ag-err-name" />
+            <p class="ag-err" id="ag-err-name"></p>
+          </div>
+          <div class="ag-field">
+            <label for="ag-operator">Who runs it</label>
+            <input id="ag-operator" name="operator" type="text" required minlength="2" maxlength="80" autocomplete="off" spellcheck="false" aria-describedby="ag-err-operator" />
+            <p class="ag-err" id="ag-err-operator"></p>
+          </div>
+          <div class="ag-field">
+            <label for="ag-lifetime">Lasts</label>
+            <select id="ag-lifetime" name="lifetime">
+              <option value="1h">1 hour</option>
+              <option value="24h" selected>24 hours</option>
+              <option value="7d">7 days</option>
+              <option value="30d">30 days</option>
+            </select>
+          </div>
+          <p class="ag-fine">Read-only: full chapters and nothing else. You can revoke it any time. You are the human principal for everything this token does.</p>
+          <button type="submit" class="kw-btn kw-btn--filled" id="ag-submit">Mint token →</button>
+        </form>
+
+        <div id="ag-result" class="ag-result" hidden tabindex="-1" aria-labelledby="ag-result-h">
+          <h4 class="ag-h4" id="ag-result-h">Your token</h4>
+          <p class="ag-fine">Copy it now and give it to your agent. It will not be shown again.</p>
+          <label for="ag-token" class="sr-only">Agent token</label>
+          <input id="ag-token" type="text" readonly autocomplete="off" spellcheck="false" />
+          <button type="button" class="kw-btn" id="ag-copy">Copy</button>
+        </div>
+
+        <h4 class="ag-h4">Active tokens</h4>
+        <ul id="ag-tokens" class="ag-tokens"></ul>
+        <p class="ag-fine" id="ag-none" hidden>No active tokens.</p>
+      </div>
+      <p class="ag-live" id="ag-status" role="status" aria-live="polite"></p>
+    </div>
   </section>
 
   <section class="kw-section ag-body" aria-labelledby="buy-h" id="buying">
@@ -111,6 +165,114 @@ const CAPABILITIES = [
   </section>
 </Base>
 
+<script>
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const signedIn = document.cookie.split('; ').includes('kw_reader_ui=1');
+  const status = $('ag-status');
+  $('ag-nojs').hidden = true;
+  $(signedIn ? 'ag-signedin' : 'ag-signedout').hidden = false;
+
+  const MESSAGES: Record<string, string> = {
+    rate_limited: 'Too many tokens minted from this connection. Try again in an hour.',
+    sign_in_required: 'Sign up on the manuscript page first, then return here.',
+    forbidden: 'This request was refused. Reload the page and try again.',
+  };
+  const say = (code?: string) => (code && MESSAGES[code]) || code || 'Could not mint a token. Try again.';
+
+  const fmt = (iso: string) => new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+
+  async function refresh() {
+    const list = $('ag-tokens');
+    const none = $('ag-none');
+    try {
+      const res = await fetch('/api/agent/tokens', { headers: { Accept: 'application/json' } });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error('list');
+      list.replaceChildren();
+      for (const t of data.tokens as Array<{ id: string; name: string; operator: string; expiresAt: string }>) {
+        const li = document.createElement('li');
+        const text = document.createElement('span');
+        text.textContent = `${t.name} · ${t.operator} · expires ${fmt(t.expiresAt)}`;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'kw-btn ag-revoke';
+        btn.textContent = 'Revoke';
+        btn.setAttribute('aria-label', `Revoke token for ${t.name}`);
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
+          const r = await fetch(`/api/agent/tokens/${t.id}`, { method: 'DELETE' });
+          status.textContent = r.ok ? `Revoked the token for ${t.name}. It can take up to a minute to take effect everywhere.` : 'Could not revoke. Try again.';
+          await refresh();
+        });
+        li.append(text, btn);
+        list.append(li);
+      }
+      none.hidden = data.tokens.length > 0;
+    } catch {
+      signedInFailed();
+    }
+  }
+
+  function signedInFailed() {
+    $('ag-signedin').hidden = true;
+    $('ag-signedout').hidden = false;
+  }
+
+  if (signedIn) {
+    refresh();
+    const form = $<HTMLFormElement>('ag-mint');
+    const err = (field: string, msg: string) => {
+      $(`ag-err-${field}`).textContent = msg;
+      const input = $<HTMLInputElement>(`ag-${field}`);
+      if (msg) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = $<HTMLInputElement>('ag-name');
+      const operator = $<HTMLInputElement>('ag-operator');
+      err('name', ''); err('operator', '');
+      if (name.value.trim().length < 2) { err('name', 'Give the agent a name.'); name.focus(); return; }
+      if (operator.value.trim().length < 2) { err('operator', 'Say who runs it.'); operator.focus(); return; }
+      const btn = $<HTMLButtonElement>('ag-submit');
+      btn.disabled = true;
+      status.textContent = 'Minting…';
+      try {
+        const res = await fetch('/api/agent/tokens', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name.value, operator: operator.value, lifetime: $<HTMLSelectElement>('ag-lifetime').value, scopes: ['read'] }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          const box = $('ag-result');
+          $<HTMLInputElement>('ag-token').value = data.token;
+          box.hidden = false;
+          box.focus();
+          status.textContent = `Token minted for ${data.name}. It expires ${fmt(data.expiresAt)}.`;
+          form.reset();
+          await refresh();
+        } else {
+          status.textContent = say(data.error);
+        }
+      } catch {
+        status.textContent = 'Could not reach the server. Try again.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+    $('ag-copy').addEventListener('click', async () => {
+      const input = $<HTMLInputElement>('ag-token');
+      try {
+        await navigator.clipboard.writeText(input.value);
+        status.textContent = 'Copied.';
+      } catch {
+        input.select();
+        status.textContent = 'Press Ctrl or Cmd C to copy.';
+      }
+    });
+  }
+</script>
+
 <style>
   .ag-intro { padding-bottom: clamp(20px, 3vw, 36px); }
   .ag-lede { max-width: 62ch; }
@@ -137,4 +299,26 @@ const CAPABILITIES = [
   .ag-table tbody tr:last-child > * { border-bottom: 0; }
   .ag-status { font: 600 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; padding: 4px 7px; border: 1px solid var(--sub); color: var(--ink); white-space: nowrap; }
   .ag-status--live { border-color: var(--status-alive); border-width: 2px; }
+  .ag-h3 { font: 700 20px/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); }
+  .ag-h4 { font: 600 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--sub); margin: 28px 0 12px; }
+  .ag-console { margin-top: 28px; padding: 24px; border: 1px solid var(--rule-strong); }
+  .ag-form { display: grid; gap: 16px; max-width: 460px; }
+  .ag-field label { display: block; font: 500 13px/1.3 "JetBrains Mono", ui-monospace, monospace; margin-bottom: 6px; color: var(--ink); }
+  .ag-field input, .ag-field select, #ag-token {
+    width: 100%; box-sizing: border-box; padding: 11px 12px; font: 400 15px/1.3 "JetBrains Mono", ui-monospace, monospace;
+    color: var(--ink); background: transparent; border: 1px solid var(--rule-strong); border-radius: 0;
+  }
+  .ag-field select option { color: #191938; background: #EDEEE4; }
+  .ag-field input:focus-visible, .ag-field select:focus-visible, #ag-token:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .ag-field input[aria-invalid="true"] { border-width: 2px; border-color: var(--error); }
+  .ag-err { margin: 6px 0 0; min-height: 0; font-size: 13px; color: var(--error); }
+  .ag-err:empty { display: none; }
+  .ag-fine { margin: 0; font-size: 14px; line-height: 1.5; color: var(--sub); max-width: 56ch; }
+  .ag-result { margin-top: 24px; padding: 16px; border: 2px solid var(--signal-ink); display: grid; gap: 12px; max-width: 520px; }
+  .ag-result[hidden], #ag-signedin[hidden], #ag-signedout[hidden], #ag-nojs[hidden], #ag-none[hidden] { display: none; }
+  .ag-tokens { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .ag-tokens li { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--rule); font-size: 14px; }
+  .ag-tokens li span { overflow-wrap: anywhere; min-width: 0; }
+  .ag-revoke { padding: 8px 14px; }
+  .ag-live { margin: 16px 0 0; font-size: 14px; color: var(--ink); min-height: 1.4em; }
 </style>

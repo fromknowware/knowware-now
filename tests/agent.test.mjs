@@ -1,0 +1,105 @@
+// Unit tests for agent tokens, with an in-memory KV. Run: npm test
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { authenticateAgent, mintToken, revokeById, listTokens, principalHash, timingSafeEqualHex, MAX_ACTIVE } from '../lib/server/agent.js';
+import { sha256 } from '../lib/server/guard.js';
+
+function fakeKV() {
+  const m = new Map();
+  return {
+    m,
+    async get(k) { return m.has(k) ? m.get(k) : null; },
+    async put(k, v) { m.set(k, v); },
+    async delete(k) { m.delete(k); },
+    async list({ prefix }) { return { keys: [...m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })) }; },
+  };
+}
+const reader = { email: 'person@example.com' };
+const req = (token, extra = {}) =>
+  new Request('https://knowware.press/api/agent/me', { headers: { Authorization: `Bearer ${token}`, 'CF-Connecting-IP': '198.51.100.7', ...extra } });
+const input = { name: 'Test Agent', operator: 'Test Ops', lifetime: '1h', scopes: ['read'] };
+
+test('a minted token authenticates and carries its principal', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const t = await mintToken(env, reader, input);
+  assert.match(t.token, /^kwa_[A-Za-z0-9_-]{43}$/);
+  const auth = await authenticateAgent(req(t.token), env, 'read');
+  assert.equal(auth.agent.email, 'person@example.com');
+  assert.equal(auth.agent.prin, await principalHash('person@example.com'));
+});
+
+test('only the hash of a token is stored', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const t = await mintToken(env, reader, input);
+  const all = JSON.stringify([...env.CLAIMS.m.entries()]);
+  assert.equal(all.includes(t.token), false);
+  assert.ok(env.CLAIMS.m.has(`agent:${await sha256(t.token)}`));
+});
+
+test('an expired token is refused even if KV still holds it', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const t = await mintToken(env, reader, input);
+  const key = `agent:${await sha256(t.token)}`;
+  const rec = JSON.parse(env.CLAIMS.m.get(key));
+  rec.expiresAt = new Date(Date.now() - 1000).toISOString();
+  env.CLAIMS.m.set(key, JSON.stringify(rec));
+  const auth = await authenticateAgent(req(t.token), env, 'read');
+  assert.equal(auth.response.status, 401);
+});
+
+test('a read token cannot be used for a checkout scope', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const t = await mintToken(env, reader, input);
+  const auth = await authenticateAgent(req(t.token), env, 'checkout');
+  assert.equal(auth.response.status, 403);
+});
+
+test('revoking removes the token and its index entry', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const t = await mintToken(env, reader, input);
+  const prin = await principalHash(reader.email);
+  assert.equal((await listTokens(env, prin)).length, 1);
+  assert.equal(await revokeById(env, prin, t.id), true);
+  assert.equal((await listTokens(env, prin)).length, 0);
+  assert.equal((await authenticateAgent(req(t.token), env, 'read')).response.status, 401);
+});
+
+test("another person cannot revoke someone else's token", async () => {
+  const env = { CLAIMS: fakeKV() };
+  const t = await mintToken(env, reader, input);
+  assert.equal(await revokeById(env, await principalHash('other@example.com'), t.id), false);
+  assert.ok((await authenticateAgent(req(t.token), env, 'read')).agent);
+});
+
+test('a person holds at most MAX_ACTIVE tokens', async () => {
+  const env = { CLAIMS: fakeKV() };
+  for (let i = 0; i < MAX_ACTIVE; i++) assert.ok((await mintToken(env, reader, input)).token);
+  assert.equal((await mintToken(env, reader, input)).status, 409);
+});
+
+test('labels with markup, control characters or no operator are refused', async () => {
+  const env = { CLAIMS: fakeKV() };
+  for (const bad of [{ name: '<b>x</b>' }, { name: 'a\nb' }, { operator: '' }, { name: 'x' }]) {
+    assert.ok((await mintToken(env, reader, { ...input, ...bad })).error, JSON.stringify(bad));
+  }
+});
+
+test('checkout scope is not granted unless asked for, and unknown scopes fail', async () => {
+  const env = { CLAIMS: fakeKV() };
+  assert.deepEqual((await mintToken(env, reader, { ...input, scopes: undefined })).scopes, ['read']);
+  assert.ok((await mintToken(env, reader, { ...input, scopes: ['root'] })).error);
+});
+
+test('bad tokens are counted and eventually blocked before lookup', async () => {
+  const env = { CLAIMS: fakeKV() };
+  let last;
+  for (let i = 0; i < 22; i++) last = await authenticateAgent(req('kwa_' + 'A'.repeat(43)), env, 'read');
+  assert.equal(last.response.status, 429);
+});
+
+test('timingSafeEqualHex compares by value and length', () => {
+  assert.equal(timingSafeEqualHex('abcd', 'abcd'), true);
+  assert.equal(timingSafeEqualHex('abcd', 'abce'), false);
+  assert.equal(timingSafeEqualHex('abcd', 'abc'), false);
+  assert.equal(timingSafeEqualHex('abcd', undefined), false);
+});

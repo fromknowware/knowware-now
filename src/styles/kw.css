@@ -325,7 +325,7 @@ article[data-kw-read] {
 .kw-btn--filled {
   background: var(--signal); border-color: var(--signal); color: #EDEEE4;
 }
-.kw-btn--filled:hover { background: #1e3fc0; border-color: #1e3fc0; }
+.kw-btn--filled:hover { background: #1e3fc0; border-color: #1e3fc0; color: #EDEEE4; }
 
 /* ============================================================
    Disclosure band

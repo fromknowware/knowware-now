@@ -48,6 +48,7 @@ export const GET: APIRoute = async () => {
     link('/agents', 'what agents can do here, with a human principal'),
     `- [Manifest](${ENDPOINTS.manifest}): machine-readable endpoints, terms and the human-principal requirement`,
     `- [Full public text](${ENDPOINTS.llmsFull}): the pages above concatenated in one file`,
+    `- [Chapter API](${SITE_URL}/api/agent/chapters): list of chapters; full text needs a token that a signed-up person mints at ${SITE_URL}/agents#reading`,
     '',
     '## Optional',
     '',
