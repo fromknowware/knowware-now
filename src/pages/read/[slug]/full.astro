@@ -1,0 +1,82 @@
+---
+// Built like any page, then moved out of the static output by the
+// reader-gate integration and served only to signed-up readers.
+import Base from '../../../layouts/Base.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import { SITE_URL } from '../../../config';
+
+export async function getStaticPaths() {
+  const chapters = await getCollection('chapters');
+  return chapters.map((ch) => ({ params: { slug: ch.id }, props: { chapter: ch } }));
+}
+
+const { chapter } = Astro.props;
+const full = await getEntry('manuscript', `${chapter.id}-full`);
+if (!full) throw new Error(`Missing manuscript for chapter ${chapter.id}`);
+const { Content } = await render(full);
+
+const all = (await getCollection('chapters')).sort((a, b) => a.data.n - b.data.n);
+const idx = all.findIndex((c) => c.id === chapter.id);
+const prev = idx > 0 ? all[idx - 1] : null;
+const next = idx < all.length - 1 ? all[idx + 1] : null;
+const nn = String(chapter.data.n).padStart(2, '0');
+const fmt = (x: number) => x.toLocaleString('en-US');
+---
+<Base
+  title={`Chapter ${nn}: ${full.data.title || chapter.data.title}`}
+  description={`The full text of Chapter ${nn} of Knowware: ${chapter.data.title}`}
+  ogType="article"
+  canonical={`${SITE_URL}/read/${chapter.id}`}
+  noindex
+>
+  <header class="kw-full-head">
+    <p class="kw-label">Chapter {nn} · Full text</p>
+    <h1 class="kw-h2">{full.data.title || chapter.data.title}</h1>
+    {full.data.dek && <p class="kw-prose-dek">{full.data.dek}</p>}
+    <p class="kw-full-meta mono">{fmt(full.data.totalWords)} words · about {full.data.readMinutes} min</p>
+  </header>
+
+  <article class="kw-section kw-prose" data-kw-read>
+    <Content />
+  </article>
+
+  <nav class="kw-section kw-full-nav" aria-label="Chapters">
+    {prev ? (
+      <a href={`/read/${prev.id}/full`} class="kw-full-nav-link">
+        <span class="mono kw-full-nav-k">← Chapter {String(prev.data.n).padStart(2, '0')}</span>
+        <span>{prev.data.title}</span>
+      </a>
+    ) : <span />}
+    {next ? (
+      <a href={`/read/${next.id}/full`} class="kw-full-nav-link kw-full-nav-link--next">
+        <span class="mono kw-full-nav-k">Chapter {String(next.data.n).padStart(2, '0')} →</span>
+        <span>{next.data.title}</span>
+      </a>
+    ) : <span />}
+  </nav>
+
+  <section class="kw-section kw-full-foot">
+    <p class="kw-body">
+      Reading on another device? Enter the same email on any chapter page.
+      <a href={`/read/${chapter.id}`}>Chapter overview, diagram and voices</a>
+      · <a href="/api/reader?forget=1">Sign out on this device</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .kw-full-head {
+    padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 48px) 0;
+  }
+  .kw-full-meta { font-size: 12px; color: var(--sub); margin: 0; letter-spacing: .02em; }
+  .kw-full-nav { display: flex; justify-content: space-between; gap: 24px; }
+  .kw-full-nav-link {
+    display: flex; flex-direction: column; gap: 6px; max-width: 320px;
+    font: 600 15px/1.25 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -.01em; color: var(--ink);
+  }
+  .kw-full-nav-link--next { text-align: right; margin-left: auto; }
+  .kw-full-nav-link:hover { color: var(--signal-ink); }
+  .kw-full-nav-k { font-size: 11px; color: var(--sub); }
+  .kw-full-foot a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
+</style>

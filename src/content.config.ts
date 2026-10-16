@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { manuscriptLoader } from './loaders/manuscript';
 
 const chapterCollection = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/chapters' }),
@@ -51,7 +52,21 @@ const voiceCollection = defineCollection({
   }),
 });
 
+const manuscriptCollection = defineCollection({
+  loader: manuscriptLoader(),
+  schema: z.object({
+    n: z.number().int().min(1).max(9),
+    kind: z.enum(['preview', 'full']),
+    title: z.string(),
+    dek: z.string(),
+    words: z.number().int(),
+    totalWords: z.number().int(),
+    readMinutes: z.number().int(),
+  }),
+});
+
 export const collections = {
   chapters: chapterCollection,
   voices: voiceCollection,
+  manuscript: manuscriptCollection,
 };

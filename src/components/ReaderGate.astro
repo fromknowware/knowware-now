@@ -1,0 +1,200 @@
+---
+interface Props {
+  slug: string;
+  n: number;
+  previewWords: number;
+  totalWords: number;
+  readMinutes: number;
+}
+const { slug, n, previewWords, totalWords, readMinutes } = Astro.props;
+const nn = String(n).padStart(2, '0');
+const remaining = Math.max(0, totalWords - previewWords);
+const fmt = (x: number) => x.toLocaleString('en-US');
+const fullHref = `/read/${slug}/full`;
+---
+<section class="kw-gate kw-band" id="unlock" aria-labelledby="gate-h" data-full-href={fullHref} data-chapter={nn}>
+  <div class="kw-gate-inner">
+    <div class="kw-gate-copy">
+      <p class="kw-gate-eyebrow mono">Chapter {nn} · {fmt(remaining)} words left · about {readMinutes} min in full</p>
+      <h2 class="kw-gate-h" id="gate-h">Keep reading. It's free.</h2>
+      <p class="kw-gate-body">
+        One email unlocks all nine chapters in full. Enter the same email on any other
+        device to keep reading there. No paywall, no tracking.
+      </p>
+    </div>
+
+    <div class="kw-gate-action">
+      <div class="kw-gate-unlocked" hidden>
+        <p class="kw-gate-ok">You're signed up on this device.</p>
+        <a class="kw-btn kw-btn--filled" href={`${fullHref}#continue`}>Continue reading Chapter {nn} →</a>
+      </div>
+
+      <form class="kw-gate-form" method="post" action="/api/reader" novalidate aria-describedby="gate-h">
+        <input type="hidden" name="chapter" value={nn} />
+        <div class="kw-gate-field">
+          <label for={`gate-email-${nn}`} class="kw-gate-label">Email</label>
+          <input
+            type="email"
+            id={`gate-email-${nn}`}
+            name="email"
+            required
+            maxlength="254"
+            autocomplete="email"
+            inputmode="email"
+            spellcheck="false"
+            class="kw-gate-input"
+            aria-describedby={`gate-email-${nn}-err`}
+          />
+          <p class="kw-gate-error" id={`gate-email-${nn}-err`}></p>
+        </div>
+        <label class="kw-gate-check">
+          <input type="checkbox" name="updates" value="yes" />
+          <span>Also email me when new chapters and the print edition are ready (optional).</span>
+        </label>
+        <div class="kw-gate-trap" aria-hidden="true">
+          <label for={`gate-company-${nn}`}>Company</label>
+          <input type="text" id={`gate-company-${nn}`} name="company" tabindex="-1" autocomplete="off" />
+        </div>
+        <button type="submit" class="kw-btn kw-btn--filled kw-gate-submit">Unlock the full chapter →</button>
+        <p class="kw-gate-status" role="status" aria-live="polite"></p>
+        <p class="kw-gate-fine">
+          {fmt(totalWords)} words in Chapter {nn}. Your email stays with the author and is never sold or shared.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const READER_FLAG = 'kw_reader_ui=1';
+
+  for (const gate of document.querySelectorAll<HTMLElement>('.kw-gate')) {
+    const form = gate.querySelector<HTMLFormElement>('.kw-gate-form');
+    const unlocked = gate.querySelector<HTMLElement>('.kw-gate-unlocked');
+    const status = gate.querySelector<HTMLElement>('.kw-gate-status');
+    const email = form?.querySelector<HTMLInputElement>('input[name=email]');
+    const err = email ? document.getElementById(`${email.id}-err`) : null;
+    const fullHref = gate.dataset.fullHref ?? '/read';
+
+    if (document.cookie.split('; ').includes(READER_FLAG)) {
+      if (form) form.hidden = true;
+      if (unlocked) unlocked.hidden = false;
+      continue;
+    }
+
+    const setError = (msg: string) => {
+      if (!email || !err) return;
+      err.textContent = msg;
+      if (msg) email.setAttribute('aria-invalid', 'true');
+      else email.removeAttribute('aria-invalid');
+    };
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form || !email || !status) return;
+      email.value = email.value.trim();
+      if (!email.checkValidity()) {
+        setError('Enter a valid email address, like name@example.com.');
+        status.textContent = '';
+        email.focus();
+        return;
+      }
+      setError('');
+
+      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      btn.disabled = true;
+      btn.textContent = 'Unlocking…';
+      status.textContent = 'Unlocking the full chapter…';
+
+      try {
+        const fd = new FormData(form);
+        const res = await fetch('/api/reader', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: fd.get('email'),
+            updates: fd.get('updates') === 'yes',
+            company: fd.get('company'),
+            chapter: gate.dataset.chapter,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          status.textContent = 'Unlocked. Opening the full chapter…';
+          window.location.assign(`${fullHref}#continue`);
+          return;
+        }
+        if (Array.isArray(data.fields) && data.fields.includes('email')) {
+          setError(data.error ?? 'Enter a valid email address.');
+          email.focus();
+        }
+        status.textContent = data.error ?? 'The chapter did not unlock. Try again in a moment.';
+      } catch {
+        status.textContent = 'The chapter did not unlock because the connection failed. Check your connection and try again.';
+      }
+      btn.disabled = false;
+      btn.textContent = 'Unlock the full chapter →';
+    });
+  }
+</script>
+
+<style>
+  .kw-gate {
+    background: var(--band-bg);
+    color: var(--band-ink);
+    padding: clamp(40px, 6vw, 72px) clamp(16px, 3vw, 48px);
+  }
+  .kw-gate-inner {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px 32px;
+    align-items: start;
+  }
+  .kw-gate-copy { grid-column: 1 / span 6; }
+  .kw-gate-action { grid-column: 8 / span 5; }
+  .kw-gate-eyebrow {
+    font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--band-accent); margin: 0 0 16px;
+  }
+  .kw-gate-h {
+    font: 700 clamp(28px, 4vw, 52px)/1.02 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -.03em; margin: 0 0 16px;
+  }
+  .kw-gate-body {
+    font-size: clamp(15px, 1.4vw, 17px); line-height: 1.6;
+    color: var(--band-sub); margin: 0; max-width: 52ch;
+  }
+  .kw-gate-form { display: flex; flex-direction: column; gap: 14px; }
+  .kw-gate-field { display: flex; flex-direction: column; gap: 6px; }
+  .kw-gate-label {
+    font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--band-sub);
+  }
+  .kw-gate-input {
+    font: 400 16px/1.3 "JetBrains Mono", ui-monospace, monospace;
+    color: var(--band-ink); background: var(--band-node-bg);
+    border: 1px solid var(--band-node-line); padding: 12px 14px;
+    width: 100%;
+  }
+  .kw-gate-input:focus-visible { outline: 2px solid var(--band-ink); outline-offset: 2px; }
+  .kw-gate-input[aria-invalid="true"] { border: 2px solid #ff8a80; }
+  .kw-gate-error { font-size: 13px; color: #ff8a80; margin: 0; }
+  .kw-gate-error:empty { display: none; }
+  .kw-gate-error::before { content: "Error: "; font-weight: 700; }
+  .kw-gate-check {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 14px; line-height: 1.45; color: var(--band-sub); cursor: pointer;
+  }
+  .kw-gate-check input { width: 18px; height: 18px; margin: 1px 0 0; flex-shrink: 0; accent-color: var(--signal); }
+  .kw-gate-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .kw-gate-submit { align-self: flex-start; }
+  .kw-gate-status { font-size: 14px; color: var(--band-ink); margin: 0; min-height: 1em; }
+  .kw-gate-status:empty { display: none; }
+  .kw-gate-fine { font-size: 12px; line-height: 1.5; color: var(--band-sub); margin: 0; }
+  .kw-gate-ok { font-size: 15px; color: var(--band-sub); margin: 0 0 14px; }
+
+  @media (max-width: 900px) {
+    .kw-gate-inner { grid-template-columns: 1fr; gap: 28px; }
+    .kw-gate-copy, .kw-gate-action { grid-column: 1; }
+  }
+</style>

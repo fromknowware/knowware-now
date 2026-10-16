@@ -200,6 +200,48 @@ article[data-kw-read] {
 }
 
 /* ============================================================
+   Manuscript prose
+   ============================================================ */
+.kw-prose p, .kw-prose li {
+  max-width: 68ch;
+  font-size: calc(17px * var(--read-scale));
+  line-height: var(--read-lh);
+  letter-spacing: var(--read-track);
+}
+.kw-prose p { margin: 0 0 1.3em; }
+.kw-prose h2 {
+  font: 700 clamp(22px, 2.6vw, 32px)/1.15 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.02em; margin: 2.2em 0 .7em; max-width: 32ch;
+}
+.kw-prose h3 {
+  font: 600 clamp(18px, 1.8vw, 22px)/1.25 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.015em; margin: 1.8em 0 .5em; max-width: 40ch;
+}
+.kw-prose > div > :first-child, .kw-prose > :first-child { margin-top: 0; }
+.kw-prose ul, .kw-prose ol { padding-left: 1.4em; margin: 0 0 1.3em; max-width: 68ch; }
+.kw-prose li { margin-bottom: .4em; }
+.kw-prose blockquote {
+  margin: 1.8em 0; padding: 18px 0 0; max-width: 60ch;
+  border-top: 2px solid var(--ink);
+}
+.kw-prose blockquote p { font-size: calc(21px * var(--read-scale)); line-height: 1.45; }
+.kw-prose hr { border: 0; border-top: 1px solid var(--rule); margin: 2.6em 0; max-width: 68ch; }
+.kw-prose strong { font-weight: 600; }
+.kw-prose p:has(> #continue) { margin: 0; }
+.kw-prose em { font-style: italic; }
+.kw-prose a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
+.kw-prose-dek {
+  font: 400 clamp(19px, 2vw, 24px)/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -.015em; color: var(--sub);
+  max-width: 44ch; margin: 0 0 1.6em;
+}
+.kw-preview-body {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 180px), transparent);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - 180px), transparent);
+}
+.kw-preview { border-bottom: none; padding-bottom: 0; }
+
+/* ============================================================
    Field — the cover's bar-field
    ============================================================ */
 .kw-field {
