@@ -6,10 +6,10 @@
   "tier": "A",
   "status": "alive",
   "flag": "old",
-  "affiliation": "Meta AI · NYU Courant Institute",
+  "affiliation": "NYU Courant Institute · formerly Meta AI",
   "active": "1960 – present",
   "jurisdiction": "Deep Learning / Machine Perception / AI Architecture",
-  "role": "Chief AI Scientist, Meta",
+  "role": "Formerly Chief AI Scientist, Meta",
   "awards": [
     "Turing Award (2018, shared with Bengio & Hinton)",
     "IEEE Neural Network Pioneer Award",
@@ -28,6 +28,6 @@
     "Backpropagation refinement"
   ],
   "coldOpen": "Large language models predict the next token. That is not intelligence — that is statistical autocomplete at scale. Real intelligence predicts the state of the world. The model must have a world model, not just a word model. That third layer — the world — is what everyone keeps skipping.",
-  "bio": "Invented convolutional neural networks and proved that hierarchical feature learning could match human perception on structured tasks. Now leads Meta AI's fundamental research agenda, arguing that current LLMs are architecturally incapable of genuine reasoning and proposing JEPA — Joint Embedding Predictive Architecture — as a path toward world-modeling intelligence.",
+  "bio": "Invented convolutional neural networks and proved that hierarchical feature learning could match human perception on structured tasks. Spent twelve years at Meta, where he founded its AI research lab (FAIR) and served as Chief AI Scientist, and announced in 2025 that he was leaving to start a company. He argues that current LLMs are architecturally incapable of genuine reasoning and proposing JEPA — Joint Embedding Predictive Architecture — as a path toward world-modeling intelligence.",
   "whyMatters": "LeCun is the field's most prominent critic of two-body AI (input → predicted token). His JEPA architecture explicitly adds a third body: the abstract world model that coordinates between perception and prediction. He argues that intelligence without a world model is not intelligence — it is sophisticated pattern matching at industrial scale."
 }

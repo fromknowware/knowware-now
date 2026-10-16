@@ -27,6 +27,6 @@
     "Google Sycamore processor"
   ],
   "coldOpen": "Classical computers scale linearly. Quantum computers scale doubly exponentially. But here is what nobody says: the reason quantum works is that it does not collapse possibilities until it must. It coordinates all states simultaneously. It is a three-body computer.",
-  "bio": "Founded Google Quantum AI and established Neven's law — the observation that quantum hardware was improving at a doubly exponential rate, faster than any known technology curve. Led the team that achieved quantum supremacy in 2019, demonstrating that quantum systems can solve problems classical systems cannot in any practical timeframe.",
+  "bio": "Founded Google Quantum AI and established Neven's law — the observation that quantum hardware was improving at a doubly exponential rate, faster than any known technology curve. Directed the Google effort behind the 2019 'quantum supremacy' experiment, which reported a computation beyond what classical computers could do in a practical timeframe; rivals have disputed the claim.",
   "whyMatters": "Neven's quantum architecture operates on superposition — the ability to coordinate across all possible states before committing to one. This is structurally a three-body system: the question, the superposition (the coordination field), and the measured answer. He builds hardware that embodies the coordination intelligence thesis."
 }

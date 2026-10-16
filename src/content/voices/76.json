@@ -6,7 +6,7 @@
   "tier": "P",
   "status": "alive",
   "flag": "old",
-  "affiliation": "Stability AI · ex-hedge fund",
+  "affiliation": "Founder, Stability AI · ex-hedge fund",
   "active": "1983 – present",
   "jurisdiction": "Generative AI / Open-Source AI / Decentralized Intelligence",
   "role": "Founder, Stability AI",
@@ -27,6 +27,6 @@
     "AI for the global south"
   ],
   "coldOpen": "The most dangerous thing in AI is concentration. When intelligence is owned by three companies and two governments, coordination becomes control. Open-source AI is not a product strategy. It is a coordination infrastructure for the rest of humanity.",
-  "bio": "Founded Stability AI and open-sourced Stable Diffusion, triggering a wave of generative AI tools available to anyone with a laptop. His stated goal was to prevent AI capability from concentrating in the hands of a few institutions — to build a coordination layer for AI development that no single actor could capture or shut down.",
+  "bio": "Founded Stability AI and open-sourced Stable Diffusion, triggering a wave of generative AI tools available to anyone with a laptop. His stated goal was to prevent AI capability from concentrating in the hands of a few institutions — to build a coordination layer for AI development that no single actor could capture or shut down. He stepped down as CEO in March 2024.",
   "whyMatters": "Mostaque embodies the distribution question in coordination intelligence: who controls the coordination layer? His open-source strategy is a direct answer — the coordination infrastructure for AI must be a commons, not a proprietary system. He demonstrates that the choice of where to place the coordination layer has immediate political consequences."
 }
