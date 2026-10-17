@@ -3,7 +3,8 @@ import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-600.css';
 import '../styles/kw.css';
-import { SITE_NAME, SITE_TAGLINE, SITE_URL, AUTHOR, PUBLISHER, OG_IMAGE, ORDER_HREF, ORDER_CTA, PRICE_SAVING, CHECKOUT_OPEN } from '../config';
+import { SITE_NAME, SITE_TAGLINE, SITE_URL, PUBLISHER, OG_IMAGE, ORDER_HREF, ORDER_CTA, PRICE_SAVING } from '../config';
+import { bookNode } from '../lib/book-jsonld';
 import { markdownHrefFor } from '../lib/markdown-pages.mjs';
 
 interface Props {
@@ -101,21 +102,8 @@ const current = NAV.find((n) => isActive(n.href));
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Book",
-        "name": `${SITE_NAME}: ${SITE_TAGLINE}`,
-        "author": { "@type": "Person", "name": AUTHOR },
-        "publisher": { "@type": "Organization", "name": PUBLISHER },
-        "url": SITE_URL,
-        "image": resolvedOg,
-        "description": description,
-        "datePublished": "2026-12-21",
-        "inLanguage": "en",
-        // No Offer until a real checkout exists: a price marked available
-        // for a book nobody can order would be a false signal to agents.
-        ...(CHECKOUT_OPEN ? { "offers": { "@type": "Offer", "price": "33.00", "priceCurrency": "USD", "availability": "https://schema.org/PreOrder", "url": `${SITE_URL}/order` } } : {})
-      },
-      { "@type": "WebSite", "name": SITE_NAME, "url": SITE_URL }
+      bookNode(),
+      { "@type": "WebSite", "@id": `${SITE_URL}/#website`, "name": SITE_NAME, "url": SITE_URL, "inLanguage": "en", "publisher": { "@type": "Organization", "name": PUBLISHER } }
     ]
   })} />
 
@@ -189,7 +177,7 @@ const current = NAV.find((n) => isActive(n.href));
     </div>
   </div>
   <div class="kw-foot-colophon">
-    <span>Knowware / Systems of Intelligence</span>
+    <span>Knowware / <a href="/systems-of-intelligence">Systems of Intelligence</a></span>
     <span>MMXXVI · Edition 01</span>
     <span>~350 pp · 09 ch · 81 voices</span>
     <span>knowware.systems</span>
