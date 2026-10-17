@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_URL, AUTHOR, ORDER_HREF } from '../config';
+import { bookNode, BOOK_ID } from '../lib/book-jsonld';
+
+const PAGE_URL = `${SITE_URL}/systems-of-intelligence/`;
+const DESCRIPTION =
+  '"Systems of intelligence" means two different things: an enterprise-software idea, and the coordination argument of the book Knowware: Systems of Intelligence by Khayyam Wakil. Which is which, with sources.';
+
+const SOURCES = [
+  {
+    n: 1,
+    org: 'Greylock',
+    title: 'The New Moats: Why Systems of Intelligence™ are the Next Defensible Business Model',
+    note: "Jerry Chen's essay. The page's metadata dates it April 24, 2017 and the text carries a later update.",
+    url: 'https://greylock.com/greymatter/the-new-moats/',
+  },
+  {
+    n: 2,
+    org: 'Cambridge University Press',
+    title: 'Systems Approaches to Intelligence (Chapter 8), in Human Intelligence: An Introduction',
+    note: "Robert J. Sternberg's chapter on theories that treat intelligence as a system.",
+    url: 'https://www.cambridge.org/core/books/human-intelligence/systems-approaches-to-intelligence/6ACC6903AF31A9A72DFCFCCEE636E184',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    bookNode(),
+    {
+      '@type': 'WebPage',
+      '@id': `${PAGE_URL}#webpage`,
+      url: PAGE_URL,
+      name: 'Systems of intelligence: two meanings',
+      description: DESCRIPTION,
+      inLanguage: 'en',
+      isPartOf: { '@id': `${SITE_URL}/#website` },
+      about: { '@id': BOOK_ID },
+      author: { '@type': 'Person', name: AUTHOR },
+      citation: SOURCES.map((s) => ({
+        '@type': 'WebPage',
+        name: s.title,
+        url: s.url,
+        publisher: { '@type': 'Organization', name: s.org },
+      })),
+    },
+  ],
+};
+---
+<Base
+  title="Systems of intelligence: two meanings"
+  description={DESCRIPTION}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="kw-section" aria-labelledby="soi-h">
+    <p class="kw-label">The phrase</p>
+    <h1 class="kw-h2" id="soi-h">Systems of intelligence</h1>
+    <p class="soi-lead">The phrase is in use in more than one sense. This page says which is which, so you land on the one you meant.</p>
+  </section>
+
+  <article class="kw-section kw-prose" data-kw-read>
+    <h2>In enterprise software</h2>
+    <p>In startup and venture circles, "systems of intelligence" usually means AI-powered applications that sit on top of a company's systems of record and draw on data across them, to predict, recommend or automate parts of the work. Greylock's Jerry Chen set the idea out in an essay titled "The New Moats: Why Systems of Intelligence™ are the Next Defensible Business Model."<sup class="soi-ref"><a href="#src-1" aria-label="Source 1">[1]</a></sup></p>
+    <p>That essay is the primary source on this page for that sense. This page does not claim who first used the phrase, and the ™ is Greylock's own mark on its title. This book is a separate work.</p>
+
+    <h2>In this book</h2>
+    <p><em>Knowware: Systems of Intelligence</em> by {AUTHOR} uses the phrase for something else: coordination between people, machines and context, "the third body between hardware and software." Its argument is that you can get flawless coordination and still be wrong about the world, because nobody holds the layer that says what the work is for.</p>
+    <p>The book calls that layer <a href="/definition">knowware</a>. It traces the pattern through nine chapters and a capstone, in 81 voices synthesized from published work. It is not about software moats or enterprise AI products.</p>
+
+    <h2>In other fields</h2>
+    <p>In psychology, "systems of intelligence" also appears for theories that treat intelligence as several interacting systems rather than one trait.<sup class="soi-ref"><a href="#src-2" aria-label="Source 2">[2]</a></sup> That is a third use, unrelated to either of the above.</p>
+
+    <h2>If you meant the book</h2>
+    <p class="soi-actions">
+      <a class="kw-btn kw-btn--filled" href="/read/01">Read Chapter 1 free →</a>
+      <a class="kw-btn" href="/definition">What "knowware" means →</a>
+      <a class="kw-btn" href="/method">How the book works →</a>
+      <a class="kw-btn" href="/read">The manuscript →</a>
+      <a class="kw-btn" href={ORDER_HREF}>Pre-order list →</a>
+    </p>
+  </article>
+
+  <section class="kw-section soi-sources" aria-labelledby="src-h">
+    <h2 class="kw-label" id="src-h">Sources</h2>
+    <ol class="soi-src-list">
+      {SOURCES.map((s) => (
+        <li id={`src-${s.n}`}>
+          <span class="soi-src-org">{s.org}</span>,
+          <cite>{s.title}</cite>. {s.note}
+          <a href={s.url} rel="noopener">{s.url.replace('https://', '')}</a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .soi-lead { max-width: 52ch; margin: 12px 0 0; font-size: clamp(18px, 2.2vw, 24px); line-height: 1.35; color: var(--ink); }
+  .soi-ref { font-size: .7em; line-height: 0; margin-left: 1px; }
+  .soi-ref a { color: var(--signal-ink); text-decoration: none; padding: 0 1px; }
+  .soi-ref a:hover { text-decoration: underline; }
+  .soi-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1em; max-width: none; }
+  .soi-actions .kw-btn { text-decoration: none; }
+  .soi-actions .kw-btn--filled { color: #EDEEE4; }
+  .soi-actions .kw-btn:not(.kw-btn--filled) { color: var(--ink); }
+  .soi-actions .kw-btn:not(.kw-btn--filled):hover { color: var(--bg); }
+  .soi-sources { border-bottom: none; }
+  .soi-sources .kw-label { margin-bottom: 16px; }
+  .soi-src-list { margin: 0; padding-left: 1.6em; max-width: 68ch; font-size: 14px; line-height: 1.6; color: var(--sub); }
+  .soi-src-list li { margin-bottom: 10px; }
+  .soi-src-org { color: var(--ink); font-weight: 600; }
+  .soi-src-list a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; display: inline-block; }
+  .soi-src-list li:target { background: var(--accent-soft); }
+</style>
