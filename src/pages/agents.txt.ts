@@ -1,11 +1,11 @@
 // /agents.txt — the /agents page in a few plain lines, for small or cheap models.
 import type { APIRoute } from 'astro';
-import { SITE_URL, SITE_NAME, SITE_TAGLINE, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
+import { SITE_URL, BOOK_TITLE, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
 import { PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS } from '../lib/agents';
 
 export const GET: APIRoute = () => {
   const body = [
-    `${SITE_NAME}: ${SITE_TAGLINE}, a book by ${AUTHOR}.`,
+    `${BOOK_TITLE}, a book by ${AUTHOR}.`,
     '',
     'RULE',
     PRINCIPAL_RULE,

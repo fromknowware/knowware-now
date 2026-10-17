@@ -5,7 +5,7 @@ import { getCollection, getEntry } from 'astro:content';
 import { chapterNum } from '../lib/chapters';
 import { MARKDOWN_PAGES } from '../lib/markdown-pages.mjs';
 import { getPublishedStories, eventLine } from '../lib/stories';
-import { SITE_URL, SITE_NAME, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL } from '../config';
+import { SITE_URL, SITE_NAME, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, BOOK_TITLE } from '../config';
 import { ENDPOINTS, PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS } from '../lib/agents';
 
 export const GET: APIRoute = async () => {
@@ -21,9 +21,11 @@ export const GET: APIRoute = async () => {
   const link = (path: string, note: string) => `- [${page(path).label}](${SITE_URL}/${page(path).file}): ${note}`;
 
   const body = [
-    `# ${SITE_NAME}: Systems of Intelligence`,
+    `# ${BOOK_TITLE}`,
     '',
     `> A book by ${AUTHOR} on coordination between people and machines, "the third body between hardware and software". Nine chapters and a capstone, with 81 voices that are synthesized from published work. This site is human-operated; agents are welcome when they act for a person.`,
+    '',
+    `> In this book, "systems of intelligence" means coordination between people, machines and context: the book's own definition, distinct from the enterprise-software sense of the phrase (AI applications built on systems of record). The phrase is used by others and is not owned by this book. See ${SITE_URL}/systems-of-intelligence.`,
     '',
     'Read this first:',
     '',
