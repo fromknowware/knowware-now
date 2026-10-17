@@ -1,0 +1,38 @@
+{
+  "systemsofintelligence.com": {
+    "registered": true,
+    "registrar": "NameCheap, Inc.",
+    "status": [
+      "client transfer prohibited"
+    ],
+    "nameservers": [
+      "ns5.afternic.com",
+      "ns6.afternic.com"
+    ],
+    "registration": "2024-08-08T19:15:43Z",
+    "expiration": "2027-08-08T19:15:43Z",
+    "mx": [
+      "0 ."
+    ]
+  },
+  "knowware.press": {
+    "registered": true,
+    "registrar": "NameCheap, Inc.",
+    "status": [
+      "client transfer prohibited"
+    ],
+    "nameservers": [
+      "bart.ns.cloudflare.com",
+      "khloe.ns.cloudflare.com"
+    ],
+    "registration": "2026-05-07T21:56:21.113Z",
+    "expiration": "2027-05-07T21:56:21.113Z",
+    "mx": [
+      "10 eforward1.registrar-servers.com",
+      "10 eforward2.registrar-servers.com",
+      "10 eforward3.registrar-servers.com",
+      "15 eforward4.registrar-servers.com",
+      "20 eforward5.registrar-servers.com"
+    ]
+  }
+}
