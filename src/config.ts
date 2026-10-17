@@ -1,5 +1,8 @@
 export const SITE_NAME = 'Knowware';
 export const SITE_TAGLINE = 'Systems of Intelligence';
+export const SITE_SUBTITLE = 'for the 21st Century';
+// The book's full title. Page titles, nav and the cover art still use the shorter SITE_NAME / SITE_TAGLINE.
+export const BOOK_TITLE = `${SITE_NAME}: ${SITE_TAGLINE} ${SITE_SUBTITLE}`;
 export const SITE_URL = 'https://knowware.systems';
 export const AUTHOR = 'Khayyam Wakil';
 export const PUBLISHER = 'The ARC Institute of Knowware';
