@@ -116,3 +116,13 @@ Three plan files now sit in this folder, written by different sessions. They ove
 **Open discrepancies reported by the ch7-9 session** (all listed in `corrections-plan.md` section 4): Apollo Table 5-I times versus an ALSJ note; NHS Figure 5 (4 trusts) versus paragraph 18 (10); the Hyatt dates and phone call resting on a secondary case study; the JAMA URL possibly pointing to an editorial; FCIC years on AIG and Moody's pages taken from context. None affects the book corrections above, which concern other claims.
 
 **Still true:** nothing here has been checked by a human, and no book file has been changed.
+
+---
+
+## Update from the deep search, 2026-10-17
+
+- **D (Bogotá):** an official-institute table (Medicina Legal, via Acero 2002) shows 79.0 (1993), 58.9 (1995), 47.1 (1997), 40.5 (1998), 34.8 (2000), 30.7 (2001). More than half of the fall happened before Peñalosa took office, so "credit Peñalosa" and "credit Mockus" both overstate; say it fell through both administrations and began in 1993. Details in `perplexity-answers.md`.
+- **R1 (retinopathy):** the Beede full text confirms >90% sensitivity and specificity, 393 of 1,838 images (21%) ungradable in the first six months, and no wording about shutdown.
+- **R15 (Challenger):** confirmed that CAIB p. 196 (elevated to 1, then demoted to 1-R) and Rogers Vol. I Ch. VI (1R, then 1 with a March 1983 waiver, with documents still saying 1-R) disagree. Any script should use one and say which.
+- **Parks (R6):** "ten days" now has a court-filed source (an ACLU-NJ amicus brief); the licence-photo point stands.
+- **Burkhart:** IEEE Spectrum puts the Guitar Hero session in 2015; the book's 2020 is unsupported.
