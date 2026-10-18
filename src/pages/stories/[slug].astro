@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 const { story } = Astro.props;
 const d = story.data;
 const { Content } = await render(story);
-const PAGE_URL = `${SITE_URL}/stories/${story.id}`;
+const PAGE_URL = `${SITE_URL}/stories/${story.id}/`;
 const DESCRIPTION = d.summary.length > 220 ? `${d.summary.slice(0, 217).replace(/\s+\S*$/, '')}…` : d.summary;
 const CARD_URL = `${SITE_URL}/stories/cards/${story.id}.png`;
 const CARD_ALT = `Knowware story: ${d.headline}. Evidence grade ${d.grade}. Missing layer: ${LAYER_LABEL[d.missingLayer]}.`;

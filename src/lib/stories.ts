@@ -48,7 +48,9 @@ export function primarySources(s: Story) {
 }
 
 export function storyUrl(s: Story): string {
-  return `${SITE_URL}/stories/${s.id}`;
+  // The served URL ends in a slash. Sharing the slash-less form makes every crawler follow a
+  // redirect, and LinkedIn and X cache a card per URL, so we always hand out the final one.
+  return `${SITE_URL}/stories/${s.id}/`;
 }
 
 // X counts any link as 23 characters; every other network allows more.

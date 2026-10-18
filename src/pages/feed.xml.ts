@@ -41,14 +41,15 @@ function storyHtml(story: Story): string {
     `<p><strong>Why it matters to the thesis:</strong> ${esc(d.why)}</p>`,
     caveats,
     `<h3>Sources</h3><ol>${sources}</ol>`,
-    `<p><a href="${SITE_URL}/stories/${story.id}">Read the full cited write-up on ${esc(SITE_NAME)}</a></p>`,
+    `<p><a href="${SITE_URL}/stories/${story.id}/">Read the full cited write-up on ${esc(SITE_NAME)}</a></p>`,
     `<p><small>${esc(SELECTION_NOTE)}</small></p>`,
   ].join('');
 }
 
 function entryXml(story: Story): string {
   const d = story.data;
-  const url = `${SITE_URL}/stories/${story.id}`;
+  const url = `${SITE_URL}/stories/${story.id}`; // the entry id, kept stable
+  const page = `${url}/`; // the URL readers land on
   const content = storyHtml(story);
   if (!d.summary.trim() || !content.trim()) {
     throw new Error(`feed: story "${story.id}" would produce empty content`);
@@ -68,7 +69,7 @@ function entryXml(story: Story): string {
   return `  <entry>
     <id>${url}</id>
     <title type="text">${esc(d.headline)}</title>
-    <link rel="alternate" type="text/html" href="${url}" />
+    <link rel="alternate" type="text/html" href="${page}" />
     ${related.join('\n    ')}
     <published>${published}</published>
     <updated>${updated}</updated>
