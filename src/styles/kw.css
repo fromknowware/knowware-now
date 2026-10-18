@@ -745,7 +745,7 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
 }
 .kw-spine-caption {
   display: flex; justify-content: space-between;
-  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); margin-top: 8px;
 }
 
@@ -883,7 +883,7 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   padding: 10px 48px 10px 16px;
   background: var(--band-bg); color: var(--band-ink);
   position: sticky; top: 52px; z-index: 10;
-  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: .04em;
 }
 .cast-ch-num {
