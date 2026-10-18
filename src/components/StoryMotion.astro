@@ -8,6 +8,7 @@ interface Props {
   alleged?: boolean;
   size?: 'card' | 'hero';
 }
+import { diagramCaption } from '../lib/diagram-caption';
 const { id, layerLabel, simulation = false, alleged = false, size = 'card' } = Astro.props;
 
 const DESCRIPTIONS: Record<string, string> = {
@@ -27,11 +28,7 @@ const DESCRIPTIONS: Record<string, string> = {
 const description =
   DESCRIPTIONS[id] ?? `Animated diagram. Two systems exchange signals while a dashed circle for the missing layer, ${layerLabel}, stays unconnected.`;
 
-const caption = simulation
-  ? 'Diagram of a simulated scenario. No real people or systems were involved.'
-  : alleged
-    ? 'Diagram of the allegation as described by the sources, not a finding.'
-    : 'Diagram of the structure the sources describe. Not a recording.';
+const caption = diagramCaption({ simulation, alleged });
 ---
 <figure class={`sm sm--${size}`} data-story-motion data-scene={id} data-layer-label={layerLabel}>
   <canvas class="sm-canvas" role="img" aria-label={description}></canvas>
