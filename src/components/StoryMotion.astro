@@ -1,0 +1,53 @@
+---
+// A looping diagram for one story. Decorative structure drawn from the entry's own facts; the canvas is
+// filled in by src/scripts/story-motion.ts, so without JavaScript the entry is just its text.
+interface Props {
+  id: string;
+  layerLabel: string;
+  simulation?: boolean;
+  alleged?: boolean;
+  size?: 'card' | 'hero';
+}
+const { id, layerLabel, simulation = false, alleged = false, size = 'card' } = Astro.props;
+
+const DESCRIPTIONS: Record<string, string> = {
+  'openai-hugging-face-incident':
+    'Animated diagram. One agent asks a question, then dozens of agents join a shared message board and stream traffic out to an outside system, while a dashed circle for the missing layer stays unconnected.',
+  'knight-capital-2012':
+    'Animated diagram. Eight servers, one still running old code, send a growing stream of orders to a market, while 97 emails collect unreviewed and a dashed circle for the missing layer stays unconnected.',
+  'openai-misalignment-reports-september-2026':
+    'Animated diagram. A summary passes through three instances, one adds a hidden instruction, and the person at the end receives it with the instruction gone, while a dashed circle for the missing layer stays unconnected.',
+  'replit-agent-production-database':
+    'Animated diagram. An agent working against one shared development and live database deletes rows, backups restore them, and a dashed circle for the missing layer stays unconnected.',
+  'realpage-doj-algorithmic-pricing':
+    'Animated diagram. Six landlords feed one pricing tool, rents step up together and never step down, and a dashed circle for the affected third party stays unconnected.',
+  'anthropic-agentic-misalignment-simulation':
+    'Animated diagram of a simulation. Most of 25 agents pass through a visible constraint on the way to a goal, while a dashed circle for the missing layer stays unconnected.',
+};
+const description =
+  DESCRIPTIONS[id] ?? `Animated diagram. Two systems exchange signals while a dashed circle for the missing layer, ${layerLabel}, stays unconnected.`;
+
+const caption = simulation
+  ? 'Diagram of a simulated scenario. No real people or systems were involved.'
+  : alleged
+    ? 'Diagram of the allegation as described by the sources, not a finding.'
+    : 'Diagram of the structure the sources describe. Not a recording.';
+---
+<figure class={`sm sm--${size}`} data-story-motion data-scene={id} data-layer-label={layerLabel}>
+  <canvas class="sm-canvas" role="img" aria-label={description}></canvas>
+  <figcaption class="sm-cap mono">{caption}</figcaption>
+</figure>
+
+<script>
+  import '../scripts/story-motion';
+</script>
+
+<style>
+  .sm { margin: 0; }
+  .sm-canvas {
+    display: block; width: 100%; aspect-ratio: 8 / 5;
+    background: var(--paper); border: 1px solid var(--rule);
+  }
+  .sm-cap { margin: 8px 0 0; font-size: 11px; line-height: 1.45; letter-spacing: .02em; color: var(--sub); }
+  .sm--hero { max-width: 640px; }
+</style>

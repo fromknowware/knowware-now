@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import StoriesNote from '../../components/StoriesNote.astro';
 import StoryBadges from '../../components/StoryBadges.astro';
 import ShareStory from '../../components/ShareStory.astro';
+import StoryMotion from '../../components/StoryMotion.astro';
 import { SITE_NAME, SITE_URL, AUTHOR, PUBLISHER } from '../../config';
 import { getPublishedStories, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, shareText } from '../../lib/stories';
 
@@ -56,6 +57,10 @@ const jsonLd = {
       <StoryBadges grade={d.grade} simulation={d.simulation} alleged={d.alleged} />
     </p>
 
+    <div class="st-hero-fig">
+      <StoryMotion id={story.id} layerLabel={LAYER_LABEL[d.missingLayer]} simulation={d.simulation} alleged={d.alleged} size="hero" />
+    </div>
+
     <section class="st-block st-brief" aria-labelledby="st-brief-h">
       <h2 class="kw-label" id="st-brief-h">In brief</h2>
       <p class="st-summary">{d.summary}</p>
@@ -103,6 +108,7 @@ const jsonLd = {
 
     <StoriesNote />
   </article>
+  <noscript><style>.st-hero-fig { display: none; }</style></noscript>
 </Base>
 
 <style>
@@ -131,4 +137,6 @@ const jsonLd = {
   @media (max-width: 760px) {
     .st-frame { grid-template-columns: minmax(0, 1fr); }
   }
+  .st-hero-fig { margin: 8px 0 28px; }
+  @media (max-width: 880px) { .st-hero-fig { margin: 4px 0 20px; } }
 </style>

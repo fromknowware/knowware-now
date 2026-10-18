@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import StoriesNote from '../../components/StoriesNote.astro';
 import StoryBadges from '../../components/StoryBadges.astro';
+import StoryMotion from '../../components/StoryMotion.astro';
 import { SITE_NAME, SITE_URL } from '../../config';
 import { getPublishedStories, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, FEED_CAP } from '../../lib/stories';
 
@@ -63,11 +64,15 @@ const jsonLd = {
             <p class="st-summary">{s.data.summary}</p>
             <p class="st-layer"><span class="st-layer-k mono">Missing layer</span> {LAYER_LABEL[s.data.missingLayer]}</p>
             <p class="st-more"><a href={`/stories/${s.id}`}>Read the cited write-up →</a></p>
+            <div class="st-fig">
+              <StoryMotion id={s.id} layerLabel={LAYER_LABEL[s.data.missingLayer]} simulation={s.data.simulation} alleged={s.data.alleged} />
+            </div>
           </article>
         </li>
       ))}
     </ol>
   </section>
+  <noscript><style>.st-fig { display: none; } .st-item article { display: block; }</style></noscript>
 </Base>
 
 <style>
@@ -85,6 +90,18 @@ const jsonLd = {
   .st-list .kw-label { margin-bottom: 8px; }
   .st-items { list-style: none; margin: 0; padding: 0; }
   .st-item { padding: 28px 0; border-top: 1px solid var(--rule); }
+  .st-item article {
+    display: grid; align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    grid-template-areas: "meta fig" "head fig" "sum fig" "layer fig" "more fig";
+    column-gap: clamp(24px, 4vw, 56px);
+  }
+  .st-meta { grid-area: meta; }
+  .st-h { grid-area: head; }
+  .st-summary { grid-area: sum; }
+  .st-layer { grid-area: layer; }
+  .st-more { grid-area: more; }
+  .st-fig { grid-area: fig; }
   .st-item:first-child { border-top: 2px solid var(--ink); }
   .st-meta { display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; margin: 0 0 12px; font-size: 12px; line-height: 1.4; color: var(--sub); }
   .st-h { max-width: 30ch; margin-bottom: 12px; }
@@ -95,6 +112,14 @@ const jsonLd = {
   .st-layer-k { display: inline-block; margin-right: 10px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--sub); }
   .st-more { margin: 0; font: 500 13px/1.4 "JetBrains Mono", ui-monospace, monospace; }
   .st-more a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 880px) {
+    .st-item article {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "meta" "head" "fig" "sum" "layer" "more";
+    }
+    .st-fig { margin: 4px 0 18px; max-width: 560px; }
+    .st-h { max-width: none; }
+  }
   @media (max-width: 520px) {
     .st-legend div { grid-template-columns: 1fr; gap: 2px; }
   }
