@@ -12,8 +12,10 @@ interface Props {
   gif: string;      // path to the branded animation
   still: string;    // path to one frame of it, for reduced motion and Pause
   gifAlt: string;
+  gifName: string;  // the file name a saved GIF gets, branded with the story
 }
-const { text, url, title, summary, card, gif, still, gifAlt } = Astro.props;
+const { text, url, title, summary, card, gif, still, gifAlt, gifName } = Astro.props;
+const cardName = gifName.replace(/\.gif$/, '-card.png');
 const q = encodeURIComponent;
 const networks = [
   { name: 'X', href: `https://x.com/intent/post?text=${q(text)}` },
@@ -22,20 +24,20 @@ const networks = [
 ];
 const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
 ---
-<section class="st-share" aria-labelledby="st-share-h" data-share data-url={url} data-title={title}>
+<section class="st-share" aria-labelledby="st-share-h" data-share data-url={url} data-title={title} data-gif-name={gifName}>
   <h2 class="kw-label" id="st-share-h">Share this story</h2>
 
   <figure class="st-share-card">
     <picture>
       <source media="(prefers-reduced-motion: reduce)" srcset={still} />
-      <img src={gif} width="640" height="600" alt={gifAlt} loading="lazy" decoding="async" data-share-gif data-gif={gif} data-still={still} />
+      <img src={gif} width="640" height="616" alt={gifAlt} loading="lazy" decoding="async" data-share-gif data-gif={gif} data-still={still} />
     </picture>
     <figcaption class="mono">
       The animation, branded to travel on its own.
       <span class="st-share-acts">
         <button type="button" class="st-share-pause" data-share-motion aria-pressed="false" hidden>Pause animation</button>
-        <a href={gif} download>Save the GIF</a>
-        <a href={card} download>Save the link-preview card</a>
+        <a href={gif} download={gifName} data-share-save>Save the GIF and copy the post text</a>
+        <a href={card} download={cardName}>Save the link-preview card</a>
       </span>
     </figcaption>
   </figure>
@@ -83,7 +85,7 @@ const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
           if (gifPath && typeof navigator.canShare === 'function') {
             try {
               const blob = await (await fetch(gifPath)).blob();
-              const file = new File([blob], 'knowware-story.gif', { type: 'image/gif' });
+              const file = new File([blob], root.dataset.gifName ?? 'knowware-story.gif', { type: 'image/gif' });
               if (navigator.canShare({ files: [file] })) {
                 await navigator.share({ files: [file], title: root.dataset.title, text });
                 return;
@@ -98,6 +100,17 @@ const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
         }
       });
     }
+
+    // Saving the GIF also copies the post text, which ends with this story's link, so the GIF and the
+    // link travel together: attach the file, paste the text.
+    root.querySelector<HTMLAnchorElement>('[data-share-save]')?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        say('GIF saved. Post text with the link copied: paste it into your post.');
+      } catch {
+        say('GIF saved. Copy the post text below so the link goes with it.');
+      }
+    });
 
     // Pause stops the loop by swapping in the still frame. Readers who ask for reduced motion
     // already get the still, so there is nothing to pause for them.
