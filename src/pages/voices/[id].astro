@@ -134,6 +134,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
     {voice.status !== 'anon' && (
       <p class="mono" style="font-size:11px;line-height:1.5;color:var(--sub);margin-top:20px;max-width:70ch">
         Biographical details are summarized from public sources and may be out of date. {voice.name} has not reviewed this page.
+        <a href="/corrections" style="text-decoration:underline">Report an error or ask for a change</a>.
       </p>
     )}
   </div>
