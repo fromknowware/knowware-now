@@ -192,8 +192,6 @@ html.kw-dock-off #kw-dock { display: none; }
 }
 .js #kw-dock-close { display: inline-flex; }
 #kw-dock-close:hover { color: #EDEEE4; }
-/* While a text field has focus the on-screen keyboard is up: a fixed bar would sit on the field being typed in. */
-body:has(input:not([type="checkbox"], [type="radio"]):focus, textarea:focus, select:focus) #kw-dock { display: none; }
 @media (max-width: 520px) {
   #kw-dock { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); gap: 10px; }
   #kw-dock-sep, #kw-dock-saving { display: none; }
@@ -349,6 +347,8 @@ article[data-kw-read] {
   background: var(--signal); border-color: var(--signal); color: #EDEEE4;
 }
 .kw-btn--filled:hover { background: #1e3fc0; border-color: #1e3fc0; color: #EDEEE4; }
+/* While a text field has focus the on-screen keyboard is up: a fixed bar would sit on the field being typed in. */
+body:has(input:not([type="checkbox"], [type="radio"]):focus, textarea:focus, select:focus) #kw-dock { display: none; }
 
 /* ============================================================
    Disclosure band
