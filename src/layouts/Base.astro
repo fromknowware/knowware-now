@@ -19,7 +19,7 @@ interface Props {
 const {
   title,
   description = 'A field guide for a world where machines think. An interview-driven study of coordination — the third body between hardware and software.',
-  ogImage = OG_IMAGE,
+  ogImage,
   ogImageAlt,
   ogType = 'website',
   canonical,
@@ -30,6 +30,12 @@ const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — ${SITE
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
 
 const path = Astro.url.pathname;
+// Every indexable page gets its own card at /og/<path>.png, written after the build by
+// integrations/social-cards.mjs from this page's own title and description. A page that brings its
+// own image (stories) keeps it; the home page keeps the cover; noindex pages keep the generic image.
+const autoCard = ogImage === undefined && !noindex && path !== '/';
+const resolvedOg = ogImage ?? (autoCard ? `${SITE_URL}/og${path.replace(/\/$/, '')}.png` : OG_IMAGE);
+const resolvedOgAlt = ogImageAlt ?? (autoCard ? `Knowware: ${title ?? SITE_TAGLINE}` : `${SITE_NAME} — ${SITE_TAGLINE}`);
 const markdownHref = markdownHrefFor(path);
 function isActive(href: string) {
   if (href === '/') return path === '/';
@@ -78,18 +84,18 @@ const current = NAV.find((n) => isActive(n.href));
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:image" content={ogImage} />
-  <meta property="og:image:type" content={ogImage.endsWith('.png') ? 'image/png' : ogImage.endsWith('.gif') ? 'image/gif' : 'image/jpeg'} />
+  <meta property="og:image" content={resolvedOg} />
+  <meta property="og:image:type" content={resolvedOg.endsWith('.png') ? 'image/png' : resolvedOg.endsWith('.gif') ? 'image/gif' : 'image/jpeg'} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content={ogImageAlt ?? `${SITE_NAME} — ${SITE_TAGLINE}`} />
-  <meta name="twitter:image:alt" content={ogImageAlt ?? `${SITE_NAME} — ${SITE_TAGLINE}`} />
+  <meta property="og:image:alt" content={resolvedOgAlt} />
+  <meta name="twitter:image:alt" content={resolvedOgAlt} />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image" content={resolvedOg} />
 
   <!-- JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -101,7 +107,7 @@ const current = NAV.find((n) => isActive(n.href));
         "author": { "@type": "Person", "name": AUTHOR },
         "publisher": { "@type": "Organization", "name": PUBLISHER },
         "url": SITE_URL,
-        "image": ogImage,
+        "image": resolvedOg,
         "description": description,
         "datePublished": "2026-12-21",
         "inLanguage": "en",
