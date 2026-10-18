@@ -74,3 +74,31 @@ export async function renderStoryCard(story: Story): Promise<Uint8Array> {
   const svg = await satori(tree as never, { width: W, height: H, fonts: await loadFonts() });
   return new Resvg(svg, { fitTo: { mode: 'width', value: W } }).render().asPng();
 }
+
+/** The card for the /stories index, so pasting that link unfurls with the Knowware mark too. */
+export async function renderIndexCard(count: number): Promise<Uint8Array> {
+  const tree = el('div', { boxSizing: 'border-box', width: W, height: H, flexDirection: 'column', background: BG, color: INK, padding: '48px 56px', fontFamily: 'JetBrains Mono' }, [
+    el('div', { justifyContent: 'space-between', alignItems: 'center' }, [
+      el('div', { alignItems: 'center', fontSize: 24, fontWeight: 800, letterSpacing: 5 }, [
+        el('div', { width: 16, height: 16, borderRadius: 8, background: INK, marginRight: 14 }),
+        'KNOWWARE · STORIES',
+      ]),
+      el('div', { gap: 10 }, [pill(`${count} CITED ${count === 1 ? 'STORY' : 'STORIES'}`, true)]),
+    ]),
+    el('div', { flex: 1, flexDirection: 'column', justifyContent: 'center' }, [
+      el('div', { fontSize: 72, fontWeight: 800, lineHeight: 1.1, letterSpacing: -2 }, 'Coordination without knowing'),
+      el('div', { fontSize: 28, fontWeight: 400, lineHeight: 1.35, color: SUB, marginTop: 22, maxWidth: 980 },
+        'Real cases where systems acted at speed and nobody held the knowing. Cited, graded, newest event first.'),
+    ]),
+    el('div', { borderTop: `3px solid ${INK}`, paddingTop: 22, justifyContent: 'space-between', alignItems: 'flex-end' }, [
+      el('div', { flexDirection: 'column' }, [
+        el('div', { fontSize: 18, fontWeight: 400, letterSpacing: 4, color: SUB }, 'EVERY ENTRY NAMES THE MISSING LAYER'),
+        el('div', { fontSize: 28, fontWeight: 700, color: SIGNAL, marginTop: 6 }, 'Knowing · Context · Accountability · Meaning'),
+      ]),
+      el('div', { fontSize: 20, fontWeight: 700, color: INK }, 'knowware.press/stories'),
+    ]),
+  ]);
+
+  const svg = await satori(tree as never, { width: W, height: H, fonts: await loadFonts() });
+  return new Resvg(svg, { fitTo: { mode: 'width', value: W } }).render().asPng();
+}

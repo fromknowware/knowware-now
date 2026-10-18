@@ -7,7 +7,9 @@ import { SITE_NAME, SITE_URL } from '../../config';
 import { getStoriesByEvent, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, FEED_CAP } from '../../lib/stories';
 
 const stories = await getStoriesByEvent();
-const PAGE_URL = `${SITE_URL}/stories`;
+const PAGE_URL = `${SITE_URL}/stories/`;
+const CARD_URL = `${SITE_URL}/stories/cards/index.png`;
+const CARD_ALT = `Knowware stories: coordination without knowing. A running, cited log of ${stories.length} real cases, each graded by evidence.`;
 const DESCRIPTION =
   'A running, cited log of real stories where systems coordinated or acted at speed and nobody held the knowing: the context, the meaning, the accountability. Newest event first, each graded by evidence.';
 
@@ -23,13 +25,13 @@ const jsonLd = {
     itemListElement: stories.map((s, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      url: `${SITE_URL}/stories/${s.id}`,
+      url: `${SITE_URL}/stories/${s.id}/`,
       name: s.data.headline,
     })),
   },
 };
 ---
-<Base title="Stories" description={DESCRIPTION} canonical={PAGE_URL}>
+<Base title="Stories" description={DESCRIPTION} canonical={PAGE_URL} ogImage={CARD_URL} ogImageAlt={CARD_ALT}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
   <section class="kw-section st-head" aria-labelledby="st-h">
