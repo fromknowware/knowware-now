@@ -4,12 +4,12 @@ import StoriesNote from '../../components/StoriesNote.astro';
 import StoryBadges from '../../components/StoryBadges.astro';
 import StoryMotion from '../../components/StoryMotion.astro';
 import { SITE_NAME, SITE_URL } from '../../config';
-import { getPublishedStories, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, FEED_CAP } from '../../lib/stories';
+import { getStoriesByEvent, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, FEED_CAP } from '../../lib/stories';
 
-const stories = await getPublishedStories();
+const stories = await getStoriesByEvent();
 const PAGE_URL = `${SITE_URL}/stories`;
 const DESCRIPTION =
-  'A running, cited log of real stories where systems coordinated or acted at speed and nobody held the knowing: the context, the meaning, the accountability. Newest first, each graded by evidence.';
+  'A running, cited log of real stories where systems coordinated or acted at speed and nobody held the knowing: the context, the meaning, the accountability. Newest event first, each graded by evidence.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -35,7 +35,7 @@ const jsonLd = {
   <section class="kw-section st-head" aria-labelledby="st-h">
     <p class="kw-label">Stories · a running log</p>
     <h1 class="kw-h2 st-title" id="st-h">Coordination without knowing</h1>
-    <p class="kw-prose-dek">Real cases where systems coordinated or acted at speed and nobody held the knowing: what the work was for, what the context was, who answered for it. Cited, graded, newest first.</p>
+    <p class="kw-prose-dek">Real cases where systems coordinated or acted at speed and nobody held the knowing: what the work was for, what the context was, who answered for it. Cited, graded, newest event first.</p>
     <p class="st-links">
       <a class="kw-btn kw-btn--filled" href="/feed.xml">Atom feed</a>
       <a class="kw-btn" href="/definition">What is knowware?</a>
@@ -51,12 +51,13 @@ const jsonLd = {
 
   <section class="kw-section st-list" aria-labelledby="st-list-h">
     <h2 class="kw-label" id="st-list-h">{stories.length} {stories.length === 1 ? 'story' : 'stories'}{stories.length >= FEED_CAP ? ` · the feed carries the newest ${FEED_CAP}` : ''}</h2>
+    <p class="st-order mono">Ordered by when the event happened, newest first. “Added” is the day we logged the story.</p>
     <ol class="st-items">
       {stories.map((s) => (
         <li class="st-item">
           <article aria-labelledby={`h-${s.id}`}>
             <p class="st-meta mono">
-              <span>Event: {eventLine(s)}</span>
+              <span class="st-event">Event: {eventLine(s)}</span>
               <span>Added: {formatDate(s.data.added)}</span>
               <StoryBadges grade={s.data.grade} simulation={s.data.simulation} alleged={s.data.alleged} />
             </p>
@@ -96,6 +97,8 @@ const jsonLd = {
     grid-template-areas: "meta ." "head fig" "sum fig" "layer fig" "more fig";
     column-gap: clamp(24px, 4vw, 56px);
   }
+  .st-order { margin: 0 0 4px; font-size: 12px; line-height: 1.5; color: var(--sub); }
+  .st-event { color: var(--ink); font-size: 14px; font-weight: 700; }
   .st-meta { grid-area: meta; }
   .st-h { grid-area: head; }
   .st-summary { grid-area: sum; }

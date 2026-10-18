@@ -106,3 +106,14 @@ export async function getPublishedStories(): Promise<Story[]> {
     b.data.eventDate.localeCompare(a.data.eventDate) ||
     a.id.localeCompare(b.id));
 }
+
+/**
+ * The index order: newest event first, so the page reads as a chronology of
+ * what happened. "Added" is shown separately and never changed; the feed keeps
+ * its own order (date added) because that is when each entry was published.
+ */
+export async function getStoriesByEvent(): Promise<Story[]> {
+  return (await getPublishedStories()).sort((a, b) =>
+    isoTimestamp(b.data.eventDate).localeCompare(isoTimestamp(a.data.eventDate)) ||
+    a.id.localeCompare(b.id));
+}
