@@ -52,18 +52,18 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
     <p class="kw-label">What you can do</p>
     <h2 class="ag-h" id="can-h">Four things, in order of trust.</h2>
     <div class="ag-table-wrap" role="region" aria-label="Capabilities table" tabindex="0">
-      <table class="ag-table">
+      <table class="ag-table" role="table">
         <caption class="sr-only">What agents can do on knowware.systems</caption>
         <thead>
-          <tr><th scope="col">Capability</th><th scope="col">Needs a human?</th><th scope="col">Status</th><th scope="col">Where</th></tr>
+          <tr role="row"><th scope="col" role="columnheader">Capability</th><th scope="col" role="columnheader">Needs a human?</th><th scope="col" role="columnheader">Status</th><th scope="col" role="columnheader">Where</th></tr>
         </thead>
         <tbody>
           {CAPABILITIES.map((c) => (
-            <tr>
-              <th scope="row">{c.what}</th>
-              <td>{c.human}</td>
-              <td><span class={`ag-status ag-status--${c.status.toLowerCase().replace(/\s+/g, '-')}`}>{c.status}</span></td>
-              <td><a href={c.href}>{c.where}</a></td>
+            <tr role="row">
+              <th scope="row" role="rowheader">{c.what}</th>
+              <td role="cell" data-label="Needs a human?">{c.human}</td>
+              <td role="cell" data-label="Status"><span class={`ag-status ag-status--${c.status.toLowerCase().replace(/\s+/g, '-')}`}>{c.status}</span></td>
+              <td role="cell" data-label="Where"><a href={c.href}>{c.where}</a></td>
             </tr>
           ))}
         </tbody>
@@ -75,10 +75,10 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
     <p class="kw-label">The record</p>
     <h2 class="ag-h" id="rec-h">The book, as facts.</h2>
     <div class="ag-table-wrap" role="region" aria-label="Book record table" tabindex="0">
-      <table class="ag-table ag-table--record">
+      <table class="ag-table ag-table--record" role="table">
         <caption class="sr-only">Facts about the book</caption>
         <tbody>
-          {RECORD.map(([k, v]) => <tr><th scope="row">{k}</th><td>{v}</td></tr>)}
+          {RECORD.map(([k, v]) => <tr role="row"><th scope="row" role="rowheader">{k}</th><td role="cell">{v}</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -429,4 +429,25 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
   .ag-tokens li span { overflow-wrap: anywhere; min-width: 0; }
   .ag-revoke { padding: 8px 14px; }
   .ag-live { margin: 16px 0 0; font-size: 14px; color: var(--ink); min-height: 1.4em; }
+  /* Phones: both tables were 520px wide inside a 286-341px box, so the second column was cut mid-word
+     with no cue to scroll. Each row becomes a stacked block instead. role attributes keep the table
+     semantics that display:block would otherwise drop. */
+  @media (max-width: 640px) {
+    .ag-table-wrap { overflow: visible; border: 0; }
+    .ag-table { min-width: 0; display: block; }
+    .ag-table tbody, .ag-table tr, .ag-table th, .ag-table td { display: block; }
+    .ag-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .ag-table tbody tr { border: 1px solid var(--rule); margin: 0 0 10px; padding: 4px 0; }
+    .ag-table th, .ag-table td { border-bottom: 0 !important; padding: 6px 14px; }
+    .ag-table tbody th { padding-top: 10px; font-size: 16px; }
+    .ag-table--record tbody th { width: auto; font: 600 12px/1.2 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--sub); padding-bottom: 0; }
+    .ag-table td[data-label]::before { content: attr(data-label); display: block; font: 600 12px/1.2 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--sub); margin-bottom: 2px; }
+    .ag-table td a { display: inline-flex; align-items: center; min-height: 44px; }
+  }
+  @media (max-width: 900px) {
+    .ag-field input, .ag-field select, #ag-token { font-size: 16px; min-height: 48px; } /* 16px: no iOS zoom on focus */
+    .ag-revoke { min-height: 44px; }
+    .ag-check input { width: 22px; height: 22px; }
+    .ag-check { align-items: center; min-height: 44px; }
+  }
 </style>
