@@ -133,7 +133,7 @@ const QUOTES = [
         </div>
         <div class="kw-spine-bars">
           {SPINE.map((s) => (
-            <a href={`/read/${s.n}`} class="kw-spine-bar" style={`height:${s.h}%`}>
+            <a href={`/read/${s.n}`} class="kw-spine-bar" style={`--h:${s.h}`}>
               <span class="kw-spine-ch">ch{s.n}</span>
               <span class="kw-spine-title">{s.title}</span>
             </a>
@@ -225,9 +225,10 @@ const QUOTES = [
   letter-spacing: -.03em; margin: 0;
 }
 .kw-spine-read-btn {
-  font-size: 11px; background: none;
+  font-size: 12px; background: none;
   border: 1px solid var(--ink); padding: 6px 10px;
   cursor: pointer; flex-shrink: 0; color: var(--ink);
+  display: inline-flex; align-items: center; min-height: 44px;
 }
 .kw-spine-read-btn:hover { background: var(--ink); color: var(--paper); }
 
