@@ -79,6 +79,7 @@ html, body {
   background: var(--bg); color: var(--ink);
   font-family: var(--body-font);
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%; /* no font inflation when the phone turns */
   font-feature-settings: "kern", "liga";
   overflow-x: hidden;
   transition: var(--theme-transition);
@@ -158,29 +159,49 @@ html[data-contrast="high"] {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
   background: #191938; color: #EDEEE4;
   display: flex; align-items: center; gap: 16px;
-  padding: 0 24px; height: 48px;
+  /* Clear the iPhone home indicator and the notch in landscape (needs viewport-fit=cover). */
+  padding: 0 max(24px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(24px, env(safe-area-inset-left));
+  min-height: calc(var(--kw-dock-h) + env(safe-area-inset-bottom));
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px; letter-spacing: -0.005em;
+  font-size: 12px; letter-spacing: -0.005em;
   transform: translateY(100%);
   visibility: hidden;
   transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), visibility 0s linear 0.3s;
   border-top: 1px solid rgba(237,238,228,0.12);
 }
+:root { --kw-dock-h: 56px; }
 #kw-dock.kw-visible { transform: translateY(0); visibility: visible; transition-delay: 0s; }
+html.kw-dock-off #kw-dock { display: none; }
 #kw-dock-cta {
   background: #2F55E0; color: #EDEEE4;
-  padding: 8px 18px; border: none; cursor: pointer;
+  padding: 0 18px; border: none; cursor: pointer;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px; letter-spacing: -0.005em;
-  text-decoration: none; display: inline-block;
+  font-size: 12px; letter-spacing: -0.005em;
+  text-decoration: none; display: inline-flex; align-items: center;
+  min-height: 44px;
   margin-left: auto; flex-shrink: 0;
 }
 #kw-dock-cta:hover { background: #1e3fc0; }
 #kw-dock-sep { color: rgba(237,238,228,0.25); }
+#kw-dock-countdown { white-space: nowrap; }
+#kw-dock-close {
+  display: none; /* shown with scripts: dismissing needs sessionStorage */
+  align-items: center; justify-content: center;
+  width: 44px; height: 44px; margin-right: -10px; flex-shrink: 0;
+  background: none; border: 0; color: rgba(237,238,228,0.8); cursor: pointer;
+}
+.js #kw-dock-close { display: inline-flex; }
+#kw-dock-close:hover { color: #EDEEE4; }
 @media (max-width: 520px) {
-  #kw-dock { padding: 0 12px; gap: 10px; }
+  #kw-dock { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); gap: 10px; }
   #kw-dock-sep, #kw-dock-saving { display: none; }
-  #kw-dock-cta { padding: 8px 12px; }
+  #kw-dock-cta { padding: 0 14px; }
+}
+/* 320px: countdown + button + close have to share 296px on one line. */
+@media (max-width: 359px) {
+  #kw-dock { padding-left: max(8px, env(safe-area-inset-left)); padding-right: max(8px, env(safe-area-inset-right)); gap: 8px; }
+  #kw-dock-cta { padding: 0 10px; }
+  #kw-dock-close { margin-right: -6px; }
 }
 
 /* ============================================================
@@ -384,7 +405,9 @@ article[data-kw-read] {
 .kw-nav-shell {
   display: flex; align-items: stretch;
   border-bottom: 1px solid var(--rule);
-  height: 52px; overflow-x: auto;
+  min-height: 52px; position: relative;
+  /* Keep the bar clear of the notch when the phone is turned sideways. */
+  padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);
 }
 .kw-nav-logo {
   font: 700 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -408,7 +431,7 @@ article[data-kw-read] {
 .kw-nav-tab:hover { background: var(--accent-soft); color: var(--ink); }
 .kw-nav-tab.is-active { background: var(--ink); color: var(--paper); }
 .kw-nav-tab-num {
-  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: .08em; color: inherit;
 }
 .kw-nav-tab-label {
@@ -416,27 +439,67 @@ article[data-kw-read] {
   letter-spacing: -.01em;
 }
 .kw-theme-btn {
-  display: flex; align-items: center;
-  padding: 0 16px; background: none; border: 0;
-  border-left: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 14px; min-width: 44px; min-height: 44px;
+  background: none; border: 0; border-left: 1px solid var(--rule);
   color: var(--sub); cursor: pointer; flex-shrink: 0;
-  min-height: 44px;
 }
 .kw-theme-btn:hover { background: var(--accent-soft); color: var(--ink); }
-.kw-theme-btn { justify-content: center; min-width: 44px; padding: 0 14px; }
 /* One icon per theme, chosen by the same attribute the inline script sets before paint. */
 .kw-theme-icon { display: none; }
 .kw-theme-icon--light { display: block; }
 html[data-theme="dark"] .kw-theme-icon--light, html[data-theme="warm"] .kw-theme-icon--light { display: none; }
 html[data-theme="dark"] .kw-theme-icon--dark { display: block; }
 html[data-theme="warm"] .kw-theme-icon--warm { display: block; }
-@media (max-width: 600px) {
-  .kw-nav-tab-label { display: none; }
-  .kw-nav-tab-num { opacity: 1 !important; }
-  .kw-nav-tab { padding: 0 5px; }
-  /* Seven numbered tabs plus the theme button must fit at 375px without scrolling. */
-  .kw-nav-logo { padding: 0 10px; gap: 6px; }
-  .kw-theme-btn { padding: 0 10px; min-width: 40px; }
+
+/* The menu button only exists for the collapsed nav (below). */
+.kw-menu-btn { display: none; }
+
+/* Below 901px the seven tabs plus the theme button no longer fit (the row measured
+   868px, so landscape phones and tablets lost "Agents" and the theme button behind a
+   scroll). The pages move into a menu panel with full-size, labelled rows. */
+@media (max-width: 900px) {
+  /* Without scripts there is no menu: the tabs wrap into a labelled grid instead. */
+  .kw-nav-shell { flex-wrap: wrap; }
+  .kw-nav-logo { min-height: 52px; }
+  .kw-nav-tabs { order: 3; flex: 1 0 100%; margin-left: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); border-top: 1px solid var(--rule); }
+  .kw-nav-tab { min-height: 48px; padding: 0 16px; gap: 10px; border-left: 0; border-bottom: 1px solid var(--rule); }
+  .kw-nav-tab-label { font-size: 15px; }
+  .kw-nav-tab-num { font-size: 12px; }
+  .kw-theme-btn { margin-left: auto; min-width: 52px; }
+
+  .js .kw-nav-shell { flex-wrap: nowrap; }
+  .js .kw-menu-btn {
+    display: flex; align-items: center; gap: 8px;
+    margin-left: auto; min-height: 44px; padding: 0 14px;
+    background: none; border: 0; border-left: 1px solid var(--rule);
+    color: var(--ink); cursor: pointer; white-space: nowrap;
+    font: 500 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: -.01em;
+  }
+  .js .kw-menu-btn:hover { background: var(--accent-soft); }
+  .js .kw-menu-btn[aria-expanded="true"] { background: var(--ink); color: var(--paper); }
+  .js .kw-theme-btn { margin-left: 0; min-width: 52px; }
+  .kw-menu-num { font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .08em; color: var(--sub); }
+  .kw-menu-btn[aria-expanded="true"] .kw-menu-num { color: inherit; }
+  .kw-menu-chev { transition: transform .15s; flex-shrink: 0; }
+  .kw-menu-btn[aria-expanded="true"] .kw-menu-chev { transform: rotate(180deg); }
+
+  .js .kw-nav-tabs {
+    display: none;
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 90;
+    margin: 0; padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+    background: var(--bg); border-top: 0; border-bottom: 2px solid var(--ink);
+    box-shadow: 0 12px 24px rgba(0,0,0,.18);
+    max-height: calc(100vh - 52px); max-height: calc(100dvh - 52px); overflow-y: auto; overscroll-behavior: contain;
+    grid-template-columns: 1fr;
+  }
+  .js .kw-nav-shell.is-open .kw-nav-tabs { display: grid; }
+  .js .kw-nav-tab { min-height: 56px; padding: 0 20px; gap: 14px; }
+  .js .kw-nav-tab-label { font-size: 17px; }
+}
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 520px) {
+  .js .kw-nav-tabs { grid-template-columns: 1fr 1fr; }
+  .js .kw-nav-tab { min-height: 48px; }
 }
 /* On the narrowest phones keep the dot and drop the word (it is still read aloud). */
 @media (max-width: 340px) {
@@ -496,8 +559,11 @@ html[data-theme="warm"] .kw-theme-icon--warm { display: block; }
    ============================================================ */
 .kw-foot {
   border-top: 2px solid var(--ink);
-  padding: clamp(40px,5vw,56px) clamp(16px,3vw,48px) calc(clamp(24px,3vw,32px) + 48px);
+  /* The fixed dock bar must never sit on the last lines of the page: reserve its height
+     (plus the home-indicator inset) at the bottom, unless the reader dismissed it. */
+  padding: clamp(40px,5vw,56px) clamp(16px,3vw,48px) calc(clamp(24px,3vw,32px) + var(--kw-dock-h) + env(safe-area-inset-bottom));
 }
+html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe-area-inset-bottom)); }
 .kw-foot-main {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -507,7 +573,7 @@ html[data-theme="warm"] .kw-theme-icon--warm { display: block; }
 .kw-foot-letter-col { grid-column: 1 / span 9; }
 .kw-foot-meta-col {
   grid-column: 10 / span 3;
-  font: 400 11px/1.7 "JetBrains Mono", ui-monospace, monospace;
+  font: 400 12px/1.7 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); text-transform: uppercase; letter-spacing: .04em;
   align-self: end;
 }
@@ -516,8 +582,11 @@ html[data-theme="warm"] .kw-theme-icon--warm { display: block; }
   letter-spacing: -.03em; margin: 0 0 16px; color: var(--ink);
 }
 .kw-foot-email {
-  font: 400 13px/1 "JetBrains Mono", ui-monospace, monospace;
-  color: var(--signal-ink); border-bottom: 1px solid var(--signal-ink);
+  font: 400 14px/1 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--signal-ink);
+  display: inline-flex; align-items: center; min-height: 44px;
+  text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px;
+  overflow-wrap: anywhere;
 }
 .kw-foot-email:hover { opacity: 0.75; }
 .kw-foot-colophon {
@@ -526,7 +595,7 @@ html[data-theme="warm"] .kw-theme-icon--warm { display: block; }
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 20px;
-  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 400 12px/1.4 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub2);
 }
 .kw-foot-colophon span { grid-column: span 3; }
