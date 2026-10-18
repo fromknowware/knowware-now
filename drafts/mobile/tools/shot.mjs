@@ -14,7 +14,7 @@ await p.setUserAgent(UA[d.ua]);
 await p.setViewport({ width: d.w, height: d.h, deviceScaleFactor: flags.includes('--hi') ? d.dpr : 1.5, isMobile: true, hasTouch: true, isLandscape: !!d.landscape });
 const th = flags.find((f) => f.startsWith('--theme='));
 if (th) await p.evaluateOnNewDocument((t) => { try { localStorage.setItem('kw-theme', t); } catch {} }, th.split('=')[1]);
-await p.goto(base + url, { waitUntil: 'networkidle2', timeout: 45000 });
+await p.goto(base + url, { waitUntil: 'networkidle2', timeout: 180000 });
 await new Promise((r) => setTimeout(r, 500));
 if (js) { const r = await p.evaluate(js); if (r !== undefined) console.log(JSON.stringify(r)); }
 await new Promise((r) => setTimeout(r, +(wait || 700)));

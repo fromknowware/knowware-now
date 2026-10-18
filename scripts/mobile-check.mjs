@@ -206,6 +206,13 @@ async function runAxe(page, axeSource) {
 
 async function setTheme(page, theme) {
   await page.evaluate((t) => {
+    // The theme change animates colours over 0.7s: measure contrast after the change, not during it.
+    if (!document.getElementById('__mc_notrans')) {
+      const st = document.createElement('style');
+      st.id = '__mc_notrans';
+      st.textContent = '*,*::before,*::after{transition:none!important}';
+      document.head.appendChild(st);
+    }
     if (t === 'light') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', t);
   }, theme);
@@ -213,13 +220,16 @@ async function setTheme(page, theme) {
 }
 
 async function gotoPage(page, base, url) {
-  await page.goto(base + url, { waitUntil: 'networkidle2', timeout: 45000 });
+  await page.goto(base + url, { waitUntil: 'networkidle2', timeout: 120000 });
   await new Promise((r) => setTimeout(r, 500));
 }
 
 async function ensureReader(page, base) {
   // Reader sign-up with a throw-away test address; wrangler dev only (local KV).
-  await page.goto(base + '/read/01/', { waitUntil: 'domcontentloaded' });
+  // The first request after `wrangler pages dev` starts compiles the functions: allow it time, retry once.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try { await page.goto(base + '/read/01/', { waitUntil: 'domcontentloaded', timeout: 90000 }); break; } catch (e) { if (attempt) throw e; }
+  }
   return page.evaluate(async () => {
     const r = await fetch('/api/reader', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'mobile-check@example.test', updates: false, chapter: '01' }), credentials: 'same-origin' });
     return r.status;
@@ -240,7 +250,8 @@ export async function main(argv = process.argv) {
   let fails = 0, warns = 0;
   try {
     const readerPage = await browser.newPage();
-    const status = await ensureReader(readerPage, opt.base);
+    let status = 0;
+    try { status = await ensureReader(readerPage, opt.base); } catch (e) { console.error('(reader sign-up failed: ' + e.message.split('\n')[0] + ')'); }
     if (status !== 200) console.error(`(reader sign-up returned ${status}; /read/NN/full will show the gate)`);
     const anonCtx = await browser.createBrowserContext();
     const anonPage = await anonCtx.newPage();
@@ -278,7 +289,7 @@ export async function main(argv = process.argv) {
           if (clipKeys.length) rec.warns.push(`content clipped by overflow:hidden in ${clipKeys.length} box(es): ` + clipKeys.slice(0, 6).map((k) => `${k} (${clipBy[k].n}) "${clipBy[k].text}"`).join('; '));
           const hard = m.small.filter((s) => !s.inline);
           rec.small = m.small;
-          if (hard.length) rec.fails.push(`${hard.length} tap target(s) under 44px: ` + hard.slice(0, 8).map((s) => `${s.el} ${s.w}x${s.h} "${s.text}"`).join('; '));
+          if (hard.length) rec.fails.push(`${hard.length} tap target(s) under 44px: ` + hard.slice(0, 30).map((s) => `${s.el} ${s.w}x${s.h} "${s.text}"`).join('; '));
           const inl = m.small.filter((s) => s.inline);
           if (inl.length) rec.warns.push(`${inl.length} inline link(s) under 44px tall (exempt by WCAG, listed for information)`);
           if (m.tiny.length) rec.warns.push(`${m.tiny.length} text node(s) under 12px: ` + [...new Set(m.tiny.map((t) => t.el + ' ' + t.px + 'px'))].slice(0, 5).join('; '));
