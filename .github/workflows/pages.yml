@@ -3,6 +3,11 @@ name: Deploy to Cloudflare Pages
 on:
   push:
     branches: [main]
+  # Daily rebuild so stories with a future `added` date go live on their day.
+  # 13:00 UTC is 07:00 in Denver. Nothing is published that was not already
+  # committed to main; the build only releases entries whose date has arrived.
+  schedule:
+    - cron: '0 13 * * *'
   workflow_dispatch:
 
 jobs:
