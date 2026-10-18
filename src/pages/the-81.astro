@@ -466,7 +466,7 @@ function getSym(name: string): string {
 
   type View = 'cast' | 'elements' | 'graph';
 
-  function setView(v: View) {
+  function setView(v: View, persist = false) {
     btnCast?.classList.toggle('is-active',  v === 'cast');
     btnElem?.classList.toggle('is-active',  v === 'elements');
     btnGraph?.classList.toggle('is-active', v === 'graph');
@@ -481,18 +481,20 @@ function getSym(name: string): string {
     } else {
       graphLoopCtrl?.stop(); // pause sim when leaving graph view
     }
-    try { sessionStorage.setItem('kw-81-view', v); } catch {}
+    if (persist) { try { sessionStorage.setItem('kw-81-view', v); } catch {} }
   }
 
-  btnCast?.addEventListener('click',  () => setView('cast'));
-  btnElem?.addEventListener('click',  () => setView('elements'));
-  btnGraph?.addEventListener('click', () => setView('graph'));
+  btnCast?.addEventListener('click',  () => setView('cast', true));
+  btnElem?.addEventListener('click',  () => setView('elements', true));
+  btnGraph?.addEventListener('click', () => setView('graph', true));
 
-  // Restore saved view
+  // Start on the graph on desktop and the cast list on phones; a view chosen earlier this session wins.
+  let initialView: View = window.matchMedia('(min-width: 901px)').matches ? 'graph' : 'cast';
   try {
-    const saved = sessionStorage.getItem('kw-81-view') as View | null;
-    if (saved === 'elements' || saved === 'graph') setView(saved);
+    const saved = sessionStorage.getItem('kw-81-view');
+    if (saved === 'cast' || saved === 'elements' || saved === 'graph') initialView = saved;
   } catch {}
+  if (initialView !== 'cast') setView(initialView);
 
   // ── Graph simulation ────────────────────────────────────
   let graphLoopCtrl: { start: () => void; stop: () => void } | null = null;
