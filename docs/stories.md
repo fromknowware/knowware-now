@@ -42,8 +42,18 @@ same on every machine). It is the story's `og:image` and `twitter:image`, with a
 shows the headline, missing layer, evidence grade and any simulation or alleged flag, so the
 caveats travel with the link. Cards live at `/stories/cards/<slug>.png`.
 
-Each story page has a "Share this story" block: the card preview (with a link to save the
-image), one prepared post text, the native share sheet where the browser has one, Copy link,
+Every story also gets a branded animated GIF (`/stories/gifs/<slug>.gif`, 640x600, a 12 second
+loop) and a matching still frame (`/stories/gifs/still/<slug>.png`). They are rendered at build
+from the same scene code as the page diagram (`src/scripts/story-motion.ts`, drawn with
+`@napi-rs/canvas`, encoded with `gifenc`), so a new story gets one without extra work. Each
+frame carries the Knowware mark, the headline, the evidence grade, any SIMULATION or ALLEGED
+flag, the diagram caption ("Not a recording" and so on) and the URL, so the caveats travel
+with it. The GIF is not the link-preview image: networks show the static card for links and
+only play a GIF that is attached or pasted.
+
+Each story page has a "Share this story" block: the GIF (with Pause, a still for readers who
+ask for reduced motion, and links to save the GIF or the card), one prepared post text, the
+native share sheet (which attaches the GIF where the browser can), Copy link,
 Copy post text, and plain links to X, LinkedIn, Bluesky and email. Nothing loads from any
 network until a reader clicks, and there are no third-party scripts or pixels. If the
 clipboard is blocked the text is selected for manual copy.

@@ -97,7 +97,7 @@ export default function agentMarkdown() {
 
         // Each published story, as stories/<slug>.md. Stories are not synthesized.
         const storyDirs = (await readdir(join(root, 'stories'), { withFileTypes: true }))
-          .filter((e) => e.isDirectory() && e.name !== 'cards' && !e.name.startsWith('._'))
+          .filter((e) => e.isDirectory() && !['cards', 'gifs'].includes(e.name) && !e.name.startsWith('._'))
           .map((e) => e.name)
           .sort();
         for (const slug of storyDirs) await emit(join(root, 'stories', slug, 'index.html'), `/stories/${slug}`, `stories/${slug}.md`, `Story: ${slug}`, false);

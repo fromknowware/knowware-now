@@ -2,16 +2,19 @@
 // Every scene ends with the same device: a dashed ring (the missing layer) that nothing ever connects to.
 // Runs only while on screen, honors prefers-reduced-motion, and follows the site theme.
 
-type Palette = { ink: string; sub: string; accent: string; rule: string; paper: string };
+export type Palette = { ink: string; sub: string; accent: string; rule: string; paper: string };
 type G = { c: CanvasRenderingContext2D; k: number; p: Palette; sec: number; fade: number; layer: string };
 type Scene = (g: G, t: number) => void;
 
-const W = 400;
-const H = 250;
-const LOOP_SECONDS = 12;
-const STATIC_PHASE = 0.86;
+// The scenes are plain drawing functions, so the build also imports this file to render the
+// same animation into a GIF (src/lib/story-gif.ts). Nothing here touches the DOM until init().
+
+export const W = 400;
+export const H = 250;
+export const LOOP_SECONDS = 12;
+export const STATIC_PHASE = 0.86;
 // The frame that best tells each story when nothing moves.
-const STILL_PHASE: Record<string, number> = {
+export const STILL_PHASE: Record<string, number> = {
   'openai-misalignment-reports-september-2026': 0.62,
   'replit-agent-production-database': 0.52,
 };
@@ -403,13 +406,24 @@ class Figure {
 
   draw(seconds: number, phaseOverride?: number) {
     if (!this.w) return;
-    const phase = phaseOverride ?? ((seconds % LOOP_SECONDS) / LOOP_SECONDS);
-    const fade = phaseOverride !== undefined ? 1 : ss(0, 0.03, phase) * (1 - ss(0.95, 1, phase));
-    const g: G = { c: this.ctx, k: this.k, p: this.palette, sec: seconds, fade, layer: this.layer };
-    this.ctx.clearRect(0, 0, W, H);
-    this.scene(g, phase);
+    drawFrame(this.ctx, this.scene, { k: this.k, palette: this.palette, layer: this.layer, seconds, phase: phaseOverride });
   }
 }
+
+// One frame of a scene. `phase` pins the frame (a still); otherwise it follows `seconds` around the loop.
+export function drawFrame(
+  c: CanvasRenderingContext2D,
+  scene: Scene,
+  o: { k: number; palette: Palette; layer: string; seconds: number; phase?: number },
+) {
+  const phase = o.phase ?? ((o.seconds % LOOP_SECONDS) / LOOP_SECONDS);
+  const fade = o.phase !== undefined ? 1 : ss(0, 0.03, phase) * (1 - ss(0.95, 1, phase));
+  const g: G = { c, k: o.k, p: o.palette, sec: o.seconds, fade, layer: o.layer };
+  c.clearRect(0, 0, W, H);
+  scene(g, phase);
+}
+
+export const sceneFor = (id: string): Scene => SCENES[id] ?? generic;
 
 function init() {
   const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-story-motion]'));
@@ -479,4 +493,4 @@ function init() {
   document.addEventListener('visibilitychange', sync);
 }
 
-init();
+if (typeof document !== 'undefined') init();

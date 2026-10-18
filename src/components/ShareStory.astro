@@ -8,10 +8,12 @@ interface Props {
   url: string;      // canonical story URL
   title: string;
   summary: string;  // used as the email body
-  card: string;     // path to the social card PNG
-  cardAlt: string;
+  card: string;     // path to the static social card PNG (the link preview)
+  gif: string;      // path to the branded animation
+  still: string;    // path to one frame of it, for reduced motion and Pause
+  gifAlt: string;
 }
-const { text, url, title, summary, card, cardAlt } = Astro.props;
+const { text, url, title, summary, card, gif, still, gifAlt } = Astro.props;
 const q = encodeURIComponent;
 const networks = [
   { name: 'X', href: `https://x.com/intent/post?text=${q(text)}` },
@@ -24,8 +26,18 @@ const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
   <h2 class="kw-label" id="st-share-h">Share this story</h2>
 
   <figure class="st-share-card">
-    <img src={card} width="1200" height="630" alt={cardAlt} loading="lazy" decoding="async" />
-    <figcaption class="mono">The card that appears when this story is shared. <a href={card} download>Save the image</a></figcaption>
+    <picture>
+      <source media="(prefers-reduced-motion: reduce)" srcset={still} />
+      <img src={gif} width="640" height="600" alt={gifAlt} loading="lazy" decoding="async" data-share-gif data-gif={gif} data-still={still} />
+    </picture>
+    <figcaption class="mono">
+      The animation, branded to travel on its own.
+      <span class="st-share-acts">
+        <button type="button" class="st-share-pause" data-share-motion aria-pressed="false" hidden>Pause animation</button>
+        <a href={gif} download>Save the GIF</a>
+        <a href={card} download>Save the link-preview card</a>
+      </span>
+    </figcaption>
   </figure>
 
   <p class="st-share-text" data-share-text>{text}</p>
@@ -66,11 +78,41 @@ const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
       nativeBtn.hidden = false;
       nativeBtn.addEventListener('click', async () => {
         try {
+          // Where the browser can share files, send the GIF along with the post text.
+          const gifPath = root.querySelector<HTMLElement>('[data-share-gif]')?.dataset.gif;
+          if (gifPath && typeof navigator.canShare === 'function') {
+            try {
+              const blob = await (await fetch(gifPath)).blob();
+              const file = new File([blob], 'knowware-story.gif', { type: 'image/gif' });
+              if (navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], title: root.dataset.title, text });
+                return;
+              }
+            } catch (e) {
+              if ((e as DOMException).name === 'AbortError') return;
+            }
+          }
           await navigator.share({ title: root.dataset.title, text: text.replace(url, '').trim(), url });
         } catch (e) {
           if ((e as DOMException).name !== 'AbortError') say('Sharing failed. Try Copy link.');
         }
       });
+    }
+
+    // Pause stops the loop by swapping in the still frame. Readers who ask for reduced motion
+    // already get the still, so there is nothing to pause for them.
+    const img = root.querySelector<HTMLImageElement>('[data-share-gif]');
+    const motionBtn = root.querySelector<HTMLButtonElement>('[data-share-motion]');
+    if (img && motionBtn) {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        motionBtn.hidden = false;
+        motionBtn.addEventListener('click', () => {
+          const paused = motionBtn.getAttribute('aria-pressed') !== 'true';
+          img.src = paused ? (img.dataset.still ?? img.src) : (img.dataset.gif ?? img.src);
+          motionBtn.setAttribute('aria-pressed', String(paused));
+          motionBtn.textContent = paused ? 'Play animation' : 'Pause animation';
+        });
+      }
     }
 
     root.querySelectorAll<HTMLButtonElement>('[data-share-copy]').forEach((btn) => {
@@ -95,9 +137,15 @@ const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
 <style>
   .st-share { margin: 0 0 32px; padding-top: 20px; border-top: 1px solid var(--rule); }
   .st-share .kw-label { margin-bottom: 12px; }
-  .st-share-card { margin: 0 0 18px; max-width: 560px; }
+  .st-share-card { margin: 0 0 18px; max-width: 480px; }
   .st-share-card img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
   .st-share-card figcaption { margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--sub); }
+  .st-share-acts { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 6px; }
+  .st-share-pause {
+    font: inherit; padding: 0; border: 0; background: none; cursor: pointer;
+    color: var(--ink); text-decoration: underline; text-underline-offset: 3px;
+  }
+  .st-share-pause[hidden] { display: none; }
   .st-share-card figcaption a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   .st-share-text {
     max-width: 60ch; margin: 0 0 16px; padding: 14px 16px;
