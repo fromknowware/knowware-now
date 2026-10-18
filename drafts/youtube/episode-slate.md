@@ -1,0 +1,222 @@
+# Episode slate: three episodes per chapter (revised with receipts)
+
+First written 2026-10-16; revised 2026-10-17 after six research sessions read the primary sources and wrote receipts files. A proposal, not a commitment. The three-per-chapter plan is the project owner's; nothing in the repo records it. The slate covers the nine chapters and the capstone (ChX): 30 slots. Four are already drafted (DRAFTED).
+
+**Nothing in this file or in the receipts has been checked by a human.** "READ" means a model read the passages named, not that a person verified them.
+
+## 1. What changed in this revision
+
+- Of the 24 slots that had not yet been read (21 located only, 1 abstract only, 2 unverified), 23 were READ and 1 (Amazon, 7A) was UNVERIFIED; on 2026-10-17 Amazon was replaced by Columbia (READ), so all 30 slots are now READ. READ covers 30 of 30 slots, but coverage varies a lot (a report read in part, a 663-page report read for about a dozen pages). The coverage column in section 2 says what was and was not read.
+- Several statements in the first version were wrong or loose and are corrected here: the Challenger appendix does not contain the ice-water demonstration; the cited NBSIR 82-2465A is only the appendix volume of the Hyatt report; the NASA Apollo page cited is a 1998 email recollection, not a record; the "shareholder letter" file cited for Zillow is the press release; the MKUltra hearing PDF is a text file, not a scan; Therac-25 hardware interlocks were "not duplicated", not "removed"; the Big Dig report gives $14 billion, not the book's $22 billion; Zillow's 2021 filings never name a pricing model.
+- Several cases now look like poor or weak fits for the channel's premise (a failure because nobody held the knowing). Section 3 lists proposed swaps. Two (XA and XC in Chapter X) were applied on 2026-10-17 at the project owner's instruction. Later the same day, on the owner's go-ahead, three more were applied after their replacement documents were read: 7A Amazon to Columbia, 4B Sidewalk Labs to HealthCare.gov, 5B Neuralink to the Post Office Horizon judgment (receipts-swaps.md). 8B was kept. The remaining reframes are still proposals.
+- A new consolidated table (section 5) lists where the book disagrees with the sources.
+
+## 2. The slate at a glance
+
+**Status labels.** READ = the passages named were read from the downloaded document. UNVERIFIED = no primary document found. (LOCATED and READ (abstract) no longer apply to any slot.)
+**Premise fit** is the receipts sessions' assessment of whether the source shows a failure where the knowing existed but was not held or passed on: Strong, Good, Partial, Weak, Poor. "Drafted" slots were assessed earlier.
+**Receipts** are in `drafts/youtube/receipts/`.
+
+| Ch | Slot | Working title | Case | Primary source | Status and coverage | Premise fit | Action | Receipts |
+|---|---|---|---|---|---|---|---|---|
+| 1 | A | The Experiment Nobody Reviewed | Facebook emotional-contagion study | Kramer, Guillory, Hancock, PNAS 2014; Expression of Concern (PMC4115552); Cornell statement (archived) | READ: whole paper, notice, Cornell statement, the PNAS correction (affiliations only) and Kramer's June 29, 2014 post (archived copy, not the live post) | Partial | Keep; reframe as "each institution had a stated reason the question was someone else's" | receipts-ch1-3, receipts-d-followup |
+| 1 | B | The Units | Mars Climate Orbiter, 1999 | NASA MIB Phase I Report, Nov 10, 1999 | READ (root cause and communication findings); cost not in the report text | Good | Keep | none (read by the lead; facts in section 5) |
+| 1 | C | Left Out of the Manual | Boeing 737 MAX | House T&I Committee Democratic staff report, Sept 2020 | READ (passages used in Ep04); single party's report | Good, single source | **DRAFTED** as Ep04 | none |
+| 2 | A | The Eighth Server | Knight Capital, 2012 | SEC Release 34-70694 | READ | Strong | **DRAFTED** as Ep02 | none |
+| 2 | B | Forty-Five Minutes in May | May 6, 2010 Flash Crash | SEC/CFTC staff report, Sept 30, 2010 | READ: Executive Summary, §I.4, §II.2.a-b, §III.3 of 104 pp | Partial | **Reframe adopted 2026-10-17:** a volume-only sell algorithm with no price limit, plus many firms' separate pause rules adding up (the report's own "Lessons Learned", pp. 6-8); distinguish it from 2A Knight (one firm's deployment failure) | receipts-ch1-3, receipts-options |
+| 2 | C | The Parable | Google Flu Trends | Lazer et al., Science 343:1203 (2014) | READ: full paper; supplement not read | Weak to partial | **Do not use the "never published how it worked" framing** (Google's 2009 Nature paper publishes the method and counts). Keep for now, record the alternative thread (the authors named the failure modes in advance); first candidate to swap if a stronger Ch. 2 case is wanted. Google's later statements and its 2015 shutdown notice were not read | receipts-ch1-3, receipts-options |
+| 3 | A | A Glass of Ice Water | Challenger, 1986 | Rogers Commission report; Feynman Appendix F; hearing transcripts | READ: decision chapters, findings, App. F, hearing passages; Ch. VI (p. 120, pp. 125-128) and Ch. VII (p. 152) now read; rest of VI and VII-IX not read | Strong | Keep; reframe: the knowing sat with the engineers, was overruled, and did not reach the deciders; add the 1982 reclassification and 1983 waiver; pair with 7A Columbia (the CAIB itself pairs them) but keep their angles distinct and do not release back to back; reconcile the CAIB and Rogers wording on the joint's criticality history first | receipts-ch1-3, receipts-d-followup, receipts-options |
+| 3 | B | Two Faults | Therac-25 overdoses, 1985-1987 | Leveson and Turner, IEEE Computer, July 1993 | READ: all five parts and four sidebars (MIT reprint) | Strong | Keep; angle is information flow among hospitals, manufacturer and regulators | receipts-ch1-3 |
+| 3 | C | The Missing Check | Heartbleed | OpenSSL advisory, Apr 7, 2014 | READ: advisory plus the OpenSSL commits that introduced (Dec 31, 2011) and fixed (Apr 2014) the bug | Unknown | Needs the author's account, the project's post-mortem and a disclosure timeline before drafting | receipts-d-followup |
+| 4 | A | The Clinic With the Bad Lighting | Google DR screening in Thai clinics | Beede et al., CHI 2020 | READ: all 12 pp (Internet Archive copy) | Partial | Keep, honestly: a study that found problems, not a documented failure | receipts-ch4-5 |
+| 4 | B | Bad News | HealthCare.gov launch, Oct 2013 (**replaced Sidewalk Labs, applied 2026-10-17**) | HHS OIG case study OEI-06-14-00350 (Feb 2016); GAO-14-694 not readable | READ: foreword, executive summary, Ch. 2 pp. 21-22 and 25 in full, short passages from pp. 27-32; Chs. 1, 3, 4 and GAO not read | Strong | Keep; the knowing sat in 18 documented warnings that did not reach the people building it; Sidewalk receipts stay in receipts-ch4-5.md | receipts-swaps |
+| 4 | C | The Ceiling | Big Dig ceiling collapse, 2006 | NTSB/HAR-07/02 | READ: summary, findings, key analysis; test chapters and appendices not read | Good | Keep; two linked failures (supplier held the creep data; project never held the concept) | receipts-ch4-5 |
+| 5 | A | The Citations That Did Not Exist | Mata v. Avianca, 2023 | S.D.N.Y. order (May 4) and opinion (June 22), RECAP copies | READ: order in full; opinion pp. 1-34; appendices not read | Partial | Keep as a verification-chain failure; the court rests on conscious avoidance after warnings | receipts-ch4-5 |
+| 5 | B | The Known Error Log | Post Office Horizon (**replaced Neuralink, applied 2026-10-17**) | Bates v Post Office (No 6: Horizon Issues) [2019] EWHC 3408 (QB), Dec 16, 2019 | READ: ¶¶ 100-111, 661-663, 925-935, 941-945 of 313 pp; Technical Appendix and other judgments not read | Strong | Keep; fault knowledge sat in the operator's and supplier's records; do not script prosecutions or outcomes from these receipts; Neuralink receipts stay in receipts-ch4-5.md | receipts-swaps |
+| 5 | C | Too Slow | Facebook in Myanmar | BSR assessment (Nov 2018); UN FFM A/HRC/39/CRP.2 and /64 passages; Facebook's post | READ: parts of each; BSR §3.2 (Facebook as the internet for most users) added | Partial | Keep as "the knowing was outside the company and did not reach enforcement" | receipts-ch5-7, receipts-d2-followup |
+| 6 | A | 5.6 Seconds | Uber test vehicle, Tempe, 2018 | NTSB/HAR-19/03 | READ | Strong | **DRAFTED** as Ep03 | none |
+| 6 | B | The Match | Robert Williams, Detroit | First Amended Complaint; MSP lead report; settlement documents; ACLU summary | READ: complaint ¶¶1-248 (allegations), settlement; Parks complaint pp. 2-17 (pp. 18-29 not read; still no "ten days" on the pages read) | Good, allegation caveat | Keep | receipts-ch5-7, receipts-d2-followup |
+| 6 | C | Gender Shades | Commercial gender-classification audit | Buolamwini and Gebru, PMLR 81:77-91 | READ: pp. 1-12; follow-up paper partly | Partial | Keep as an audit; pair with 6B | receipts-ch5-7 |
+| 7 | A | The Photo Request | Columbia accident, Feb 1, 2003 (**replaced Amazon's recruiting tool, applied 2026-10-17**) | Columbia Accident Investigation Board Report, Vol. I, Aug 2003 | READ: Ch. 6 (opening, p. 130, pp. 150-151, 170-172); Chs. 5, 7, 8 and other volumes not read | Strong | Keep as a pair with 3A Challenger (decided 2026-10-17): Columbia's angle is a concern and a request that never became a decision (imagery turned off for "proper channels", reversed burden of proof, a team that did not speak up); Chapter 8 (CAIB) read in part; Amazon receipts stay in receipts-ch5-7.md | receipts-swaps, receipts-options |
+| 7 | B | Reused Code | Ariane 5 Flight 501, 1996 | Inquiry Board report (Lions), July 19, 1996 | READ: whole report; restricted technical report not read | Strong | Keep; the assumption's justification was never written into the requirements | receipts-ch5-7 |
+| 7 | C | The Walkway | Hyatt Regency Kansas City, 1981 | NBS Building Science Series 143 (the full report); NBSIR 82-2465A is only its appendix volume | READ: summary and chapters 10-11; test chapters not read. Missouri court opinion read in part; the Commission decision not obtained (no working link found); a secondary case study says the fabricator testified to a phone call that the engineers denied | Partial | Keep; source "who held what", the stamp dates and the disputed call to the Missouri findings, not to NBS or the case study | receipts-ch7-9, receipts-d2-followup |
+| 8 | A | The First Message Was a Question | OpenAI and Hugging Face agent incident | OpenAI post; METR/Redwood report | READ | Strong | **DRAFTED** as Ep01 | none |
+| 8 | B | Eight Signals | Breakthrough Listen technosignature search | Ma et al., arXiv 2301.12670 v1 (Nature Astronomy 7:492) | READ: full arXiv text; journal version not opened | Does not fit (nothing failed) | Keep as a second counter-example beside 8C (decided 2026-10-17; no swap) | receipts-ch7-9, receipts-swaps |
+| 8 | C | 1202 | Apollo 11 program alarms (counter-example) | Apollo 11 Mission Report MSC-00171; air-to-ground transcript | READ: alarm passages and descent transcript; a 2001 oral history by controller-side software support (Jack Garman) now read; no 1969 controller-loop record found | Partial | Keep as counter-example; the named controller and the "list under plastic" come from later recollection and commentary, not 1969 records | receipts-ch7-9, receipts-d2-followup |
+| 9 | A | The Programme | NHS National Programme for IT | NAO HC 888 (2011); NAO memo (2013); PAC HC 294 (2013) | READ: NAO summary, memo overview and governance, PAC report text; PAC oral evidence of June 12, 2013 read for Q1-10, Q47-50, Q212-215 only | Partial | Keep; frame as unreconciled information and split ownership; not the book's EHR framing | receipts-ch7-9, receipts-d2-followup |
+| 9 | B | The Score | Epic Sepsis Model validation | Wong et al., JAMA Intern Med 2021 (PMC author manuscript) | READ: full paper text; JAMA page, supplement and Epic's own publication not read (Epic's emailed statement read only as reported by MedCity News) | Partial | Keep as "vendor claims behind a wall, widely deployed, one independent check" | receipts-ch7-9, receipts-d2-followup |
+| 9 | C | Compartments | MKUltra | 1977 joint Senate hearing (CIA copy); Church Committee Book I (OCR) | READ: Turner's statement, selected exchanges, Book I pp. 385-406 selected pages | Good | Keep; do not use the book's dates or figures | receipts-ch9-x |
+| X | A | Who Owed What | 2008 crisis, narrowed to AIG Financial Products | FCIC Final Report, Jan 2011 | READ: Conclusions, eight body pages, and the AIG chapters (printed pp. 140-142, 200-202, 243-244, 266-273, 344-347 and 350-352 in full; pp. 348-349 not read) of 663 | Good once narrowed | **Narrowed to AIG collateral-call terms (applied 2026-10-17).** Angle after the AIG read: who held the collateral terms (sellers, counterparties and the unit's general counsel did; the governing executives, the supervisor and the auditor apparently did not), not "the top did not know" | receipts-ch9-x, receipts-d-followup |
+| X | B | The Chatbot's Promise | Moffatt v. Air Canada | 2024 BCCRT 149 | READ: whole decision (9 pp) | Partial | Keep as "accountability sat nowhere until the tribunal placed it" | receipts-ch9-x |
+| X | C | Alchemy | Moody's CDO ratings and the correlation assumption (**replaced Zillow, applied 2026-10-17**) | FCIC Report pp. 146-150, 206-208 | READ: printed pp. 118-121, 146-150, 206-208 and 221-223; Moody's own documents not read | Good | Ready for a script check against the pages cited; years on these pages were dropped by the text layer, so check dates against page images; Zillow receipts are kept in receipts-ch9-x.md | receipts-ch9-x, receipts-d-followup, receipts-d2-followup |
+
+**Counts.** READ 30, UNVERIFIED 0 (7A is now Columbia, READ). Of the READ slots, 4 are drafted episodes.
+
+## 3. Proposed and applied changes
+
+These follow the receipts. XA, XC, 7A, 4B and 5B are applied; 8B was decided (kept); every other row is a recommendation for the project owner, not applied.
+
+| Slot | Problem | Proposal | Status of the proposal |
+|---|---|---|---|
+| 7A Amazon | No primary source; one outlet's anonymous sources; Amazon's statement exists only second-hand | Swap for the Columbia accident (CAIB report, 2003) | **APPLIED 2026-10-17.** CAIB Vol. I Chapter 6 read (pp. 121-122, 130, 150-151, 170-172); Chapters 5, 7, 8 unread. Overlaps with 3A Challenger (both NASA): decide whether to keep both, with different angles. Amazon receipts remain in `receipts-ch5-7.md` |
+| 4B Sidewalk Labs | The only primary statements give an economic reason; the book's quote is in no primary document | Replace with HealthCare.gov (HHS OIG case study OEI-06-14-00350) | **APPLIED 2026-10-17.** OIG study read in part (Ch. 2 pp. 21-22, 25 and the executive summary); GAO-14-694 returned access denied and is unread. Sidewalk receipts remain in `receipts-ch4-5.md` |
+| 5B Neuralink | Post reports a setback and a software fix; no failure of knowing; the book's weekly account is not in it | Replace with the Post Office Horizon Issues judgment (*Bates v Post Office (No 6)*, [2019] EWHC 3408 (QB)) | **APPLIED 2026-10-17.** Paragraphs 100-111, 661-663, 925-935, 941-945 read; the Technical Appendix, other judgments and anything on prosecutions unread. Neuralink receipts remain in `receipts-ch4-5.md` |
+| 8B Breakthrough Listen | Nothing failed; re-observation found nothing like the signals | Keep as a second counter-example beside Apollo | **DECIDED 2026-10-17: keep.** Columbia went to 7A |
+| XA 2008 crisis | 663 pages; the Commission says human decisions, not models, were the cause | Narrow to AIG Financial Products (p. 243: who knew the collateral terms and who did not) | **APPLIED 2026-10-17.** Pages read: the Conclusions and p. 243; the AIG chapters are unread |
+| XC Zillow | Filings give a forecasting-limit explanation; they name no model and say nothing about who knew what | Replace with Moody's CDO correlation (FCIC pp. 146-150) | **APPLIED 2026-10-17.** Those pages are read; the surrounding section is not. Zillow Offers is retired from the slate; its receipts remain in `receipts-ch9-x.md` |
+| 2B Flash Crash | Partial premise fit | Reframe around the volume-only algorithm and many private pause rules | **APPLIED 2026-10-17** (receipts-options.md; coverage still the Executive Summary plus four body sections) |
+| 2C Google Flu Trends | Weak to partial premise fit | The proposed "never published how it worked" reframe | **REJECTED 2026-10-17** after reading Google's 2009 paper; slot kept at weak-to-partial, first to swap |
+| 3A Challenger and 7A Columbia | Same agency, same theme | Keep both as a pair with different angles, not released back to back | **DECIDED 2026-10-17.** Settle the O-ring classification wording (CAIB p. 196 vs Rogers Vol. I pp. 125-128) before drafting 3A |
+
+## 4. Chapter by chapter
+
+Each entry is the book's own framing, the case, and what the receipts changed. Detail and locators are in the receipts files.
+
+### Chapter 1: The Coordination Intelligence Revolution
+
+- **1A Facebook.** The paper reports N = 689,003 and a one-week window (January 11-18, 2012). The manipulation removed posts (positive for one group, negative for another); no group saw added content. It measured the share of emotional words in people's own updates, not mood, with effect sizes as small as d = 0.001. The paper asserts consent through the Data Use Policy; the Expression of Concern calls consent a matter of concern; Cornell's IRB found the project outside its program because Facebook ran it. Facebook, Cornell and PNAS each had a reason the consent question was elsewhere, and the authors and editors did address it, so "none was placed to ask" is too strong.
+- **1B Mars Climate Orbiter.** Root cause: thruster data in pound-seconds where the interface required Newton-seconds, in a ground file called "Small Forces". The Board also found the navigation team's trajectory concerns were not communicated effectively and not understood by the spacecraft operations team.
+- **1C 737 MAX.** DRAFTED as Ep04.
+
+### Chapter 2: The Dawn of Systems Intelligence
+
+- **2A Knight Capital.** DRAFTED as Ep02.
+- **2B Flash Crash.** The report documents a large sale executed by a volume-only algorithm (9% of the prior minute's volume, no price or time limit), automated participants and market makers pausing under their own rules, and liquidity collapsing when many withdrew at once. It does not say nobody could see the whole market; staff reconstructed the picture afterwards from order data and interviews.
+- **2C Google Flu Trends.** The paper argues overfitting (50 million terms against 1,152 data points) and search-service drift, hedged. It does not use causal-inference language. Google's response is not in the paper.
+
+### Chapter 3: Architecture of Systems Intelligence
+
+- **3A Challenger.** The Commission found the launch decision flawed and the deciders unaware of the O-ring history, of Thiokol's initial recommendation against launching below 53°F, and of the engineers' continuing opposition. Thiokol's engineers did connect temperature to O-ring performance; their recommendation was reversed in a management caucus. The ice-water remark is in the February 11, 1986 hearing transcript, not in Appendix F. All seven crew died. Chapter VI adds that the joint's redundancy was formally dropped (Criticality 1R to 1, Dec 17, 1982) and then waived (Mar 28, 1983), and later tracking documents still used the old label (receipts-d-followup).
+- **3B Therac-25.** Six known accidents, June 1985 to January 1987; two distinct software faults (an edit-timing race at Tyler; a one-byte counter overflow at Yakima); AECL "decided not to duplicate" earlier hardware interlocks. The paper gives no total death count; the receipts file counts three deaths it attributes to overdose. Hospitals, the manufacturer and two regulators each held part of the picture and did not share it.
+- **3C Heartbleed.** The advisory (Apr 7, 2014, CVE-2014-0160): a missing bounds check in the TLS heartbeat extension; fixed in 1.0.1g; credited to Neel Mehta of Google Security. The story of who reviewed and relied on the code needs other sources. The OpenSSL repository shows the heartbeat code added on Dec 31, 2011 (commit marked "Submitted by" its author and "Reviewed by" one named reviewer) and fixed in April 2014; nothing read says how much review it got (receipts-d-followup).
+
+### Chapter 4: Systems Intelligence in Action
+
+- **4A Thai clinics.** Eleven clinics (five in Pathum Thani, six in Chiang Mai), November 2018 to August 2019; 21% of 1,838 images (393) failed the quality standard; only two clinics could darken a screening room; some uploads took 60 to 90 seconds; nurses worked around the protocol. The paper says nothing about shutdowns. The book's "95% accuracy" and "hospitals deployed it; many shut it down within months" are not in it.
+- **4B HealthCare.gov (replaced Sidewalk Labs).** The HHS OIG case study (Feb 2016) says CMS received 18 "documented warnings" about the build between July 2011 and July 2013; the technical staff's Deputy CIO said they did not receive or know the McKinsey findings that senior officials had; staff avoided passing bad news up; the launch on Oct 1, 2013 drew 250,000 concurrent users against a lower planned capacity (receipts-swaps). GAO's report was not readable. Former note, kept for the record: **Sidewalk Labs.** Doctoroff's May 7, 2020 post gives economic uncertainty and financial viability. It does not use "coordination" or "living system". Waterfront Toronto's board vote had been scheduled for May 20, 2020.
+- **4C Big Dig collapse.** About 26 tons fell on July 10, 2006; one person died. Probable cause: an epoxy with poor creep resistance. The supplier had failed creep-test results from 1995-96; the report finds no evidence the project's designers or builders knew epoxies could creep, and faults B/PB and the contractor for not monitoring anchors after a 1999 displacement. Final cost: "in excess of $14 billion".
+
+### Chapter 5: Human-Systems Intelligence Interaction
+
+- **5A Mata v. Avianca.** Sequence: March 1, 2023 filing; March 15 reply saying the cases could not be found; May 4 order; May 25 admission. $5,000 penalty, notices to the client and to the judges named; the finding of bad faith rests on conscious avoidance and false statements, not on the use of an AI tool. The F. Supp. 3d reporter citation was not verified.
+- **5B Post Office Horizon (replaced Neuralink).** In the Horizon Issues judgment (Dec 16, 2019) the experts agreed bugs had caused actual shortfalls in sub-postmasters' accounts; the Post Office was by the end of the trial "forced to accept" a great many bugs; the judge describes "institutional obstinacy", and says Fujitsu kept powers over the system from the court until shortly before trial and disclosed some 5,000 error-log entries only after it ended (receipts-swaps; the Technical Appendix and prosecutions were not read). Former note, kept for the record: **Neuralink.** The post (May 8, 2024) says "a number of threads retracted" and that a changed algorithm and interface restored and then exceeded the initial performance; it gives no thread count or dates. It lists text entry as future work. The book's "typing messages" and week-by-week learning story are not in it.
+- **5C Myanmar.** BSR was funded by Facebook with editorial control retained; it classed Facebook as "linked" to the security risks, not as causing them. The sentence "we weren't doing enough" is Facebook's description of the report, not found in BSR's text. The UN mission called Facebook's response "slow and ineffective" and said its reported-post test took weeks to resolve through an unofficial contact.
+
+### Chapter 6: Consciousness as Pattern Recognition
+
+- **6A Uber.** DRAFTED as Ep03.
+- **6B Williams.** The complaint alleges a blurry still, a match from an expired licence photo, a non-blind lineup with a witness who was not present, and a warrant request that omitted those facts. "Approximately 30 hours" is the plaintiff's figure, not admitted by the City. The settlement (June 28, 2024) bars arrests resting solely on a facial-recognition lead or a lineup generated from one; $300,000 appears only in press coverage, because the release attachment is fully redacted.
+- **6C Gender Shades.** On the Pilot Parliaments Benchmark (1,270 people), IBM's error on darker-skinned women was 34.7% and Face++'s on lighter-skinned men was 0.8%; Microsoft's error on darker women was 20.8%. The skew figures (79.6% and 86.2% lighter-skinned) describe the public benchmarks IJB-A and Adience, not the vendors' training data.
+
+### Chapter 7: Engineering Reality
+
+- **7A Columbia (replaced Amazon).** CAIB Volume I, Chapter 6: a photo working group saw a large foam strike on Flight Day Two; the engineers' team asked for imagery through the wrong channel and wrote that uncertainty could not be reduced without it; managers asked who was requesting the photos, and a trusted expert's early reassurance went unquestioned; safety representatives were passive (receipts-swaps; Chapters 5, 7 and 8, including the Board's link to Challenger, not read). Former note, kept for the record: **Amazon.** UNVERIFIED. Reuters (via CNBC) reports a tool that penalized resumes with the word "women's", from five anonymous sources; Motherboard quotes an Amazon statement that it was never used by recruiters to evaluate candidates, which conflicts with Reuters's sources on that point.
+- **7B Ariane 5.** An unprotected 64-bit to 16-bit conversion of the "Horizontal Bias" variable raised an exception in the inertial reference software; both units stopped, the second a cycle after the first. The alignment function served no purpose after lift-off but ran for about 40 seconds, for commonality with Ariane 4. The Board says the assumption was "obscured", not that someone held it and failed to tell.
+- **7C Hyatt Regency.** NBS Building Science Series 143 (May 1982) is the full report. The rod change roughly doubled the load on the fourth-floor connections (about 20.3 to 40.7 kips); the original detail was already below code capacity. NBS names no individuals and documents no calls or reasons. The Missouri Court of Appeals' 1988 opinion summarizes the Commission's findings: the engineers approved the shop drawings and did not review the connection for code compliance.
+
+### Chapter 8: Beyond Human Intelligence
+
+- **8A OpenAI and Hugging Face.** DRAFTED as Ep01.
+- **8B Breakthrough Listen.** 820 stars, about 480 hours of Green Bank data, eight signals of interest from five stars. A May 21, 2022 re-observation found nothing like them. The paper never mentions a million stars.
+- **8C Apollo 11.** Five program alarms during powered descent (1201 and 1202, "executive overflow"). The Mission Report attributes them to rendezvous-radar interface configuration and says the continue-descent rule was decided before flight. It names no controller and no simulation. The NASA Apollo Lunar Surface Journal page cited earlier is a 1998 recollection by Peter Adler; the named flight controller appears only in editors' commentary.
+
+### Chapter 9: No Way? Know-How
+
+- **9A NHS programme.** NAO (May 18, 2011): £2.7 billion on care records systems judged not value for money; the NHS Chief Executive was the named Senior Responsible Owner. PAC (Sept 18, 2013): the programme was dismantled but "in effect remains in place" as component programmes. The case concerns a stalled national programme, not the book's picture of unconnected hospital systems.
+- **9B Epic Sepsis Model.** Single academic centre, 38,455 hospitalizations; hospitalization-level AUC 0.63, sensitivity 33%, positive predictive value 12%, alerts on 18% of admissions. The vendor's own documentation, which the authors saw, gave 0.76 to 0.83. Epic disputed the findings; its response was read only through press relay.
+- **9C MKUltra.** The director's statement dates it 1953-1964; records were destroyed in January 1973 on Gottlieb's verbal orders, per the Church report; seven boxes of finance folders survived and were found in 1977. 149 subprojects in the recovered files. The book's "1953 to 1973", "hundreds of millions of dollars" and "zero validated intelligence applications" are not supported as written.
+
+### Chapter X: The Grand Coordination
+
+- **XA FCIC.** The Commission's first conclusion rejects "computer models gone haywire" and puts the cause on human decisions. At AIG Financial Products (p. 243), the CEO and others told investigators they did not know the collateral-call terms until calls began in July 2007, while the salesman and division head did. The AIG chapters add that the unit's general counsel reviewed the contracts before execution and called the terms standard; the colleague who pushed to stop writing the swaps did not know them; and the Commission's headline is governance and deregulation, not ignorance alone (receipts-d-followup).
+- **XB Moffatt v. Air Canada.** The tribunal rejected the argument that the airline was not responsible for its chatbot; award $812.02 ($650.88 damages, $36.14 interest, $125 fees). The decision does not say how the chatbot worked.
+- **XC Moody's (applied; replaces Zillow Offers).** The report says Moody's relied on ratings already assigned to the underlying securities, lacked a good correlation model, and that its insider's proposal for a "look through" method stalled. The study was approved but blocked by a software-purchase dispute; former staff and current Moody's executives disagree on whether market share drove ratings (receipts-d-followup).
+
+## 5. Where the book disagrees with the sources
+
+Details, locators and the author's short list are in the receipts files; section references are to those files.
+
+| Ch | The book says | The source says | Source status |
+|---|---|---|---|
+| 1 | "Without their informed consent" (as fact); "secretly manipulated"; users saw "more positive" or "more negative" content | The paper asserts consent via the Data Use Policy; PNAS calls it a concern; the manipulation removed posts | READ |
+| 1 | "The study proved, unequivocally" emotional contagion | "First experimental evidence"; effect sizes as small as d = 0.001; measures word shares, not mood | READ |
+| 1 | "In partnership with Cornell University and UCSF" | Authors are from Facebook and Cornell; UCSF is one author's later address | READ |
+| 1 | Title "$50 Million Algorithm" | No dollar figure in the paper, notice or correction | UNVERIFIED |
+| 1 | MCO: pounds-force and newtons | Impulse units: pound-seconds and Newton-seconds | READ |
+| 1 | Meadows: the paradigm is the top leverage point | The top item is the power to transcend paradigms; paradigm is second | READ (claims audit) |
+| 2 | House of Cards: "$100 million", greenlit "almost entirely" on data | The $100M was a press report disputed at the time; Sarandos named the creative team and source material as the bet | READ (interview) |
+| 3 | Challenger: "nobody coordinated" findings with launch-morning temperature | Thiokol's engineers made the link and recommended against launching below 53°F; it was reversed and not passed up | READ |
+| 3 | Feynman's ice-water demonstration "proved" this | The Feb 11, 1986 hearing records him saying sealing material showed no resilience at 32°F; not in Appendix F | READ |
+| 3 | Heartbleed, Morris worm and Code Red "trace back to memory management failures" | Heartbleed: bounds check; Code Red: buffer overflow; Morris: one of four routes was an overflow. "Memory-safety bugs" fits better | READ (claims audit) |
+| 3 | "Most security vulnerabilities in the history of computing" are memory failures | Microsoft ~70% of CVEs (2019), Chromium ~70% of high-severity bugs (since 2015), Android 76% (2019) falling to 24% (2024); specific codebases | READ (claims audit) |
+| 4 | DR AI: 95% accuracy; "Hospitals deployed it. Many shut it down within months." | Beede et al.: >90% sensitivity and specificity; a three-clinic prospective study; nothing on shutdowns | READ |
+| 4 | Doctoroff: "coordination isn't a blueprint—it's a living system"; collapse as "coordination death spiral" | In no primary document read; the post gives an economic reason | READ |
+| 4 | Big Dig: "$22 billion and fifteen years" | NTSB: "in excess of $14 billion"; a 20-year effort | READ |
+| 4 | Bogotá: Peñalosa "1998 to 2001"; 80 to 20 per 100,000 (−75%); the repo opener credits Mockus and −70% | IDB/World Bank case study: 80 (1993) to 22 (2004); decline began before either mayor; terms 1995-97 Mockus, 1998-2000 Peñalosa, Mockus again from 2000 or 2001 | READ (claims audit) |
+| 5 | Burkhart played Guitar Hero in 2020; "first such demonstration in history" | First hand movement June 2014; Guitar Hero reported with the Nature paper, April 2016; institutions' "first" is narrower | READ (press releases; Nature paper abstract only) |
+| 5 | Neuralink: "typing messages"; week-by-week learning; hybrid performance | The post lists text entry as future work and has no weekly account | READ |
+| 6 | Uber: Oct 21, 2018; classification times; 1.5 s; 43 mph; 6.7 s streaming; "four-lane"; names | NTSB: March 18, 2018; no such timestamps; 1.2 s; 45 mph at detection, 39 mph at steering; about 6 s of gaze down; neither "four-lane" nor names | READ |
+| 6 | Gender Shades: "training data overwhelmingly biased toward lighter-skinned males"; "95% accuracy on Black female faces" | The skew figures are about public benchmarks (lighter males 59.4% and 41.6%); no post-fix results in the paper; the follow-up gives 4.1%, 1.52% and 16.97% darker-female error for three vendors in Aug 2018 | READ |
+| 6 | Parks: "10 days in jail after an incorrect match to a blurry surveillance image" | The Parks complaint alleges the probe was a photo from a fake licence; the pages read do not state "ten days" | READ (pages 2-15 of the complaint) |
+| 6 | GPT-3: 1,287 MWh, 552 tons CO2, "120 homes", "one person's lifetime" | Patterson et al. give the first two as estimates; the comparisons are not in the paper | READ (claims audit) |
+| 7 | Airbus partition "in 2019", "generative AI" | Unveiled December 2015, Airbus announcement March 2016; "generative design"; 45% (30 kg) lighter than current designs | READ (claims audit) |
+| 7 | Huyen: "70% of ML projects never make it to production" | No source found | UNVERIFIED |
+| 8 | Breakthrough Listen "analyzed 1 million stars" | 820 targets | READ |
+| 9 | MKUltra "active from 1953 to 1973"; "hundreds of millions of dollars"; "zero validated intelligence applications" | Director: 1953-1964; no program-wide total; the Church report records operational use abroad | READ |
+| 9 | Tellers "from roughly 300,000 in 1970 to nearly 500,000 by 2010" | Autor 2015: 500,000 to about 550,000 over 1980-2010 | READ (claims audit) |
+| 9 | EHR systems "don't coordinate" across hospitals | The NHS case is a national programme that stalled | READ |
+| 9, X | A 2016 Stanford pneumonia AI at 95% accuracy, deployed then shut down in six months | Nothing found; the nearest real items are CheXNet (arXiv Nov 2017, F1 scores, no deployment) and Zech et al. 2018 | UNVERIFIED |
+| X | A team's AI adoption went from 11% to 74% | Anonymous; no source | UNVERIFIED |
+
+### 5b. Further differences found in the receipts, not in the table above (added 2026-10-17)
+
+Source for each row is the receipts file named in the last column. Same rule as above: model-read, not human-checked.
+
+| Ch | The book says | The source says | Receipts |
+|---|---|---|---|
+| 1 | 689,003 people "had their News Feeds ... manipulated" | 689,003 is the paper's N; about 155,000 per condition posted at least once in the window and entered the analysis | receipts-ch1-3 §1A.4 |
+| 3 | "A glass of ice water and a piece of rubber" as one scene | The transcript passage has ice water and the seal material; the glass comes from a separate remark about a clamp | receipts-ch1-3 §3A.4 |
+| 4 | DR AI: doctors "didn't trust it"; false positives "scared patients"; reports transcribed into EHRs; "who pays for follow-up" | The users in the paper are nurses and camera technicians; false-positive worry is nurses anticipating it; the paper has nothing on EHR integration or who pays | receipts-ch4-5 §4A.4 |
+| 4 | Sidewalk designed "a Civic Data Trust where citizens governed urban data collection" | The panel record says the data-trust idea was Sidewalk's own proposal and the objection was a private company defining it; the Master Innovation and Development Plan was not read | receipts-ch4-5 §4B.4 |
+| 5 | Neuralink: performance "exceeds what either could do alone" | The May 8, 2024 post gives 8.0 bits per second against about 10 for engineers using a mouse | receipts-ch4-5 §5B.4 |
+| 6 | Gender Shades: 34.7% error on darker-skinned females; "65% accuracy on Black faces" before the fix | 34.7% is IBM only (range 20.8% to 34.7% across vendors); 65.5% and 65.3% are true-positive rates for darker females (Table 4); "Black faces" is not the paper's group | receipts-ch5-7 §6C.4 |
+| 7 | Fei-Fei Li section: "error rates 34% higher for dark-skinned women" | The paper's figure is a 34.7% error rate, not "34% higher" | receipts-ch5-7 §6C.4 |
+| 9 | MKUltra: "150 research projects"; each team knew only its own results; failures could not be learned from because classified; "chemist-director" | 149 subprojects in the recovered files (144 counted by 1963), so approximately right; the next two were not found; "chemist" was not searched for | receipts-ch9-x §9C.3 |
+| 1 | 2008: "these models largely failed" (Ch. 1) | The FCIC says the crisis was not the work of "computer models gone haywire"; its model passages concern rating agencies | receipts-ch9-x §XA.4 |
+
+**Noticed but not checked by anyone:** the Kepler "anomalies... megastructures" sentence in the Tarter section of Chapter 8; Doctoroff's other quotes, the Hudson Yards line and the "$30 billion" deputy-mayor figure in Chapter 4.
+
+## 6. Audit trail
+
+**Receipts files** (each by a separate Claude session; uncommitted): `receipts-ch1-3.md`, `receipts-ch4-5.md`, `receipts-ch5-7.md`, `receipts-ch7-9.md`, `receipts-ch9-x.md`, `claims-audit.md`. Added 2026-10-17: `receipts-d-followup.md` (AIG chapters, Moody's, PNAS correction, Rogers Commission chapters VI and VII, OpenSSL commits), `receipts-swaps.md` (Columbia, HealthCare.gov and Horizon receipts for the 7A, 4B and 5B swaps), `receipts-options.md` (CAIB Chapter 8 and the Columbia/Challenger pairing, the Flash Crash lessons, Google's 2009 Flu Trends paper), `receipts-d2-followup.md` (rest of the AIG and Moody's pages, Kramer's post, Hyatt case study, Parks pp. 16-17, BSR §3.2, PAC oral evidence, Epic's response as reported, Garman's oral history), `corrections-plan.md` (inventory and batches) and `book-corrections-for-author.md` (the standalone list for the author).
+
+**What I did to check them.** I read all six files. I then re-downloaded ten sources and searched them myself for the receipts' most consequential claims. All ten matched:
+1. Challenger Appendix F contains no "ice" and no "clamp"; it does give the "1 in 100 to 1 in 100,000" range.
+2. NBSIR 82-2465(A) carries the same title and authors as the full report; I did not independently confirm it is only the appendix volume.
+3. The Apollo "Program Alarms" page is "Copyright © 1998 by Peter Adler", a recollection.
+4. The Ma et al. paper contains "We do not detect anything like the 8 signals of interest" and no "million stars".
+5. The Facebook paper has no "unequivocal"; it gives January 11-18, 2012, N = 689,003, and the Data Use Policy sentence.
+6. The Doctoroff post archive page has no "coordination"; the single "living" in its text is a Medium sidebar headline ("The Pros and Cons of Living in Seattle").
+7. The NTSB report says "in excess of $14 billion" and "about 26 tons", and has no "$22 billion".
+8. The Therac-25 paper says "six known accidents".
+9. Autor's 2015 paper says tellers rose from 500,000 to about 550,000 over 1980-2010.
+10. Turner's statement says "1953-1964" and "149 MKULTRA subprojects"; "hundreds of millions" does not appear in the hearing.
+
+**One error found and fixed.** The claims audit swapped two PNAS identifiers; PMC4115552 is the Expression of Concern and PMC4115523 is the Correction. The audit file now says so.
+
+**What I did not check.** The remaining receipts (several hundred specific passages) are unaudited by me; their locators are meant to let a person find each passage quickly. Receipts for the Missouri Commission decision, the MIDP, JAMA's own page, Epic's own response and the Nature paper's full text do not exist. For the 2008 report, receipts now cover the Conclusions, about eight body pages, the AIG chapters (partly as keyword sentences) and Moody's printed pp. 146-150 and 206-208; the other roughly 600 pages are unread.
+
+## 7. Where to start
+
+Ranked by how much of the work the receipts have already done, not by importance:
+
+1. **Challenger (3A), Therac-25 (3B), Ariane 5 (7B), Big Dig (4C).** Strong or good premise fit, full text read, specific passages located.
+2. **MKUltra (9C)** (with the book's numbers dropped), **Mars Climate Orbiter (1B).**
+3. **Williams (6B), Myanmar (5C), Facebook (1A), Mata (5A), Moffatt (XB).** Good facts, with the framing caveats above.
+4. **Decisions taken 2026-10-17:** 7A (Columbia), 4B (HealthCare.gov), 5B (Horizon) replaced; 8B kept. Also decided: Columbia and Challenger (3A) both stay as a pair; 2B reframed; the 2C reframe rejected (2C is first to swap). XA and XC are decided and now substantially read (XA: all AIG pages in the follow-up files except printed pp. 348-349; XC: printed pp. 118-121, 146-150, 206-208 and 221-223), so the next step is a script-level check of the cited pages against page images, since the FCIC text layer drops digits.
+
+## 8. Not done
+
+- No new episodes were drafted.
+- The swaps applied are XA, XC, 7A, 4B and 5B (the last three on 2026-10-17 after their replacement documents were read, and in part only: see their coverage cells). The other proposals in section 3 (2B, 2C reframes) are not applied.
+- No human has checked any receipt. The channel's rule still applies: nothing goes out under "checked by a human" until the author does the source check.
