@@ -11,12 +11,12 @@ import { createCanvas, GlobalFonts, type SKRSContext2D } from '@napi-rs/canvas';
 import gifenc from 'gifenc';
 import { H as SH, W as SW, LOOP_SECONDS, STATIC_PHASE, STILL_PHASE, drawFrame, sceneFor, type Palette } from '../scripts/story-motion';
 import { diagramCaption } from './diagram-caption';
-import { LAYER_LABEL, type Story } from './stories';
+import { LAYER_LABEL, storyUrl, type Story } from './stories';
 
 const { GIFEncoder, quantize, applyPalette } = gifenc;
 
 export const GIF_WIDTH = 640;
-export const GIF_HEIGHT = 600;
+export const GIF_HEIGHT = 616;
 const FRAME_MS = 80; // 12.5 frames per second; a 12 s loop is exactly 150 frames
 const SCALE = GIF_WIDTH / SW; // the 400x250 scene, drawn at 1.6x
 const PAD = 28;
@@ -117,21 +117,42 @@ function drawChrome(c: SKRSContext2D, story: Story) {
   c.lineWidth = 1;
   c.strokeRect(0.5, SCENE_TOP + 0.5, GIF_WIDTH - 1, SCENE_H - 1);
 
-  // Footer: the diagram's honest caption, the missing layer, and where to read the sources.
+  // Footer: the diagram's honest caption, the missing layer, and this story's own link, so the file
+  // points back to its source wherever it is posted. The link is on every frame.
   const y1 = SCENE_TOP + SCENE_H + 22;
   c.font = `400 11px ${FONT}`;
   c.fillStyle = SUB;
   c.fillText(diagramCaption(d), PAD, y1);
   c.font = `700 12px ${FONT}`;
   c.fillStyle = INK;
-  c.fillText(`Missing layer: ${LAYER_LABEL[d.missingLayer]}`, PAD, y1 + 20);
-  c.textAlign = 'right';
+  c.fillText(`Missing layer: ${LAYER_LABEL[d.missingLayer]}`, PAD, y1 + 19);
   c.fillStyle = SIGNAL;
-  c.fillText('knowware.press/stories', GIF_WIDTH - PAD, y1 + 20);
+  c.fillText(displayUrl(story), PAD, y1 + 38);
   c.textAlign = 'left';
 }
 
-// The scene clears its own canvas, so it is drawn on a layer of its own and composited over the paper.
+/** knowware.press/stories/<slug>: the story's page, without the scheme or trailing slash. */
+export function displayUrl(story: Story): string {
+  return storyUrl(story).replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
+
+/**
+ * A GIF comment block (the format's own metadata slot) carrying the title, link and licence, added
+ * just before the trailer. Viewers ignore it, but it survives in the file, so a saved GIF still says
+ * where it came from.
+ */
+function withComment(gif: Uint8Array, text: string): Buffer {
+  const bytes = Buffer.from(text.replace(/[^\x20-\x7E]/g, ''), 'ascii');
+  if (gif[gif.length - 1] !== 0x3b) throw new Error('story-gif: unexpected GIF ending');
+  const parts: number[] = [0x21, 0xfe];
+  for (let i = 0; i < bytes.length; i += 255) {
+    const chunk = bytes.subarray(i, i + 255);
+    parts.push(chunk.length, ...chunk);
+  }
+  parts.push(0x00);
+  return Buffer.concat([Buffer.from(gif.subarray(0, gif.length - 1)), Buffer.from(parts), Buffer.from([0x3b])]);
+}
+
 function drawScene(c: SKRSContext2D, layer: SKRSContext2D, story: Story, seconds: number, phase?: number) {
   layer.setTransform(SCALE, 0, 0, SCALE, 0, 0);
   // k = 1: the scene is laid out for a 400px-wide canvas, so its text and lines scale up with it.
@@ -223,7 +244,10 @@ export function renderStoryGif(story: Story): Promise<Buffer> {
         prev = index;
       }
       gif.finish();
-      return Buffer.from(gif.bytes());
+      return withComment(
+        gif.bytes(),
+        `Knowware stories. ${story.data.headline}. ${storyUrl(story)} Evidence grade ${story.data.grade}. Entry text CC BY 4.0; cite the sources on the page.`,
+      );
     });
     gifs.set(story.id, p);
   }

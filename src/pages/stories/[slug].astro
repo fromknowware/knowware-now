@@ -106,7 +106,7 @@ const jsonLd = {
       </ol>
     </section>
 
-    <ShareStory text={shareText(story)} url={PAGE_URL} title={d.headline} summary={d.summary} card={`/stories/cards/${story.id}.png`} gif={`/stories/gifs/${story.id}.gif`} still={`/stories/gifs/still/${story.id}.png`} gifAlt={GIF_ALT} />
+    <ShareStory text={shareText(story)} url={PAGE_URL} title={d.headline} summary={d.summary} card={`/stories/cards/${story.id}.png`} gif={`/stories/gifs/${story.id}.gif`} still={`/stories/gifs/still/${story.id}.png`} gifAlt={GIF_ALT} gifName={`knowware-${story.id}.gif`} />
 
     <StoriesNote />
   </article>
