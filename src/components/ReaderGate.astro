@@ -154,7 +154,7 @@ const fullHref = `/read/${slug}/full`;
   .kw-gate-copy { grid-column: 1 / span 6; }
   .kw-gate-action { grid-column: 8 / span 5; }
   .kw-gate-eyebrow {
-    font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
     color: var(--band-accent); margin: 0 0 16px;
   }
   .kw-gate-h {
@@ -166,16 +166,18 @@ const fullHref = `/read/${slug}/full`;
     color: var(--band-sub); margin: 0; max-width: 52ch;
   }
   .kw-gate-form { display: flex; flex-direction: column; gap: 14px; }
+  /* display:flex beat the hidden attribute, so a signed-in reader saw the sign-up form under the Continue button */
+  .kw-gate-form[hidden], .kw-gate-unlocked[hidden] { display: none; }
   .kw-gate-field { display: flex; flex-direction: column; gap: 6px; }
   .kw-gate-label {
-    font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+    font: 600 12px/1 "JetBrains Mono", ui-monospace, monospace;
     letter-spacing: .08em; text-transform: uppercase; color: var(--band-sub);
   }
   .kw-gate-input {
     font: 400 16px/1.3 "JetBrains Mono", ui-monospace, monospace;
     color: var(--band-ink); background: var(--band-node-bg);
     border: 1px solid var(--band-node-line); padding: 12px 14px;
-    width: 100%;
+    width: 100%; min-height: 48px;
   }
   .kw-gate-input:focus-visible { outline: 2px solid var(--band-ink); outline-offset: 2px; }
   .kw-gate-input[aria-invalid="true"] { border: 2px solid #ff8a80; }
@@ -185,17 +187,21 @@ const fullHref = `/read/${slug}/full`;
   .kw-gate-check {
     display: flex; gap: 10px; align-items: flex-start;
     font-size: 14px; line-height: 1.45; color: var(--band-sub); cursor: pointer;
+    min-height: 44px; align-items: center;
   }
-  .kw-gate-check input { width: 18px; height: 18px; margin: 1px 0 0; flex-shrink: 0; accent-color: var(--signal); }
+  .kw-gate-check input { width: 22px; height: 22px; margin: 0; flex-shrink: 0; accent-color: var(--signal); }
   .kw-gate-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
   .kw-gate-submit { align-self: flex-start; }
   .kw-gate-status { font-size: 14px; color: var(--band-ink); margin: 0; min-height: 1em; }
   .kw-gate-status:empty { display: none; }
-  .kw-gate-fine { font-size: 12px; line-height: 1.5; color: var(--band-sub); margin: 0; }
+  .kw-gate-fine { font-size: 13px; line-height: 1.5; color: var(--band-sub); margin: 0; }
   .kw-gate-ok { font-size: 15px; color: var(--band-sub); margin: 0 0 14px; }
 
   @media (max-width: 900px) {
     .kw-gate-inner { grid-template-columns: 1fr; gap: 28px; }
     .kw-gate-copy, .kw-gate-action { grid-column: 1; }
+  }
+  @media (max-width: 520px) {
+    .kw-gate-submit { align-self: stretch; justify-content: center; min-height: 48px; }
   }
 </style>
