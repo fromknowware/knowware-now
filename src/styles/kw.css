@@ -192,6 +192,8 @@ html.kw-dock-off #kw-dock { display: none; }
 }
 .js #kw-dock-close { display: inline-flex; }
 #kw-dock-close:hover { color: #EDEEE4; }
+/* While a text field has focus the on-screen keyboard is up: a fixed bar would sit on the field being typed in. */
+body:has(input:not([type="checkbox"], [type="radio"]):focus, textarea:focus, select:focus) #kw-dock { display: none; }
 @media (max-width: 520px) {
   #kw-dock { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); gap: 10px; }
   #kw-dock-sep, #kw-dock-saving { display: none; }
@@ -334,7 +336,7 @@ article[data-kw-read] {
    ============================================================ */
 .kw-btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 12px 22px;
+  padding: 12px 22px; min-height: 44px; /* 41px before: under the 44px target */
   font: 500 13px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: -0.01em;
   border: 2px solid var(--ink);

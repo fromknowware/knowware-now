@@ -103,7 +103,7 @@ import Field from '../components/Field.astro';
 .claim-form { max-width: 520px; display: flex; flex-direction: column; gap: 20px; }
 .field-group { display: flex; flex-direction: column; gap: 6px; }
 .field-label {
-  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 600 12px/1.2 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: .08em; text-transform: uppercase; color: var(--sub);
 }
 .field-input {
@@ -112,8 +112,10 @@ import Field from '../components/Field.astro';
   padding: 10px 14px;
   font: 400 14px/1.4 "JetBrains Mono", ui-monospace, monospace;
   transition: border-color 0.15s;
-  width: 100%;
+  width: 100%; min-height: 48px;
 }
+/* 16px or more: iOS Safari zooms the whole page when a smaller field takes focus, and does not zoom back. */
+@media (max-width: 900px) { .field-input { font-size: 16px; } }
 .field-input:focus { border-color: var(--signal); }
 .field-input[aria-invalid="true"] { border-color: var(--error); border-width: 2px; }
 .form-note { font-size: 14px; color: var(--sub); margin: 0 0 20px; }
@@ -128,6 +130,7 @@ import Field from '../components/Field.astro';
 .form-status:empty { display: none; }
 .form-status.is-error { color: var(--error); }
 .field-textarea { resize: vertical; min-height: 120px; }
+@media (max-width: 900px) { .claim-form { max-width: none; } }
 .form-status {
   font: 400 13px/1.4 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub);
