@@ -398,7 +398,7 @@ const VOICES = [
       "Google Sycamore processor"
     ],
     "coldOpen": "Classical computers scale linearly. Quantum computers scale doubly exponentially. But here is what nobody says: the reason quantum works is that it does not collapse possibilities until it must. It coordinates all states simultaneously. It is a three-body computer.",
-    "bio": "Founded Google Quantum AI and established Neven's law — the observation that quantum hardware was improving at a doubly exponential rate, faster than any known technology curve. Led the team that achieved quantum supremacy in 2019, demonstrating that quantum systems can solve problems classical systems cannot in any practical timeframe.",
+    "bio": "Founded Google Quantum AI and established Neven's law — the observation that quantum hardware was improving at a doubly exponential rate, faster than any known technology curve. Directed the Google effort behind the 2019 'quantum supremacy' experiment, which reported a computation beyond what classical computers could do in a practical timeframe; rivals have disputed the claim.",
     "whyMatters": "Neven's quantum architecture operates on superposition — the ability to coordinate across all possible states before committing to one. This is structurally a three-body system: the question, the superposition (the coordination field), and the measured answer. He builds hardware that embodies the coordination intelligence thesis."
   },
   {
@@ -553,7 +553,7 @@ const VOICES = [
       "Ch. 03",
       "Academic"
     ],
-    "affiliation": "Meta AI · NYU Courant Institute",
+    "affiliation": "NYU Courant Institute · formerly Meta AI",
     "status": "Living · Active",
     "active": "1960 – present",
     "jurisdiction": "Deep Learning / Machine Perception / AI Architecture",
@@ -575,7 +575,7 @@ const VOICES = [
       "Backpropagation refinement"
     ],
     "coldOpen": "Large language models predict the next token. That is not intelligence — that is statistical autocomplete at scale. Real intelligence predicts the state of the world. The model must have a world model, not just a word model. That third layer — the world — is what everyone keeps skipping.",
-    "bio": "Invented convolutional neural networks and proved that hierarchical feature learning could match human perception on structured tasks. Now leads Meta AI's fundamental research agenda, arguing that current LLMs are architecturally incapable of genuine reasoning and proposing JEPA — Joint Embedding Predictive Architecture — as a path toward world-modeling intelligence.",
+    "bio": "Invented convolutional neural networks and proved that hierarchical feature learning could match human perception on structured tasks. Spent twelve years at Meta, where he founded its AI research lab (FAIR) and served as Chief AI Scientist, and announced in 2025 that he was leaving to start a company. He argues that current LLMs are architecturally incapable of genuine reasoning and proposing JEPA — Joint Embedding Predictive Architecture — as a path toward world-modeling intelligence.",
     "whyMatters": "LeCun is the field's most prominent critic of two-body AI (input → predicted token). His JEPA architecture explicitly adds a third body: the abstract world model that coordinates between perception and prediction. He argues that intelligence without a world model is not intelligence — it is sophisticated pattern matching at industrial scale."
   },
   {
@@ -704,7 +704,7 @@ const VOICES = [
       "DeepMind co-founder"
     ],
     "coldOpen": "Protein folding was called the hardest problem in biology for 50 years. We solved it not by computing harder — but by learning the coordination grammar of amino acids. The sequence is one body. The physics is another. The coordination rules between them were the missing third.",
-    "bio": "Co-founded DeepMind with the explicit mission of solving intelligence to advance science. AlphaFold decoded protein structure by treating folding as a coordination problem — learning how sequence coordinates with chemistry to produce shape. Won the Nobel Prize in Chemistry in 2024 for work done by an AI system, a first in scientific history.",
+    "bio": "Co-founded DeepMind with the explicit mission of solving intelligence to advance science. AlphaFold decoded protein structure by treating folding as a coordination problem — learning how sequence coordinates with chemistry to produce shape. Shared the 2024 Nobel Prize in Chemistry with John Jumper for protein structure prediction with AlphaFold.",
     "whyMatters": "Hassabis proves that the three-body framework is not theoretical — it is the structure that unlocks otherwise intractable scientific problems. AlphaFold's breakthrough was recognizing that protein folding is a coordination problem: the solution lives in the space between sequence, physics, and evolutionary context."
   },
   {
@@ -800,7 +800,7 @@ const VOICES = [
       "Deep ecology"
     ],
     "coldOpen": "Every living system is characterized by its network of relationships, not its components. Take away the web, and you don't have simplified life — you have no life at all. Cognition is coordination. The web is the mind.",
-    "bio": "Physicist who crossed disciplines to argue that the mechanistic worldview of Western science fails to describe life, mind, or society. His Santiago Theory — developed with Humberto Maturana — defines cognition as the process of living, not a function occurring inside brains. Systems coordinate; coordination is intelligence.",
+    "bio": "Physicist who crossed disciplines to argue that the mechanistic worldview of Western science fails to describe life, mind, or society. He champions the Santiago theory of cognition, developed by Humberto Maturana and Francisco Varela, which defines cognition as the process of living, not a function occurring inside brains. Systems coordinate; coordination is intelligence.",
     "whyMatters": "Capra provides the biological foundation of coordination intelligence. His autopoiesis framework shows that living systems are self-organizing coordination loops, not input-output machines. He extends this to cities, economies, and consciousness — wherever the third body (the network of relationships) is ignored, the system dies."
   },
   {
@@ -1231,7 +1231,7 @@ const VOICES = [
       "ALS communication restoration"
     ],
     "coldOpen": "We reach the brain through the blood vessels it already depends on for life. We do not cut. We coordinate. The body's own architecture becomes the path.",
-    "bio": "Neurosurgeon and CEO of Synchron who invented the Stentrode, a brain-computer interface deployed through a blood vessel rather than open brain surgery. In 2021 his team completed the first human motor BCI implanted without craniotomy, allowing ALS patients to control digital devices by thought alone. He reimagined neural access as a coordination problem solved by working with the body's existing infrastructure.",
+    "bio": "Neurologist and CEO of Synchron who invented the Stentrode, a brain-computer interface deployed through a blood vessel rather than open brain surgery. In 2021 his team completed the first human motor BCI implanted without craniotomy, allowing ALS patients to control digital devices by thought alone. He reimagined neural access as a coordination problem solved by working with the body's existing infrastructure.",
     "whyMatters": "Oxley's Stentrode is coordination intelligence made physical: by routing through the vascular network rather than cutting through tissue, he demonstrates that the most powerful path is always through existing coordination channels. His device shows that human-machine neural coordination does not require violation — it requires alignment with the body's own architecture."
   },
   {
@@ -1262,7 +1262,7 @@ const VOICES = [
       "Design ethicist"
     ],
     "coldOpen": "Two billion people carry a supercomputer in their pocket that has been optimized — by the world's smartest engineers — to extract their attention against their own interests. That is not design failure. That is coordination weaponized.",
-    "bio": "Former Google design ethicist who exposed Silicon Valley's deliberate exploitation of cognitive vulnerabilities. Co-founded the Center for Humane Technology to reverse the attention economy's race to the bottom of the brainstem. His Netflix documentary The Social Dilemma brought the persuasive technology critique to mass audiences.",
+    "bio": "Former Google design ethicist who exposed Silicon Valley's deliberate exploitation of cognitive vulnerabilities. Co-founded the Center for Humane Technology to reverse the attention economy's race to the bottom of the brainstem. The Netflix documentary The Social Dilemma, in which he is a featured voice, brought the persuasive technology critique to mass audiences.",
     "whyMatters": "Harris shows what coordination intelligence looks like when it runs in reverse: platforms that optimize the human-machine coordination loop against the human's interests. He maps the failure mode — coordination without consent — and argues that the fix requires designing for the whole person's coordination needs, not just engagement metrics."
   },
   {
@@ -1740,7 +1740,7 @@ const VOICES = [
       "Ch. 07",
       "Academic"
     ],
-    "affiliation": "Stanford University · Claypot AI",
+    "affiliation": "Stanford University · co-founder, Claypot AI (acquired 2024)",
     "status": "Living · Active",
     "active": "1992 – present",
     "jurisdiction": "Machine Learning Systems / AI Engineering / Real-Time ML",
@@ -1771,7 +1771,7 @@ const VOICES = [
       "Ch. 07",
       "Practitioner"
     ],
-    "affiliation": "Google DeepMind · Google Senior Fellow",
+    "affiliation": "Formerly Google (Chief Scientist, Senior Fellow)",
     "status": "Living · Active",
     "active": "1968 – present",
     "jurisdiction": "Distributed Systems / AI Infrastructure / Large-Scale Computing",
@@ -1791,11 +1791,11 @@ const VOICES = [
       "MapReduce",
       "Bigtable",
       "TensorFlow",
-      "Google Brain founder",
+      "Google Brain co-founder",
       "Pathways multi-task architecture"
     ],
     "coldOpen": "When you have a million machines, the hardest problem is not compute — it is coordination. How do you get a million independent processors to agree on a single state? That is MapReduce. That is Bigtable. That is every distributed system I have ever built. The machine is easy. The coordination is the engineering.",
-    "bio": "Google Senior Fellow who designed the distributed infrastructure that runs modern civilization's AI. His MapReduce paper taught the world to program at planetary scale; his Bigtable gave that scale a memory; his TensorFlow gave it a brain. He founded Google Brain and now leads Google DeepMind, where the Pathways architecture attempts to build a unified coordination layer across all of Google's AI systems — a single model that coordinates across tasks rather than a collection of specialist models.",
+    "bio": "Google Senior Fellow who designed the distributed infrastructure that runs modern civilization's AI. His MapReduce paper taught the world to program at planetary scale; his Bigtable gave that scale a memory; his TensorFlow gave it a brain. He co-founded Google Brain and served as Google's chief scientist, where the Pathways architecture attempted to build a unified coordination layer across all of Google's AI systems — a single model that coordinates across tasks rather than a collection of specialist models.",
     "whyMatters": "Dean built the coordination layer that makes large-scale AI physically possible. His distributed systems reveal the three-body pattern at infrastructure scale: compute nodes, network coordination, and emergent distributed computation. His Pathways architecture is explicitly an attempt to replace narrow two-body task-specific models with a single coordination-capable system — a direct engineering implementation of the coordination intelligence thesis."
   },
   {
@@ -1994,7 +1994,7 @@ const VOICES = [
       "Ch. 08",
       "Academic"
     ],
-    "affiliation": "Oxford University · Future of Humanity Institute (FHI)",
+    "affiliation": "Founder of the Future of Humanity Institute (Oxford; closed 2024)",
     "status": "Living · Active",
     "active": "1973 – present",
     "jurisdiction": "Existential Risk / Superintelligence / Anthropic Reasoning",
@@ -2016,7 +2016,7 @@ const VOICES = [
       "Deep utopia"
     ],
     "coldOpen": "The first superintelligent system will be the last invention humans ever need to make — because after that, the system invents everything. The question is whether that system has a coordination layer between its capability and our values. Without that coordination, capability and values diverge. The divergence is the risk.",
-    "bio": "Philosopher who founded the Future of Humanity Institute at Oxford and wrote 'Superintelligence' — the book that put AI existential risk on the intellectual map. His simulation argument and orthogonality thesis together frame the deepest challenge to two-body AI: a system can be arbitrarily intelligent and have arbitrarily bad goals. The coordination layer between capability and value is not automatic — it must be explicitly constructed.",
+    "bio": "Philosopher who founded the Future of Humanity Institute at Oxford (closed in 2024) and wrote 'Superintelligence' — the book that put AI existential risk on the intellectual map. His simulation argument and orthogonality thesis together frame the deepest challenge to two-body AI: a system can be arbitrarily intelligent and have arbitrarily bad goals. The coordination layer between capability and value is not automatic — it must be explicitly constructed.",
     "whyMatters": "Bostrom's orthogonality thesis is a direct challenge to anyone who believes smarter AI is automatically safer AI: intelligence and values are independent dimensions. A system that is smart but uncoordinated with human values is more dangerous than a dumb system. His work makes the thesis precise: the third body — the coordination layer between capability and goals — is not an emergent property of intelligence. It must be deliberately built."
   },
   {
@@ -2066,8 +2066,7 @@ const VOICES = [
     "awards": [
       "MacArthur Fellowship (2013)",
       "Sackler Prize in Physics (2012)",
-      "Time 100 (2012)",
-      "Raymond and Beverly Sackler Prize"
+      "Time 100 (2012)"
     ],
     "works": [
       "Exoplanet Atmospheres (2010)",
@@ -2130,8 +2129,7 @@ const VOICES = [
     "jurisdiction": "Cognitive Science / Artificial Intelligence / Computational Consciousness",
     "awards": [
       "Creator, MicroPsi cognitive architecture",
-      "Author, Principles of Synthetic Intelligence (Oxford, 2009)",
-      "Widely-circulated dialogues on mind & machine consciousness (Lex Fridman Podcast; AGI / Foundations of Mind talks)"
+      "Author, Principles of Synthetic Intelligence (Oxford, 2009)"
     ],
     "works": [
       "Principles of Synthetic Intelligence: PSI (Oxford, 2009)",
@@ -2314,12 +2312,11 @@ const VOICES = [
       "Ch. 09",
       "Academic"
     ],
-    "affiliation": "Google DeepMind · ex-Keras",
+    "affiliation": "Ndea · creator of Keras",
     "status": "Living · Active",
     "active": "1987 – present",
     "jurisdiction": "AI Architecture / Reasoning Benchmarks / Abstraction Theory",
     "awards": [
-      "Google Distinguished Engineer",
       "Keras Lifetime Achievement"
     ],
     "works": [
@@ -2336,7 +2333,7 @@ const VOICES = [
       "Skill vs. intelligence distinction"
     ],
     "coldOpen": "Current AI systems acquire skills through exposure. That is not intelligence — it is sophisticated retrieval. Intelligence is the ability to efficiently acquire new skills from minimal data. The ARC benchmark tests that. Almost every modern model fails it.",
-    "bio": "Created Keras, making deep learning accessible to millions, then turned around and built the test that proves deep learning cannot reason. His ARC benchmark — the Abstraction and Reasoning Corpus — presents simple visual puzzles that any five-year-old can solve but that state-of-the-art AI consistently fails, because they require genuine abstraction, not pattern matching.",
+    "bio": "Created Keras, making deep learning accessible to millions, then built the ARC benchmark — the Abstraction and Reasoning Corpus — which tests whether AI can acquire new skills from a few examples. Its visual puzzles are easy for people and have been hard for AI systems, which he argues is because they require abstraction, not pattern matching.",
     "whyMatters": "Chollet proves empirically that current AI is a two-body system: training data maps to trained pattern. The third body — the ability to abstract across contexts and reason from minimal examples — is missing. His benchmark is the clearest existing test of whether coordination intelligence has been achieved, and so far the answer is no."
   },
   {
@@ -2346,7 +2343,7 @@ const VOICES = [
       "Ch. 09",
       "Practitioner"
     ],
-    "affiliation": "Stability AI · ex-hedge fund",
+    "affiliation": "Founder, Stability AI · ex-hedge fund",
     "status": "Living · Active",
     "active": "1983 – present",
     "jurisdiction": "Generative AI / Open-Source AI / Decentralized Intelligence",
@@ -2367,7 +2364,7 @@ const VOICES = [
       "AI for the global south"
     ],
     "coldOpen": "The most dangerous thing in AI is concentration. When intelligence is owned by three companies and two governments, coordination becomes control. Open-source AI is not a product strategy. It is a coordination infrastructure for the rest of humanity.",
-    "bio": "Founded Stability AI and open-sourced Stable Diffusion, triggering a wave of generative AI tools available to anyone with a laptop. His stated goal was to prevent AI capability from concentrating in the hands of a few institutions — to build a coordination layer for AI development that no single actor could capture or shut down.",
+    "bio": "Founded Stability AI and open-sourced Stable Diffusion, triggering a wave of generative AI tools available to anyone with a laptop. His stated goal was to prevent AI capability from concentrating in the hands of a few institutions — to build a coordination layer for AI development that no single actor could capture or shut down. He stepped down as CEO in March 2024.",
     "whyMatters": "Mostaque embodies the distribution question in coordination intelligence: who controls the coordination layer? His open-source strategy is a direct answer — the coordination infrastructure for AI must be a commons, not a proprietary system. He demonstrates that the choice of where to place the coordination layer has immediate political consequences."
   },
   {
