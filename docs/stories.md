@@ -10,7 +10,7 @@ validates it against the schema in `src/content.config.ts`; a bad entry fails th
 | --- | --- |
 | `headline` | Plain statement of what happened. |
 | `eventDate` | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. Use `eventDateLabel` when the date is a disclosure. |
-| `added` / `updated` | `YYYY-MM-DD`. `added` is the feed `published` date. |
+| `added` / `updated` | `YYYY-MM-DD`. `added` is the feed `published` date, and the day the story goes live (see Scheduling). Set it to the day you actually log or release the story; never backdate it. |
 | `summary` | One factual paragraph, only from the cited sources. Say "alleged" (and set `alleged: true`) for allegations; say "simulation" (and set `simulation: true`) for simulations. |
 | `missingLayer` | `knowing`, `context`, `accountability`, `meaning` or `third-party`. |
 | `missingLayerLine` | One sentence saying how that layer was missing. The page supplies the label. |
@@ -42,8 +42,36 @@ same on every machine). It is the story's `og:image` and `twitter:image`, with a
 shows the headline, missing layer, evidence grade and any simulation or alleged flag, so the
 caveats travel with the link. Cards live at `/stories/cards/<slug>.png`.
 
-Each story page has a "Share this story" block: the card preview (with a link to save the
-image), one prepared post text, the native share sheet where the browser has one, Copy link,
+Every story also gets a branded animated GIF (`/stories/gifs/<slug>.gif`, 640x600, a 12 second
+loop) and a matching still frame (`/stories/gifs/still/<slug>.png`). They are rendered at build
+from the same scene code as the page diagram (`src/scripts/story-motion.ts`, drawn with
+`@napi-rs/canvas`, encoded with `gifenc`), so a new story gets one without extra work. Each
+frame carries the Knowware mark, the headline, the evidence grade, any SIMULATION or ALLEGED
+flag, the diagram caption ("Not a recording" and so on) and the URL, so the caveats travel
+with it. The GIF is not the link-preview image: networks show the static card for links and
+only play a GIF that is attached or pasted.
+
+Each story page has a "Share this story" block: the GIF (with Pause, a still for readers who
+ask for reduced motion, and links to save the GIF or the card), one prepared post text, the
+native share sheet (which attaches the GIF where the browser can), Copy link,
 Copy post text, and plain links to X, LinkedIn, Bluesky and email. Nothing loads from any
 network until a reader clicks, and there are no third-party scripts or pixels. If the
 clipboard is blocked the text is selected for manual copy.
+
+## Scheduling
+
+Give a story an `added` date in the future and it is held back: the build checks it like
+any other entry, but leaves it out of the index, its page, its card, the feed, the sitemap,
+`llms.txt` and the Markdown copies until the first build on or after that date.
+
+- A daily run of the deploy workflow (`.github/workflows/pages.yml`, 13:00 UTC, 07:00 in
+  Denver) rebuilds `main` so releases go out on their day. It publishes nothing that was not
+  already committed and merged to `main`.
+- The deploy log lists what is held: `stories: 1 scheduled, not released yet: <slug> (<date>)`.
+- To preview a release before its day: `STORIES_TODAY=2026-12-01 npx astro build`.
+- The repository is public, so a scheduled entry can be read on GitHub before it goes live.
+  Keep anything that must stay quiet out of `main` until its day.
+- GitHub can pause scheduled workflows on a repository with no activity for 60 days. If a
+  release does not appear, run "Deploy to Cloudflare Pages" by hand.
+- Release dates are the dates stories are really added to the log. Event dates carry the
+  chronology; the index is ordered by them.

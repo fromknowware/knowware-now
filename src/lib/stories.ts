@@ -48,7 +48,9 @@ export function primarySources(s: Story) {
 }
 
 export function storyUrl(s: Story): string {
-  return `${SITE_URL}/stories/${s.id}`;
+  // The served URL ends in a slash. Sharing the slash-less form makes every crawler follow a
+  // redirect, and LinkedIn and X cache a card per URL, so we always hand out the final one.
+  return `${SITE_URL}/stories/${s.id}/`;
 }
 
 // X counts any link as 23 characters; every other network allows more.
@@ -84,14 +86,42 @@ function canonicalUrl(u: string): string {
 }
 
 /**
- * Published stories, newest first (date added, then event date). Fails the
- * build if two entries rest on the same primary source: one canonical story
- * gets one entry, and further outlets are added as sources on it.
+ * The build's "today" (UTC, YYYY-MM-DD). STORIES_TODAY overrides it so a
+ * release can be previewed or tested without waiting for the date.
+ */
+export function releaseDate(): string {
+  const override = process.env.STORIES_TODAY;
+  if (override) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(override)) throw new Error(`STORIES_TODAY must be YYYY-MM-DD, got "${override}"`);
+    return override;
+  }
+  return new Date().toISOString().slice(0, 10);
+}
+
+let announced = false;
+
+/**
+ * Published stories, newest first (date added, then event date). A story whose
+ * `added` date is still in the future is scheduled: it is validated like any
+ * other entry but left out of every page, card, feed entry and sitemap URL
+ * until the first build on or after that date (see the scheduled deploy).
+ * Fails the build if two entries rest on the same primary source: one
+ * canonical story gets one entry, and further outlets are added as sources.
  */
 export async function getPublishedStories(): Promise<Story[]> {
-  const all = (await getCollection('stories')).filter((s) => !s.data.draft);
+  const today = releaseDate();
+  const live = (await getCollection('stories')).filter((s) => !s.data.draft);
+  const all = live.filter((s) => s.data.added <= today);
+  if (!announced) {
+    announced = true;
+    const held = live.filter((s) => s.data.added > today).map((s) => `${s.id} (${s.data.added})`);
+    if (held.length) console.info(`stories: ${held.length} scheduled, not released yet: ${held.join(', ')}`);
+  }
+  // Checked for every entry, scheduled or not, so a problem surfaces when the
+  // file is committed and not on the morning the story is due to go out.
   const seen = new Map<string, string>();
-  for (const s of all) {
+  for (const s of live) {
+    shareText(s);
     for (const p of primarySources(s)) {
       const key = canonicalUrl(p.url);
       const other = seen.get(key);
@@ -104,5 +134,16 @@ export async function getPublishedStories(): Promise<Story[]> {
   return all.sort((a, b) =>
     b.data.added.localeCompare(a.data.added) ||
     b.data.eventDate.localeCompare(a.data.eventDate) ||
+    a.id.localeCompare(b.id));
+}
+
+/**
+ * The index order: newest event first, so the page reads as a chronology of
+ * what happened. "Added" is shown separately and never changed; the feed keeps
+ * its own order (date added) because that is when each entry was published.
+ */
+export async function getStoriesByEvent(): Promise<Story[]> {
+  return (await getPublishedStories()).sort((a, b) =>
+    isoTimestamp(b.data.eventDate).localeCompare(isoTimestamp(a.data.eventDate)) ||
     a.id.localeCompare(b.id));
 }

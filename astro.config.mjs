@@ -3,6 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import securityHeaders from './integrations/security-headers.mjs';
 import readerGate from './integrations/reader-gate.mjs';
 import agentMarkdown from './integrations/agent-markdown.mjs';
+import socialCards from './integrations/social-cards.mjs';
 
 export default defineConfig({
   site: 'https://knowware.press',
@@ -13,6 +14,7 @@ export default defineConfig({
     agentMarkdown(),
     securityHeaders(),
     readerGate(),
+    socialCards(),
   ],
   build: {
     format: 'directory',

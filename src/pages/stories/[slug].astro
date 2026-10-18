@@ -4,6 +4,8 @@ import Base from '../../layouts/Base.astro';
 import StoriesNote from '../../components/StoriesNote.astro';
 import StoryBadges from '../../components/StoryBadges.astro';
 import ShareStory from '../../components/ShareStory.astro';
+import { diagramCaption } from '../../lib/diagram-caption';
+import StoryMotion from '../../components/StoryMotion.astro';
 import { SITE_NAME, SITE_URL, AUTHOR, PUBLISHER } from '../../config';
 import { getPublishedStories, LAYER_LABEL, GRADE_LABEL, eventLine, formatDate, shareText } from '../../lib/stories';
 
@@ -15,10 +17,11 @@ export async function getStaticPaths() {
 const { story } = Astro.props;
 const d = story.data;
 const { Content } = await render(story);
-const PAGE_URL = `${SITE_URL}/stories/${story.id}`;
+const PAGE_URL = `${SITE_URL}/stories/${story.id}/`;
 const DESCRIPTION = d.summary.length > 220 ? `${d.summary.slice(0, 217).replace(/\s+\S*$/, '')}…` : d.summary;
 const CARD_URL = `${SITE_URL}/stories/cards/${story.id}.png`;
 const CARD_ALT = `Knowware story: ${d.headline}. Evidence grade ${d.grade}. Missing layer: ${LAYER_LABEL[d.missingLayer]}.`;
+const GIF_ALT = `Animated Knowware diagram for this story: ${d.headline}. Evidence grade ${d.grade}. Missing layer: ${LAYER_LABEL[d.missingLayer]}. ${diagramCaption({ simulation: d.simulation, alleged: d.alleged })}`;
 const updated = d.updated && d.updated !== d.added ? d.updated : undefined;
 
 const jsonLd = {
@@ -55,6 +58,10 @@ const jsonLd = {
       {updated && <span>Updated: {formatDate(updated)}</span>}
       <StoryBadges grade={d.grade} simulation={d.simulation} alleged={d.alleged} />
     </p>
+
+    <div class="st-hero-fig">
+      <StoryMotion id={story.id} layerLabel={LAYER_LABEL[d.missingLayer]} simulation={d.simulation} alleged={d.alleged} size="hero" />
+    </div>
 
     <section class="st-block st-brief" aria-labelledby="st-brief-h">
       <h2 class="kw-label" id="st-brief-h">In brief</h2>
@@ -99,10 +106,11 @@ const jsonLd = {
       </ol>
     </section>
 
-    <ShareStory text={shareText(story)} url={PAGE_URL} title={d.headline} summary={d.summary} card={`/stories/cards/${story.id}.png`} cardAlt={CARD_ALT} />
+    <ShareStory text={shareText(story)} url={PAGE_URL} title={d.headline} summary={d.summary} card={`/stories/cards/${story.id}.png`} gif={`/stories/gifs/${story.id}.gif`} still={`/stories/gifs/still/${story.id}.png`} gifAlt={GIF_ALT} />
 
     <StoriesNote />
   </article>
+  <noscript><style>.st-hero-fig { display: none; }</style></noscript>
 </Base>
 
 <style>
@@ -131,4 +139,6 @@ const jsonLd = {
   @media (max-width: 760px) {
     .st-frame { grid-template-columns: minmax(0, 1fr); }
   }
+  .st-hero-fig { margin: 8px 0 28px; }
+  @media (max-width: 880px) { .st-hero-fig { margin: 4px 0 20px; } }
 </style>
