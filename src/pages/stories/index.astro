@@ -93,7 +93,7 @@ const jsonLd = {
   .st-item article {
     display: grid; align-items: start;
     grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
-    grid-template-areas: "meta fig" "head fig" "sum fig" "layer fig" "more fig";
+    grid-template-areas: "meta ." "head fig" "sum fig" "layer fig" "more fig";
     column-gap: clamp(24px, 4vw, 56px);
   }
   .st-meta { grid-area: meta; }
@@ -101,7 +101,7 @@ const jsonLd = {
   .st-summary { grid-area: sum; }
   .st-layer { grid-area: layer; }
   .st-more { grid-area: more; }
-  .st-fig { grid-area: fig; }
+  .st-fig { grid-area: fig; margin-top: 10px; }
   .st-item:first-child { border-top: 2px solid var(--ink); }
   .st-meta { display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; margin: 0 0 12px; font-size: 12px; line-height: 1.4; color: var(--sub); }
   .st-h { max-width: 30ch; margin-bottom: 12px; }
