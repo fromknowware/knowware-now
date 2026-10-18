@@ -1,4 +1,4 @@
-// Knowware client runtime — countdown + dock
+// Knowware client runtime — countdown, dock, menu, theme
 // Runs once on DOMContentLoaded, no framework
 
 const DEADLINE_ISO = '2026-12-21T23:59:59-05:00';
@@ -19,6 +19,13 @@ function initDock() {
   }
   tick();
   setInterval(tick, 60000);
+
+  // Dismissed for this tab only (sessionStorage; nothing is sent or kept across visits).
+  const close = document.getElementById('kw-dock-close');
+  close?.addEventListener('click', () => {
+    document.documentElement.classList.add('kw-dock-off');
+    try { sessionStorage.setItem('kw-dock-off', '1'); } catch {}
+  });
 
   let shown = false;
   function check() {
@@ -55,7 +62,28 @@ function initTheme() {
   });
 }
 
+// Collapsed nav (below 901px): the seven pages sit behind one button.
+function initMenu() {
+  const nav = document.getElementById('kw-nav');
+  const btn = document.getElementById('kw-menu-btn');
+  if (!nav || !btn) return;
+  const set = (open: boolean) => {
+    nav.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  };
+  btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') { set(false); (btn as HTMLElement).focus(); }
+  });
+  // A tap anywhere else closes it; so does widening the window past the breakpoint.
+  document.addEventListener('click', (e) => {
+    if (!nav.contains(e.target as Node)) set(false);
+  });
+  window.matchMedia('(min-width: 901px)').addEventListener('change', (m) => { if (m.matches) set(false); });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initDock();
   initTheme();
+  initMenu();
 });
