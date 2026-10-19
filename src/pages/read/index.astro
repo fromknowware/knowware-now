@@ -9,14 +9,14 @@ const manuscript = await getCollection('manuscript', (e) => e.data.kind === 'ful
 const minutes = Object.fromEntries(manuscript.map((e) => [e.data.n, e.data.readMinutes]));
 const totalMinutes = manuscript.reduce((sum, e) => sum + e.data.readMinutes, 0);
 ---
-<Base title="Read" description="Nine chapters on coordination intelligence. Read the opening of each free, and unlock every chapter in full with one email.">
+<Base title="Read" description="Nine chapters on coordination intelligence. Read the opening of each free, and unlock more in full by confirming one email.">
   <section class="kw-section">
     <p class="kw-label">Read Free</p>
     <h1 class="kw-h2">Nine chapters.</h1>
     <p class="kw-notice" id="read-notice" role="status" hidden></p>
     <p class="kw-body" style="margin-bottom: 40px">
       Every chapter opens with a scene where coordination intelligence became visible in the world.
-      The opening of each is right here. One email unlocks all nine and the capstone in full, about {Math.round(totalMinutes / 60)} hours of reading.
+      The opening of each is right here. Confirm one email to read them in full, the capstone included, about {Math.round(totalMinutes / 60)} hours of reading.
     </p>
 
     <div class="read-list">
@@ -65,9 +65,9 @@ const totalMinutes = manuscript.reduce((sum, e) => sum + e.data.readMinutes, 0);
 
 <script>
   const NOTICES: Record<string, string> = {
-    'link=expired': 'That sign-in link has expired. Open any chapter and enter your email to unlock again.',
-    'link=invalid': 'That sign-in link is not valid. Open any chapter and enter your email to unlock.',
-    'signed-out=1': 'You are signed out on this device. Your email still works if you sign up again.',
+    'link=expired': 'That link was already used or has expired. Open any chapter and enter your email to get a new one.',
+    'link=invalid': 'That link is not valid. Open any chapter and enter your email to get a new one.',
+    'signed-out=1': 'You are signed out on this device. Enter your email at any chapter to get a new sign-in link.',
   };
   const params = new URLSearchParams(window.location.search);
   const key = Object.keys(NOTICES).find((k) => { const [name, value] = k.split('='); return params.get(name) === value; });

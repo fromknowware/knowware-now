@@ -1,0 +1,46 @@
+# Email and sign-ups
+
+Every message the site can send, every list it keeps, and how to run, test and erase them. Code: `lib/server/mail.js`, `lib/server/reader.js`, `functions/api/reader.js`, `functions/api/reader/confirm.js`.
+
+## What the site sends
+
+| Message | When | To | Consent | Opens access? |
+|---|---|---|---|---|
+| Confirmation / sign-in link | Someone types an address at a chapter gate | That address | None needed: one message, no marketing, expires in 48 h | Only after its button is pressed |
+| New nomination | Someone submits `/contribute` | The author (`CLAIM_NOTIFY_TO`) | Internal | No |
+
+The site sends no marketing email. Chapter news and the pre-order notice are sent by the author from Resend to the two lists below.
+
+## Reading needs a confirmed email
+1. A visitor enters an address at a chapter gate. The site stores a pending record (`pending:<hash>`, 48 h) and mails one link.
+2. The answer is always "check your email", whether the address is new, known or throttled. Nothing in the response or the page says which.
+3. The link opens `/api/reader/confirm`. Opening it changes nothing, so a mail scanner that fetches every link cannot confirm an address on someone's behalf. Pressing **Confirm and read** uses the link (once), verifies the address and signs that device in.
+4. An address can be mailed once per ten minutes and five times a day. A connection can ask ten times an hour.
+5. An address has at most five signed-in devices. The sixth sign-in signs out the oldest. Cookies last 180 days.
+6. Reading on another device means entering the same address there for a fresh link.
+
+Without `RESEND_API_KEY` the site answers 503 and unlocks nothing. `READER_AUTOCONFIRM=true` skips the email and confirms at once, for local development and CI only; it is ignored whenever `RESEND_API_KEY` is set, and must never be set in Cloudflare.
+
+## The two lists
+They are different lists with different consent, stored separately, and joining one never joins the other.
+
+| | News (**interest**) | Pre-order list (**waitlist**) |
+|---|---|---|
+| What it is for | A note when a chapter is published and when the print edition is ready | One email when pre-orders open |
+| Where collected | The optional, unticked box on the chapter gate | The form on `/order` |
+| KV key | `interest:<sha256(email)>` | `waitlist:<sha256(email)>` |
+| Consent wording | `INTEREST_CONSENT` in `lib/site-facts.mjs` | `WAITLIST_CONSENT` in `lib/site-facts.mjs` |
+| Active when | The address is confirmed (the same click that opens reading) | The address is confirmed |
+
+Both texts come from `lib/site-facts.mjs`, which the forms, the privacy page and the stored consent record all read, so what a person saw is what is on file.
+
+## Sender
+`READER_FROM` (Pages secret) is the From address; Reply-To is `hello@knowware.systems`. Until `knowware.systems` is a verified Resend domain it is `Knowware <hello@knowware.institute>`. Switch it by setting the secret and redeploying (`gh workflow run pages.yml --ref main`). The postal address printed in every footer is `POSTAL_ADDRESS` in `lib/site-facts.mjs`; it must be filled in before any list email is sent.
+
+## Testing
+- `npm test` covers the reader, throttles, device cap and both message formats.
+- `scripts/test-reader.sh` runs the real flow against a local server that talks to `scripts/mock-resend.mjs`, which records messages instead of sending them (CI does this on port 8789).
+- Never send test mail to anyone but your own address.
+
+## Erasing one person
+Delete, for `h = sha256(lowercased email)`: `acct:h`, `interest:h`, `waitlist:h`, `mail10:h`, `maild:h`, every `readerdev:h:*` key and the `reader:<token hash>` each ends with (the token hash is the part after the last colon), then any `claim:*` whose `email` matches. Leave nothing else with the address in it.

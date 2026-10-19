@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import { PUBLISHER, AUTHOR, CONTACT_EMAIL } from '../config';
+import { INTEREST_CONSENT, WAITLIST_CONSENT, POSTAL_ADDRESS } from '../../lib/site-facts.mjs';
+const link = 'color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)';
+---
+<Base title="Privacy" description="What email Knowware collects, why, who handles it, and how to have it removed.">
+  <section class="kw-section">
+    <p class="kw-label">Privacy</p>
+    <h1 class="kw-h2">Your email, and what we do with it.</h1>
+    <p class="kw-body">
+      Knowware is published by {PUBLISHER}; {AUTHOR} is responsible for this site.
+      {POSTAL_ADDRESS && ` Postal address: ${POSTAL_ADDRESS}.`}
+      Write to <a href={`mailto:${CONTACT_EMAIL}`} style={link}>{CONTACT_EMAIL}</a> about anything here.
+    </p>
+    <p class="kw-body" style="margin-top:16px">There are no ads and no analytics trackers on this site. We do not sell or share addresses.</p>
+  </section>
+
+  <section class="kw-section">
+    <h2 class="kw-h3">Three separate things you can ask for</h2>
+    <p class="kw-body"><strong>1. Reading the full chapters.</strong> You enter an email, we send one link, and you press a button to confirm it is yours. We keep the address so you can sign in on other devices. Basis: it is how the service you asked for works (legitimate interest in running it). This is not a mailing list: we use it only to send you sign-in links when you ask for one.</p>
+    <p class="kw-body" style="margin-top:16px"><strong>2. News about the book (optional).</strong> A separate box on the chapter gate, never ticked for you: “{INTEREST_CONSENT}” Basis: your consent, recorded with the wording shown, the time you ticked it and the time you confirmed the address. Reading never requires it.</p>
+    <p class="kw-body" style="margin-top:16px"><strong>3. The pre-order list (optional).</strong> A separate form on the pre-order page: “{WAITLIST_CONSENT}” Basis: your consent, recorded the same way. Joining it does not sign you up for news or open chapters, and the reverse.</p>
+  </section>
+
+  <section class="kw-section">
+    <h2 class="kw-h3">Where it lives</h2>
+    <p class="kw-body">Cloudflare hosts the site and stores these records (Cloudflare Pages and KV). Resend delivers the email. Stripe will process payments when pre-orders open. These providers may handle data outside your country, including in the United States. We store the address, the consent wording and times, and nothing about your browsing.</p>
+    <p class="kw-body" style="margin-top:16px">We keep an address until you ask us to remove it or you leave the lists. Sign-in links expire after 48 hours. Devices are signed in for up to 180 days, and at most five devices per address at a time.</p>
+  </section>
+
+  <section class="kw-section">
+    <h2 class="kw-h3">Your choices</h2>
+    <p class="kw-body">Every email we send about a list has an unsubscribe link and the same address to write to. You can ask to see, correct or delete what we hold, and to withdraw consent, at any time: write to <a href={`mailto:${CONTACT_EMAIL}`} style={link}>{CONTACT_EMAIL}</a> and we will answer within 30 days (usually much sooner). If you are in the EU, UK or Canada you can also complain to your data protection or privacy authority.</p>
+  </section>
+</Base>

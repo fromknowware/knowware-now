@@ -1,5 +1,6 @@
 ---
 import { chapterNum } from '../lib/chapters';
+import { INTEREST_CONSENT } from '../../lib/site-facts.mjs';
 interface Props {
   slug: string;
   n: number;
@@ -19,8 +20,8 @@ const fullHref = `/read/${slug}/full`;
       <p class="kw-gate-eyebrow mono">Chapter {nn} · {fmt(remaining)} words left · about {readMinutes} min in full</p>
       <h2 class="kw-gate-h" id="gate-h">Keep reading. It's free.</h2>
       <p class="kw-gate-body">
-        One email unlocks every chapter in full, including the capstone. Enter the same email on any other
-        device to keep reading there. No paywall, no tracking.
+        Confirm one email to read this chapter in full. We send a link; nothing opens until you use it.
+        To read on another device, enter the same email there for a fresh link. No paywall, no tracking.
       </p>
     </div>
 
@@ -50,16 +51,16 @@ const fullHref = `/read/${slug}/full`;
         </div>
         <label class="kw-gate-check">
           <input type="checkbox" name="updates" value="yes" />
-          <span>Also email me when new chapters and the print edition are ready (optional).</span>
+          <span>{INTEREST_CONSENT} (optional, unticked, and separate from reading)</span>
         </label>
         <div class="kw-gate-trap" aria-hidden="true">
           <label for={`gate-company-${nn}`}>Company</label>
           <input type="text" id={`gate-company-${nn}`} name="company" tabindex="-1" autocomplete="off" />
         </div>
-        <button type="submit" class="kw-btn kw-btn--filled kw-gate-submit">Unlock the full chapter →</button>
+        <button type="submit" class="kw-btn kw-btn--filled kw-gate-submit">Email me a link →</button>
         <p class="kw-gate-status" role="status" aria-live="polite"></p>
         <p class="kw-gate-fine">
-          {fmt(totalWords)} words in Chapter {nn}. Your email stays with the author and is never sold or shared.
+          {fmt(totalWords)} words in Chapter {nn}. Your email stays with the author and is never sold or shared. <a href="/privacy">Privacy</a>.
         </p>
       </form>
     </div>
@@ -75,7 +76,6 @@ const fullHref = `/read/${slug}/full`;
     const status = gate.querySelector<HTMLElement>('.kw-gate-status');
     const email = form?.querySelector<HTMLInputElement>('input[name=email]');
     const err = email ? document.getElementById(`${email.id}-err`) : null;
-    const fullHref = gate.dataset.fullHref ?? '/read';
 
     if (document.cookie.split('; ').includes(READER_FLAG)) {
       if (form) form.hidden = true;
@@ -104,8 +104,8 @@ const fullHref = `/read/${slug}/full`;
 
       const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
       btn.disabled = true;
-      btn.textContent = 'Unlocking…';
-      status.textContent = 'Unlocking the full chapter…';
+      btn.textContent = 'Sending…';
+      status.textContent = 'Sending your link…';
 
       try {
         const fd = new FormData(form);
@@ -120,21 +120,27 @@ const fullHref = `/read/${slug}/full`;
           }),
         });
         const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok && data.next) {
+          // Local development only: the server confirmed at once because no email is configured.
+          window.location.assign(`${data.next}#continue`);
+          return;
+        }
         if (res.ok && data.ok) {
-          status.textContent = 'Unlocked. Opening the full chapter…';
-          window.location.assign(`${fullHref}#continue`);
+          status.textContent = 'Check your email. We sent a link to confirm it. It works once and lasts 48 hours. Nothing there? Look in spam. Wrong address? Fix it and send again.';
+          btn.disabled = false;
+          btn.textContent = 'Send to another address →';
           return;
         }
         if (Array.isArray(data.fields) && data.fields.includes('email')) {
           setError(data.error ?? 'Enter a valid email address.');
           email.focus();
         }
-        status.textContent = data.error ?? 'The chapter did not unlock. Try again in a moment.';
+        status.textContent = data.error ?? 'The link could not be sent. Try again in a moment.';
       } catch {
-        status.textContent = 'The chapter did not unlock because the connection failed. Check your connection and try again.';
+        status.textContent = 'The link could not be sent because the connection failed. Check your connection and try again.';
       }
       btn.disabled = false;
-      btn.textContent = 'Unlock the full chapter →';
+      btn.textContent = 'Email me a link →';
     });
   }
 </script>

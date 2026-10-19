@@ -598,13 +598,15 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   font: 400 12px/1.4 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub2);
 }
-.kw-foot-colophon span { grid-column: span 3; }
+.kw-foot-colophon span, .kw-foot-colophon a { grid-column: span 3; }
+/* A link in the colophon row keeps a 24px target (WCAG 2.2 2.5.8). */
+.kw-foot-colophon a { padding: 4px 0; text-decoration: underline; }
 @media (max-width: 680px) {
   .kw-foot-main { grid-template-columns: 1fr; }
   .kw-foot-letter-col { grid-column: 1; }
   .kw-foot-meta-col { display: none; }
   .kw-foot-colophon { grid-template-columns: 1fr 1fr; }
-  .kw-foot-colophon span { grid-column: span 1; }
+  .kw-foot-colophon span, .kw-foot-colophon a { grid-column: span 1; }
 }
 
 /* ============================================================

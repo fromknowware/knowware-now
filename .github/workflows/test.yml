@@ -44,6 +44,7 @@ jobs:
         run: |
           cat > .dev.vars <<'VARS'
           AGENT_REQUIRE_VERIFIED_EMAIL=false
+          READER_AUTOCONFIRM=true
           AGENT_TOKENS=on
           AGENT_CHECKOUT=test
           STRIPE_SECRET_KEY=sk_test_mockmockmockmock
@@ -59,16 +60,22 @@ jobs:
         run: |
           node scripts/mock-stripe.mjs &
           node scripts/mock-facilitator.mjs &
+          node scripts/mock-resend.mjs &
           npx --yes wrangler@4.86.0 pages dev dist --kv CLAIMS --port 8788 > wrangler.log 2>&1 &
-          for i in $(seq 1 60); do curl -fs http://localhost:8788/api/agent/status >/dev/null && exit 0; sleep 2; done
-          cat wrangler.log; exit 1
+          # A second instance with a (mock) email key, so sign-up goes through the real confirm-by-email flow.
+          npx --yes wrangler@4.86.0 pages dev dist --kv CLAIMS --port 8789 --persist-to .wrangler/state-reader \
+            --binding RESEND_API_KEY=re_mock_local --binding RESEND_API_BASE=http://127.0.0.1:12113 \
+            --binding "READER_FROM=Knowware <hello@knowware.institute>" > wrangler-reader.log 2>&1 &
+          for i in $(seq 1 60); do curl -fs http://localhost:8788/api/agent/status >/dev/null && curl -fs http://localhost:8789/api/agent/status >/dev/null && exit 0; sleep 2; done
+          cat wrangler.log wrangler-reader.log; exit 1
       - name: Abuse suites
         run: |
           for s in test-agent-api test-agent-checkout test-mcp test-agent-x402 test-waitlist; do echo "== $s"; bash ./scripts/$s.sh; done
+          echo "== test-reader"; bash ./scripts/test-reader.sh http://localhost:8789 http://127.0.0.1:12113
       - name: Fuzz
         run: |
           node scripts/fuzz-agent-api.mjs http://localhost:8788 --n 3000 --seed 1
           node scripts/fuzz-agent-api.mjs http://localhost:8788 --n 3000 --seed 2
       - name: Server log on failure
         if: failure()
-        run: cat wrangler.log
+        run: cat wrangler.log wrangler-reader.log
