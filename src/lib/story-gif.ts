@@ -131,7 +131,7 @@ function drawChrome(c: SKRSContext2D, story: Story) {
   c.textAlign = 'left';
 }
 
-/** knowware.press/stories/<slug>: the story's page, without the scheme or trailing slash. */
+/** knowware.systems/stories/<slug>: the story's page, without the scheme or trailing slash. */
 export function displayUrl(story: Story): string {
   return storyUrl(story).replace(/^https?:\/\//, '').replace(/\/$/, '');
 }

@@ -51,7 +51,7 @@ async function sendWelcome(env, email, link, nn) {
           '',
           'If you did not request this, ignore this email.',
           '',
-          'Knowware · knowware.press',
+          'Knowware · knowware.systems',
         ].join('\n'),
       }),
     });
@@ -86,7 +86,7 @@ async function readForm(request, maxBytes) {
 }
 
 async function handlePost({ request, env }) {
-  if (!originAllowed(request)) return json({ ok: false, error: 'Requests must come from knowware.press.' }, 403);
+  if (!originAllowed(request)) return json({ ok: false, error: 'Requests must come from the Knowware site.' }, 403);
 
   const isForm = (request.headers.get('Content-Type') || '').startsWith('application/x-www-form-urlencoded');
   let data;

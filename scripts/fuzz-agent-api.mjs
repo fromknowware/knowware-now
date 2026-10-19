@@ -77,7 +77,7 @@ function headers(r, method) {
   const authForms = [`Bearer ${tok}`, `Bearer ${tok}`, `bearer ${tok}`, `Bearer  ${tok}`, `Basic ${b64(tok)}`, 'Bearer', `Bearer ${ADMIN}`, `Bearer ${ADMIN}x`, tok];
   if (chance(0.8)) { try { h.Authorization = pick(authForms); } catch {} }
   if (chance(0.25)) h.Cookie = pick([who.cookie, who.cookie + ';x=1', 'kw_reader=' + 'A'.repeat(43), 'kw_reader=', 'kw_reader=' + 'a'.repeat(4000), 'a=b; kw_reader=' + who.cookie.split('=')[1], '=;;;']);
-  if (chance(0.6)) h.Origin = pick([BASE, BASE, 'https://evil.example', 'null', 'http://localhost:1', 'https://knowware.press', 'https://knowware.press.evil.example', '']);
+  if (chance(0.6)) h.Origin = pick([BASE, BASE, 'https://evil.example', 'null', 'http://localhost:1', 'https://knowware.systems', 'https://knowware.press', 'https://knowware.systems.evil.example', '']);
   if (chance(0.5)) h['Idempotency-Key'] = pick(['k-12345678', rstr(8).replace(/[^A-Za-z0-9]/g, 'a'), 'x', 'a'.repeat(64), 'a'.repeat(65), 'bad key!', '😀😀😀😀😀😀😀😀', `fuzz-${Math.floor(rand() * 1e9)}-abc`]);
   if (chance(0.4)) h['PAYMENT-SIGNATURE'] = pick(['x', '%%%', 'A'.repeat(9000), b64('{}'), b64('null'), b64('[]'), b64('{"x402Version":2}'), b64('{"x402Version":2,"accepted":{},"payload":{}}'), b64('{"x402Version":2,"accepted":null,"payload":{"authorization":null}}'), b64('['.repeat(2000))]);
   if (chance(0.3)) h['Stripe-Signature'] = pick(['x', 't=1,v1=00', `t=${Math.floor(Date.now() / 1000)},v1=${'0'.repeat(64)}`, `t=${'9'.repeat(30)},v1=${'a'.repeat(64)}`, 'v1=' + 'a'.repeat(64), 't=,v1=', ','.repeat(300)]);

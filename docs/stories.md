@@ -48,7 +48,7 @@ from the same scene code as the page diagram (`src/scripts/story-motion.ts`, dra
 `@napi-rs/canvas`, encoded with `gifenc`), so a new story gets one without extra work. Each
 frame carries the Knowware mark, the headline, the evidence grade, any SIMULATION or ALLEGED
 flag, the diagram caption ("Not a recording" and so on) and the story's own link
-(`knowware.press/stories/<slug>`), so the caveats and the source travel with it. The same link,
+(`knowware.systems/stories/<slug>`), so the caveats and the source travel with it. The same link,
 the headline, the grade and the licence are also written into the file as a GIF comment block.
 A saved file is named `knowware-<slug>.gif`, and the Save button also copies the post text (which
 ends with the story link) so the GIF and the link go into the post together. The GIF is not the link-preview image: networks show the static card for links and

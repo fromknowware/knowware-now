@@ -8,7 +8,7 @@ function fakeKV() {
     async list({ prefix, limit = 1000 }) { const keys = [...m.keys()].filter((k) => k.startsWith(prefix)).slice(0, limit).map((name) => ({ name })); return { keys, list_complete: true }; } };
 }
 const SECRET = 'x'.repeat(40);
-const req = (token) => new Request('https://knowware.press/api/admin/orders', { headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), 'CF-Connecting-IP': '198.51.100.9' } });
+const req = (token) => new Request('https://knowware.systems/api/admin/orders', { headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), 'CF-Connecting-IP': '198.51.100.9' } });
 
 test('admin is off without a long ADMIN_TOKEN', async () => {
   assert.equal((await adminAuth(req(SECRET), { CLAIMS: fakeKV() })).response.status, 404);
@@ -28,7 +28,7 @@ test('only the exact token passes; others are 401 and counted', async () => {
 });
 
 test('a browser origin that is not ours is refused', async () => {
-  const r = new Request('https://knowware.press/api/admin/orders', { headers: { Authorization: `Bearer ${SECRET}`, Origin: 'https://evil.example' } });
+  const r = new Request('https://knowware.systems/api/admin/orders', { headers: { Authorization: `Bearer ${SECRET}`, Origin: 'https://evil.example' } });
   assert.equal((await adminAuth(r, { CLAIMS: fakeKV(), ADMIN_TOKEN: SECRET })).response.status, 403);
 });
 
