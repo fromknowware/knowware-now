@@ -11,10 +11,12 @@ import { esc } from '../../../lib/server/mail.js';
 import { confirmSignup, peekPending } from '../../../lib/server/reader.js';
 import { accessCookies, redirect } from '../../../lib/server/reader-http.js';
 
+// The referrer policy must NOT be "no-referrer": browsers then send "Origin: null" on this page's form
+// POST, and the endpoint (rightly) refuses it. "strict-origin" still keeps the token out of Referer.
 function page(token, pending) {
   const body = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex"><meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex"><meta name="referrer" content="strict-origin">
 <title>Confirm your email — Knowware</title>
 <style>
   body{margin:0;background:#f6f4ee;color:#1a1a1a;font:18px/1.55 "Helvetica Neue",Helvetica,Arial,sans-serif}
@@ -36,7 +38,7 @@ function page(token, pending) {
       ...pageHeaders,
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store',
-      'Referrer-Policy': 'no-referrer',
+      'Referrer-Policy': 'strict-origin',
       'X-Robots-Tag': 'noindex',
     },
   });
