@@ -32,6 +32,7 @@ PAGE=$(cu -si "$LOCAL" | tr -d '\r')
 check "GET shows the confirm page" 200 "$(printf '%s' "$PAGE" | sed -n '1s/[^ ]* \([0-9]*\).*/\1/p')"
 check "the page has the button" 1 "$(printf '%s' "$PAGE" | grep -c 'Confirm and read')"
 check "the page is no-store and noindex" 2 "$(printf '%s' "$PAGE" | grep -ci '^cache-control: no-store\|^x-robots-tag: noindex')"
+check "the page keeps its token out of Referer but lets the form send an Origin (not no-referrer)" "strict-origin" "$(printf '%s' "$PAGE" | sed -n 's/^[Rr]eferrer-[Pp]olicy: //p')"
 check "the page does not leak the address" 0 "$(printf '%s' "$PAGE" | grep -c "$EMAIL")"
 check "opening the page unlocks nothing" 302 "$(code "$B/read/01/full")"
 check "opening it twice is harmless" 200 "$(code "$LOCAL")"
