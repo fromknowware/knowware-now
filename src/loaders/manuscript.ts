@@ -48,7 +48,7 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').repl
 const isFigure = (block: string) => block.startsWith('<figure class="kw-fig"');
 const figureBlock = (f: Figure) =>
   `<figure class="kw-fig" id="fig-${f.label.replace('.', '-')}">\n` +
-  `<div class="kw-fig-plate" role="region" tabindex="0" aria-label="Figure ${f.label}, scrolls sideways on small screens"><img src="${f.src}" alt="${esc(f.alt)}" width="${f.width}" height="${f.height}" loading="lazy" decoding="async"></div>\n` +
+  `<div class="kw-fig-plate" role="region" tabindex="0" aria-label="Figure ${f.label}, scrolls sideways on small screens"><img src="${f.src}" alt="${esc(f.alt)}" width="${f.width}" height="${f.height}" decoding="async"></div>\n` +
   `<figcaption><span class="kw-fig-n">Figure ${f.label}</span> <strong>${esc(f.title)}.</strong> ${esc(f.caption)}</figcaption>\n` +
   `</figure>`;
 
