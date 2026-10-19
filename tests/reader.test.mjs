@@ -54,7 +54,7 @@ test('the news list is recorded only if ticked, only after confirmation, with th
   assert.equal(env.CLAIMS.m.has(`interest:${eh}`), false); // asked, not yet confirmed
   await confirmSignup(env, ticked.token);
   const rec = JSON.parse(env.CLAIMS.m.get(`interest:${eh}`));
-  assert.equal(rec.status, 'subscribed');
+  assert.equal(rec.status, 'confirmed');
   assert.equal(rec.consent.text, INTEREST_CONSENT);
   assert.ok(rec.consent.askedAt && rec.consent.confirmedAt);
   assert.equal(rec.country, undefined); // no location kept

@@ -133,8 +133,8 @@ const current = NAV.find((n) => isActive(n.href));
 <!-- Dock bar -->
 <div id="kw-dock" role="region" aria-label="Pre-order">
   <span id="kw-dock-countdown"></span>
-  <span id="kw-dock-sep" aria-hidden="true" style="margin: 0 10px">·</span>
-  <span id="kw-dock-saving" style="color: rgba(237,238,228,0.72)">{PRICE_SAVING}</span>
+  {CHECKOUT_OPEN && <span id="kw-dock-sep" aria-hidden="true" style="margin: 0 10px">·</span>}
+  {CHECKOUT_OPEN && <span id="kw-dock-saving" style="color: rgba(237,238,228,0.72)">{PRICE_SAVING}</span>}
   <a href={ORDER_HREF} id="kw-dock-cta">{ORDER_CTA}</a>
   <button type="button" id="kw-dock-close" aria-label="Dismiss the pre-order bar">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
