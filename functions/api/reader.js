@@ -9,6 +9,7 @@ import {
   rateLimited, readCookie, readJson, sha256,
 } from '../../lib/server/guard.js';
 import { CONTACT_EMAIL } from '../../lib/site-facts.mjs';
+import { logResend } from '../../lib/server/resend.js';
 
 const ACCESS_TTL_S = 60 * 60 * 24 * 400;
 const CONSENT_TEXT = 'Also email me when new chapters and the print edition are ready.';
@@ -35,7 +36,7 @@ function redirect(location, cookies = [], status = 302) {
 
 async function sendWelcome(env, email, link, nn) {
   try {
-    await fetch('https://api.resend.com/emails', {
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -57,20 +58,25 @@ async function sendWelcome(env, email, link, nn) {
         ].join('\n'),
       }),
     });
-  } catch {
+    await logResend('welcome email', res);
+  } catch (err) {
     // Access already works on this device; the email is best-effort.
+    await logResend('welcome email', null, err);
   }
 }
 
 async function addToAudience(env, email) {
   if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID) return;
   try {
-    await fetch(`https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`, {
+    const res = await fetch(`https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, unsubscribed: false }),
     });
-  } catch {}
+    await logResend('add contact', res);
+  } catch (err) {
+    await logResend('add contact', null, err);
+  }
 }
 
 // Without JavaScript the gate form posts natively; answer with redirects
