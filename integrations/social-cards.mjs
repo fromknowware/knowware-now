@@ -10,6 +10,7 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parse as parseYaml } from 'yaml';
 
 const W = 1200;
 const H = 630;
@@ -90,6 +91,17 @@ function clip(text, max) {
   return `${head.replace(/\s+\S*$/, '').replace(/[\s.,;:—-]+$/, '')}...`;
 }
 
+// A card hook should end where a sentence ends: take whole sentences while they fit, else clip.
+function hook(text, max) {
+  const sentences = text.match(/[^.!?]+[.!?]+(\s+|$)/g) ?? [text];
+  let out = '';
+  for (const sentence of sentences) {
+    if ((out + sentence).trim().length > max) break;
+    out += sentence;
+  }
+  return out.trim().length >= 40 ? out.trim() : clip(text, max);
+}
+
 function titleSize(title) {
   const n = title.length;
   return n <= 18 ? 92 : n <= 30 ? 76 : n <= 46 ? 62 : n <= 70 ? 52 : 44;
@@ -122,15 +134,73 @@ async function describe(path, html, root) {
 
   const chapter = path.match(/^\/read\/(\d\d|x)$/);
   if (chapter) {
+    // A chapter card carries the chapter's own argument: its one-line hook and its causal diagram.
+    const front = (await readFile(join(root, 'src/content/chapters', `${chapter[1]}.md`), 'utf8')).match(/^---\n([\s\S]*?)\n---/);
+    const data = front ? parseYaml(front[1]) : {};
+    const diagram = data.diagram;
     return {
       ...base,
       kicker: chapter[1] === 'x' ? 'CAPSTONE' : `CHAPTER ${chapter[1]}`,
-      subtitle: 'A chapter of Knowware: Systems of Intelligence. Read the free preview.',
-      label: 'KNOWWARE',
-      value: 'The book, by Khayyam Wakil',
+      subtitle: diagram ? safe(hook(diagram.caption, 150)) : 'The capstone of Knowware: Systems of Intelligence.',
+      label: 'FREE PREVIEW',
+      value: safe(data.title ?? 'Read the chapter online'),
+      diagram,
     };
   }
   return base;
+}
+
+// ── The chapter's causal diagram, drawn from its own nodes and arcs (src/content/chapters/*.md) ──
+const PW = 440;
+const PH = 300;
+const NODE_W = 142;
+const NODE_H = 58;
+const COLS = [NODE_W / 2 + 4, PW / 2, PW - NODE_W / 2 - 4];
+const ROWS = [NODE_H / 2 + 4, PH / 2, PH - NODE_H / 2 - 4];
+
+function diagramPanel(d) {
+  const at = new Map(d.nodes.map((n) => [n.id, { x: COLS[n.pos[0]], y: ROWS[n.pos[1]] }]));
+  const inside = (p, c, pad) => Math.abs(p.x - c.x) <= NODE_W / 2 + pad && Math.abs(p.y - c.y) <= NODE_H / 2 + pad;
+  const shapes = [];
+  d.arcs.forEach((arc, i) => {
+    const a = at.get(arc.from);
+    const b = at.get(arc.to);
+    if (!a || !b) return;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.max(Math.hypot(dx, dy), 1);
+    const bend = 0.16 + (i % 3) * 0.04;
+    const c = { x: (a.x + b.x) / 2 - (dy / len) * len * bend, y: (a.y + b.y) / 2 + (dx / len) * len * bend };
+    const pt = (t) => ({ x: (1 - t) ** 2 * a.x + 2 * (1 - t) * t * c.x + t ** 2 * b.x, y: (1 - t) ** 2 * a.y + 2 * (1 - t) * t * c.y + t ** 2 * b.y });
+    const latent = arc.kind === 'latent';
+    shapes.push({ type: 'path', props: { d: `M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}`, fill: 'none', stroke: latent ? SUB : SIGNAL, strokeWidth: latent ? 2 : 3, ...(latent ? { strokeDasharray: '7 6' } : {}) } });
+    if (!latent) {
+      // Arrowhead where the curve leaves the target box, pointing along the curve.
+      let t = 1;
+      while (t > 0.5 && inside(pt(t), b, 6)) t -= 0.01;
+      const tip = pt(t), back = pt(Math.max(t - 0.04, 0));
+      const ux = (tip.x - back.x) / Math.max(Math.hypot(tip.x - back.x, tip.y - back.y), 1);
+      const uy = (tip.y - back.y) / Math.max(Math.hypot(tip.x - back.x, tip.y - back.y), 1);
+      const bx = tip.x - ux * 16, by = tip.y - uy * 16;
+      shapes.push({ type: 'path', props: { d: `M ${tip.x} ${tip.y} L ${bx - uy * 8} ${by + ux * 8} L ${bx + uy * 8} ${by - ux * 8} Z`, fill: SIGNAL } });
+    }
+  });
+  const nodes = d.nodes.map((n) => {
+    const p = at.get(n.id);
+    const lines = n.label.split('\n').map((l) => el('div', {}, safe(l)));
+    return el('div', {
+      position: 'absolute', left: p.x - NODE_W / 2, top: p.y - NODE_H / 2, width: NODE_W, height: NODE_H, boxSizing: 'border-box',
+      flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontSize: 17, lineHeight: 1.15, textAlign: 'center',
+      fontWeight: n.latent ? 400 : 700, color: n.latent ? SUB : INK, background: n.latent ? BG : '#F7F7F1',
+      border: n.latent ? `2px dashed ${SUB}` : `2px solid ${INK}`,
+    }, lines);
+  });
+  return el('div', { flexDirection: 'column', width: PW }, [
+    el('div', { fontSize: 15, letterSpacing: 2, color: SUB, marginBottom: 14, textTransform: 'uppercase' }, safe(d.title)),
+    el('div', { position: 'relative', width: PW, height: PH }, [
+      { type: 'svg', props: { width: PW, height: PH, viewBox: `0 0 ${PW} ${PH}`, style: { position: 'absolute', left: 0, top: 0 }, children: shapes } },
+      ...nodes,
+    ]),
+  ]);
 }
 
 function tree(c) {
@@ -142,10 +212,18 @@ function tree(c) {
       ]),
       pill(c.kicker),
     ]),
-    el('div', { flex: 1, flexDirection: 'column', justifyContent: 'center' }, [
-      el('div', { fontSize: titleSize(c.title), fontWeight: 800, lineHeight: 1.1, letterSpacing: -2 }, c.title),
-      c.subtitle ? el('div', { fontSize: 28, fontWeight: 400, lineHeight: 1.35, color: SUB, marginTop: 22, maxWidth: 1000 }, c.subtitle) : el('div', {}),
-    ]),
+    c.diagram
+      ? el('div', { flex: 1, alignItems: 'center', justifyContent: 'space-between' }, [
+          el('div', { flexDirection: 'column', width: 600 }, [
+            el('div', { fontSize: c.title.length <= 24 ? 62 : c.title.length <= 40 ? 52 : 44, fontWeight: 800, lineHeight: 1.1, letterSpacing: -1.5 }, c.title),
+            c.subtitle ? el('div', { fontSize: 22, fontWeight: 400, lineHeight: 1.4, color: SUB, marginTop: 20 }, c.subtitle) : el('div', {}),
+          ]),
+          diagramPanel(c.diagram),
+        ])
+      : el('div', { flex: 1, flexDirection: 'column', justifyContent: 'center' }, [
+          el('div', { fontSize: titleSize(c.title), fontWeight: 800, lineHeight: 1.1, letterSpacing: -2 }, c.title),
+          c.subtitle ? el('div', { fontSize: 28, fontWeight: 400, lineHeight: 1.35, color: SUB, marginTop: 22, maxWidth: 1000 }, c.subtitle) : el('div', {}),
+        ]),
     el('div', { borderTop: `3px solid ${INK}`, paddingTop: 22, justifyContent: 'space-between', alignItems: 'flex-end' }, [
       el('div', { flexDirection: 'column' }, [
         el('div', { fontSize: 18, fontWeight: 400, letterSpacing: 4, color: SUB }, c.label),

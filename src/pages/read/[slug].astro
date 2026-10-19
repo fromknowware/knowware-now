@@ -38,6 +38,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   title={chapter.data.opener}
   description={`Chapter ${chapterNum(chapter.data.n)} of Knowware: ${chapter.data.opener}`}
   ogType="article"
+  ogImageAlt={`Knowware, ${chapter.id === 'x' ? 'the capstone' : `chapter ${chapterNum(chapter.data.n)}`}: ${chapter.data.opener}.${chapter.data.diagram ? ` Causal diagram: ${chapter.data.diagram.title}.` : ''}`}
   canonical={`${SITE_URL}/read/${chapter.id}`}
 >
   <SceneHead n={chapter.data.n} opener={chapter.data.opener} />
