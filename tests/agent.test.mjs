@@ -16,7 +16,7 @@ function fakeKV() {
 }
 const reader = { email: 'person@example.com' };
 const req = (token, extra = {}) =>
-  new Request('https://knowware.press/api/agent/me', { headers: { Authorization: `Bearer ${token}`, 'CF-Connecting-IP': '198.51.100.7', ...extra } });
+  new Request('https://knowware.systems/api/agent/me', { headers: { Authorization: `Bearer ${token}`, 'CF-Connecting-IP': '198.51.100.7', ...extra } });
 const input = { name: 'Test Agent', operator: 'Test Ops', lifetime: '1h', scopes: ['read'] };
 
 test('a minted token authenticates and carries its principal', async () => {
@@ -124,7 +124,7 @@ test('agent tokens need a confirmed email: an unconfirmed sign-up is refused', a
     const env = { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' };
     const token = 'A'.repeat(43);
     env.CLAIMS.m.set(`reader:${await sha256(token)}`, JSON.stringify(rec));
-    return { env, request: new Request('https://knowware.press/api/agent/tokens', { headers: { Cookie: `kw_reader=${token}` } }) };
+    return { env, request: new Request('https://knowware.systems/api/agent/tokens', { headers: { Cookie: `kw_reader=${token}` } }) };
   };
   const unconfirmed = await cookieFor({ email: 'victim@example.com', createdAt: 'x' });
   const r = await verifiedReader(unconfirmed.request, unconfirmed.env);
@@ -138,7 +138,7 @@ test('agent tokens need a confirmed email: an unconfirmed sign-up is refused', a
   dev.env.AGENT_REQUIRE_VERIFIED_EMAIL = 'false';
   assert.ok((await verifiedReader(dev.request, dev.env)).reader);
 
-  const nobody = await verifiedReader(new Request('https://knowware.press/'), { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' });
+  const nobody = await verifiedReader(new Request('https://knowware.systems/'), { CLAIMS: fakeKV(), AGENT_TOKENS: 'on' });
   assert.equal(nobody.response.status, 401);
 });
 

@@ -1,4 +1,4 @@
-Contact: mailto:hello@knowware.press
+Contact: mailto:hello@knowware.systems
 Expires: 2027-10-15T00:00:00.000Z
 Preferred-Languages: en
-Canonical: https://knowware.press/.well-known/security.txt
+Canonical: https://knowware.systems/.well-known/security.txt

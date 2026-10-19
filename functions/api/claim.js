@@ -17,7 +17,7 @@ const FIELDS = {
 };
 
 const ALLOWED_ORIGINS = [
-  /^https:\/\/(www\.)?knowware\.press$/,
+  /^https:\/\/(www\.)?knowware\.(systems|press)$/,
   /^https:\/\/([a-z0-9-]+\.)?knowware-book\.pages\.dev$/,
   /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/,
 ];
@@ -58,7 +58,7 @@ async function rateLimited(env, request) {
 async function handlePost({ request, env }) {
   const origin = request.headers.get('Origin') || '';
   if (!ALLOWED_ORIGINS.some((re) => re.test(origin))) {
-    return json({ ok: false, error: 'Requests must come from knowware.press.' }, 403);
+    return json({ ok: false, error: 'Requests must come from the Knowware site.' }, 403);
   }
 
   if (!(request.headers.get('Content-Type') || '').startsWith('application/json')) {

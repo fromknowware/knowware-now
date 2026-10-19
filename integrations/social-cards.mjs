@@ -17,7 +17,7 @@ const INK = '#191938';
 const BG = '#EDEEE4';
 const SUB = '#55554f';
 const SIGNAL = '#2F55E0';
-const SITE = 'https://knowware.press';
+const SITE = 'https://knowware.systems';
 const CARD_REF = new RegExp(`<meta property="og:image" content="${SITE}/og(/[^"]+)\\.png"`);
 
 // What each static page is called on its card. Anything not listed uses its title as the kicker.
@@ -103,7 +103,7 @@ async function describe(path, html, root) {
   const description = clip(raw.startsWith(`${title}: `) ? raw.slice(title.length + 2) : raw, 150);
   const base = {
     title: safe(title), subtitle: safe(description), kicker: KICKERS[path] ?? title.toUpperCase().slice(0, 22),
-    label: 'SYSTEMS OF INTELLIGENCE', value: 'A field guide, by Khayyam Wakil', url: `knowware.press${path}`,
+    label: 'SYSTEMS OF INTELLIGENCE', value: 'A field guide, by Khayyam Wakil', url: `knowware.systems${path}`,
   };
 
   const voice = path.match(/^\/voices\/([^/]+)$/);

@@ -1,7 +1,7 @@
 # Knowware: reading is welcome; training on the text is not.
 # Content-Signal is Cloudflare's contentsignals.org vocabulary. It states a
 # preference for how content may be used; it is not a licence, and the
-# policy may change (see https://knowware.press/agents#terms).
+# policy may change (see https://knowware.systems/agents#terms).
 User-agent: *
 Content-Signal: search=yes, ai-input=yes, ai-train=no
 Allow: /
@@ -9,4 +9,4 @@ Allow: /
 Allow: /api/agent/
 Disallow: /api/
 
-Sitemap: https://knowware.press/sitemap-index.xml
+Sitemap: https://knowware.systems/sitemap-index.xml

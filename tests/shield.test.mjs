@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { shielded, guard } from '../lib/server/shield.js';
 
-const ctx = (env = {}, url = 'https://knowware.press/api/agent/x') => ({ env, request: new Request(url, { method: 'POST' }) });
+const ctx = (env = {}, url = 'https://knowware.systems/api/agent/x') => ({ env, request: new Request(url, { method: 'POST' }) });
 
 test('a throwing handler becomes a generic 500 with no internals', async () => {
   const quiet = console.error; const logged = []; console.error = (...a) => logged.push(a.join(' '));

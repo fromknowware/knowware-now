@@ -1,11 +1,11 @@
 // Connects to the Knowware MCP server with the official MCP TypeScript client.
 // Not a dependency of this repo; install it where you run this:
 //   npm i @modelcontextprotocol/client            (v2, spec 2026-07-28)
-//   KNOWWARE_AGENT_TOKEN=kwa_... node examples/mcp-client.mjs [https://knowware.press/mcp]
+//   KNOWWARE_AGENT_TOKEN=kwa_... node examples/mcp-client.mjs [https://knowware.systems/mcp]
 // Without a token only the public tools work. A person mints the token at /agents.
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 
-const url = process.argv[2] || 'https://knowware.press/mcp';
+const url = process.argv[2] || 'https://knowware.systems/mcp';
 const token = process.env.KNOWWARE_AGENT_TOKEN;
 const client = new Client({ name: 'knowware-mcp-example', version: '1.0.0' }, { versionNegotiation: { mode: 'auto' } });
 await client.connect(new StreamableHTTPClientTransport(new URL(url), token ? { requestInit: { headers: { Authorization: `Bearer ${token}` } } } : {}));

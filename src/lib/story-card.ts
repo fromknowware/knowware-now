@@ -66,7 +66,7 @@ export async function renderStoryCard(story: Story): Promise<Uint8Array> {
       ]),
       el('div', { flexDirection: 'column', alignItems: 'flex-end', fontSize: 20, color: SUB }, [
         el('div', {}, eventLine(story).slice(0, 60)),
-        el('div', { color: INK, fontWeight: 700, marginTop: 6 }, 'knowware.press/stories'),
+        el('div', { color: INK, fontWeight: 700, marginTop: 6 }, 'knowware.systems/stories'),
       ]),
     ]),
   ]);
@@ -95,7 +95,7 @@ export async function renderIndexCard(count: number): Promise<Uint8Array> {
         el('div', { fontSize: 18, fontWeight: 400, letterSpacing: 4, color: SUB }, 'EVERY ENTRY NAMES THE MISSING LAYER'),
         el('div', { fontSize: 28, fontWeight: 700, color: SIGNAL, marginTop: 6 }, 'Knowing · Context · Accountability · Meaning'),
       ]),
-      el('div', { fontSize: 20, fontWeight: 700, color: INK }, 'knowware.press/stories'),
+      el('div', { fontSize: 20, fontWeight: 700, color: INK }, 'knowware.systems/stories'),
     ]),
   ]);
 

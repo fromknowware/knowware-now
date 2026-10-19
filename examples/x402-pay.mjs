@@ -81,7 +81,7 @@ async function main() {
   }
   if (args.includes('--selftest')) return selftest();
 
-  const base = (opt('base', 'https://knowware.press')).replace(/\/$/, '');
+  const base = (opt('base', 'https://knowware.systems')).replace(/\/$/, '');
   const token = process.env.KNOWWARE_AGENT_TOKEN;
   const key = process.env.X402_TEST_PRIVATE_KEY;
   const maxUsdc = Number(opt('max', '11.95'));
