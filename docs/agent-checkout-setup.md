@@ -23,6 +23,7 @@ Set these on the **Preview** environment first, then Production when ready. The 
 | `STRIPE_PRICE_PREORDER` | `price_…` | Plaintext |
 | `STRIPE_SHIP_COUNTRIES` | optional, default `US` | Plaintext |
 | `RESEND_API_KEY` | needed so readers get the confirmation link (see below); already used by the reader sign-up email | Secret |
+| `READER_FROM` | sender for reader emails, on a domain verified in Resend, e.g. `Knowware <hello@knowware.institute>` (falls back to `CLAIM_NOTIFY_FROM`, then to Resend's test sender, which only delivers to the account owner) | Secret |
 | `RATE_SALT` | any long random string (existing recommendation; also salts the new limits) | Secret |
 
 With `AGENT_CHECKOUT` unset, `POST /api/agent/checkout` returns 503 `checkout_not_open`, `/api/stripe/webhook` returns 404, and tokens cannot be minted with the `checkout` scope. `GET /api/agent/status` says which.
