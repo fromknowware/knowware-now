@@ -59,13 +59,20 @@ curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.systems/api/ad
 ```
 Import each CSV into its own Resend segment ("Knowware pre-order waitlist", "Knowware updates"; the `email` column maps to the contact email) and send a Broadcast to that segment. The export holds confirmed members only; `&status=all` adds rows that never confirmed (old sign-ups show as `legacy`). `X-Next-Cursor` on a response means there is another page: repeat with `&cursor=…`. Resend adds the unsubscribe link and header to broadcasts.
 
+## Leaving, erasure and Resend feedback
+- `/unsubscribe` → `POST /api/remove/request`. If the address has a reader account or a list record we mail ONE link (24 h, once); the answer is identical either way, so it cannot probe who is held and a stranger can remove no one.
+- The link opens `/api/remove/confirm`, which shows three buttons: **stop news**, **leave the pre-order list**, **delete everything**. The first two mark the record `unsubscribed` (kept as the withdrawal record, left out of every export, and a later sign-up gets a fresh consent record). Chapters already open stay open. **Delete everything** removes the reader, both lists, credits, devices, agent tokens, the invite code, the person's notes and nominations; it keeps `order:*` (accounts) and nothing else keyed by the address.
+- The author gets a short email for every removal (`CLAIM_NOTIFY_TO`) naming the address, so it can be taken out of any Resend segment it was imported into. Export `…&status=unsubscribed` lists who left a list.
+- **Resend feedback without a wider key:** point a Resend webhook at `https://knowware.systems/api/resend-webhook` for `email.bounced`, `email.complained` and `contact.updated`, and set the signing secret as the Pages secret `RESEND_WEBHOOK_SECRET`. A permanent bounce or complaint writes `suppress:<h(email)>` (no mail of any kind is sent to that address again) and takes it off both lists; a contact marked unsubscribed in Resend leaves both lists here. Signatures are Svix; stale or replayed deliveries are refused. Off (404) until the secret is set.
+- Broadcasts sent from Resend carry Resend's own unsubscribe link and one-click header; our footer line points to `/unsubscribe` too.
+
 ## Sender
 `READER_FROM` (Pages secret) is the From address; Reply-To is `hello@knowware.systems`. Until `knowware.systems` is a verified Resend domain it is `Knowware <hello@knowware.institute>`. Switch it by setting the secret and redeploying (`gh workflow run pages.yml --ref main`). The postal address printed in every footer is `POSTAL_ADDRESS` in `lib/site-facts.mjs`; it must be filled in before any list email is sent.
 
 ## Testing
 - `npm test` covers the reader, throttles, device cap, both lists, the export and both message formats.
-- `scripts/test-reader.sh` and `scripts/test-lists.sh` run the real flows against a local server that talks to `scripts/mock-resend.mjs`, which records messages instead of sending them (CI does this on port 8789).
+- `scripts/test-reader.sh`, `test-lists.sh`, `test-unlocks.sh` and `test-remove.sh` run the real flows against a local server that talks to `scripts/mock-resend.mjs`, which records messages instead of sending them (CI does this on port 8789).
 - Never send test mail to anyone but your own address.
 
 ## Erasing one person
-Delete, for `h = sha256(lowercased email)`: `acct:h` (and its `refcode:<code>`), `credit:h:*`, `interest:h`, `waitlist:h`, `mail10:h`, `maild:h`, every `readerdev:h:*` key and the `reader:<token hash>` each ends with (the token hash is the part after the last colon), then any `claim:*` whose `email` matches. Leave nothing else with the address in it.
+The `/unsubscribe` page does this for the person. By hand, delete, for `h = sha256(lowercased email)`: `acct:h` (and its `refcode:<code>`), `credit:h:*`, `interest:h`, `waitlist:h`, `mail10:h`, `maild:h`, `rm10:h`, `rmd:h`, every `readerdev:h:*` key and the `reader:<token hash>` each ends with (the token hash is the part after the last colon), then any `claim:*` whose `email` matches. Leave nothing else with the address in it.

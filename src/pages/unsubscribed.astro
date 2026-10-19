@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACT_EMAIL } from '../config';
+const link = 'color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)';
+---
+<Base title="Done" description="Your removal was carried out." noindex>
+  <section class="kw-section" aria-labelledby="done-h">
+    <p class="kw-label">Unsubscribe</p>
+    <h1 class="kw-h2" id="done-h">Done.</h1>
+    <p class="kw-body">What you chose has been removed. Mail already on its way can take a little while to stop. If anything else reaches you, write to <a href={`mailto:${CONTACT_EMAIL}`} style={link}>{CONTACT_EMAIL}</a> and a person will sort it out.</p>
+    <p class="kw-body" style="margin-top:16px"><a href="/" style={link}>Back to the book →</a></p>
+  </section>
+</Base>
