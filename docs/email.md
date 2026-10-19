@@ -21,6 +21,21 @@ The site sends no marketing email. Chapter news and the pre-order notice are sen
 
 Without `RESEND_API_KEY` the site answers 503 and unlocks nothing. `READER_AUTOCONFIRM=true` skips the email and confirms at once, for local development and CI only; it is ignored whenever `RESEND_API_KEY` is set, and must never be set in Cloudflare.
 
+## Chapter unlocks
+Confirming opens Chapter 1. `unlocked = min(10, 1 + credits + weeks since confirming)`, in book order (`01`–`09`, then `x`). One more opens every 7 days with no action. Credits (one chapter each; `lib/server/unlocks.js`):
+
+| Credit | Earned when | Cap |
+|---|---|---|
+| `invite` | A NEW address confirms its email through your share link (`/read/01/?ref=CODE`). No credit for yourself or an alias (`+tag`, Gmail dots), for an address someone else brought first, or for an existing reader. | 9 |
+| `nominate` | You submit `/contribute` while signed in | 2 |
+| `waitlist` | Your address is confirmed on the pre-order list | 1 |
+| `interest` | Your address is confirmed on the news list | 1 |
+| `note` | You send the author a note (`/api/reader/note`; it is emailed to `CLAIM_NOTIFY_TO` with the reader as Reply-To) | 2 |
+
+A credit is never taken back: leaving a list, or the friend leaving, does not close a chapter. The two list credits are a thank-you; consent for each list is still its own unticked, separate choice with its own wording. The site never emails a third party for a reader (invites are a link the reader shares themselves). An agent token opens exactly what its person has open (`chapter_locked` otherwise). Page: `/read/progress`, data: `GET /api/reader/me`.
+
+Known soft spot: someone with many throwaway inboxes can open chapters faster than the weekly drip. That only moves a free chapter earlier, so it is accepted.
+
 ## The two lists
 They are different lists with different consent, stored separately, and joining one never joins the other.
 
@@ -53,4 +68,4 @@ Import each CSV into its own Resend segment ("Knowware pre-order waitlist", "Kno
 - Never send test mail to anyone but your own address.
 
 ## Erasing one person
-Delete, for `h = sha256(lowercased email)`: `acct:h`, `interest:h`, `waitlist:h`, `mail10:h`, `maild:h`, every `readerdev:h:*` key and the `reader:<token hash>` each ends with (the token hash is the part after the last colon), then any `claim:*` whose `email` matches. Leave nothing else with the address in it.
+Delete, for `h = sha256(lowercased email)`: `acct:h` (and its `refcode:<code>`), `credit:h:*`, `interest:h`, `waitlist:h`, `mail10:h`, `maild:h`, every `readerdev:h:*` key and the `reader:<token hash>` each ends with (the token hash is the part after the last colon), then any `claim:*` whose `email` matches. Leave nothing else with the address in it.

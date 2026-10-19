@@ -1,6 +1,6 @@
 // /api/reader — asks for access to the full chapters. Typing an address sends ONE email with a
 // confirmation link; nothing unlocks until the link is used (see /api/reader/confirm).
-//   POST {email, updates, chapter, company}  → "check your email" (the same answer for every address)
+//   POST {email, updates, chapter, ref, company}  → "check your email" (the same answer for every address)
 //   GET  ?forget=1                           → signs this device out
 // The answer never says whether an address is new, known or throttled, so the form cannot be used
 // to probe who reads. Tokens are random; KV keeps only their SHA-256.
@@ -56,6 +56,7 @@ async function handlePost({ request, env }) {
     return json({ ok: false, error: 'Enter a valid email address, like name@example.com.', fields: ['email'] }, 422);
   }
   const interest = data.updates === true;
+  const ref = typeof data.ref === 'string' ? data.ref : '';
 
   if (await rateLimited(env, request, 'reader', 10, 3600)) {
     if (isForm) return backToGate();
@@ -65,7 +66,7 @@ async function handlePost({ request, env }) {
   // Local development and CI only: with no email key configured, skip the email and confirm at once.
   // Ignored whenever RESEND_API_KEY is set, so it cannot weaken a real deployment.
   if (!env.RESEND_API_KEY && env.READER_AUTOCONFIRM === 'true') {
-    const started = await startSignup(env, { email, chapter, interest });
+    const started = await startSignup(env, { email, chapter, interest, ref });
     const confirmed = started && (await confirmSignup(env, started.token));
     if (!confirmed) return checkEmail();
     const next = `/read/${chapter}/full`;
@@ -78,7 +79,7 @@ async function handlePost({ request, env }) {
     return json({ ok: false, error: 'Sign-up is paused for a moment. Try again later.' }, 503, { 'Retry-After': '600' });
   }
 
-  const started = await startSignup(env, { email, chapter, interest });
+  const started = await startSignup(env, { email, chapter, interest, ref });
   if (!started) return checkEmail(); // this address was mailed moments ago; say nothing different
   const link = `${new URL(request.url).origin}/api/reader/confirm?t=${started.token}`;
   const sent = await sendMail(env, 'confirmation email', { to: email, ...confirmEmail({ link, signin: started.known, interest }) });

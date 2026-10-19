@@ -13,6 +13,7 @@ import {
 import { json, originAllowed, readJson } from '../lib/server/guard.js';
 import { authenticateAgent, ipKey, principalBlock, windowLimited } from '../lib/server/agent.js';
 import { guard } from '../lib/server/shield.js';
+import { chapterOpen, unlockedFor } from '../lib/server/unlocks.js';
 
 const VERSIONS = ['2026-07-28', '2025-11-25', '2025-06-18', '2025-03-26'];
 const SERVER_INFO = { name: 'knowware', title: 'Knowware: Systems of Intelligence', version: '1.0.0' };
@@ -54,6 +55,7 @@ async function callTool(name, args, request, env) {
       }
       const auth = await authenticateAgent(request, env, 'read');
       if (auth.response) return text(`Not authorized (HTTP ${auth.response.status}). Ask the person for a new token. See ${SITE_URL}/agents`, true);
+      if (!chapterOpen((await unlockedFor(env, auth.agent.email)).count, slug)) return text(`Chapter ${slug} is not open for the person you act for yet. They can see how to open more at ${SITE_URL}/read/progress`, true);
       const c = chapters[slug];
       return text({
         ...envelope(),
