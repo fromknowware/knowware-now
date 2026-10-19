@@ -2,6 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { onRequest as readerRoute } from '../functions/api/reader.js';
+import { confirmPage } from '../lib/server/confirm-page.js';
 import { confirmEmail, footerLines } from '../lib/server/mail.js';
 import {
   MAX_DEVICES, confirmSignup, mintDevice, peekPending, readerFromToken, signOut, startSignup,
@@ -233,4 +234,16 @@ test('HTML in the email is escaped', () => {
   const m = confirmEmail({ link: 'https://knowware.systems/x?a=1&b="<script>"' });
   assert.equal(m.html.includes('<script>'), false);
   assert.ok(m.html.includes('&lt;script&gt;'));
+});
+
+test('the confirm page keeps its token out of Referer but still lets the form POST carry an Origin', async () => {
+  // With "no-referrer" a browser sends "Origin: null" on the form POST and the endpoint refuses it.
+  const res = confirmPage({ 'Content-Security-Policy': "default-src 'self'" }, { heading: 'Confirm', lead: 'x', action: '/api/reader/confirm', token: 'T'.repeat(43), button: 'Go' });
+  assert.equal(res.headers.get('Referrer-Policy'), 'strict-origin');
+  assert.equal(res.headers.get('Cache-Control'), 'no-store');
+  assert.equal(res.headers.get('X-Robots-Tag'), 'noindex');
+  const html = await res.text();
+  assert.ok(html.includes('content="strict-origin"'));
+  assert.equal(html.includes('no-referrer'), false);
+  assert.ok(html.includes('<form method="post" action="/api/reader/confirm">'));
 });

@@ -1,0 +1,196 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { chapterNum } from '../../lib/chapters';
+
+const chapters = (await getCollection('chapters')).sort((a, b) => a.data.n - b.data.n);
+const titles = Object.fromEntries(chapters.map((c) => [c.id, `${chapterNum(c.data.n)} ${c.data.title}`]));
+---
+<Base title="Your chapters" description="Which Knowware chapters are open for you, and how to open more." noindex>
+  <section class="kw-section" aria-labelledby="progress-h">
+    <p class="kw-label">Your chapters</p>
+    <h1 class="kw-h2" id="progress-h">Open one more.</h1>
+    <p class="kw-notice" id="pr-locked" role="status" hidden></p>
+    <p class="kw-body" id="pr-summary" role="status" aria-live="polite">Loading your chapters…</p>
+    <noscript><p class="kw-body">This page needs JavaScript to show your chapters. Chapter 1 is open once you confirm your email; one more opens every week. <a href="/read">Back to the chapters</a>.</p></noscript>
+  </section>
+
+  <section class="kw-section" id="pr-chapters-wrap" aria-labelledby="pr-chapters-h" hidden>
+    <h2 class="kw-h3" id="pr-chapters-h">Chapters</h2>
+    <ol class="pr-list" id="pr-chapters" data-titles={JSON.stringify(titles)}></ol>
+  </section>
+
+  <section class="kw-section" id="pr-ways-wrap" aria-labelledby="pr-ways-h" hidden>
+    <h2 class="kw-h3" id="pr-ways-h">Ways to open the next one</h2>
+    <p class="kw-body">One more chapter opens by itself every week, so waiting works. These open them sooner. None of them is required, and a chapter that is open stays open: leaving a list or unsubscribing never closes one.</p>
+    <ul class="pr-ways" id="pr-ways"></ul>
+
+    <div class="pr-share">
+      <label for="pr-link" class="pr-label">Your invite link</label>
+      <div class="pr-share-row">
+        <input id="pr-link" class="pr-input" type="text" readonly value="" aria-describedby="pr-copy-status" />
+        <button type="button" class="kw-btn kw-btn--filled" id="pr-copy">Copy link</button>
+      </div>
+      <p class="pr-fine" id="pr-copy-status" role="status" aria-live="polite">Send it to people yourself. The site never emails anyone for you. A chapter opens when a new person confirms their email through it.</p>
+    </div>
+
+    <form class="pr-note" id="pr-note" novalidate>
+      <label for="pr-note-text" class="pr-label">Tell the author one thing about a chapter</label>
+      <textarea id="pr-note-text" class="pr-input" rows="4" maxlength="1000" aria-describedby="pr-note-help pr-note-live"></textarea>
+      <p class="pr-fine" id="pr-note-help">20 to 1,000 characters. It goes to the author, who may reply. Opens one chapter, up to twice.</p>
+      <button type="submit" class="kw-btn kw-btn--filled" id="pr-note-send">Send the note</button>
+      <p class="pr-live" id="pr-note-live" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+</Base>
+
+<script>
+  const $ = (id: string) => document.getElementById(id)!;
+  const summary = $('pr-summary');
+  const lockedNote = $('pr-locked');
+
+  const locked = new URLSearchParams(window.location.search).get('locked') ?? '';
+  const titles: Record<string, string> = JSON.parse($('pr-chapters').dataset.titles ?? '{}');
+  if (/^(0[1-9]|x)$/.test(locked)) {
+    lockedNote.textContent = `${titles[locked] ?? `Chapter ${locked}`} is not open for you yet. Here is how to open it.`;
+    lockedNote.hidden = false;
+  }
+
+  const WAYS: Record<string, { title: string; text: string; href?: string; cta?: string }> = {
+    invite: { title: 'Invite a reader', text: 'Each new person who confirms their email through your link opens a chapter for you.' },
+    nominate: { title: 'Nominate a voice', text: 'While signed in, nominate someone whose voice belongs in the book.', href: '/contribute', cta: 'Nominate a voice' },
+    waitlist: { title: 'Join the pre-order list', text: 'Optional and separate from reading. Use this same email and confirm it. You can leave any time and keep the chapter.', href: '/order#waitlist', cta: 'Join the pre-order list' },
+    interest: { title: 'Get news about chapters', text: 'Optional and separate from reading. Use this same email and confirm it. You can leave any time and keep the chapter.', href: '/read#news', cta: 'Get chapter news' },
+    note: { title: 'Send the author a note', text: 'One honest line about what landed or did not. Use the form below.' },
+  };
+
+  type Me = { unlocked: number; total: number; chapters: { slug: string; open: boolean }[]; next_weekly_at: string | null; credits: Record<string, { earned: number; max: number }>; share_url: string | null };
+
+  function render(me: Me) {
+    summary.textContent = me.unlocked >= me.total
+      ? `All ${me.total} chapters are open for you.`
+      : `Chapters open: ${me.unlocked} of ${me.total}.${me.next_weekly_at ? ` The next one opens by itself on ${new Date(me.next_weekly_at).toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}.` : ''}`;
+
+    const list = $('pr-chapters');
+    list.replaceChildren(...me.chapters.map((c) => {
+      const li = document.createElement('li');
+      const name = titles[c.slug] ?? `Chapter ${c.slug}`;
+      if (c.open) {
+        const a = document.createElement('a');
+        a.href = `/read/${c.slug}/full`;
+        a.textContent = name;
+        li.append(a, ' ');
+        const tag = document.createElement('span');
+        tag.className = 'pr-tag';
+        tag.textContent = 'open';
+        li.append(tag);
+      } else {
+        li.textContent = `${name} `;
+        const tag = document.createElement('span');
+        tag.className = 'pr-tag pr-tag--locked';
+        tag.textContent = 'not open yet';
+        li.append(tag);
+      }
+      return li;
+    }));
+    $('pr-chapters-wrap').hidden = false;
+
+    const ways = $('pr-ways');
+    ways.replaceChildren(...Object.entries(WAYS).map(([kind, w]) => {
+      const c = me.credits[kind] ?? { earned: 0, max: 0 };
+      const li = document.createElement('li');
+      const h = document.createElement('strong');
+      h.textContent = w.title;
+      const p = document.createElement('span');
+      p.textContent = ` ${w.text} `;
+      const count = document.createElement('span');
+      count.className = 'pr-tag';
+      count.textContent = c.earned >= c.max ? 'done' : `${c.earned} of ${c.max} used`;
+      li.append(h, p, count);
+      if (w.href && c.earned < c.max) {
+        const a = document.createElement('a');
+        a.href = w.href;
+        a.className = 'pr-act';
+        a.textContent = w.cta ?? 'Go';
+        li.append(' ', a);
+      }
+      return li;
+    }));
+
+    const link = $('pr-link') as HTMLInputElement;
+    if (me.share_url) link.value = me.share_url;
+    $('pr-ways-wrap').hidden = false;
+  }
+
+  async function load() {
+    try {
+      const res = await fetch('/api/reader/me', { headers: { Accept: 'application/json' } });
+      if (res.status === 401) {
+        summary.textContent = 'You are not signed in on this device. Open any chapter and enter your email to get a sign-in link.';
+        const a = document.createElement('a');
+        a.href = '/read';
+        a.textContent = 'Go to the chapters';
+        summary.append(' ', a, '.');
+        return;
+      }
+      render(await res.json());
+    } catch {
+      summary.textContent = 'Your chapters could not be loaded. Check your connection and reload.';
+    }
+  }
+
+  $('pr-copy').addEventListener('click', async () => {
+    const input = $('pr-link') as HTMLInputElement;
+    const status = $('pr-copy-status');
+    try { await navigator.clipboard.writeText(input.value); status.textContent = 'Copied.'; }
+    catch { input.select(); status.textContent = 'Select the link and copy it.'; }
+  });
+
+  $('pr-note').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = ($('pr-note-text') as HTMLTextAreaElement).value.trim();
+    const live = $('pr-note-live');
+    const send = $('pr-note-send') as HTMLButtonElement;
+    if (text.length < 20) { live.textContent = 'Write at least 20 characters.'; return; }
+    send.disabled = true;
+    live.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/reader/note', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note: text }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        live.textContent = data.credited ? 'Thank you. The author will read it. One more chapter is open.' : 'Thank you. The author will read it.';
+        ($('pr-note-text') as HTMLTextAreaElement).value = '';
+        load();
+      } else {
+        live.textContent = data.error ?? 'The note could not be sent. Try again in a moment.';
+      }
+    } catch {
+      live.textContent = 'The note could not be sent because the connection failed.';
+    } finally {
+      send.disabled = false;
+    }
+  });
+
+  load();
+</script>
+
+<style is:global>
+  /* Global because the lists below are built by the script, so scoped styles would miss them. */
+  .kw-notice { font-size: 15px; line-height: 1.5; max-width: 60ch; background: var(--accent-soft); color: var(--ink); padding: 12px 16px; margin: 0 0 24px; }
+  .pr-list, .pr-ways { max-width: 60ch; padding-left: 0; list-style: none; margin: 0 0 24px; }
+  .pr-list li, .pr-ways li { padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 17px; line-height: 1.5; color: var(--ink); }
+  .pr-list a, .pr-act { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; display: inline-block; padding: 8px 0; }
+  .pr-tag { font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; color: var(--sub); border: 1px solid var(--rule-strong); padding: 3px 6px; white-space: nowrap; }
+  .pr-share, .pr-note { max-width: 520px; margin-top: 32px; display: grid; gap: 12px; }
+  .pr-label { font: 500 13px/1.3 "JetBrains Mono", ui-monospace, monospace; color: var(--ink); }
+  .pr-share-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pr-input { flex: 1 1 240px; box-sizing: border-box; width: 100%; padding: 12px; font: 400 16px/1.4 "JetBrains Mono", ui-monospace, monospace; color: var(--ink); background: transparent; border: 1px solid var(--rule-strong); border-radius: 0; }
+  .pr-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .pr-fine { margin: 0; font-size: 14px; line-height: 1.5; color: var(--sub); }
+  .pr-live { margin: 0; font-size: 16px; min-height: 1.4em; color: var(--ink); }
+  #pr-note .kw-btn, #pr-copy { min-height: 44px; }
+</style>

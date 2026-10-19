@@ -20,8 +20,9 @@ const fullHref = `/read/${slug}/full`;
       <p class="kw-gate-eyebrow mono">Chapter {nn} · {fmt(remaining)} words left · about {readMinutes} min in full</p>
       <h2 class="kw-gate-h" id="gate-h">Keep reading. It's free.</h2>
       <p class="kw-gate-body">
-        Confirm one email to read this chapter in full. We send a link; nothing opens until you use it.
-        To read on another device, enter the same email there for a fresh link. No paywall, no tracking.
+        Confirm one email and Chapter 1 opens in full. Open more by inviting readers and a few small things,
+        or just wait: one more chapter opens every week. We send a link; nothing opens until you use it.
+        On another device, enter the same email for a fresh link. No paywall, no tracking.
       </p>
     </div>
 
@@ -58,6 +59,7 @@ const fullHref = `/read/${slug}/full`;
           <input type="text" id={`gate-company-${nn}`} name="company" tabindex="-1" autocomplete="off" />
         </div>
         <button type="submit" class="kw-btn kw-btn--filled kw-gate-submit">Email me a link →</button>
+        <p class="kw-gate-ref" hidden>You came through a reader's link. When you confirm your email, they open another chapter.</p>
         <p class="kw-gate-status" role="status" aria-live="polite"></p>
         <p class="kw-gate-fine">
           {fmt(totalWords)} words in Chapter {nn}. Your email stays with the author and is never sold or shared. <a href="/privacy">Privacy</a>.
@@ -76,6 +78,17 @@ const fullHref = `/read/${slug}/full`;
     const status = gate.querySelector<HTMLElement>('.kw-gate-status');
     const email = form?.querySelector<HTMLInputElement>('input[name=email]');
     const err = email ? document.getElementById(`${email.id}-err`) : null;
+
+    // A reader's share link carries ?ref=CODE. Remember it in this browser until the address is confirmed.
+    const REF_RE = /^[A-HJ-NP-Z2-9]{8}$/;
+    let ref = '';
+    try {
+      const fromUrl = new URLSearchParams(window.location.search).get('ref') ?? '';
+      if (REF_RE.test(fromUrl)) localStorage.setItem('kw_ref', fromUrl);
+      const saved = localStorage.getItem('kw_ref') ?? '';
+      if (REF_RE.test(saved)) ref = saved;
+    } catch { /* storage blocked: the link still works if used on this page */ }
+    if (ref) gate.querySelector<HTMLElement>('.kw-gate-ref')?.removeAttribute('hidden');
 
     if (document.cookie.split('; ').includes(READER_FLAG)) {
       if (form) form.hidden = true;
@@ -117,6 +130,7 @@ const fullHref = `/read/${slug}/full`;
             updates: fd.get('updates') === 'yes',
             company: fd.get('company'),
             chapter: gate.dataset.chapter,
+            ref,
           }),
         });
         const data = await res.json().catch(() => ({}));
@@ -197,6 +211,7 @@ const fullHref = `/read/${slug}/full`;
   .kw-gate-submit { align-self: flex-start; }
   .kw-gate-status { font-size: 14px; color: var(--band-ink); margin: 0; min-height: 1em; }
   .kw-gate-status:empty { display: none; }
+  .kw-gate-ref { font-size: 14px; line-height: 1.5; color: var(--band-ink); margin: 0; }
   .kw-gate-fine { font-size: 12px; line-height: 1.5; color: var(--band-sub); margin: 0; }
   .kw-gate-ok { font-size: 15px; color: var(--band-sub); margin: 0 0 14px; }
 

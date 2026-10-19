@@ -12,6 +12,7 @@ import {
 } from '../../../../lib/site-facts.mjs';
 import { json } from '../../../../lib/server/guard.js';
 import { NOTICE_HEADER, NOTICE_TEXT, agentJson, authenticateAgent, principalBlock } from '../../../../lib/server/agent.js';
+import { chapterOpen, unlockedFor } from '../../../../lib/server/unlocks.js';
 
 const SLUG_RE = /^(0[1-9]|x)$/;
 
@@ -32,6 +33,10 @@ export async function onRequest({ request, env, params }) {
   if (!ch) return agentJson({ ok: false, error: 'not_found' }, 404);
 
   const a = auth.agent;
+  // An agent opens exactly the chapters its human has open.
+  if (!chapterOpen((await unlockedFor(env, a.email)).count, slug)) {
+    return agentJson({ ok: false, error: 'chapter_locked', hint: `This chapter is not open for the person you act for yet. They can see how to open more at ${SITE_URL}/read/progress.` }, 403);
+  }
   const principal = principalBlock(a);
   const attribution = {
     work: WORK.title,

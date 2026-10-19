@@ -88,6 +88,7 @@ import Field from '../components/Field.astro';
       <button type="submit" class="kw-btn kw-btn--filled" style="margin-top:8px">
         Submit nomination →
       </button>
+      <p class="field-note">Signed in to read? A nomination also opens one more chapter for you (up to two). Your address is used only to reply to you. <a href="/privacy">Privacy</a>.</p>
       <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
     </form>
   </section>
@@ -100,6 +101,8 @@ import Field from '../components/Field.astro';
 }
 .contribute-steps li { margin-bottom: 12px; }
 
+.field-note { margin: 0; font-size: 14px; line-height: 1.5; color: var(--sub); }
+.field-note a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
 .claim-form { max-width: 520px; display: flex; flex-direction: column; gap: 20px; }
 .field-group { display: flex; flex-direction: column; gap: 6px; }
 .field-label {

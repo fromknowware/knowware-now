@@ -4,6 +4,9 @@
 // also emails a plain-text notification.
 
 import { logResend } from '../../lib/server/resend.js';
+import { TOKEN_RE, readCookie } from '../../lib/server/guard.js';
+import { readerFromToken } from '../../lib/server/reader.js';
+import { addCredit } from '../../lib/server/unlocks.js';
 
 const MAX_BODY_BYTES = 8 * 1024;
 const RATE_LIMIT = 5;
@@ -109,6 +112,12 @@ async function handlePost({ request, env }) {
   const key = `claim:${claim.submittedAt}:${crypto.randomUUID().slice(0, 8)}`;
   await env.CLAIMS.put(key, JSON.stringify(claim));
 
+  // A nomination from a signed-in reader opens one more chapter for them (twice at most).
+  let credited = false;
+  const readerToken = readCookie(request, 'kw_reader');
+  const reader = TOKEN_RE.test(readerToken) ? await readerFromToken(env, readerToken) : null;
+  if (reader) credited = await addCredit(env, await sha256(reader.email), 'nominate', key.split(':').pop(), claim.submittedAt);
+
   if (env.RESEND_API_KEY && env.CLAIM_NOTIFY_TO) {
     // Fail-soft: the claim is already stored; email is best-effort.
     try {
@@ -143,7 +152,7 @@ async function handlePost({ request, env }) {
     }
   }
 
-  return json({ ok: true });
+  return json({ ok: true, credited });
 }
 
 export async function onRequest(context) {
