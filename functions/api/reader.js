@@ -8,6 +8,7 @@ import {
   EMAIL_RE, TOKEN_RE, clean, json, newToken, originAllowed,
   rateLimited, readCookie, readJson, sha256,
 } from '../../lib/server/guard.js';
+import { CONTACT_EMAIL } from '../../lib/site-facts.mjs';
 
 const ACCESS_TTL_S = 60 * 60 * 24 * 400;
 const CONSENT_TEXT = 'Also email me when new chapters and the print edition are ready.';
@@ -39,6 +40,7 @@ async function sendWelcome(env, email, link, nn) {
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: env.READER_FROM || env.CLAIM_NOTIFY_FROM || 'Knowware <onboarding@resend.dev>',
+        reply_to: CONTACT_EMAIL,
         to: [email],
         subject: 'Your Knowware chapters are unlocked',
         text: [
