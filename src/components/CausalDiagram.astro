@@ -1,0 +1,219 @@
+---
+// The chapter's causal diagram: the node row, the latent (missing) body and the curved causal graph.
+// Used on the chapter overview and inside the full chapter text.
+interface Props {
+  diagram: {
+    title: string;
+    caption: string;
+    nodes: { id: string; label: string; pos: [number, number]; latent?: boolean }[];
+    arcs: { from: string; to: string; label?: string; kind?: "latent" }[];
+  };
+}
+const diag = Astro.props.diagram;
+const visible = diag.nodes.filter(n => !n.latent);
+const latent  = diag.nodes.filter(n => n.latent);
+// SVG geometry — matches original: W=620, H=300
+const W = 620, H = 300;
+const colX = [70, W / 2, W - 70];
+const rowY = [60, H / 2, H - 60];
+const px = (n: typeof diag.nodes[0]) => colX[n.pos[0]];
+const py = (n: typeof diag.nodes[0]) => rowY[n.pos[1]];
+---
+<section class="ch-diag-section">
+  <h2 class="sr-only">Causal diagram: {diag.title}</h2>
+  <div class="ch-diag-header mono" aria-hidden="true">
+    <span>WHAT THIS CHAPTER COORDINATES</span>
+    <span class="ch-diag-fig">FIG · CAUSAL DIAGRAM</span>
+  </div>
+
+  <!-- Node boxes row -->
+  <div class="ch-diag-node-row">
+    {visible.map((node, i) => (
+      <>
+        <div class="ch-diag-node">
+          <span class="ch-diag-node-id mono">{node.id}</span>
+          <span class="ch-diag-node-lbl">{node.label.replace('\n', ' ')}</span>
+        </div>
+        {i < visible.length - 1 && (
+          <span class="ch-diag-arrow">→</span>
+        )}
+      </>
+    ))}
+  </div>
+
+  <!-- Latent node -->
+  {latent.length > 0 && (
+    <div class="ch-diag-latent">
+      <span class="mono ch-diag-latent-label">LATENT /</span>
+      {latent.map(n => (
+        <span class="ch-diag-latent-node">{n.label.replace('\n', ' ')}</span>
+      ))}
+      <span class="ch-diag-latent-note">— the missing third body</span>
+    </div>
+  )}
+
+  <p class="ch-diag-caption">{diag.caption}</p>
+
+  <ul class="sr-only" aria-label="Causal links in this diagram">
+    {diag.arcs.map(arc => {
+      const f = diag.nodes.find(n => n.id === arc.from);
+      const t = diag.nodes.find(n => n.id === arc.to);
+      if (!f || !t) return null;
+      const fl = f.label.replace('\n', ' ');
+      const tl = t.label.replace('\n', ' ');
+      return <li>{arc.kind === 'latent' ? `${fl} feeds the latent ${tl}` : `${fl} ${arc.label || 'leads to'} ${tl}`}</li>;
+    })}
+  </ul>
+
+  <!-- SVG causal graph — full width, curved bezier arcs -->
+  <div class="ch-diag-svg-wrap">
+    <p class="mono ch-diag-svg-label">CAUSAL GRAPH · {diag.title.toUpperCase()}</p>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" aria-hidden="true" style="display:block;overflow:visible">
+      {diag.arcs.map((arc, i) => {
+        const fn = diag.nodes.find(n => n.id === arc.from);
+        const tn = diag.nodes.find(n => n.id === arc.to);
+        if (!fn || !tn) return null;
+        const ax = px(fn), ay = py(fn), bx = px(tn), by = py(tn);
+        const dx = bx - ax, dy = by - ay;
+        const len = Math.max(Math.sqrt(dx*dx + dy*dy), 1);
+        const c = 0.14 + (i % 3) * 0.04;
+        const nx2 = -dy/len, ny2 = dx/len;
+        const mx = (ax+bx)/2 + nx2*len*c;
+        const my = (ay+by)/2 + ny2*len*c;
+        const R2 = 46;
+        const t1 = R2/len, t2 = 1 - R2/len;
+        const d = `M ${ax+dx*t1} ${ay+dy*t1} Q ${mx} ${my} ${ax+dx*t2} ${ay+dy*t2}`;
+        const isLatent = arc.kind === 'latent';
+        return (
+          <g>
+            <path
+              d={d}
+              fill="none"
+              stroke={isLatent ? 'oklch(0.66 0.08 250)' : 'oklch(0.80 0.05 250)'}
+              stroke-width={isLatent ? '1' : '1.5'}
+              stroke-dasharray={isLatent ? '4 3' : undefined}
+              marker-end={isLatent ? undefined : 'url(#arr)'}
+            />
+            {arc.label && !isLatent && (
+              <text
+                x={mx} y={my - 9}
+                font-family="JetBrains Mono, monospace"
+                font-size="11"
+                fill="oklch(0.74 0.07 250)"
+                text-anchor="middle"
+              >{arc.label}</text>
+            )}
+          </g>
+        );
+      })}
+      <!-- Defs for arrowhead -->
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="oklch(0.80 0.05 250)" />
+        </marker>
+      </defs>
+      <!-- Nodes -->
+      {diag.nodes.map(node => {
+        const x = px(node), y = py(node);
+        const isLatent = node.latent;
+        const lines = node.label.split('\n');
+        return (
+          <g>
+            <circle
+              cx={x} cy={y} r={isLatent ? '28' : '40'}
+              fill={isLatent ? 'oklch(0.16 0.04 250)' : 'oklch(0.20 0.05 250)'}
+              stroke={isLatent ? 'oklch(0.60 0.08 250)' : 'oklch(0.75 0.07 250)'}
+              stroke-width={isLatent ? '1' : '1.5'}
+              stroke-dasharray={isLatent ? '4 3' : undefined}
+            />
+            {lines.map((line, li) => (
+              <text
+                x={x}
+                y={y + (li - (lines.length - 1) / 2) * 14}
+                font-family="JetBrains Mono, monospace"
+                font-size="11"
+                fill={isLatent ? 'oklch(0.78 0.07 250)' : 'oklch(0.94 0.02 250)'}
+                text-anchor="middle"
+                dominant-baseline="middle"
+              >{line}</text>
+            ))}
+          </g>
+        );
+      })}
+    </svg>
+  </div>
+</section>
+
+
+<style>
+/* ── Causal diagram section ────────────────────────────── */
+.ch-diag-section {
+  background: var(--band-bg);
+  color: var(--band-ink);
+  padding: clamp(32px,5vw,56px) clamp(20px,5vw,64px) clamp(40px,6vw,64px);
+}
+.ch-diag-header {
+  font-size: 11px; letter-spacing: 0.06em;
+  color: var(--band-sub);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 24px;
+}
+.ch-diag-fig { color: var(--band-mute); }
+
+.ch-diag-node-row {
+  display: flex; align-items: stretch; flex-wrap: wrap; gap: 8px 0;
+  padding-bottom: 4px;
+  margin-bottom: 16px;
+}
+.ch-diag-node {
+  border: 1px solid var(--band-node-line);
+  padding: 14px 20px; flex-shrink: 0;
+  background: var(--band-node-bg); min-width: 100px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ch-diag-node-id {
+  font-size: 11px; color: var(--band-mute); letter-spacing: 0.05em;
+}
+.ch-diag-node-lbl {
+  font: 500 14px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -0.01em; color: var(--band-ink);
+}
+.ch-diag-arrow {
+  display: flex; align-items: center;
+  padding: 0 10px; color: var(--band-mute);
+  font-size: 16px; flex-shrink: 0;
+}
+
+.ch-diag-latent {
+  padding-top: 14px; margin-top: 0;
+  border-top: 1px solid var(--band-rule);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.ch-diag-latent-label {
+  font-size: 11px; color: var(--band-mute); letter-spacing: 0.05em;
+}
+.ch-diag-latent-node {
+  border: 1px dashed var(--band-node-line);
+  padding: 8px 14px;
+  font: 400 13px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--band-sub); letter-spacing: -0.01em;
+}
+.ch-diag-latent-note {
+  font-size: 12px; color: var(--band-mute);
+}
+
+.ch-diag-caption {
+  font-size: 13px; color: var(--band-sub);
+  line-height: 1.6; margin: 0 0 20px;
+}
+
+.ch-diag-svg-wrap {
+  border-top: 1px solid var(--band-rule);
+  padding-top: 18px;
+}
+.ch-diag-svg-label {
+  font-size: 11px; letter-spacing: 0.04em;
+  color: var(--band-mute); margin: 0 0 10px;
+}
+</style>

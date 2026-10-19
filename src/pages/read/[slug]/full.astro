@@ -5,6 +5,7 @@ import { chapterNum } from '../../../lib/chapters';
 import Base from '../../../layouts/Base.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { SITE_URL } from '../../../config';
+import CausalDiagram from '../../../components/CausalDiagram.astro';
 
 export async function getStaticPaths() {
   const chapters = await getCollection('chapters');
@@ -37,6 +38,9 @@ const fmt = (x: number) => x.toLocaleString('en-US');
     <p class="kw-full-meta mono">{fmt(full.data.totalWords)} words · about {full.data.readMinutes} min</p>
   </header>
 
+  <!-- The chapter's map: what it coordinates and the one thing missing, before the argument starts. -->
+  {chapter.data.diagram && <CausalDiagram diagram={chapter.data.diagram} />}
+
   <article class="kw-section kw-prose" data-kw-read>
     <Content />
   </article>
@@ -67,7 +71,7 @@ const fmt = (x: number) => x.toLocaleString('en-US');
 
 <style>
   .kw-full-head {
-    padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 48px) 0;
+    padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 48px) clamp(24px, 3vw, 36px);
   }
   .kw-full-meta { font-size: 12px; color: var(--sub); margin: 0; letter-spacing: .02em; }
   .kw-full-nav { display: flex; justify-content: space-between; gap: 24px; }
