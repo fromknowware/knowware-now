@@ -3,6 +3,8 @@
 // Optional: if RESEND_API_KEY and CLAIM_NOTIFY_TO are set as Pages secrets,
 // also emails a plain-text notification.
 
+import { logResend } from '../../lib/server/resend.js';
+
 const MAX_BODY_BYTES = 8 * 1024;
 const RATE_LIMIT = 5;
 const RATE_WINDOW_S = 3600;
@@ -110,7 +112,7 @@ async function handlePost({ request, env }) {
   if (env.RESEND_API_KEY && env.CLAIM_NOTIFY_TO) {
     // Fail-soft: the claim is already stored; email is best-effort.
     try {
-      await fetch('https://api.resend.com/emails', {
+      const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${env.RESEND_API_KEY}`,
@@ -134,8 +136,10 @@ async function handlePost({ request, env }) {
           ].join('\n'),
         }),
       });
-    } catch {
+      await logResend('claim notification', res);
+    } catch (err) {
       // stored in KV regardless
+      await logResend('claim notification', null, err);
     }
   }
 
