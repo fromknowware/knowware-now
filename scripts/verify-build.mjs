@@ -75,6 +75,14 @@ if (existsSync(fullPath)) {
     if (!allowed.has(hashOf(body))) bad.push(slug);
   }
   check('CSP covers inline scripts on the gated chapter pages', bad.length === 0, bad.join(', '));
+  // Every figure in src/content/figures.json is in its chapter's full text, and its image file exists.
+  const figs = JSON.parse(read(join(root, 'src/content/figures.json')));
+  const missing = [];
+  for (const [slug, list] of Object.entries(figs)) for (const f of list) {
+    if (!(full[slug] ?? '').includes(`id="fig-${f.label.replace('.', '-')}"`)) missing.push(`${slug}:${f.label} not in text`);
+    if (!existsSync(join(root, 'public', f.src))) missing.push(`${f.src} missing`);
+  }
+  check('every figure in figures.json renders in its full chapter and has its image', missing.length === 0, missing.join(', '));
 }
 
 // 4. The synthesis disclosure travels with every Markdown file that can hold voices.
