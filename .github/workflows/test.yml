@@ -65,13 +65,14 @@ jobs:
           # A second instance with a (mock) email key, so sign-up goes through the real confirm-by-email flow.
           npx --yes wrangler@4.86.0 pages dev dist --kv CLAIMS --port 8789 --inspector-port 9230 --persist-to .wrangler/state-reader \
             --binding RESEND_API_KEY=re_mock_local --binding RESEND_API_BASE=http://127.0.0.1:12113 \
-            --binding "READER_FROM=Knowware <hello@knowware.institute>" --binding ADMIN_TOKEN=local-admin-token-for-tests-0123456789abcdef --binding AGENT_TOKENS=on --binding CLAIM_NOTIFY_TO=author@example.com > wrangler-reader.log 2>&1 &
+            --binding "READER_FROM=Knowware <hello@knowware.institute>" --binding ADMIN_TOKEN=local-admin-token-for-tests-0123456789abcdef --binding AGENT_TOKENS=on --binding CLAIM_NOTIFY_TO=author@example.com \
+            --binding RESEND_WEBHOOK_SECRET=whsec_dGVzdC13ZWJob29rLXNlY3JldC1mb3ItY2k= > wrangler-reader.log 2>&1 &
           for i in $(seq 1 60); do curl -fs http://localhost:8788/api/agent/status >/dev/null && curl -fs http://localhost:8789/api/agent/status >/dev/null && exit 0; sleep 2; done
           cat wrangler.log wrangler-reader.log; exit 1
       - name: Abuse suites
         run: |
           for s in test-agent-api test-agent-checkout test-mcp test-agent-x402 test-waitlist; do echo "== $s"; bash ./scripts/$s.sh; done
-          for s in test-reader test-lists test-unlocks; do echo "== $s"; bash ./scripts/$s.sh http://localhost:8789 http://127.0.0.1:12113; done
+          for s in test-reader test-lists test-unlocks test-remove; do echo "== $s"; bash ./scripts/$s.sh http://localhost:8789 http://127.0.0.1:12113; done
       - name: Fuzz
         run: |
           node scripts/fuzz-agent-api.mjs http://localhost:8788 --n 3000 --seed 1
