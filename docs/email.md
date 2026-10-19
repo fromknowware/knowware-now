@@ -30,16 +30,26 @@ They are different lists with different consent, stored separately, and joining 
 | Where collected | The optional, unticked box on the chapter gate | The form on `/order` |
 | KV key | `interest:<sha256(email)>` | `waitlist:<sha256(email)>` |
 | Consent wording | `INTEREST_CONSENT` in `lib/site-facts.mjs` | `WAITLIST_CONSENT` in `lib/site-facts.mjs` |
-| Active when | The address is confirmed (the same click that opens reading) | The address is confirmed |
+| Active when | The address is confirmed: the same click that opens reading (gate box), or its own confirmation link (`/read` news form, `/api/interest`) | Its own confirmation link (`/api/waitlist`, then `/api/list/confirm`) |
+| Until then | Nothing kept except a 48-hour pending record | Same |
 
 Both texts come from `lib/site-facts.mjs`, which the forms, the privacy page and the stored consent record all read, so what a person saw is what is on file.
+
+## Getting addresses into Resend
+The site's Resend key is send-only on purpose, so it never reads or writes contacts. To mail a list, export it and import it yourself:
+
+```bash
+curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.systems/api/admin/lists?list=waitlist&format=csv" -o waitlist.csv
+curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.systems/api/admin/lists?list=interest&format=csv" -o interest.csv
+```
+Import each CSV into its own Resend segment ("Knowware pre-order waitlist", "Knowware updates"; the `email` column maps to the contact email) and send a Broadcast to that segment. The export holds confirmed members only; `&status=all` adds rows that never confirmed (old sign-ups show as `legacy`). `X-Next-Cursor` on a response means there is another page: repeat with `&cursor=…`. Resend adds the unsubscribe link and header to broadcasts.
 
 ## Sender
 `READER_FROM` (Pages secret) is the From address; Reply-To is `hello@knowware.systems`. Until `knowware.systems` is a verified Resend domain it is `Knowware <hello@knowware.institute>`. Switch it by setting the secret and redeploying (`gh workflow run pages.yml --ref main`). The postal address printed in every footer is `POSTAL_ADDRESS` in `lib/site-facts.mjs`; it must be filled in before any list email is sent.
 
 ## Testing
-- `npm test` covers the reader, throttles, device cap and both message formats.
-- `scripts/test-reader.sh` runs the real flow against a local server that talks to `scripts/mock-resend.mjs`, which records messages instead of sending them (CI does this on port 8789).
+- `npm test` covers the reader, throttles, device cap, both lists, the export and both message formats.
+- `scripts/test-reader.sh` and `scripts/test-lists.sh` run the real flows against a local server that talks to `scripts/mock-resend.mjs`, which records messages instead of sending them (CI does this on port 8789).
 - Never send test mail to anyone but your own address.
 
 ## Erasing one person

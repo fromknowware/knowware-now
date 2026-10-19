@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Tests the pre-order waiting list against local `wrangler pages dev dist --kv CLAIMS`
-# with ADMIN_TOKEN set in .dev.vars. Makes no external calls.
+# with ADMIN_TOKEN and READER_AUTOCONFIRM=true set in .dev.vars (no email key, so sign-up confirms at once).
+# The confirm-by-email flow itself is scripts/test-lists.sh. Makes no external calls.
 set -u
 B="${1:-http://localhost:8788}"; O="Origin: $B"; J='Content-Type: application/json'
 ADMIN="${ADMIN_TOKEN:-local-admin-token-for-tests-0123456789abcdef}"
@@ -27,7 +28,7 @@ check "form post, bad email → redirect back to the form" "303 /order#waitlist"
 echo "join"
 check "valid sign-up → 200" 200 "$(code -X POST "$B/api/waitlist" -H "$O" -H "$J" -d "{\"email\":\"$EMAIL\"}")"
 check "same address again → 200, indistinguishable" 200 "$(code -X POST "$B/api/waitlist" -H "$O" -H "$J" -d "{\"email\":\"$(echo $EMAIL | tr a-z A-Z)\"}")"
-check "form post, valid → redirect to the thanks page" "303 /order/listed" "$(cu -s -o /dev/null -w '%{http_code} %{redirect_url}' -X POST "$B/api/waitlist" -H "$O" -d "email=form-$EMAIL" | sed "s#$B##")"
+check "form post, valid → redirect to the thanks page" "303 /order/confirmed/" "$(cu -s -o /dev/null -w '%{http_code} %{redirect_url}' -X POST "$B/api/waitlist" -H "$O" -d "email=form-$EMAIL" | sed "s#$B##")"
 check "honeypot looks successful but stores nothing" 200 "$(code -X POST "$B/api/waitlist" -H "$O" -H "$J" -d '{"email":"bot-'"$EMAIL"'","company":"Acme"}')"
 
 echo "admin export"

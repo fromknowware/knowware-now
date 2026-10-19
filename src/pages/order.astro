@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Field from '../components/Field.astro';
+import ListForm from '../components/ListForm.astro';
+import { WAITLIST_CONSENT } from '../../lib/site-facts.mjs';
 import { PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL, CHECKOUT_OPEN, CONTACT_EMAIL } from '../config';
 
 const DESCRIPTION = CHECKOUT_OPEN
@@ -12,47 +14,36 @@ const DESCRIPTION = CHECKOUT_OPEN
     <p class="kw-label">Pre-order</p>
     <h1 class="kw-h2" id="order-h">Pre-orders open soon.</h1>
     <p class="kw-body">
-      Knowware ships on the solstice: December 21, 2026. The pre-order is not open yet, so there is nothing to buy today. Leave your email and we will write to you once, the day it opens.
+      Knowware ships on the solstice: December 21, 2026. The pre-order is not open yet, so there is nothing to buy today. Leave your email, confirm it, and we will write to you once, the day it opens.
     </p>
   </section>
 
   <Field height="180px" sigTop="50%" />
 
-  <section class="kw-section wl" id="waitlist" aria-labelledby="wl-h">
+  <section class="kw-section wl" id="waitlist">
     <p class="kw-label">The pre-order list</p>
-    <h2 class="wl-h" id="wl-h">Tell me when it opens.</h2>
-    <form class="wl-form" id="wl-form" method="post" action="/api/waitlist" novalidate>
-      <div class="wl-field">
-        <label for="wl-email">Email</label>
-        <input type="email" id="wl-email" name="email" required maxlength="254" autocomplete="email" inputmode="email" spellcheck="false" aria-describedby="wl-err wl-fine" />
-        <p class="wl-err" id="wl-err"></p>
-      </div>
-      <div class="wl-trap" aria-hidden="true">
-        <label for="wl-company">Company</label>
-        <input type="text" id="wl-company" name="company" tabindex="-1" autocomplete="off" />
-      </div>
-      <button type="submit" class="kw-btn kw-btn--filled" id="wl-submit">Tell me when it opens →</button>
-      <p class="wl-fine" id="wl-fine">One email, the day pre-orders open. Nothing else, and nothing shared. To be removed, write to <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
-    </form>
-    <p class="wl-live" id="wl-status" role="status" aria-live="polite"></p>
+    <ListForm id="wl" endpoint="/api/waitlist" heading="Tell me when it opens." button="Email me a confirmation →" consent={WAITLIST_CONSENT}
+      sent="Check your email. Press the button in it to confirm your place. After that you will hear from us once, the day pre-orders open.">
+      This is a separate list from chapter news. <a href="/privacy">Privacy</a>. Leave any time: every email has an unsubscribe link, or write to <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+    </ListForm>
   </section>
 
   <section class="kw-section">
     <div class="pricing-grid">
       <div class="pricing-card pricing-card--featured">
-        <p class="kw-label">Pre-order</p>
+        <p class="kw-label">{CHECKOUT_OPEN ? 'Pre-order' : 'Planned pre-order price'}</p>
         <p class="pricing-price">{PRICE_PREORDER}</p>
-        <p class="pricing-desc kw-body">Print + digital bundle. The launch price. Opens soon: join the list above.</p>
+        <p class="pricing-desc kw-body">{CHECKOUT_OPEN ? 'Print + digital bundle. The launch price.' : 'Print + digital bundle. The planned launch price, confirmed on the day pre-orders open. Join the list above to hear then.'}</p>
       </div>
       <div class="pricing-card">
-        <p class="kw-label">At Print</p>
+        <p class="kw-label">{CHECKOUT_OPEN ? 'At Print' : 'Planned price at print'}</p>
         <p class="pricing-price">{PRICE_PRINT}</p>
-        <p class="pricing-desc kw-body">Full retail price after December 21.</p>
+        <p class="pricing-desc kw-body">{CHECKOUT_OPEN ? 'Full retail price after December 21.' : 'Planned retail price after December 21.'}</p>
       </div>
       <div class="pricing-card">
-        <p class="kw-label">Digital Only</p>
+        <p class="kw-label">{CHECKOUT_OPEN ? 'Digital Only' : 'Planned digital price'}</p>
         <p class="pricing-price">{PRICE_DIGITAL}</p>
-        <p class="pricing-desc kw-body">PDF + ePub edition, available at launch.</p>
+        <p class="pricing-desc kw-body">{CHECKOUT_OPEN ? 'PDF + ePub edition, available at launch.' : 'PDF + ePub edition, planned for launch.'}</p>
       </div>
     </div>
   </section>
@@ -67,49 +58,6 @@ const DESCRIPTION = CHECKOUT_OPEN
     </ul>
   </section>
 </Base>
-
-<script>
-  const form = document.getElementById('wl-form') as HTMLFormElement | null;
-  if (form) {
-    const email = document.getElementById('wl-email') as HTMLInputElement;
-    const err = document.getElementById('wl-err') as HTMLElement;
-    const status = document.getElementById('wl-status') as HTMLElement;
-    const submit = document.getElementById('wl-submit') as HTMLButtonElement;
-    const setError = (msg: string) => {
-      err.textContent = msg;
-      if (msg) email.setAttribute('aria-invalid', 'true'); else email.removeAttribute('aria-invalid');
-    };
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      email.value = email.value.trim();
-      if (!email.checkValidity()) { setError('Enter a valid email address, like name@example.com.'); status.textContent = ''; email.focus(); return; }
-      setError('');
-      submit.disabled = true;
-      status.textContent = 'Adding you…';
-      try {
-        const res = await fetch('/api/waitlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.value, company: (document.getElementById('wl-company') as HTMLInputElement).value }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.ok) {
-          form.hidden = true;
-          status.textContent = "You're on the list. We will write to you once, the day pre-orders open.";
-          status.tabIndex = -1;
-          status.focus();
-          return;
-        }
-        if (Array.isArray(data.fields) && data.fields.includes('email')) { setError(data.error ?? 'Enter a valid email address.'); status.textContent = ''; email.focus(); }
-        else status.textContent = res.status === 429 ? 'Too many sign-ups from this connection. Try again in an hour.' : 'Something went wrong. Try again in a moment.';
-      } catch {
-        status.textContent = 'Could not reach the server. Try again in a moment.';
-      } finally {
-        submit.disabled = false;
-      }
-    });
-  }
-</script>
 
 <style>
 .pricing-grid {
@@ -127,23 +75,4 @@ const DESCRIPTION = CHECKOUT_OPEN
 }
 .what-list { padding-left: 20px; }
 .what-list li { margin-bottom: 8px; }
-
-.wl { max-width: 640px; }
-.wl-h { font: 700 clamp(24px, 3.4vw, 36px)/1.1 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: -.03em; margin: 8px 0 20px; color: var(--ink); }
-.wl-form { display: grid; gap: 16px; max-width: 460px; }
-.wl-form[hidden] { display: none; }
-.wl-field label { display: block; font: 500 13px/1.3 "JetBrains Mono", ui-monospace, monospace; margin-bottom: 6px; color: var(--ink); }
-.wl-field input {
-  width: 100%; box-sizing: border-box; padding: 12px; font: 400 16px/1.3 "JetBrains Mono", ui-monospace, monospace;
-  color: var(--ink); background: transparent; border: 1px solid var(--rule-strong); border-radius: 0;
-}
-.wl-field input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.wl-field input[aria-invalid="true"] { border-width: 2px; border-color: var(--error); }
-.wl-err { margin: 6px 0 0; font-size: 13px; color: var(--error); }
-.wl-err:empty { display: none; }
-.wl-fine { margin: 0; font-size: 14px; line-height: 1.5; color: var(--sub); }
-.wl-fine a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
-.wl-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-.wl-live { margin: 16px 0 0; font-size: 17px; line-height: 1.45; color: var(--ink); min-height: 1.4em; }
-.wl-live:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
 </style>

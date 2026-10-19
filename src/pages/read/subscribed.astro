@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CONTACT_EMAIL } from '../../config';
+const link = 'color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)';
+---
+<Base title="You're on the news list" description="You will hear when a new Knowware chapter is published and when the print edition is ready." noindex>
+  <section class="kw-section" aria-labelledby="subscribed-h">
+    <p class="kw-label">News</p>
+    <h1 class="kw-h2" id="subscribed-h">You're on the news list.</h1>
+    <p class="kw-body">We will write when a new chapter is published and when the print edition is ready. Nothing else, and nothing shared. To stop, use the unsubscribe link in any email from us, or write to <a href={`mailto:${CONTACT_EMAIL}`} style={link}>{CONTACT_EMAIL}</a>.</p>
+    <p class="kw-body" style="margin-top:16px"><a href="/read" style={link}>Back to the chapters →</a></p>
+  </section>
+</Base>

@@ -2,6 +2,8 @@
 import { chapterNum } from '../../lib/chapters';
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import ListForm from '../../components/ListForm.astro';
+import { INTEREST_CONSENT } from '../../../lib/site-facts.mjs';
 
 const chapters = await getCollection('chapters');
 const sorted = chapters.sort((a, b) => a.data.n - b.data.n);
@@ -31,6 +33,14 @@ const totalMinutes = manuscript.reduce((sum, e) => sum + e.data.readMinutes, 0);
         </a>
       ))}
     </div>
+  </section>
+
+  <section class="kw-section" id="news" aria-label="News about the book">
+    <p class="kw-label">News</p>
+    <ListForm id="news-form" endpoint="/api/interest" heading="Hear when a chapter lands." button="Email me a confirmation →" consent={INTEREST_CONSENT}
+      sent="Check your email. Press the button in it to confirm. After that you will hear from us when there is news.">
+      Separate from reading and from the pre-order list. <a href="/privacy">Privacy</a>. Every email has an unsubscribe link.
+    </ListForm>
   </section>
 </Base>
 
