@@ -1,14 +1,16 @@
 // Pulls the book's causal-diagram figures out of the manuscript repo and works out where each belongs in
 // the current chapter text.   node scripts/sync-figures.mjs
 //
-// Why this exists: the manuscript repo ships 65 SVG figures and a PLACEMENT.md per chapter, but its "after
-// line N" placements were written on 2026-04-09 and the chapters were rewritten afterwards (Apr 17+). So each
-// figure is resolved against today's text, most reliable method first:
-//   1. override      a hand-picked paragraph start (OVERRIDES below), for rewritten passages
+// Why this exists: the manuscript repo ships SVG figures and a PLACEMENT.md per chapter. Since the 2026-10-19
+// audit (manuscript PR "Audit the 58 chapter diagrams against the rewritten text") each PLACEMENT row carries a
+// quoted anchor taken from the end of the paragraph the figure follows, so each figure is resolved against
+// today's text, most reliable method first:
+//   1. override      a hand-picked paragraph start (OVERRIDES below), only if an anchor ever stops resolving
 //   2. anchor tail   the last 7 words of the quoted anchor appear in one paragraph
 //   3. anchor words  >= 85% of the anchor's content words appear in one paragraph
 //   4. original      the paragraph that sat at the stated line in the original text, matched forward by similarity
-// A figure whose subject no longer appears in the rewritten text is skipped (SKIP below), not forced in.
+// A row the audit marked HELD (class c: its subject was cut from the rewritten chapter) is skipped, not forced
+// in; the author decides whether it is redrawn or removed. MANUSCRIPT_REF=<branch> reads another ref.
 //
 // Output (commit both): public/figures/<chapter>/<slug>.svg (cropped to the drawing) and src/content/figures.json.
 // The loader (src/loaders/manuscript.ts) inserts each figure after the paragraph that starts with `after`.
@@ -23,42 +25,14 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const REPO = 'https://raw.githubusercontent.com/fromknowware/systems-intelligence';
+const REF = process.env.MANUSCRIPT_REF || 'main';
 const ORIGINAL_TEXT_REF = '4fdfeb68'; // the commit the placement files were written against
 const CHAPTERS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', 'X'];
 const idOf = (c) => (c === 'X' ? 'x' : c);
 const PAD = 28;
 
-// Paragraph starts (first words) chosen by hand where the chapter was rewritten after the placements.
-const OVERRIDES = {
-  '3.2': 'Constitutional AI works by giving the AI a',
-  '3.3': "LeCun's Joint-Embedding Predictive Architecture",
-  '3.4': "The genius wasn't any single component. It was the coordination architecture",
-  '3.6': 'In each case, the absence of a third coordinating element',
-  '3.5': 'Traditional approaches optimized either evolutionary data OR physical constraints',
-  '6.1': 'The National Transportation Safety Board investigation peeled back layers',
-  '6.2': 'Russell\'s solution through Inverse Reinforcement Learning',
-  '6.3': "Gebru's framework insists that the solution is not better algorithms",
-  '6.4': '**The AI Material Three-Body System:**',
-  '9.5': 'Turkle explained that technology undermines connection',
-  'X.1': 'At every scale, the same architecture.',
-};
-
-// Figures whose subject was cut from the rewritten chapter, with the grep that shows it is gone.
-const SKIP = {
-  '1.2': 'composite triptych (2584px wide, unreadable at page width); its three diagrams are placed individually',
-  '1.8': 'Burning Man no longer appears in chapter 1',
-  '2.3': 'no first-principles / Musk passage in chapter 2',
-  '2.4': "no Conway's Game of Life passage in chapter 2",
-  '4.4': 'no 23andMe passage in chapter 4',
-  '7.4': 'no Abbeel / sim-to-real passage in chapter 7',
-  '9.4': 'no Yang passage in chapter 9',
-  '9.6': 'no Menegon passage in chapter 9',
-  'X.2': 'no Kurzweil passage in the rewritten capstone',
-  'X.3': 'no Blueprint / Bryan Johnson passage in the rewritten capstone',
-  'X.4': 'no Ostrom commons passage in the rewritten capstone',
-  'X.5': 'no Verdon acceleration passage in the rewritten capstone',
-  'X.6': 'no AGI-alignment-fork passage in the rewritten capstone',
-};
+// Paragraph starts (first words) for a figure whose anchor no longer resolves. Empty since the 2026-10-19 audit.
+const OVERRIDES = {};
 
 const STOP = new Set('the a an of to and in that is it for as with on by or be are this their its not from at which can we you they what how more than into when if but has have was were will would about also'.split(' '));
 const words = (s) => (s.replace(/[*_`]/g, '').toLowerCase().replace(/’/g, "'").match(/[a-z0-9]+/g) ?? []);
@@ -73,8 +47,9 @@ const get = async (url, binary = false) => {
 const paragraphs = (text) => text.replace(/\r\n/g, '\n').split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 
 function parseRows(md) {
-  return [...md.matchAll(/^\| \*\*([\dA-Z]+\.\d+)\*\* \| `([^`]+)` \| \*\*(\d+)\*\* \| (.*?) \| /gm)].map((m) => ({
-    label: m[1], file: m[2], slug: m[2].replace(/\.png$/, ''), line: Number(m[3]), anchor: m[4],
+  return [...md.matchAll(/^\| \*\*([\dA-Z]+\.\d+)\*\* \| `([^`]+)` \| \*\*(\d+)\*\* \| (.*?) \| (.*) \|\s*$/gm)].map((m) => ({
+    label: m[1], file: m[2], slug: m[2].replace(/\.png$/, ''), line: Number(m[3]), anchor: m[4], held: /HELD \(class c\)/.test(m[5]),
+    why: m[5].replace(/^\*\*HELD \(class c\)\.\*\*\s*/, '').split(/(?<=\.)\s/)[0],
   }));
 }
 
@@ -177,12 +152,12 @@ const report = [];
 const staged = [];
 
 for (const c of CHAPTERS) {
-  const dirBase = `${REPO}/main/chapters/ch${c}`;
+  const dirBase = `${REPO}/${REF}/chapters/ch${c}`;
   const rows = parseRows(await get(`${dirBase}/PLACEMENT.md`));
   const current = paragraphs(await get(`${dirBase}/text/chapter-${c}.md`));
   const originalLines = (await get(`${REPO}/${ORIGINAL_TEXT_REF}/chapters/ch${c}/text/chapter-${c}.md`)).replace(/\r\n/g, '\n').split('\n');
   for (const row of rows) {
-    if (SKIP[row.label]) { report.push(`skip   ${row.label}  ${SKIP[row.label]}`); continue; }
+    if (row.held) { report.push(`skip   ${row.label}  ${row.why}`); continue; }
     const hit = resolve(row, current, originalLines);
     if (!hit) { report.push(`UNPLACED ${row.label}  ${row.anchor.slice(0, 90)}`); continue; }
     const short = row.slug.replace(/^ch\d+-/, '');
