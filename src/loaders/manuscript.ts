@@ -41,14 +41,14 @@ async function fetchChapter(n: number, logger: { warn: (m: string) => void }): P
 
 // Figures from the manuscript repo (see scripts/sync-figures.mjs). Each is placed after the paragraph that
 // starts with `after`; a figure whose paragraph has been edited away is skipped and the build says so.
-type Figure = { label: string; src: string; width: number; height: number; title: string; caption: string; alt: string; after: string };
+type Figure = { label: string; src: string; width: number; height: number; title: string; caption: string; alt: string; after: string; wide?: boolean };
 const FIGURES = figureData as Record<string, Figure[]>;
 const plain = (s: string) => s.replace(/[*_`]/g, '').replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s+/g, ' ').trim();
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const isFigure = (block: string) => block.startsWith('<figure class="kw-fig"');
+const isFigure = (block: string) => block.startsWith('<figure class="kw-fig');
 const figureBlock = (f: Figure) =>
-  `<figure class="kw-fig" id="fig-${f.label.replace('.', '-')}">\n` +
-  `<div class="kw-fig-plate" role="region" tabindex="0" aria-label="Figure ${f.label}, scrolls sideways on small screens"><img src="${f.src}" alt="${esc(f.alt)}" width="${f.width}" height="${f.height}" decoding="async"></div>\n` +
+  `<figure class="kw-fig${f.wide ? ' kw-fig--wide' : ''}" id="fig-${f.label.replace('.', '-')}">\n` +
+  `<a class="kw-fig-plate" href="${f.src}" target="_blank" rel="noopener" aria-label="Figure ${f.label}, open full size in a new tab"><img src="${f.src}" alt="${esc(f.alt)}" width="${f.width}" height="${f.height}" decoding="async"></a>\n` +
   `<figcaption><span class="kw-fig-n">Figure ${f.label}</span> <strong>${esc(f.title)}.</strong> ${esc(f.caption)}</figcaption>\n` +
   `</figure>`;
 
