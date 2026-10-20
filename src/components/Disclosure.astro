@@ -4,15 +4,21 @@
 <div class="kw-disclosure mono">
   <span style="color: var(--ink)">Not interviews — the Third Body in action.</span>
   <span class="disc-links">
-    <a href="/definition" style="color: var(--signal-ink); border-bottom: 1px solid var(--signal-ink); flex-shrink: 0">
+    <a href="/definition" class="disc-link">
       What is knowware? →
     </a>
-    <a href="/method" style="color: var(--signal-ink); border-bottom: 1px solid var(--signal-ink); flex-shrink: 0">
+    <a href="/method" class="disc-link">
       What does that mean? →
     </a>
   </span>
 </div>
 
 <style>
-  .disc-links { display: flex; gap: 8px 20px; flex-wrap: wrap; }
+  .disc-links { display: flex; gap: 0 20px; flex-wrap: wrap; }
+  /* 44px tall target; the underline is a text decoration so it stays beside the words. */
+  .disc-link {
+    color: var(--signal-ink); flex-shrink: 0;
+    display: inline-flex; align-items: center; min-height: 44px;
+    text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px;
+  }
 </style>

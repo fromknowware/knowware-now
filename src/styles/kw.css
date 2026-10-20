@@ -318,6 +318,11 @@ article[data-kw-read] {
   text-transform: uppercase;
   margin: 0; padding: clamp(20px,3vw,36px) clamp(16px,3vw,48px) 0;
 }
+/* The 64px floor made the word 392px wide: clipped, and the only overflow on the page.
+   Below 601px size it from the width it has (the word is about 5.9em wide). */
+@media (max-width: 600px) {
+  .kw-hero-word { font-size: calc((100vw - 32px) / 6.3); }
+}
 .kw-hero-foot {
   display: flex; justify-content: space-between; align-items: flex-end;
   gap: 24px; flex-wrap: wrap;
@@ -356,7 +361,7 @@ article[data-kw-read] {
   padding: 10px clamp(16px,3vw,48px);
   display: flex; justify-content: space-between; align-items: center;
   gap: 16px; flex-wrap: wrap;
-  font: 400 11px/1.4 "JetBrains Mono", ui-monospace, monospace;
+  font: 400 12px/1.4 "JetBrains Mono", ui-monospace, monospace;
 }
 
 /* ============================================================
@@ -646,11 +651,11 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
 }
 .kw-masthead-cell:last-child { border-right: none; }
 .kw-masthead-lbl {
-  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: .1em; text-transform: uppercase; color: var(--sub2);
 }
 .kw-masthead-val {
-  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace;
   color: var(--ink);
 }
 
@@ -669,7 +674,7 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   background: var(--bg); color: var(--ink);
   border: 0; border-left: 1px solid var(--rule);
   padding: 0 16px; cursor: pointer; min-width: 44px;
-  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: .06em; text-transform: uppercase;
 }
 .kw-motion-btn:hover { background: var(--accent-soft); }
@@ -684,14 +689,14 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: .02em;
   display: inline-flex; align-items: center;
-  gap: 10px; padding: 11px 22px;
+  gap: 10px; padding: 16px 22px; /* 45px strip: the pause button inside it is a 44px target */
   border-right: 1px solid var(--rule);
   white-space: nowrap;
 }
 .kw-marquee-swatch {
   width: 10px; height: 10px; flex-shrink: 0; display: inline-block;
 }
-.kw-marquee-code { color: var(--sub2); font-size: 11px; }
+.kw-marquee-code { color: var(--sub2); font-size: 12px; }
 
 /* ============================================================
    Grid label (section prefix)
@@ -723,6 +728,7 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   background: var(--paper);
 }
 .kw-spine-bar {
+  height: calc(var(--h) * 1%);
   background: var(--ink);
   display: flex; flex-direction: column;
   justify-content: space-between;
@@ -732,10 +738,10 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
 }
 .kw-spine-bar:hover { background: var(--accent); }
 .kw-spine-ch {
-  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace; color: inherit;
+  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace; color: inherit;
 }
 .kw-spine-title {
-  font-size: 11px;
+  font-size: 12px;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   letter-spacing: -.005em;
@@ -744,9 +750,31 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   color: inherit;
 }
 .kw-spine-caption {
-  display: flex; justify-content: space-between;
-  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  display: flex; justify-content: space-between; gap: 12px;
+  font: 400 12px/1.3 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); margin-top: 8px;
+}
+/* Phones: nine 33px-wide columns with rotated, truncated titles become nine 56px rows with the
+   full title; the bar survives as a hairline under each row (width = page count). */
+@media (max-width: 600px) {
+  .kw-spine-bars { display: flex; flex-direction: column; align-items: stretch; height: auto; padding: 0; gap: 0; }
+  .kw-spine-bar {
+    height: auto; min-height: 56px; position: relative;
+    flex-direction: row; justify-content: flex-start; align-items: center; gap: 14px;
+    padding: 10px 14px 16px; background: transparent; color: var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+  .kw-spine-bar:last-child { border-bottom: 0; }
+  .kw-spine-bar::after {
+    content: ''; position: absolute; left: 14px; bottom: 7px; height: 4px;
+    width: calc((100% - 28px) * var(--h) / 100); background: var(--ink);
+  }
+  .kw-spine-bar:hover, .kw-spine-bar:focus-visible { background: var(--accent-soft); color: var(--ink); }
+  .kw-spine-ch { color: var(--sub); flex-shrink: 0; width: 2.6em; }
+  .kw-spine-title {
+    writing-mode: horizontal-tb; transform: none; white-space: normal; max-height: none;
+    font: 500 15px/1.25 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: -.01em; overflow: visible;
+  }
 }
 
 /* ============================================================
