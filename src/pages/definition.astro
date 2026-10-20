@@ -12,6 +12,7 @@ const SOURCES = [
     org: 'OpenAI',
     title: 'The Hugging Face incident and the road ahead',
     date: 'August 26, 2026',
+    iso: '2026-08-26',
     url: 'https://openai.com/index/hugging-face-incident-and-the-road-ahead/',
   },
   {
@@ -19,7 +20,17 @@ const SOURCES = [
     org: 'METR and Redwood Research',
     title: "Brief independent investigation of agents' behavior, reasoning and collaboration in the OpenAI / Hugging Face hacking incident",
     date: 'August 26, 2026',
+    iso: '2026-08-26',
     url: 'https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/',
+  },
+  {
+    n: 3,
+    org: 'Ruqian Lu',
+    person: true,
+    title: 'Knowware: the third star after Hardware and Software',
+    date: '2007 (book, Polimetrica; arXiv:0711.4309, November 27, 2007)',
+    iso: '2007-11-27',
+    url: 'https://arxiv.org/abs/0711.4309',
   },
 ];
 
@@ -57,8 +68,10 @@ const jsonLd = {
         '@type': 'WebPage',
         name: s.title,
         url: s.url,
-        publisher: { '@type': 'Organization', name: s.org },
-        datePublished: '2026-08-26',
+        ...(s.person
+          ? { author: { '@type': 'Person', name: s.org } }
+          : { publisher: { '@type': 'Organization', name: s.org } }),
+        datePublished: s.iso,
       })),
     },
   ],
@@ -103,7 +116,7 @@ const jsonLd = {
     <h2>The third body</h2>
     <p>This is the argument of my book, and I did not want to be proven right this way.</p>
     <p>Hardware executes. Software instructs. Neither knows why. The third body is the layer that does: the knowledge, the context, and the people who answer the question "what is this for?" Take it out and you can still get a flawless swarm. Fast, organized, loyal to each other, wrong about the world, and accountable to no one.</p>
-    <p>I call it <strong>knowware</strong>. I have looked for an existing word and haven't found one. "Alignment" names the goal. "Coordination" names the mechanism. Nothing names the layer that carries the knowing.</p>
+    <p>I call it <strong>knowware</strong>. The word has an earlier, narrower use: in 2007 the computer scientist Ruqian Lu proposed "knowware" as a third component of computing beside hardware and software, meaning knowledge packaged as a tradable module.<sup class="def-ref"><a href="#src-3" aria-label="Source 3">[3]</a></sup> This book uses it for the layer of knowing between people and machines. "Alignment" names the goal. "Coordination" names the mechanism. Nothing names the layer that carries the knowing.</p>
     <p><em>Knowware</em> traces the same pattern through nine chapters and a capstone, from Facebook's emotional-contagion experiment to the Boeing 737 MAX, in 81 voices synthesized from published work. This summer it got a newer example.</p>
     <p>The cases keep arriving. I keep a <a href="/stories">running, cited log of them</a>, each graded by how closely its source was read.</p>
     <p class="def-actions">
