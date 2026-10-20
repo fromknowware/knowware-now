@@ -103,7 +103,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
     ) : <span />}
     {next ? (
       <a href={`/read/${next.id}`} class="chapter-nav-link" style="text-align:right">
-        <span class="mono" style="font-size:11px;color:var(--sub)">Ch. {chapterNum(next.data.n)} →</span>
+        <span class="mono" style="font-size:12px;color:var(--sub)">Ch. {chapterNum(next.data.n)} →</span>
         <span>{next.data.opener}</span>
       </a>
     ) : <span />}
@@ -198,5 +198,23 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
 .ch-diag-svg-label {
   font-size: 11px; letter-spacing: 0.04em;
   color: var(--band-mute); margin: 0 0 10px;
+}
+
+.chapter-nav-link { min-height: 44px; }
+
+@media (max-width: 640px) {
+  /* Nine-voices cards: number and tier share the first row, the card body gets the full width
+     (the 40px number gutter squeezed the cold-open box to two thirds and pushed the tier badge off screen). */
+  .kw-voice-card { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "num tier" "body body"; gap: 8px 12px; padding: 18px 0; }
+  .kw-voice-card > .kw-voice-num { grid-area: num; font-size: 12px; align-self: center; }
+  .kw-voice-card > .kw-tier { grid-area: tier; font-size: 12px; align-self: center; }
+  .kw-voice-card > div { grid-area: body; min-width: 0; }
+  .kw-voice-name { font-size: 17px; }
+  .voice-cold-open { font-size: 14px; padding: 12px 14px; overflow-wrap: anywhere; }
+  .kw-voice-role { font-size: 12px; }
+
+  .chapter-nav { flex-direction: column; gap: 0; padding-top: 0; padding-bottom: 0; }
+  .chapter-nav-link { max-width: none; min-height: 72px; justify-content: center; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .chapter-nav-link[style] { text-align: left !important; }
 }
 </style>
