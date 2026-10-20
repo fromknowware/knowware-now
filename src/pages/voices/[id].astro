@@ -152,10 +152,10 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
       <div class="dos-classification" style={`background:${tierBg};border:1px solid ${tierInk}`}>
         <span class="dos-cls-sym" aria-hidden="true" style={`color:${tierInk}`}>{voiceSym}</span>
         <div>
-          <div class="mono" style={`font-size:11px;color:${tierInk};letter-spacing:0.06em`}>
+          <div class="mono" style={`font-size:12px;color:${tierInk};letter-spacing:0.06em`}>
             {tierLbl.toUpperCase()} · TIER {voice.tier}
           </div>
-          <div class="mono" style={`font-size:11px;color:${tierInk}`}>ch{chapterSlug}</div>
+          <div class="mono" style={`font-size:12px;color:${tierInk}`}>ch{chapterSlug}</div>
         </div>
       </div>
     </div>
@@ -177,7 +177,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
   <div class="dos-section">
     <div class="dos-section-hd">
       <div class="dos-section-lbl mono">METHODS &amp; FRAMEWORKS</div>
-      <span class="mono" style="font-size:11px;color:var(--sub2)">{voice.knownFor.length} entries</span>
+      <span class="mono" style="font-size:12px;color:var(--sub2)">{voice.knownFor.length} entries</span>
     </div>
     <div class="dos-tags">
       {voice.knownFor.map(t => <span class="dos-tag mono">{t}</span>)}
@@ -214,7 +214,7 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
 <style>
 /* ── Topbar ─────────────────────────────────── */
 .dos-topbar {
-  position: sticky; top: 52px; z-index: 20;
+  position: sticky; top: 0; z-index: 20; /* the nav above is not sticky: 52px left a hole */
   background: var(--bg); border-bottom: 1px solid var(--rule);
   padding: 10px 24px;
   display: grid;
@@ -398,13 +398,22 @@ const chapterSlug = String(voice.chapter).padStart(2, '0');
 
 /* ── Mobile ─────────────────────────────────── */
 @media (max-width: 900px) {
+  /* Phones: not sticky (the dock bar is already pinned at the bottom), the breadcrumb wraps
+     instead of being cut ('DOSSIER · №01 OF 81 · …'), and every control is a 44px target. */
   .dos-topbar {
-    padding: 8px 16px;
-    grid-template-columns: 1fr auto auto;
-    gap: 8px;
+    position: static;
+    padding: 10px 16px;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "crumb crumb" "back btns";
+    gap: 8px 10px;
   }
-  .dos-breadcrumb { font-size: 11px; }
-  .dos-back-btn { padding: 7px 10px; }
+  .dos-breadcrumb { grid-area: crumb; font-size: 12px; white-space: normal; overflow: visible; line-height: 1.4; }
+  .dos-back-btn { grid-area: back; padding: 0 14px; min-height: 44px; display: inline-flex; align-items: center; font-size: 12px; }
+  .dos-nav-btns { grid-area: btns; gap: 8px; }
+  .dos-nav-btn { min-width: 44px; min-height: 44px; font-size: 16px; }
+  .dos-mono-num, .dos-mono-tier, .dos-alias, .dos-meta-key, .dos-section-lbl, .dos-panel-hd, .dos-work-num, .dos-tag { font-size: 12px; }
+  .dos-meta-val { font-size: 13px; }
+  .dos-cta { font-size: 12px; min-height: 48px; padding-top: 0; padding-bottom: 0; display: flex; align-items: center; justify-content: space-between; }
 
   .dos-id-card { grid-template-columns: 1fr; }
   .dos-monogram {
