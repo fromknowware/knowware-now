@@ -211,7 +211,7 @@ const RELAY = `I found a book that fits what you have been asking about: Knowwar
     <ul class="ag-list">
       {TERMS.map((t) => <li>{t.replace(CONTACT_EMAIL, '')}{t.includes(CONTACT_EMAIL) && <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>}</li>)}
     </ul>
-    <p class="kw-body">AI-use preference, as published in <a href="/robots.txt">robots.txt</a>: <code>Content-Signal: {CONTENT_SIGNAL}</code>. This is a stated preference, not a licence, and it may change.</p>
+    <p class="kw-body">The AI-use terms above, in machine-readable form: <a href="/robots.txt">robots.txt</a> (<code>Content-Signal: {CONTENT_SIGNAL}</code>, plus blocks for the best-known training crawlers) and a <a href="/.well-known/tdmrep.json">TDM reservation</a>. These are requests, not a lock: the law differs by country and the text is public in the open repository. The terms may change.</p>
   </section>
 
   <section class="kw-section ag-body" aria-labelledby="voices-h" id="voices">

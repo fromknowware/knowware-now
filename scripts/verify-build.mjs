@@ -146,6 +146,10 @@ check('while tokens are off, /agents and agents.txt say so', tokensOpen || (/Not
 // 7. Policy and discovery files.
 const robots = read(join(dist, 'robots.txt'));
 check('robots.txt states ai-train=no', /Content-Signal:[^\n]*ai-train=no/.test(robots));
+check('robots.txt blocks the named training crawlers but not retrieval agents', /User-agent: GPTBot[\s\S]*?Disallow: \/\n/.test(robots) && /User-agent: ClaudeBot/.test(robots) && !/User-agent: (OAI-SearchBot|ChatGPT-User|Claude-SearchBot|Claude-User|PerplexityBot)/.test(robots));
+const tdm = (() => { try { return JSON.parse(read(join(dist, '.well-known/tdmrep.json'))); } catch { return null; } })();
+check('TDM reservation reserves the book and leaves /stories open', Array.isArray(tdm) && tdm.some((r) => r.location === '/*' && r['tdm-reservation'] === 1) && tdm.some((r) => r.location === '/stories/*' && r['tdm-reservation'] === 0));
+check('book pages carry the tdm-reservation meta and stories do not reserve', /name="tdm-reservation" content="1"/.test(read(join(dist, 'license/index.html'))) && /name="tdm-reservation" content="0"/.test(read(join(dist, 'stories/index.html'))));
 check('robots.txt keeps /api/ disallowed and the agent API allowed', /Disallow: \/api\//.test(robots) && /Allow: \/api\/agent\//.test(robots));
 const sitemaps = files.filter((f) => /sitemap.*\.xml$/.test(f)).map(read).join('\n');
 check('sitemap lists /agents and no gated /full pages', /knowware\.systems\/agents\//.test(sitemaps) && !/\/read\/[0-9x]+\/full/.test(sitemaps));
