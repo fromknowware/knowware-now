@@ -10,6 +10,7 @@ export const MARKDOWN_PAGES = [
   { path: '/method',     file: 'method.md',     label: 'Method',                voices: true  },
   { path: '/rules',      file: 'rules.md',      label: 'Editorial rules',       voices: true  },
   { path: '/colophon',   file: 'colophon.md',   label: 'Colophon',              voices: false },
+  { path: '/license',    file: 'license.md',    label: 'License: share this book', voices: false },
   { path: '/read',       file: 'read.md',       label: 'Manuscript index',      voices: true  },
   { path: '/stories',    file: 'stories.md',    label: 'Stories',               voices: false },
   { path: '/agents',     file: 'agents.md',     label: 'For agents',            voices: false },

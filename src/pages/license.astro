@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import { AUTHOR, PUBLISHER, SITE_NAME, SITE_URL, CONTACT_EMAIL } from '../config';
+
+const PAGE_URL = `${SITE_URL}/license`;
+const DEED = 'https://creativecommons.org/licenses/by-nc-sa/4.0/';
+const REPO = 'https://github.com/fromknowware/systems-intelligence';
+const DESCRIPTION =
+  'The book is open: read it, share it and teach with it for free under CC BY-NC-SA 4.0. The official editions, and anything commercial, are separate. What that means for readers, libraries and universities.';
+const ATTRIBUTION = `${AUTHOR}, "Knowware: Systems of Intelligence" (${PUBLISHER}, 2026), ${SITE_URL.replace('https://', '')}. Licensed CC BY-NC-SA 4.0.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Book',
+  name: 'Knowware: Systems of Intelligence',
+  url: SITE_URL,
+  author: { '@type': 'Person', name: AUTHOR },
+  publisher: { '@type': 'Organization', name: PUBLISHER },
+  license: DEED,
+  isAccessibleForFree: true,
+  inLanguage: 'en',
+  sameAs: [REPO],
+};
+---
+<Base title="Share this book" description={DESCRIPTION} canonical={PAGE_URL}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="kw-section">
+    <p class="kw-label">License</p>
+    <h1 class="kw-h2">Share this book.</h1>
+    <p class="kw-body lic-lede">
+      The text and diagrams of {SITE_NAME} are open. You can read, share and teach with them for free. The official editions, and anything commercial, are separate.
+    </p>
+  </section>
+
+  <section class="kw-section lic-body" data-kw-read>
+    <h2 class="kw-h3">What you can do, free</h2>
+    <p class="kw-body">
+      The chapters, front and back matter and the diagrams are licensed under
+      <a rel="license" href={DEED}>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a> (CC BY-NC-SA 4.0).
+      In plain words, for non-commercial purposes and with credit, you may:
+    </p>
+    <ul class="lic-list">
+      <li>read it, link to it, and send a chapter to anyone;</li>
+      <li>quote it and reproduce it in your own non-commercial work;</li>
+      <li>assign it in a class, put it on a reading list or course reserve, and lend it;</li>
+      <li>archive it and mirror it, in a library, a repository or a preservation system;</li>
+      <li>translate it, adapt it, remix the diagrams, and build on it, as long as what you make is shared under the same license.</li>
+    </ul>
+    <p class="kw-body">
+      The source text, diagrams and their data are in the open repository:
+      <a href={REPO}>github.com/fromknowware/systems-intelligence</a>. The code in it is MIT licensed.
+    </p>
+
+    <h2 class="kw-h3">What needs a conversation</h2>
+    <p class="kw-body">
+      Selling the book, or putting it inside something you sell (a paid course, a paywalled collection, a product, an ad-supported copy) needs a separate agreement. Write to
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+    </p>
+
+    <h2 class="kw-h3">Libraries and universities</h2>
+    <p class="kw-body">
+      Teaching, course reserves, lending, cataloguing and archiving the open text need no permission and no fee. What you can buy is the book as a finished object: the official print and digital editions, with a stable edition and citation, updates, and formats made for accessibility. Institutional licenses for those editions are being set up. If your library or department wants to be first, or needs something particular, tell us at
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+    </p>
+
+    <h2 class="kw-h3">How to credit it</h2>
+    <p class="kw-body">Copy this, or cite it from <a href={`${REPO}/blob/main/CITATION.cff`}>the citation file</a>:</p>
+    <p class="lic-attrib mono" id="lic-attrib">{ATTRIBUTION}</p>
+    <p class="kw-body">
+      If you changed it, say so. If you reuse a passage from one of the 81 voices, keep its note that it is synthesized, so nobody mistakes it for a quote.
+    </p>
+
+    <h2 class="kw-h3">What the license does not cover</h2>
+    <ul class="lic-list">
+      <li>
+        <strong>The people behind the voices.</strong> Each voice is synthesized by the author from a named person's published work. It is not a quote. This license covers the author's own writing only, and gives no rights in anyone's name, voice or likeness. People named can ask for a correction or removal at <a href="/corrections">/corrections</a>.
+      </li>
+      <li><strong>The name, cover and logos</strong>, and the design and typesetting of the official editions.</li>
+      <li><strong>Third-party material</strong>, listed in the repository's <a href={`${REPO}/blob/main/NOTICE.md`}>NOTICE</a>.</li>
+    </ul>
+
+    <h2 class="kw-h3">Stories and this site</h2>
+    <p class="kw-body">
+      The <a href="/stories">stories</a> and their feed are a separate work, licensed
+      <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. The site's code is built with open tools and has no tracking; see the <a href="/colophon">colophon</a>.
+    </p>
+
+    <p class="kw-body lic-fine">
+      This page explains the license in plain words. The license text itself governs:
+      <a href={DEED}>deed</a> and <a href={`${DEED}legalcode`}>legal code</a>.
+    </p>
+
+    <p class="def-actions">
+      <a class="kw-btn kw-btn--filled" href="/read/01">Read Chapter 1 free →</a>
+      <a class="kw-btn" href={REPO}>Get the source →</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .lic-lede { max-width: 56ch; margin-top: 16px; }
+  .lic-body { max-width: 680px; }
+  .lic-body :global(h2) { margin-top: 40px; }
+  .lic-body :global(h2:first-child) { margin-top: 0; }
+  .lic-list { margin: 12px 0 16px; padding-left: 1.3em; font-size: 16px; line-height: 1.6; }
+  .lic-list li { margin-bottom: 8px; }
+  .lic-attrib {
+    margin: 12px 0 16px; padding: 14px 16px; font-size: 13px; line-height: 1.6;
+    background: var(--accent-soft); border: 1px dashed var(--sub); overflow-wrap: anywhere;
+  }
+  .lic-fine { margin-top: 32px; font-size: 14px; color: var(--sub); }
+  .lic-body a:not(.kw-btn) { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
+  .def-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 2em; }
+  .def-actions .kw-btn { text-decoration: none; }
+  .def-actions .kw-btn--filled { color: #EDEEE4; }
+  .def-actions .kw-btn:not(.kw-btn--filled) { color: var(--ink); }
+  .def-actions .kw-btn:not(.kw-btn--filled):hover { color: var(--bg); }
+</style>

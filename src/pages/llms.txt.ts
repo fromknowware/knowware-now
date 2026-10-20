@@ -47,6 +47,7 @@ export const GET: APIRoute = async () => {
     link('/method', 'how the 81 voices are synthesized'),
     link('/rules', 'the editorial rules'),
     link('/colophon', 'how the site is made; no analytics, no tracking'),
+    link('/license', 'the book is CC BY-NC-SA 4.0: what you can share, and what libraries and universities can do'),
     link('/read', 'the manuscript index'),
     '',
     '## Stories',
