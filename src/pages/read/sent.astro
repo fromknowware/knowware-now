@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="Check your email" description="We sent a confirmation link to the address you entered." noindex>
+  <section class="kw-section" aria-labelledby="sent-h">
+    <p class="kw-label">Read</p>
+    <h1 class="kw-h2" id="sent-h">Check your email.</h1>
+    <p class="kw-body">
+      If that address can receive mail, a link is on its way. It works once and lasts 48 hours. Open it, press
+      the button, and the chapter opens on that device.
+    </p>
+    <p class="kw-body" style="margin-top:16px">
+      Nothing after ten minutes? Look in spam, or <a href="/read" style="color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)">go back to the chapters</a> and enter the address again.
+    </p>
+  </section>
+</Base>

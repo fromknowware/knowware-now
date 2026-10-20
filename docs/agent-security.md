@@ -65,7 +65,9 @@ wrangler kv key list --binding CLAIMS --prefix agent: --remote | python3 -c "imp
 
 **Erase one person from the waiting list:** delete `waitlist:<sha256(lowercased email)>`.
 
-**Erase one person elsewhere:** delete `reader:<hash>` entries for them (hash of the token; use the person's email to find `subscriber:<sha256(email)>`), `agentidx:<sha256(email)[0:32]>:*`, and their `order:*` records (list `order:` and match `principal.email`).
+**Erase one reader (the whole recipe is in `docs/email.md`):** delete `acct:`, `interest:` and `waitlist:` for `<sha256(email)>`, every `readerdev:<sha256(email)>:*` key and the `reader:<hash>` it ends with.
+
+**Erase one person elsewhere:** delete `reader:<hash>` entries for them (the `readerdev:<sha256(email)>:*` keys name them), `agentidx:<sha256(email)[0:32]>:*`, and their `order:*` records (list `order:` and match `principal.email`).
 
 **Something returned a 500:** the log line is `unhandled <METHOD> <path> <ErrorClass>`. No request data is logged. Reproduce with the fuzzer seed or the abuse scripts.
 

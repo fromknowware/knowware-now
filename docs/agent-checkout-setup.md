@@ -28,12 +28,12 @@ Set these on the **Preview** environment first, then Production when ready. The 
 
 With `AGENT_CHECKOUT` unset, `POST /api/agent/checkout` returns 503 `checkout_not_open`, `/api/stripe/webhook` returns 404, and tokens cannot be minted with the `checkout` scope. `GET /api/agent/status` says which.
 
-### Agent tokens need a confirmed email
-Sign-up gives a reading cookie to anyone who types an address, so it does not prove who is at the keyboard. Agent tokens name that address as the human principal, so minting, listing and revoking them require the person to have **opened the link in the confirmation email** (the same link that lets them read on another device). Until then `/agents` shows "Confirm your email first" and the API returns `403 email_not_verified`. This needs `RESEND_API_KEY` to be working in that environment. `AGENT_REQUIRE_VERIFIED_EMAIL=false` turns the check off for local development only; never set it in Preview or Production.
+### Reading and agent tokens need a confirmed email
+Reading the full chapters needs a confirmed email, so by the time anyone can mint an agent token their address has already been confirmed: typing an address sends one link, and nothing opens until it is used (see `docs/email.md`). Agent tokens name that address as the human principal. This needs `RESEND_API_KEY` working in that environment; without it sign-up answers 503 and nothing unlocks. `AGENT_REQUIRE_VERIFIED_EMAIL=false` and `READER_AUTOCONFIRM=true` are for local development and CI only; never set them in Preview or Production.
 
 ## 3. Try it (test mode)
 
-1. Sign up on `/read`, open the link in the email you receive, then open `/agents`, tick "Also let this agent request a checkout link", mint a token.
+1. Sign up on `/read`, press the button on the link in the email you receive, then open `/agents`, tick "Also let this agent request a checkout link", mint a token.
 2. `examples/agent-client.mjs` (see its header) discovers the site, reads a preview, reads a chapter, and requests a checkout URL.
 3. Open the URL as the person. Pay with Stripe's published test card `4242 4242 4242 4242`, any future expiry, any CVC. Never use a real card.
 4. The webhook marks the order `paid`; the agent sees it at `GET /api/agent/orders/<id>`.
