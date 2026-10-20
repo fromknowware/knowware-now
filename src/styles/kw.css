@@ -589,6 +589,8 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   overflow-wrap: anywhere;
 }
 .kw-foot-email:hover { opacity: 0.75; }
+/* The colophon strip's 'Systems of Intelligence' link (added after the first mobile pass): a 44px target. */
+.kw-foot-colophon a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .kw-foot-colophon {
   border-top: 1px solid var(--rule);
   padding-top: 16px;
