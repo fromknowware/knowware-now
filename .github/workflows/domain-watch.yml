@@ -1,0 +1,39 @@
+name: Domain watch
+
+# Weekly, public data only (RDAP + DNS). No secrets: it uses the automatic
+# GITHUB_TOKEN to open an issue when systemsofintelligence.com, knowware.systems,
+# knowware.press or knowware.institute
+# changes registrar status, nameservers, expiry or MX. Owned domains also warn 90 days before expiry. See scripts/domain-watch.mjs.
+on:
+  schedule:
+    - cron: '17 13 * * 1'   # Mondays 13:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: '.node-version'
+      - name: Compare with baseline
+        run: node scripts/domain-watch.mjs
+      - name: Open or update an issue per change
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create domain-watch --color D93F0B --description "Weekly domain watch" 2>/dev/null || true
+          n=$(node -e "console.log(JSON.parse(require('fs').readFileSync('domain-watch-report.json','utf8')).length)")
+          for i in $(seq 0 $((n-1))); do
+            title=$(node -e "console.log(JSON.parse(require('fs').readFileSync('domain-watch-report.json','utf8'))[$i].title)")
+            node -e "console.log(JSON.parse(require('fs').readFileSync('domain-watch-report.json','utf8'))[$i].body)" > body.md
+            existing=$(gh issue list --label domain-watch --state open --search "in:title \"$title\"" --json number --jq '.[0].number // empty')
+            if [ -n "$existing" ]; then gh issue comment "$existing" --body-file body.md
+            else gh issue create --title "$title" --label domain-watch --body-file body.md; fi
+          done
