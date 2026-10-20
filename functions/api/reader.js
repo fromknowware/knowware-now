@@ -8,6 +8,8 @@ import {
   EMAIL_RE, TOKEN_RE, clean, json, newToken, originAllowed,
   rateLimited, readCookie, readJson, sha256,
 } from '../../lib/server/guard.js';
+import { CONTACT_EMAIL } from '../../lib/site-facts.mjs';
+import { logResend } from '../../lib/server/resend.js';
 
 const ACCESS_TTL_S = 60 * 60 * 24 * 400;
 const CONSENT_TEXT = 'Also email me when new chapters and the print edition are ready.';
@@ -34,11 +36,12 @@ function redirect(location, cookies = [], status = 302) {
 
 async function sendWelcome(env, email, link, nn) {
   try {
-    await fetch('https://api.resend.com/emails', {
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: env.READER_FROM || env.CLAIM_NOTIFY_FROM || 'Knowware <onboarding@resend.dev>',
+        reply_to: CONTACT_EMAIL,
         to: [email],
         subject: 'Your Knowware chapters are unlocked',
         text: [
@@ -51,24 +54,29 @@ async function sendWelcome(env, email, link, nn) {
           '',
           'If you did not request this, ignore this email.',
           '',
-          'Knowware · knowware.press',
+          'Knowware · knowware.systems',
         ].join('\n'),
       }),
     });
-  } catch {
+    await logResend('welcome email', res);
+  } catch (err) {
     // Access already works on this device; the email is best-effort.
+    await logResend('welcome email', null, err);
   }
 }
 
 async function addToAudience(env, email) {
   if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID) return;
   try {
-    await fetch(`https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`, {
+    const res = await fetch(`https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, unsubscribed: false }),
     });
-  } catch {}
+    await logResend('add contact', res);
+  } catch (err) {
+    await logResend('add contact', null, err);
+  }
 }
 
 // Without JavaScript the gate form posts natively; answer with redirects
@@ -86,7 +94,7 @@ async function readForm(request, maxBytes) {
 }
 
 async function handlePost({ request, env }) {
-  if (!originAllowed(request)) return json({ ok: false, error: 'Requests must come from knowware.press.' }, 403);
+  if (!originAllowed(request)) return json({ ok: false, error: 'Requests must come from the Knowware site.' }, 403);
 
   const isForm = (request.headers.get('Content-Type') || '').startsWith('application/x-www-form-urlencoded');
   let data;

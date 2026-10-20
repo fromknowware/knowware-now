@@ -6,7 +6,7 @@ import agentMarkdown from './integrations/agent-markdown.mjs';
 import socialCards from './integrations/social-cards.mjs';
 
 export default defineConfig({
-  site: 'https://knowware.press',
+  site: 'https://knowware.systems',
   output: 'static',
   compressHTML: true,
   integrations: [

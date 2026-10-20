@@ -8,7 +8,7 @@ Nothing here makes the public "Pre-order $33" button work. That button still poi
 
 1. **Product catalog → Add product**: "Knowware pre-order (print + digital)". One-time price **$33.00 USD**. Copy the price id (`price_…`).
 2. **Developers → API keys**: copy the **secret key** that starts with `sk_test_` (or create a restricted `rk_test_…` key that can only write Checkout Sessions).
-3. **Developers → Webhooks → Add endpoint**: URL `https://knowware.press/api/stripe/webhook` (or the `*.pages.dev` preview URL while testing). Events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired`. Copy the **signing secret** (`whsec_…`).
+3. **Developers → Webhooks → Add endpoint**: URL `https://knowware.systems/api/stripe/webhook` (or the `*.pages.dev` preview URL while testing). Events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired`. Copy the **signing secret** (`whsec_…`).
 4. Shipping: Checkout collects a shipping address because the pre-order includes print. Countries default to `US`; set `STRIPE_SHIP_COUNTRIES` (comma-separated ISO codes, e.g. `US,CA`) to change.
 
 ## 2. In Cloudflare Pages (project `knowware-book`, Settings → Variables and Secrets)
@@ -23,6 +23,7 @@ Set these on the **Preview** environment first, then Production when ready. The 
 | `STRIPE_PRICE_PREORDER` | `price_…` | Plaintext |
 | `STRIPE_SHIP_COUNTRIES` | optional, default `US` | Plaintext |
 | `RESEND_API_KEY` | needed so readers get the confirmation link (see below); already used by the reader sign-up email | Secret |
+| `READER_FROM` | sender for reader emails, on a domain verified in Resend, e.g. `Knowware <hello@knowware.institute>` (falls back to `CLAIM_NOTIFY_FROM`, then to Resend's test sender, which only delivers to the account owner) | Secret |
 | `RATE_SALT` | any long random string (existing recommendation; also salts the new limits) | Secret |
 
 With `AGENT_CHECKOUT` unset, `POST /api/agent/checkout` returns 503 `checkout_not_open`, `/api/stripe/webhook` returns 404, and tokens cannot be minted with the `checkout` scope. `GET /api/agent/status` says which.
@@ -44,7 +45,7 @@ Each order is a KV record `order:<id>` in `CLAIMS` with: the human (principal id
 ## 4b. Seeing the orders: `ADMIN_TOKEN`
 Optional. Set `ADMIN_TOKEN` (a random secret of at least 32 characters, as a **Secret**) in Cloudflare to switch on `GET /api/admin/orders`:
 ```bash
-curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.press/api/admin/orders?status=paid"
+curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.systems/api/admin/orders?status=paid"
 ```
 It lists agent orders (Stripe test mode and x402 testnet) with the human, the agent (name and operator), the context note, status, amount and, for x402, the transaction hash; `status` and `cursor` are optional. Unset, the endpoint returns 404. It is never called from a browser, compares the token in constant time after hashing, and locks a connection out after 10 wrong guesses in 10 minutes.
 

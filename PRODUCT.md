@@ -1,7 +1,7 @@
 # PRODUCT.md — Knowware: Systems of Intelligence
 
 ## What it is
-Companion website for the book *Knowware: Systems of Intelligence* by Khayyam Wakil (The ARC Institute of Knowware). Live at knowware.press. The site presents the book's 81 "voices" (experts spanning academics, practitioners, visionaries), the manuscript chapters, and the method behind the book: human knowledge coordinated with machine synthesis ("the Third Body"). The site is itself a demonstration of the book's thesis — "This book is not about Knowware. This book IS Knowware."
+Companion website for the book *Knowware: Systems of Intelligence* by Khayyam Wakil (The ARC Institute of Knowware). Live at knowware.systems. The site presents the book's 81 "voices" (experts spanning academics, practitioners, visionaries), the manuscript chapters, and the method behind the book: human knowledge coordinated with machine synthesis ("the Third Body"). The site is itself a demonstration of the book's thesis — "This book is not about Knowware. This book IS Knowware."
 
 ## Register
 brand — the site is an editorial/archival experience; design IS the product.

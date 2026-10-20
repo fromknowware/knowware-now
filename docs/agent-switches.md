@@ -33,7 +33,7 @@ Every switch is read at request time except the two constants in `src/config.ts`
 - **Nothing is emailed automatically.** It is a list, not a mailer. The page promises one email, the day pre-orders open.
 - To get it, set `ADMIN_TOKEN`, then:
   ```bash
-  curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.press/api/admin/waitlist?format=csv" -o waitlist.csv
+  curl -s -H "Authorization: Bearer $ADMIN_TOKEN" "https://knowware.systems/api/admin/waitlist?format=csv" -o waitlist.csv
   ```
   JSON without `format=csv`. It pages 100 at a time (the `cursor` in the response, or `X-Next-Cursor` for CSV). Spreadsheet formulas in addresses are neutralised.
 - To remove one person: delete the key `waitlist:<sha256 of the lowercased email>` in the `CLAIMS` namespace, or use the address they wrote from.

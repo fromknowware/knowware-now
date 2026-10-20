@@ -75,6 +75,14 @@ if (existsSync(fullPath)) {
     if (!allowed.has(hashOf(body))) bad.push(slug);
   }
   check('CSP covers inline scripts on the gated chapter pages', bad.length === 0, bad.join(', '));
+  // Every figure in src/content/figures.json is in its chapter's full text, and its image file exists.
+  const figs = JSON.parse(read(join(root, 'src/content/figures.json')));
+  const missing = [];
+  for (const [slug, list] of Object.entries(figs)) for (const f of list) {
+    if (!(full[slug] ?? '').includes(`id="fig-${f.label.replace('.', '-')}"`)) missing.push(`${slug}:${f.label} not in text`);
+    if (!existsSync(join(root, 'public', f.src))) missing.push(`${f.src} missing`);
+  }
+  check('every figure in figures.json renders in its full chapter and has its image', missing.length === 0, missing.join(', '));
 }
 
 // 4. The synthesis disclosure travels with every Markdown file that can hold voices.
@@ -104,13 +112,13 @@ const exists = (urlPath) => { const p = urlPath.split('#')[0].split('?')[0]; if 
 const runtime = /^\/(api|mcp)(\/|$)/;
 const dead = new Set();
 for (const name of ['llms.txt', 'agents.txt']) {
-  for (const m of read(join(dist, name)).matchAll(/https:\/\/knowware\.press(\/[^\s)>"']*)/g)) {
+  for (const m of read(join(dist, name)).matchAll(/https:\/\/knowware\.systems(\/[^\s)>"']*)/g)) {
     const p = m[1].replace(/[.,;]+$/, '').replace(/\{[^}]*\}.*/, '');
     if (!runtime.test(p) && !exists(p)) dead.add(`${name}: ${p}`);
   }
 }
 const manifest = JSON.parse(read(join(dist, '.well-known/knowware.json')));
-for (const m of JSON.stringify(manifest).matchAll(/https:\/\/knowware\.press(\/[^"\s)]*)/g)) {
+for (const m of JSON.stringify(manifest).matchAll(/https:\/\/knowware\.systems(\/[^"\s)]*)/g)) {
   const p = m[1].replace(/\{[^}]*\}.*/, '');
   if (!runtime.test(p) && !exists(p)) dead.add(`manifest: ${p}`);
 }
@@ -140,7 +148,7 @@ const robots = read(join(dist, 'robots.txt'));
 check('robots.txt states ai-train=no', /Content-Signal:[^\n]*ai-train=no/.test(robots));
 check('robots.txt keeps /api/ disallowed and the agent API allowed', /Disallow: \/api\//.test(robots) && /Allow: \/api\/agent\//.test(robots));
 const sitemaps = files.filter((f) => /sitemap.*\.xml$/.test(f)).map(read).join('\n');
-check('sitemap lists /agents and no gated /full pages', /knowware\.press\/agents\//.test(sitemaps) && !/\/read\/[0-9x]+\/full/.test(sitemaps));
+check('sitemap lists /agents and no gated /full pages', /knowware\.systems\/agents\//.test(sitemaps) && !/\/read\/[0-9x]+\/full/.test(sitemaps));
 check('/.well-known/security.txt is present', existsSync(join(dist, '.well-known/security.txt')));
 
 // 8. Source rules for the server code (no build needed).

@@ -1003,3 +1003,30 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   width: 8px; height: 8px; border-radius: 50%;
   flex-shrink: 0; display: inline-block;
 }
+
+/* ── Book figures inside chapter text (src/loaders/manuscript.ts) ──
+   Sized like a book figure: one fixed width centred in the column, no scrolling. Tapping opens the drawing full size.
+   The drawings are black-on-white SVGs; multiply drops the white into the page colour so there is no white slab on the cream.
+   Dark theme keeps a white plate instead, because multiplying dark strokes into a dark page would hide them. */
+.kw-prose .kw-fig {
+  margin: 2.2em auto; padding: 0; max-width: 520px;
+  background: transparent; border: 1px solid var(--rule);
+}
+.kw-fig-plate { display: block; cursor: zoom-in; }
+.kw-fig-plate:focus-visible { outline: 2px solid var(--signal-ink); outline-offset: -2px; }
+.kw-fig img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
+.kw-fig figcaption {
+  margin: 0; padding: 10px 14px 12px;
+  border-top: 1px solid var(--rule); background: transparent;
+  font: 400 12.5px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--sub);
+}
+.kw-fig figcaption strong { color: var(--ink); font-weight: 600; }
+.kw-fig-n {
+  display: block; margin-bottom: 4px;
+  font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--signal-ink);
+}
+html[data-theme="dark"] .kw-prose .kw-fig { background: #fff; }
+html[data-theme="dark"] .kw-fig img { mix-blend-mode: normal; }
+html[data-theme="dark"] .kw-fig figcaption { background: var(--paper); }
+/* The triptych is an overview of three diagrams that follow as figures of their own, so it gets a little more width. */
+.kw-prose .kw-fig--wide { max-width: 860px; }

@@ -1,7 +1,7 @@
 // /api/agent/tokens — the human's side. Needs the reader cookie.
 //   POST {name, operator, lifetime, scopes}  → mints a token, shown once
 //   GET                                      → lists this person's active tokens
-// Only knowware.press origins and JSON; the cookie is SameSite=Lax as well.
+// Only knowware.systems origins and JSON; the cookie is SameSite=Lax as well.
 
 import { json, readJson, rateLimited } from '../../../../lib/server/guard.js';
 import { agentJson, browserGuard, browserReadGuard, listTokens, mintToken, principalHash, tokensClosed, tokensOpen, verifiedReader } from '../../../../lib/server/agent.js';

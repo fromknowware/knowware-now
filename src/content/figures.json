@@ -1,0 +1,482 @@
+{
+  "01": [
+    {
+      "label": "1.1",
+      "src": "/figures/01/01-facebook-three-body.svg",
+      "width": 703,
+      "height": 610,
+      "title": "Facebook three-body system",
+      "caption": "The chapter's opening lesson: human behavior, algorithmic curation, and emergent social contagion form a three-body system. Optimizing any two while ignoring the third creates a coordination crisis.",
+      "alt": "Causal diagram. The chapter's opening lesson: human behavior, algorithmic curation, and emergent social contagion form a three-body system. Optimizing any two while ignoring the third creates a coordination crisis. Nodes: Human Behavior, Algorithmic Curation, Emergent Contagion. Missing from the system: Coordination Wisdom. Links: Human Behavior raises Algorithmic Curation; Algorithmic Curation raises Human Behavior; Human Behavior raises Emergent Contagion; Algorithmic Curation raises Emergent Contagion. Loops: R1 — Engagement spiral.",
+      "after": "You can't optimize two elements and ignore the third. The third element---the co"
+    },
+    {
+      "label": "1.2",
+      "src": "/figures/01/04-mars-orbiter-coordination-gap.svg",
+      "width": 724,
+      "height": 649,
+      "title": "Mars Climate Orbiter coordination gap",
+      "caption": "Two competent teams + missing coordination interface = $327M lost spacecraft. The components were correct; the translation layer between them never existed.",
+      "alt": "Causal diagram. Two competent teams + missing coordination interface = $327M lost spacecraft. The components were correct; the translation layer between them never existed. Nodes: Navigation Team, Ground Software Team, Thrust Calculation, Mission Outcome. Missing from the system: Unit Translation. Links: Navigation Team raises Thrust Calculation; Ground Software Team raises Thrust Calculation; Thrust Calculation reduces Mission Outcome.",
+      "after": "Dr. N. Katherine Hayles at Duke University studies how cognition distributes acr"
+    },
+    {
+      "label": "1.3",
+      "src": "/figures/01/05-2008-systemic-correlation.svg",
+      "width": 723,
+      "height": 610,
+      "title": "2008 Crisis: hidden systemic correlation",
+      "caption": "Individual risk models plus diversification looked safe, but uniform models and interconnected products created hidden systemic correlation that cascaded into collapse. The missing third element was monitoring how risks coordinated across the whole market.",
+      "alt": "Causal diagram. Individual risk models plus diversification looked safe, but uniform models and interconnected products created hidden systemic correlation that cascaded into collapse. The missing third element was monitoring how risks coordinated across the whole market. Nodes: Individual Risk Models, Diversification, Model Convergence, Hidden Correlation, Cascade Collapse. Missing from the system: Systemic Monitoring. Links: Individual Risk Models raises Diversification; Diversification raises Model Convergence; Model Convergence raises Hidden Correlation; Hidden Correlation raises Cascade Collapse.",
+      "after": "The 2008 financial crisis, which plunged the world into a deep recession, costin"
+    },
+    {
+      "label": "1.4",
+      "src": "/figures/01/06-737max-mcas-human-machine.svg",
+      "width": 711,
+      "height": 610,
+      "title": "737 MAX MCAS three-body failure",
+      "caption": "MCAS software, operational stress, and pilot expectations failed to coordinate. Each component was 'safe' in isolation; the missing coordination layer (training + transparency) cost 346 lives.",
+      "alt": "Causal diagram. MCAS software, operational stress, and pilot expectations failed to coordinate. Each component was 'safe' in isolation; the missing coordination layer (training + transparency) cost 346 lives. Nodes: MCAS Software, Sensor Failure, Operational Stress, Pilot Override, Crash Risk. Missing from the system: Pilot Awareness. Links: Sensor Failure raises MCAS Software; MCAS Software raises Crash Risk; Operational Stress reduces Pilot Override; Pilot Override reduces Crash Risk.",
+      "after": "The tragic crashes of Lion Air Flight 610 in October 2018 and Ethiopian Airlines"
+    },
+    {
+      "label": "1.5",
+      "src": "/figures/01/07-hardware-software-knowware.svg",
+      "width": 649,
+      "height": 649,
+      "title": "Hardware ↔ Software ↔ Knowware",
+      "caption": "The canonical book schema. Three bodies — physical computation, logical frameworks, and adaptive intelligence — coordinate to produce emergent system intelligence, which in turn becomes new knowware.",
+      "alt": "Causal diagram. The canonical book schema. Three bodies — physical computation, logical frameworks, and adaptive intelligence — coordinate to produce emergent system intelligence, which in turn becomes new knowware. Nodes: Hardware, Software, Knowware, Emergent Intelligence. Links: Hardware raises Emergent Intelligence; Software raises Emergent Intelligence; Knowware raises Emergent Intelligence; Emergent Intelligence raises Knowware. Loops: R1 — Knowware learning loop.",
+      "after": "Hardware: Physical computation (processing, storage, networks). This is the raw "
+    },
+    {
+      "label": "1.6",
+      "src": "/figures/01/10-universal-coordination-pattern.svg",
+      "width": 649,
+      "height": 649,
+      "title": "Universal coordination pattern",
+      "caption": "The book's operational template. Every successful coordination follows the same cycle: identify the bodies → design the coordination space → enable emergence → adapt continuously.",
+      "alt": "Causal diagram. The book's operational template. Every successful coordination follows the same cycle: identify the bodies → design the coordination space → enable emergence → adapt continuously. Nodes: Identify Bodies, Design Space, Enable Emergence, Adapt. Links: Identify Bodies raises Design Space; Design Space raises Enable Emergence; Enable Emergence raises Adapt; Adapt raises Identify Bodies. Loops: R1 — Coordination learning cycle.",
+      "after": "4. Adapt continuously (How does coordination improve over time? How do the eleme"
+    }
+  ],
+  "02": [
+    {
+      "label": "2.1",
+      "src": "/figures/02/01-netflix-recommendation-loop.svg",
+      "width": 649,
+      "height": 649,
+      "title": "Netflix content-coordination loop",
+      "caption": "Netflix's recommendation system is a self-optimizing three-body coordination: viewing data, algorithmic ranking, and content production decisions continuously reshape each other to drive emergent engagement.",
+      "alt": "Causal diagram. Netflix's recommendation system is a self-optimizing three-body coordination: viewing data, algorithmic ranking, and content production decisions continuously reshape each other to drive emergent engagement. Nodes: Viewing Data, Ranking Algorithm, Content Production, User Engagement. Links: Viewing Data raises Ranking Algorithm; Ranking Algorithm raises User Engagement; User Engagement raises Viewing Data; Viewing Data raises Content Production; Content Production raises User Engagement. Loops: R1 — Engagement-data spiral; R2 — Content-demand learning.",
+      "after": "The emergence (E) isn't the sum of components. It's what happens when three elem"
+    },
+    {
+      "label": "2.2",
+      "src": "/figures/02/02-pearl-ladder-causation.svg",
+      "width": 722,
+      "height": 649,
+      "title": "Pearl's Ladder of Causation",
+      "caption": "Pearl's ladder: association works with two bodies (data and patterns), intervention adds causal context, counterfactuals add the ability to imagine alternatives. Each rung adds a body to the coordination stack; the missing causal context is what current AI lacks.",
+      "alt": "Causal diagram. Pearl's ladder: association works with two bodies (data and patterns), intervention adds causal context, counterfactuals add the ability to imagine alternatives. Each rung adds a body to the coordination stack; the missing causal context is what current AI lacks. Nodes: Observation, Intervention, Counterfactual, Imagination. Missing from the system: Causal Context. Links: Observation raises Intervention; Intervention raises Counterfactual; Imagination raises Counterfactual.",
+      "after": "We've been trying to build intelligence with two-body tools in a three-body univ"
+    },
+    {
+      "label": "2.3",
+      "src": "/figures/02/05-hft-market-coordination.svg",
+      "width": 631,
+      "height": 601,
+      "title": "HFT market-making coordination",
+      "caption": "HFT edge is not raw speed but coordination of information flow, price discovery and liquidity provision, with inventory risk acting as a balancing check on how much liquidity is provided.",
+      "alt": "Causal diagram. HFT edge is not raw speed but coordination of information flow, price discovery and liquidity provision, with inventory risk acting as a balancing check on how much liquidity is provided. Nodes: Information Flow, Price Discovery, Liquidity Provision, Inventory Risk, Market-Making Profit. Links: Information Flow raises Price Discovery; Price Discovery raises Liquidity Provision; Liquidity Provision raises Market-Making Profit; Liquidity Provision raises Inventory Risk; Inventory Risk reduces Liquidity Provision; Inventory Risk reduces Market-Making Profit. Loops: B1 — Inventory risk control.",
+      "after": "\"The edge isn't speed. It's coordination. When you coordinate information flow w"
+    }
+  ],
+  "03": [
+    {
+      "label": "3.1",
+      "src": "/figures/03/01-iaac-learning-building.svg",
+      "width": 626,
+      "height": 601,
+      "title": "IAAC learning building three-body",
+      "caption": "Sensors, an AI learning system, and human occupant behavior coordinate continuously, with reinforcement learning closing the loop so the building's coordination strategy improves over time.",
+      "alt": "Causal diagram. Sensors, an AI learning system, and human occupant behavior coordinate continuously, with reinforcement learning closing the loop so the building's coordination strategy improves over time. Nodes: Environmental Sensors, AI Learning System, Occupant Behavior, Adaptive Comfort, Coordination Policy. Links: Environmental Sensors raises AI Learning System; Occupant Behavior raises AI Learning System; AI Learning System raises Adaptive Comfort; Adaptive Comfort raises Coordination Policy; Coordination Policy raises AI Learning System; Adaptive Comfort raises Occupant Behavior. Loops: R1 — Meta-learning loop; R2 — Occupant adaptation.",
+      "after": "The breakthrough insight: you can't build intelligence by optimizing components."
+    },
+    {
+      "label": "3.2",
+      "src": "/figures/03/02-constitutional-ai-rlaif.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Constitutional AI self-critique loop",
+      "caption": "Constitutional AI coordinates capability with human values through a constitutional framework: the model critiques and revises its own responses against the principles (RLAIF), so the critique signal shrinks as responses align. Capability and alignment grow together instead of trading off.",
+      "alt": "Causal diagram. Constitutional AI coordinates capability with human values through a constitutional framework: the model critiques and revises its own responses against the principles (RLAIF), so the critique signal shrinks as responses align. Capability and alignment grow together instead of trading off. Nodes: AI Capability, Human Values, Constitutional Framework, Critique Signal, Aligned Response. Links: AI Capability raises Aligned Response; Human Values raises Constitutional Framework; Constitutional Framework raises Critique Signal; Aligned Response reduces Critique Signal; Critique Signal raises Aligned Response. Loops: B1 — Self-critique correction.",
+      "after": "Constitutional AI works by giving the AI a \"constitution\"—a set of principles (b"
+    },
+    {
+      "label": "3.3",
+      "src": "/figures/03/03-jepa-coordination.svg",
+      "width": 626,
+      "height": 601,
+      "title": "JEPA self-supervised coordination",
+      "caption": "LeCun's Joint-Embedding Predictive Architecture learns by coordinating past and future context in abstract representation space, not by reconstructing pixels.",
+      "alt": "Causal diagram. LeCun's Joint-Embedding Predictive Architecture learns by coordinating past and future context in abstract representation space, not by reconstructing pixels. Nodes: Past Context, Future Context, Abstract Embedding, Prediction Task, Coordination Pattern. Links: Past Context raises Abstract Embedding; Future Context raises Abstract Embedding; Abstract Embedding raises Prediction Task; Prediction Task raises Coordination Pattern; Coordination Pattern raises Abstract Embedding. Loops: R1 — Representation learning.",
+      "after": "LeCun's Joint-Embedding Predictive Architecture (JEPA) takes this further: inste"
+    },
+    {
+      "label": "3.4",
+      "src": "/figures/03/04-alphago-three-networks.svg",
+      "width": 624,
+      "height": 601,
+      "title": "AlphaGo three-network coordination",
+      "caption": "AlphaGo's breakthrough came not from any single network but from coordination between a policy network, a value network, and Monte Carlo Tree Search — with self-play feedback tuning their joint behavior.",
+      "alt": "Causal diagram. AlphaGo's breakthrough came not from any single network but from coordination between a policy network, a value network, and Monte Carlo Tree Search — with self-play feedback tuning their joint behavior. Nodes: Policy Network, Value Network, Tree Search, Emergent Move, Self-Play Signal. Links: Policy Network raises Tree Search; Value Network raises Tree Search; Tree Search raises Emergent Move; Emergent Move raises Self-Play Signal; Self-Play Signal raises Policy Network; Self-Play Signal raises Value Network. Loops: R1 — Policy self-improvement; R2 — Value self-improvement.",
+      "after": "The genius wasn't any single component. It was the coordination architecture. Th"
+    },
+    {
+      "label": "3.5",
+      "src": "/figures/03/05-alphafold-coordination.svg",
+      "width": 627,
+      "height": 601,
+      "title": "AlphaFold three-body folding",
+      "caption": "AlphaFold predicts protein structure by coordinating evolutionary co-variation, physical constraints, and an attention architecture that learns how amino acids interact in 3D — a DAG from three independent information sources to a single structural prediction.",
+      "alt": "Causal diagram. AlphaFold predicts protein structure by coordinating evolutionary co-variation, physical constraints, and an attention architecture that learns how amino acids interact in 3D — a DAG from three independent information sources to a single structural prediction. Nodes: Amino Acid Sequence, Evolutionary Signal, Physical Constraints, Attention Architecture, Predicted Structure. Links: Amino Acid Sequence raises Evolutionary Signal; Amino Acid Sequence raises Attention Architecture; Evolutionary Signal raises Attention Architecture; Physical Constraints raises Attention Architecture; Attention Architecture raises Predicted Structure.",
+      "after": "Traditional approaches optimized either evolutionary data OR physical constraint"
+    },
+    {
+      "label": "3.6",
+      "src": "/figures/03/06-two-body-brittleness.svg",
+      "width": 717,
+      "height": 610,
+      "title": "Two-body brittleness failure mode",
+      "caption": "The chapter's negative case: without a third coordinating body (context, feedback, or meta-learner), a two-body system — rules/data, robot/program, data/model, policy/execution — cannot adapt to novelty and degrades when conditions shift.",
+      "alt": "Causal diagram. The chapter's negative case: without a third coordinating body (context, feedback, or meta-learner), a two-body system — rules/data, robot/program, data/model, policy/execution — cannot adapt to novelty and degrades when conditions shift. Nodes: Fixed Rules, Input Data, System Output, Novel Conditions, Brittleness. Missing from the system: Missing Third Body. Links: Fixed Rules raises System Output; Input Data raises System Output; Novel Conditions raises Brittleness; System Output raises Brittleness.",
+      "after": "In each case, the absence of a third coordinating element prevents adaptability,"
+    }
+  ],
+  "04": [
+    {
+      "label": "4.1",
+      "src": "/figures/04/01-bogota-urban-coordination.svg",
+      "width": 659,
+      "height": 649,
+      "title": "Bogotá three-body urban coordination",
+      "caption": "Peñalosa's Bogotá transformation as a virtuous cycle: political vision enables public infrastructure, which reshapes citizen behavior, which validates and renews the political mandate — producing emergent urban safety and livability.",
+      "alt": "Causal diagram. Peñalosa's Bogotá transformation as a virtuous cycle: political vision enables public infrastructure, which reshapes citizen behavior, which validates and renews the political mandate — producing emergent urban safety and livability. Nodes: Political Vision, Public Infrastructure, Citizen Behavior, Urban Emergence. Links: Political Vision raises Public Infrastructure; Public Infrastructure raises Citizen Behavior; Citizen Behavior raises Political Vision; Public Infrastructure raises Urban Emergence; Citizen Behavior raises Urban Emergence. Loops: R1 — Vision-infrastructure-behavior flywheel.",
+      "after": "Citizen behavior shifted because they saw tangible improvements and felt a renew"
+    },
+    {
+      "label": "4.2",
+      "src": "/figures/04/02-copenhagen-wheel-coordination.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Copenhagen Wheel rider-terrain-motor coordination",
+      "caption": "Ratti's Copenhagen Wheel as the canonical three-body smart-city primitive: rider effort, terrain/context data, and motor assistance continuously coordinate through an on-wheel controller to create an augmented riding experience.",
+      "alt": "Causal diagram. Ratti's Copenhagen Wheel as the canonical three-body smart-city primitive: rider effort, terrain/context data, and motor assistance continuously coordinate through an on-wheel controller to create an augmented riding experience. Nodes: Rider Effort, Terrain Context, Controller Policy, Motor Assistance, Ride Experience. Links: Rider Effort raises Controller Policy; Terrain Context raises Controller Policy; Controller Policy raises Motor Assistance; Motor Assistance reduces Rider Effort; Motor Assistance raises Ride Experience; Rider Effort raises Ride Experience. Loops: B1 — Effort-assistance equilibrium.",
+      "after": "In contrast, cities like Amsterdam or Barcelona have successfully integrated \"sm"
+    },
+    {
+      "label": "4.3",
+      "src": "/figures/04/03-medical-ai-three-body.svg",
+      "width": 725,
+      "height": 610,
+      "title": "Medical AI three-body diagnosis",
+      "caption": "Topol's diabetic retinopathy case: AI pattern recognition, clinical expertise, and patient context must coordinate through workflow integration to produce trusted diagnosis; missing any body collapses the system into clinical uselessness.",
+      "alt": "Causal diagram. Topol's diabetic retinopathy case: AI pattern recognition, clinical expertise, and patient context must coordinate through workflow integration to produce trusted diagnosis; missing any body collapses the system into clinical uselessness. Nodes: AI Pattern Recognition, Clinical Expertise, Patient Context, Workflow Integration, Diagnostic Outcome. Missing from the system: Coordination Wisdom. Links: AI Pattern Recognition raises Workflow Integration; Clinical Expertise raises Workflow Integration; Patient Context raises Workflow Integration; Workflow Integration raises Diagnostic Outcome.",
+      "after": "Another Example: AI in Radiology: Another powerful example is AI in radiology. E"
+    },
+    {
+      "label": "4.4",
+      "src": "/figures/04/05-adaptive-markets-2008-collapse.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Adaptive Markets and the 2008 coordination failure",
+      "caption": "Lo's three-body market frame applied to 2008: rational models created complex, opaque instruments; herding drove their adoption and mispricing; fragile market structure amplified the shock. The three coordinated destructively into systemic collapse.",
+      "alt": "Causal diagram. Lo's three-body market frame applied to 2008: rational models created complex, opaque instruments; herding drove their adoption and mispricing; fragile market structure amplified the shock. The three coordinated destructively into systemic collapse. Nodes: Rational Models, Opaque Instruments, Behavioral Herding, Coordination Failure, Market Structure. Links: Rational Models raises Opaque Instruments; Behavioral Herding raises Opaque Instruments; Opaque Instruments raises Behavioral Herding; Opaque Instruments raises Coordination Failure; Market Structure raises Coordination Failure. Loops: R1 — Herding-instrument bubble.",
+      "after": "These three elements didn't just coexist; they coordinated in a destructive feed"
+    },
+    {
+      "label": "4.5",
+      "src": "/figures/04/06-pni-healing-coordination.svg",
+      "width": 635,
+      "height": 601,
+      "title": "Psychoneuroimmunology healing three-body",
+      "caption": "Myss's healing frame grounded in psychoneuroimmunology: physical treatment, emotional healing and spiritual transformation coordinate through immune function. Meaning and lower stress strengthen immunity, which supports recovery, which in turn supports emotional work: a virtuous cycle that chronic stress runs in reverse.",
+      "alt": "Causal diagram. Myss's healing frame grounded in psychoneuroimmunology: physical treatment, emotional healing and spiritual transformation coordinate through immune function. Meaning and lower stress strengthen immunity, which supports recovery, which in turn supports emotional work: a virtuous cycle that chronic stress runs in reverse. Nodes: Physical Treatment, Durable Healing, Emotional Healing, Immune Function, Spiritual Transformation. Links: Physical Treatment raises Durable Healing; Immune Function raises Durable Healing; Emotional Healing raises Immune Function; Spiritual Transformation raises Immune Function; Durable Healing raises Emotional Healing. Loops: R1 — Virtuous healing cycle.",
+      "after": "The absence of any one element creates a drag on the entire system, making true,"
+    }
+  ],
+  "05": [
+    {
+      "label": "5.1",
+      "src": "/figures/05/01-neural-interface-coupling.svg",
+      "width": 718,
+      "height": 649,
+      "title": "Neural interface three-body coupling",
+      "caption": "Brain, interface, and AI learn each other over weeks. Bidirectional adaptation produces hybrid agency that neither party could achieve alone; the body schema expands to include the device.",
+      "alt": "Causal diagram. Brain, interface, and AI learn each other over weeks. Bidirectional adaptation produces hybrid agency that neither party could achieve alone; the body schema expands to include the device. Nodes: Neural Intent, Interface Decoding, Device Action, Coordination Learning. Missing from the system: Body Schema. Links: Neural Intent raises Interface Decoding; Interface Decoding raises Device Action; Device Action raises Coordination Learning; Coordination Learning raises Neural Intent; Coordination Learning raises Interface Decoding. Loops: R1 — Mutual adaptation.",
+      "after": "Result: Control that feels natural rather than mechanical, because it emerges fr"
+    },
+    {
+      "label": "5.2",
+      "src": "/figures/05/02-binary-deployment-failure.svg",
+      "width": 706,
+      "height": 610,
+      "title": "Binary AI deployment failure mode",
+      "caption": "Treating human-AI interaction as a two-body problem optimizes technical capability against user task while ignoring the latent coordination context, producing the 'brilliant tech, abandoned system' pattern.",
+      "alt": "Causal diagram. Treating human-AI interaction as a two-body problem optimizes technical capability against user task while ignoring the latent coordination context, producing the 'brilliant tech, abandoned system' pattern. Nodes: AI Capability, User Task, Deployment Outcome. Missing from the system: Coordination Context. Links: AI Capability raises Deployment Outcome; User Task raises Deployment Outcome.",
+      "after": "The coordination learning process unfolds over months: initially, the patient le"
+    },
+    {
+      "label": "5.3",
+      "src": "/figures/05/04-virtue-ethics-moderation.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Content moderation: AI, judgment, community",
+      "caption": "The content-moderation case study: AI detection flags at scale, human moderators judge in context, community context supplies norms. Community outcomes feed back into AI training and human guidelines, a balancing loop against runaway optimisation of a single objective.",
+      "alt": "Causal diagram. The content-moderation case study: AI detection flags at scale, human moderators judge in context, community context supplies norms. Community outcomes feed back into AI training and human guidelines, a balancing loop against runaway optimisation of a single objective. Nodes: AI Detection, Human Judgment, Community Context, Ethical Outcome, Shared Feedback. Links: AI Detection raises Human Judgment; Human Judgment raises Ethical Outcome; Community Context raises Human Judgment; Ethical Outcome raises Shared Feedback; Shared Feedback reduces AI Detection; Shared Feedback raises Human Judgment. Loops: B1 — Outcome correction.",
+      "after": "AI flags content based on patterns. Human moderators judge in context. Community"
+    },
+    {
+      "label": "5.4",
+      "src": "/figures/05/03-attention-economy-trap.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Attention economy coordination trap",
+      "caption": "Harris's three-body analysis of the Like button: platform design coordinates individual psychology with social dynamics to produce performance culture and polarization. A reinforcing loop that individual-level analysis cannot see.",
+      "alt": "Causal diagram. Harris's three-body analysis of the Like button: platform design coordinates individual psychology with social dynamics to produce performance culture and polarization. A reinforcing loop that individual-level analysis cannot see. Nodes: Engagement Design, User Validation Seeking, Performative Content, Network Amplification, Authentic Connection. Links: Engagement Design raises User Validation Seeking; User Validation Seeking raises Performative Content; Performative Content raises Network Amplification; Network Amplification raises Engagement Design; Performative Content reduces Authentic Connection. Loops: R1 — Engagement ratchet.",
+      "after": "Implementing these principles is a three-body coordination problem, far harder t"
+    },
+    {
+      "label": "5.5",
+      "src": "/figures/05/05-wikipedia-collective-intelligence.svg",
+      "width": 625,
+      "height": 601,
+      "title": "Wikipedia collective intelligence",
+      "caption": "Wales and Pentland converge: collective intelligence emerges when individual contribution, platform technology and community norms coordinate. A bad edit is tracked, noticed and reverted, which improves both the content and the norms; low barriers and good norms sustain participation.",
+      "alt": "Causal diagram. Wales and Pentland converge: collective intelligence emerges when individual contribution, platform technology and community norms coordinate. A bad edit is tracked, noticed and reverted, which improves both the content and the norms; low barriers and good norms sustain participation. Nodes: Individual Contribution, Knowledge Quality, Bad Edit Pressure, Community Norms, Platform Affordances. Links: Platform Affordances raises Individual Contribution; Individual Contribution raises Knowledge Quality; Bad Edit Pressure reduces Knowledge Quality; Community Norms reduces Bad Edit Pressure; Knowledge Quality raises Community Norms; Community Norms raises Individual Contribution. Loops: R1 — Self-correcting norms; R2 — Virtuous participation.",
+      "after": "The \"coordination magic\" happens when a bad edit occurs: technology tracks it, t"
+    }
+  ],
+  "06": [
+    {
+      "label": "6.1",
+      "src": "/figures/06/01-uber-classification-failure.svg",
+      "width": 743,
+      "height": 649,
+      "title": "Uber crash: perception without awareness",
+      "caption": "The Tempe Uber AV had perception and processing but no third-body awareness. Repeated reclassification plus a suppression zone delayed braking until impact.",
+      "alt": "Causal diagram. The Tempe Uber AV had perception and processing but no third-body awareness. Repeated reclassification plus a suppression zone delayed braking until impact. Nodes: Sensor Perception, Classifier Processing, Suppression Zone, Emergency Braking. Missing from the system: Contextual Awareness. Links: Sensor Perception raises Classifier Processing; Classifier Processing raises Suppression Zone; Suppression Zone reduces Emergency Braking.",
+      "after": "The National Transportation Safety Board investigation peeled back layers of tec"
+    },
+    {
+      "label": "6.2",
+      "src": "/figures/06/02-russell-alignment-loop.svg",
+      "width": 716,
+      "height": 649,
+      "title": "Russell's alignment three-body loop",
+      "caption": "Raw capability optimizing a stated objective diverges from true intent (King Midas). Inverse reinforcement learning closes a balancing loop: capability observes behavior, infers values, updates the objective.",
+      "alt": "Causal diagram. Raw capability optimizing a stated objective diverges from true intent (King Midas). Inverse reinforcement learning closes a balancing loop: capability observes behavior, infers values, updates the objective. Nodes: Ai Capability, Stated Objective, Midas Divergence, Inferred Values. Missing from the system: Human Intent. Links: Ai Capability raises Stated Objective; Stated Objective raises Midas Divergence; Midas Divergence raises Inferred Values; Inferred Values reduces Stated Objective. Loops: B1 — Midas correction via IRL.",
+      "after": "Russell's solution through Inverse Reinforcement Learning—AI that infers human v"
+    },
+    {
+      "label": "6.3",
+      "src": "/figures/06/03-gebru-injustice-amplification.svg",
+      "width": 739,
+      "height": 649,
+      "title": "Gebru: technically fair, socially unjust",
+      "caption": "Gebru's justice problem: a technically fair model (the accuracy gap closed) coordinates with biased deployment in over-policed communities, so the improvement makes surveillance more efficient and wrongful arrests more likely. The missing third body is coordination of technical development with social justice and lived experience.",
+      "alt": "Causal diagram. Gebru's justice problem: a technically fair model (the accuracy gap closed) coordinates with biased deployment in over-policed communities, so the improvement makes surveillance more efficient and wrongful arrests more likely. The missing third body is coordination of technical development with social justice and lived experience. Nodes: Technical Accuracy, Disparate Harm, Biased Deployment, Surveillance Efficiency. Missing from the system: Justice Coordination. Links: Technical Accuracy raises Surveillance Efficiency; Biased Deployment raises Surveillance Efficiency; Surveillance Efficiency raises Disparate Harm.",
+      "after": "Gebru's framework insists that the solution is not better algorithms. It is coor"
+    },
+    {
+      "label": "6.4",
+      "src": "/figures/06/04-crawford-material-stack.svg",
+      "width": 734,
+      "height": 610,
+      "title": "Crawford: AI's material three-body stack",
+      "caption": "Every AI system coordinates three material bodies: resource extraction, computational infrastructure and human labor. The output marketed as 'intelligence' externalizes environmental and social costs; with minimal accountability the machines do exactly what they are told while the human and ecological context is devastated.",
+      "alt": "Causal diagram. Every AI system coordinates three material bodies: resource extraction, computational infrastructure and human labor. The output marketed as 'intelligence' externalizes environmental and social costs; with minimal accountability the machines do exactly what they are told while the human and ecological context is devastated. Nodes: Resource Extraction, Compute Infrastructure, Externalized Costs, AI Output, Human Labor. Missing from the system: Material Accountability. Links: Resource Extraction raises Compute Infrastructure; Compute Infrastructure raises AI Output; Human Labor raises AI Output; AI Output raises Externalized Costs.",
+      "after": "Crawford's framework forces us to see AI not as a disembodied brain but as an ex"
+    },
+    {
+      "label": "6.5",
+      "src": "/figures/06/05-consciousness-coordination.svg",
+      "width": 656,
+      "height": 649,
+      "title": "Consciousness as coordination architecture",
+      "caption": "The chapter's synthesis: perception and processing alone yield pattern recognition. Causal understanding coordinates them into contextual awareness, which closes back to reshape perception — consciousness as emergent loop, not component.",
+      "alt": "Causal diagram. The chapter's synthesis: perception and processing alone yield pattern recognition. Causal understanding coordinates them into contextual awareness, which closes back to reshape perception — consciousness as emergent loop, not component. Nodes: Pattern Recognition, Causal Understanding, Contextual Awareness, Grounded Action. Links: Pattern Recognition raises Causal Understanding; Causal Understanding raises Contextual Awareness; Contextual Awareness raises Grounded Action; Grounded Action raises Pattern Recognition. Loops: R1 — Consciousness loop.",
+      "after": "Nine perspectives converge on a single insight: consciousness is not a feature y"
+    }
+  ],
+  "07": [
+    {
+      "label": "7.1",
+      "src": "/figures/07/01-generative-design-three-body.svg",
+      "width": 649,
+      "height": 649,
+      "title": "Generative design three-body system",
+      "caption": "GM seat bracket: engineer intent, AI exploration, and manufacturing reality coordinate iteratively to converge on designs no single body could imagine.",
+      "alt": "Causal diagram. GM seat bracket: engineer intent, AI exploration, and manufacturing reality coordinate iteratively to converge on designs no single body could imagine. Nodes: Engineer Intent, AI Exploration, Manufacturing Reality, Emergent Design. Links: Engineer Intent raises AI Exploration; AI Exploration raises Manufacturing Reality; Manufacturing Reality raises Engineer Intent; Engineer Intent raises Emergent Design; AI Exploration raises Emergent Design; Manufacturing Reality raises Emergent Design. Loops: R1 — Coordination iteration.",
+      "after": "The solution emerged from coordinating human judgment with AI exploration with m"
+    },
+    {
+      "label": "7.2",
+      "src": "/figures/07/02-oxman-silk-pavilion.svg",
+      "width": 656,
+      "height": 649,
+      "title": "Silk Pavilion: material ecology coordination",
+      "caption": "Oxman's Silk Pavilion coordinates biological fabricators, computational scaffold design, and robotic fabrication—form emerges from the coordination rather than control.",
+      "alt": "Causal diagram. Oxman's Silk Pavilion coordinates biological fabricators, computational scaffold design, and robotic fabrication—form emerges from the coordination rather than control. Nodes: Biological Agents, Computational Design, Robotic Fabrication, Emergent Structure. Links: Computational Design raises Robotic Fabrication; Robotic Fabrication raises Biological Agents; Biological Agents raises Computational Design; Biological Agents raises Emergent Structure; Robotic Fabrication raises Emergent Structure. Loops: R1 — Bio-computational loop.",
+      "after": "Oxman argues that traditional design fails by separating these elements, optimiz"
+    },
+    {
+      "label": "7.3",
+      "src": "/figures/07/03-vqe-hybrid-loop.svg",
+      "width": 626,
+      "height": 601,
+      "title": "VQE hybrid quantum-classical loop",
+      "caption": "Variational Quantum Eigensolver coordinates classical optimization with short-lived quantum measurements: the decoherence constraint forces hybrid coordination rather than pure quantum computation.",
+      "alt": "Causal diagram. Variational Quantum Eigensolver coordinates classical optimization with short-lived quantum measurements: the decoherence constraint forces hybrid coordination rather than pure quantum computation. Nodes: Classical Proposal, Quantum Measurement, Classical Optimization, Decoherence Limit, Ground State Estimate. Links: Classical Proposal raises Quantum Measurement; Quantum Measurement raises Classical Optimization; Classical Optimization raises Classical Proposal; Decoherence Limit reduces Quantum Measurement; Classical Optimization raises Ground State Estimate. Loops: R1 — Variational convergence.",
+      "after": "This is three-body computational intelligence: classical stability coordinating "
+    },
+    {
+      "label": "7.4",
+      "src": "/figures/07/05-mlops-production-gap.svg",
+      "width": 732,
+      "height": 649,
+      "title": "MLOps production gap: missing coordination",
+      "caption": "Chip Huyen's 70% failure pattern: model development, system requirements, and business reality are optimized independently. Without a coordination layer, accuracy gains don't translate to production value.",
+      "alt": "Causal diagram. Chip Huyen's 70% failure pattern: model development, system requirements, and business reality are optimized independently. Without a coordination layer, accuracy gains don't translate to production value. Nodes: Model Development, System Requirements, Business Reality, Production Value. Missing from the system: Coordination Layer. Links: Model Development raises Production Value; System Requirements raises Production Value; Business Reality raises Production Value; Model Development reduces System Requirements.",
+      "after": "Huyen points out that 70% of ML projects never make it to production because the"
+    }
+  ],
+  "08": [
+    {
+      "label": "8.1",
+      "src": "/figures/08/01-intelligence-explosion.svg",
+      "width": 643,
+      "height": 601,
+      "title": "Intelligence explosion as three-body recursion",
+      "caption": "Recursive self-improvement is not one body but three: human intent, AI capability and the coordination layer that preserves alignment. Capability that grows faster than coordination erodes the layer that keeps values aligned (Tegmark's uncoordinated explosion); coordination is the check on runaway recursion.",
+      "alt": "Causal diagram. Recursive self-improvement is not one body but three: human intent, AI capability and the coordination layer that preserves alignment. Capability that grows faster than coordination erodes the layer that keeps values aligned (Tegmark's uncoordinated explosion); coordination is the check on runaway recursion. Nodes: Human Intent, AI Capability, Coordination Layer, Value Alignment, Aligned Superintelligence. Links: Human Intent raises Coordination Layer; AI Capability reduces Coordination Layer; Coordination Layer raises Value Alignment; Value Alignment raises AI Capability; Value Alignment raises Aligned Superintelligence. Loops: B1 — Coordination brake.",
+      "after": "This, my friends, is three-body intelligence recursion: not optimizing capabilit"
+    },
+    {
+      "label": "8.2",
+      "src": "/figures/08/03-hassabis-agi.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Hassabis: AGI as coordination of capabilities",
+      "caption": "General intelligence is not a single monolithic skill. Specialized capabilities plus meta-learning plus goal-directed behavior are bound together by a coordination system that decides which capability to apply when.",
+      "alt": "Causal diagram. General intelligence is not a single monolithic skill. Specialized capabilities plus meta-learning plus goal-directed behavior are bound together by a coordination system that decides which capability to apply when. Nodes: Specialized Capabilities, Meta Learning, Goal Directed Behavior, Coordination System, General Intelligence. Links: Specialized Capabilities raises Coordination System; Goal Directed Behavior raises Coordination System; Coordination System raises Meta Learning; Meta Learning raises Specialized Capabilities; Coordination System raises General Intelligence. Loops: R1 — Coordinated transfer flywheel.",
+      "after": "His vision is an AGI that coordinates with human intelligence to solve scientifi"
+    },
+    {
+      "label": "8.3",
+      "src": "/figures/08/02-bostrom-control.svg",
+      "width": 698,
+      "height": 649,
+      "title": "Bostrom: orthogonality and the control problem",
+      "caption": "Intelligence and goals are orthogonal. Instrumental convergence pushes almost any goal toward self-preservation and resource acquisition, which defeats boxing, stunting and tripwires. Only approaches that act on the goal structure itself (value learning and corrigibility) coordinate capability with human values.",
+      "alt": "Causal diagram. Intelligence and goals are orthogonal. Instrumental convergence pushes almost any goal toward self-preservation and resource acquisition, which defeats boxing, stunting and tripwires. Only approaches that act on the goal structure itself (value learning and corrigibility) coordinate capability with human values. Nodes: Corrigibility, Goal Structure, Value Learning, Existential Outcome, Instrumental Convergence, Intelligence Capability. Missing from the system: True Human Values. Links: Intelligence Capability raises Instrumental Convergence; Goal Structure raises Instrumental Convergence; Instrumental Convergence reduces Existential Outcome; Value Learning raises Goal Structure; Corrigibility raises Goal Structure.",
+      "after": "The urgency, he impresses upon us, is that we may have decades to solve this. On"
+    },
+    {
+      "label": "8.4",
+      "src": "/figures/08/04-seti-coordination-signatures.svg",
+      "width": 735,
+      "height": 610,
+      "title": "SETI: searching for coordination signatures",
+      "caption": "Tarter and Seager reframe SETI: stop listening for intentional radio messages and start looking for the byproducts of intelligence coordinating with physical laws. Human hypothesis + AI pattern detection + physical reality form the three-body search.",
+      "alt": "Causal diagram. Tarter and Seager reframe SETI: stop listening for intentional radio messages and start looking for the byproducts of intelligence coordinating with physical laws. Human hypothesis + AI pattern detection + physical reality form the three-body search. Nodes: Human Hypothesis, AI Pattern Detection, Physical Reality, Coordination Signatures, Intelligence Detection. Missing from the system: Alien Coordination Mode. Links: Human Hypothesis raises AI Pattern Detection; Physical Reality raises Coordination Signatures; AI Pattern Detection raises Coordination Signatures; Coordination Signatures raises Intelligence Detection; Intelligence Detection raises Human Hypothesis. Loops: R1 — Hypothesis-detection flywheel.",
+      "after": "The implication, she suggests, is that intelligence might be common, but coordin"
+    },
+    {
+      "label": "8.5",
+      "src": "/figures/08/05-dark-forest.svg",
+      "width": 743,
+      "height": 610,
+      "title": "Liu Cixin: dark forest as coordination failure",
+      "caption": "Light-speed delay and unknowable values raise perceived threat, which triggers preemption and hiding. Silence then feeds suspicion in turn: a self-reinforcing trap of stable silence, not stable peace. A coordination architecture is the only escape.",
+      "alt": "Causal diagram. Light-speed delay and unknowable values raise perceived threat, which triggers preemption and hiding. Silence then feeds suspicion in turn: a self-reinforcing trap of stable silence, not stable peace. A coordination architecture is the only escape. Nodes: Communication Delay, Value Unknowability, Perceived Threat, Preemptive Posture, Cosmic Silence. Missing from the system: Coordination Architecture. Links: Communication Delay raises Perceived Threat; Value Unknowability raises Perceived Threat; Perceived Threat raises Preemptive Posture; Preemptive Posture raises Cosmic Silence; Cosmic Silence raises Perceived Threat; Coordination Architecture reduces Perceived Threat; Coordination Architecture reduces Cosmic Silence. Loops: R1 — Silence begets silence.",
+      "after": "The three-body lesson, he imparts, is that complexity creates chaos, but coordin"
+    },
+    {
+      "label": "8.6",
+      "src": "/figures/08/06-consciousness-coordination.svg",
+      "width": 829,
+      "height": 610,
+      "title": "Consciousness as coordination (Chalmers, Seth, Nagel)",
+      "caption": "The hard problem becomes a coordination problem: physical processes and subjective experience are bound by prediction-error coordination (Seth) under psychophysical laws (Chalmers), two aspects of one reality (Nagel). Perception is the coordination, not what follows it, which is what current AI lacks.",
+      "alt": "Causal diagram. The hard problem becomes a coordination problem: physical processes and subjective experience are bound by prediction-error coordination (Seth) under psychophysical laws (Chalmers), two aspects of one reality (Nagel). Perception is the coordination, not what follows it, which is what current AI lacks. Nodes: Physical Processes, Prediction Error, Unified Awareness. Missing from the system: Subjective Experience, Psychophysical Laws. Links: Physical Processes raises Prediction Error; Prediction Error raises Unified Awareness; Subjective Experience raises Unified Awareness; Unified Awareness raises Physical Processes. Loops: R1 — Meta-coordination loop.",
+      "after": "The three-body insight, he offers, is that mind is not physical OR phenomenal—it"
+    }
+  ],
+  "09": [
+    {
+      "label": "9.1",
+      "src": "/figures/09/01-stanford-ai-deployment.svg",
+      "width": 750,
+      "height": 649,
+      "title": "Stanford AI deployment three-body failure",
+      "caption": "A 95%-accurate pneumonia diagnostic AI was shut down six months after deployment. The model worked; the coordination with radiologist workflow and hospital operations did not. Optimizing one body (capability) while ignoring the others produced resistance, liability ambiguity, and reimbursement refusal.",
+      "alt": "Causal diagram. A 95%-accurate pneumonia diagnostic AI was shut down six months after deployment. The model worked; the coordination with radiologist workflow and hospital operations did not. Optimizing one body (capability) while ignoring the others produced resistance, liability ambiguity, and reimbursement refusal. Nodes: AI Capability, Radiologist Workflow, Hospital Operations, Deployment Outcome. Missing from the system: Integration Coordination. Links: AI Capability reduces Radiologist Workflow; AI Capability reduces Hospital Operations; Radiologist Workflow raises Deployment Outcome; Hospital Operations raises Deployment Outcome.",
+      "after": "The technology worked. The coordination failed."
+    },
+    {
+      "label": "9.2",
+      "src": "/figures/09/02-chollet-death-spiral.svg",
+      "width": 756,
+      "height": 649,
+      "title": "Chollet coordination death spiral",
+      "caption": "Chollet's three bodies of technical debt form a reinforcing loop: more system complexity creates more integration overhead, which raises cognitive load, which spawns still more complexity. Good abstractions act as a latent balancing force that breaks the spiral when present.",
+      "alt": "Causal diagram. Chollet's three bodies of technical debt form a reinforcing loop: more system complexity creates more integration overhead, which raises cognitive load, which spawns still more complexity. Good abstractions act as a latent balancing force that breaks the spiral when present. Nodes: System Complexity, Integration Overhead, Cognitive Load, Innovation Rate. Missing from the system: Coordination Abstractions. Links: System Complexity raises Integration Overhead; Integration Overhead raises Cognitive Load; Cognitive Load raises System Complexity; Cognitive Load reduces Innovation Rate; Coordination Abstractions reduces Integration Overhead; Coordination Abstractions reduces Cognitive Load. Loops: R1 — Coordination death spiral.",
+      "after": "Chollet explained that as systems grow, coordination overhead dominates. More co"
+    },
+    {
+      "label": "9.3",
+      "src": "/figures/09/03-yang-automation-distribution.svg",
+      "width": 750,
+      "height": 649,
+      "title": "Automation–distribution coordination break",
+      "caption": "Automation raises productivity, but wages tie income to jobs. As routine tasks and whole jobs are automated, income falls even as abundance grows (the productivity-wage gap). The institutions that once distributed gains broadly (unions, progressive taxation, minimum wage) are the missing coordination layer.",
+      "alt": "Causal diagram. Automation raises productivity, but wages tie income to jobs. As routine tasks and whole jobs are automated, income falls even as abundance grows (the productivity-wage gap). The institutions that once distributed gains broadly (unions, progressive taxation, minimum wage) are the missing coordination layer. Nodes: Automation Capability, Economic Security, Wage Income, Job Displacement. Missing from the system: Distribution Institutions. Links: Automation Capability raises Job Displacement; Job Displacement reduces Wage Income; Wage Income raises Economic Security; Automation Capability raises Economic Security.",
+      "after": "The technology works. The economy breaks."
+    },
+    {
+      "label": "9.4",
+      "src": "/figures/09/05-raworth-doughnut-overshoot.svg",
+      "width": 752,
+      "height": 649,
+      "title": "Raworth doughnut overshoot and shortfall",
+      "caption": "GDP growth optimises one metric without coordinating with ecology or wellbeing: it pushes the economy through the ecological ceiling while the social floor stays unmet. Regenerative, distributive economics is the missing coordination layer that would land the economy inside the doughnut.",
+      "alt": "Causal diagram. GDP growth optimises one metric without coordinating with ecology or wellbeing: it pushes the economy through the ecological ceiling while the social floor stays unmet. Regenerative, distributive economics is the missing coordination layer that would land the economy inside the doughnut. Nodes: GDP Growth, Ecological Overshoot, Social Shortfall, Human Flourishing. Missing from the system: Regenerative Distribution. Links: GDP Growth raises Ecological Overshoot; Ecological Overshoot reduces Human Flourishing; Social Shortfall reduces Human Flourishing.",
+      "after": "Raworth sees AI as an opportunity to enable coordination at scale—optimizing res"
+    },
+    {
+      "label": "9.5",
+      "src": "/figures/09/04-turkle-conversation-erosion.svg",
+      "width": 723,
+      "height": 649,
+      "title": "Turkle conversation erosion loop",
+      "caption": "Technology mediation trains fragmented attention, which erodes the skills of face-to-face conversation and, with them, empathy: Turkle's conversation crisis and empathy deficit. New cultural norms (device-free zones, intentional use) are the missing coordination.",
+      "alt": "Causal diagram. Technology mediation trains fragmented attention, which erodes the skills of face-to-face conversation and, with them, empathy: Turkle's conversation crisis and empathy deficit. New cultural norms (device-free zones, intentional use) are the missing coordination. Nodes: Mediated Communication, Fragmented Attention, Conversation Skill, Empathy Capacity. Missing from the system: Cultural Norms. Links: Mediated Communication raises Fragmented Attention; Fragmented Attention reduces Conversation Skill; Conversation Skill raises Empathy Capacity.",
+      "after": "Turkle explained that technology undermines connection when it mediates relation"
+    }
+  ],
+  "x": [
+    {
+      "label": "X.1",
+      "src": "/figures/x/chX-01-three-ware-resolution.svg",
+      "width": 649,
+      "height": 649,
+      "title": "Three Ware Problem: Hardware ↔ Software ↔ Knowware",
+      "caption": "Hardware (substrate) and software (pattern) coordinate consciously; what emerges is knowware, not a third thing added to the first two but the awareness that arises when hardware running software reflects on its own coordination. That awareness feeds back into both.",
+      "alt": "Causal diagram. Hardware (substrate) and software (pattern) coordinate consciously; what emerges is knowware, not a third thing added to the first two but the awareness that arises when hardware running software reflects on its own coordination. That awareness feeds back into both. Nodes: Hardware Substrate, Software Patterns, Conscious Coordination, Emergent Knowware. Links: Hardware Substrate raises Conscious Coordination; Software Patterns raises Conscious Coordination; Conscious Coordination raises Emergent Knowware; Emergent Knowware raises Software Patterns; Emergent Knowware raises Hardware Substrate. Loops: R1 — Knowware self-lift; R2 — Pattern evolution.",
+      "after": "At every scale, the same architecture. At every scale, the same resolution: not "
+    }
+  ]
+}

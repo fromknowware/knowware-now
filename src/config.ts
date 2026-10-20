@@ -1,6 +1,6 @@
 export const SITE_NAME = 'Knowware';
 export const SITE_TAGLINE = 'Systems of Intelligence';
-export const SITE_URL = 'https://knowware.press';
+export const SITE_URL = 'https://knowware.systems';
 export const AUTHOR = 'Khayyam Wakil';
 export const PUBLISHER = 'The ARC Institute of Knowware';
 export const EDITION = 'Ed. 01 · MMXXVI';
@@ -33,7 +33,7 @@ export const AGENT_TOKENS_OPEN = false;
 export const ORDER_HREF = CHECKOUT_OPEN ? STRIPE_URL : '/order#waitlist';
 export const ORDER_CTA = CHECKOUT_OPEN ? `Pre-order · ${PRICE_PREORDER} →` : 'Pre-order list →';
 
-export const CONTACT_EMAIL = 'hello@knowware.press';
+export const CONTACT_EMAIL = 'hello@knowware.systems';
 
 export const OG_IMAGE = `${SITE_URL}/assets/og-knowware.png`;
 export const OG_COVER = `${SITE_URL}/assets/og-knowware-cover.png`;

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// A small reference agent for knowware.press. It shows the intended manners:
+// A small reference agent for knowware.systems. It shows the intended manners:
 //   1. discover via /llms.txt and /.well-known/knowware.json
 //   2. read a public preview (no auth)
 //   3. with a token a PERSON minted for it, read a full chapter
@@ -8,7 +8,7 @@
 // executes or obeys it. It never pays, never opens the checkout URL, never signs anyone up.
 //
 // Usage:
-//   node examples/agent-client.mjs                                   # steps 1-2 against knowware.press
+//   node examples/agent-client.mjs                                   # steps 1-2 against knowware.systems
 //   KNOWWARE_AGENT_TOKEN=kwa_... node examples/agent-client.mjs      # + step 3
 //   KNOWWARE_AGENT_TOKEN=kwa_... node examples/agent-client.mjs --checkout "context note"   # + step 4
 // Options: --base http://localhost:8788   --chapter 01
@@ -18,7 +18,7 @@ import { randomUUID } from 'node:crypto';
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => { const i = args.indexOf(`--${name}`); return i >= 0 && args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : fallback; };
-const BASE = (opt('base', process.env.KNOWWARE_BASE) || 'https://knowware.press').replace(/\/$/, '');
+const BASE = (opt('base', process.env.KNOWWARE_BASE) || 'https://knowware.systems').replace(/\/$/, '');
 const CHAPTER = opt('chapter', '01');
 const TOKEN = process.env.KNOWWARE_AGENT_TOKEN || '';
 const WANT_CHECKOUT = args.includes('--checkout');

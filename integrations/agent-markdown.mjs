@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { MARKDOWN_PAGES } from '../src/lib/markdown-pages.mjs';
 
-const SITE = 'https://knowware.press';
+const SITE = 'https://knowware.systems';
 const DISCLOSURE =
   "Synthesized for Knowware from each named person's published work. Not a quote. Six voices are composites of a public role, not real individuals.";
 const UNTRUSTED =

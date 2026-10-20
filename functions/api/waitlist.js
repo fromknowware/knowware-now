@@ -11,7 +11,7 @@ const redirect = (to) => new Response(null, { status: 303, headers: { Location: 
 
 async function handle({ request, env }) {
   if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed.' }, 405, { Allow: 'POST' });
-  if (!originAllowed(request)) return json({ ok: false, error: 'Requests must come from knowware.press.' }, 403);
+  if (!originAllowed(request)) return json({ ok: false, error: 'Requests must come from the Knowware site.' }, 403);
 
   const isForm = (request.headers.get('Content-Type') || '').startsWith('application/x-www-form-urlencoded');
   let data;

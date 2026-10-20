@@ -3,6 +3,8 @@
 // Optional: if RESEND_API_KEY and CLAIM_NOTIFY_TO are set as Pages secrets,
 // also emails a plain-text notification.
 
+import { logResend } from '../../lib/server/resend.js';
+
 const MAX_BODY_BYTES = 8 * 1024;
 const RATE_LIMIT = 5;
 const RATE_WINDOW_S = 3600;
@@ -17,7 +19,7 @@ const FIELDS = {
 };
 
 const ALLOWED_ORIGINS = [
-  /^https:\/\/(www\.)?knowware\.press$/,
+  /^https:\/\/(www\.)?knowware\.(systems|press)$/,
   /^https:\/\/([a-z0-9-]+\.)?knowware-book\.pages\.dev$/,
   /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/,
 ];
@@ -58,7 +60,7 @@ async function rateLimited(env, request) {
 async function handlePost({ request, env }) {
   const origin = request.headers.get('Origin') || '';
   if (!ALLOWED_ORIGINS.some((re) => re.test(origin))) {
-    return json({ ok: false, error: 'Requests must come from knowware.press.' }, 403);
+    return json({ ok: false, error: 'Requests must come from the Knowware site.' }, 403);
   }
 
   if (!(request.headers.get('Content-Type') || '').startsWith('application/json')) {
@@ -110,7 +112,7 @@ async function handlePost({ request, env }) {
   if (env.RESEND_API_KEY && env.CLAIM_NOTIFY_TO) {
     // Fail-soft: the claim is already stored; email is best-effort.
     try {
-      await fetch('https://api.resend.com/emails', {
+      const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${env.RESEND_API_KEY}`,
@@ -134,8 +136,10 @@ async function handlePost({ request, env }) {
           ].join('\n'),
         }),
       });
-    } catch {
+      await logResend('claim notification', res);
+    } catch (err) {
       // stored in KV regardless
+      await logResend('claim notification', null, err);
     }
   }
 
