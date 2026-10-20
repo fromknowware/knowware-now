@@ -3,7 +3,7 @@ import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-600.css';
 import '../styles/kw.css';
-import { SITE_NAME, SITE_TAGLINE, SITE_SUBTITLE, SITE_URL, PUBLISHER, OG_IMAGE, ORDER_HREF, ORDER_CTA, PRICE_SAVING } from '../config';
+import { SITE_NAME, SITE_TAGLINE, SITE_SUBTITLE, SITE_URL, PUBLISHER, PUBLISHER_DESCRIPTOR, OG_IMAGE, ORDER_HREF, ORDER_CTA, PRICE_SAVING } from '../config';
 import { bookNode } from '../lib/book-jsonld';
 import { markdownHrefFor } from '../lib/markdown-pages.mjs';
 
@@ -103,7 +103,7 @@ const current = NAV.find((n) => isActive(n.href));
     "@context": "https://schema.org",
     "@graph": [
       bookNode(),
-      { "@type": "WebSite", "@id": `${SITE_URL}/#website`, "name": SITE_NAME, "url": SITE_URL, "inLanguage": "en", "publisher": { "@type": "Organization", "name": PUBLISHER } }
+      { "@type": "WebSite", "@id": `${SITE_URL}/#website`, "name": SITE_NAME, "url": SITE_URL, "inLanguage": "en", "publisher": { "@type": "Organization", "name": PUBLISHER, "description": PUBLISHER_DESCRIPTOR } }
     ]
   })} />
 

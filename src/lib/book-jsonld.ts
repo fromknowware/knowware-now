@@ -1,4 +1,4 @@
-import { BOOK_TITLE, SITE_URL, AUTHOR, PUBLISHER, OG_IMAGE, CHECKOUT_OPEN } from '../config';
+import { BOOK_TITLE, SITE_URL, AUTHOR, PUBLISHER, PUBLISHER_DESCRIPTOR, OG_IMAGE, CHECKOUT_OPEN } from '../config';
 
 // One description for the Book node on every page. (Base.astro used to pass the
 // page's own description, so the Book's description changed from page to page.)
@@ -17,7 +17,7 @@ export function bookNode(ogImage: string = OG_IMAGE, description: string = BOOK_
     '@id': BOOK_ID,
     name: BOOK_TITLE,
     author: { '@type': 'Person', name: AUTHOR },
-    publisher: { '@type': 'Organization', name: PUBLISHER },
+    publisher: { '@type': 'Organization', name: PUBLISHER, description: PUBLISHER_DESCRIPTOR },
     url: SITE_URL,
     image: ogImage,
     description,
