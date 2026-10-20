@@ -3,7 +3,7 @@ import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-600.css';
 import '../styles/kw.css';
-import { SITE_NAME, SITE_TAGLINE, SITE_URL, PUBLISHER, OG_IMAGE, ORDER_HREF, ORDER_CTA, PRICE_SAVING } from '../config';
+import { SITE_NAME, SITE_TAGLINE, SITE_SUBTITLE, SITE_URL, PUBLISHER, OG_IMAGE, ORDER_HREF, ORDER_CTA, PRICE_SAVING } from '../config';
 import { bookNode } from '../lib/book-jsonld';
 import { markdownHrefFor } from '../lib/markdown-pages.mjs';
 
@@ -27,7 +27,7 @@ const {
   noindex = false,
 } = Astro.props;
 
-const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — ${SITE_TAGLINE}`;
+const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — ${SITE_TAGLINE} ${SITE_SUBTITLE}`;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
 
 const path = Astro.url.pathname;
