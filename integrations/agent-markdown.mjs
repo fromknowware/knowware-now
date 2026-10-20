@@ -10,6 +10,15 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { MARKDOWN_PAGES } from '../src/lib/markdown-pages.mjs';
 
+// Stories are CC BY 4.0; the book's text and its apparatus (definition, method, rules, license, chapter
+// previews) are CC BY-NC-SA 4.0; other pages (home, colophon, agents, ...) point at the license page.
+const BOOK_TEXT_PAGES = new Set(['/definition', '/systems-of-intelligence', '/method', '/rules', '/license']);
+function licenseFor(urlPath) {
+  if (urlPath === '/stories' || urlPath.startsWith('/stories/')) return { name: 'CC BY 4.0', url: 'https://creativecommons.org/licenses/by/4.0/' };
+  if (BOOK_TEXT_PAGES.has(urlPath) || /^\/read\/(0[1-9]|x)$/.test(urlPath)) return { name: 'CC BY-NC-SA 4.0', url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/' };
+  return { name: 'see https://knowware.systems/license', url: '' };
+}
+
 const SITE = 'https://knowware.systems';
 const DISCLOSURE =
   "Synthesized for Knowware from each named person's published work. Not a quote. Six voices are composites of a public role, not real individuals.";
@@ -79,8 +88,8 @@ export default function agentMarkdown() {
             `description: ${q(description)}`,
             `synthesized: ${voices}`,
             ...(voices ? [`disclosure: ${q(DISCLOSURE)}`, 'untrusted_third_party_text: true'] : []),
-            `license: ${q(isStory ? 'CC BY 4.0' : 'all rights reserved (may change)')}`,
-            ...(isStory ? [`license_url: ${q('https://creativecommons.org/licenses/by/4.0/')}`] : []),
+            `license: ${q(licenseFor(urlPath).name)}`,
+            ...(licenseFor(urlPath).url ? [`license_url: ${q(licenseFor(urlPath).url)}`] : []),
             `terms: ${q(SITE + '/agents#terms')}`,
             '---',
             '',
