@@ -5,7 +5,8 @@ export const SITE_SUBTITLE = 'for the 21st Century';
 export const BOOK_TITLE = `${SITE_NAME}: ${SITE_TAGLINE} ${SITE_SUBTITLE}`;
 export const SITE_URL = 'https://knowware.systems';
 export const AUTHOR = 'Khayyam Wakil';
-export const PUBLISHER = 'The ARC Institute of Knowware';
+export const PUBLISHER = 'Knowware Institute';
+export const PUBLISHER_DESCRIPTOR = 'Applied Research in Cybernetics';
 export const EDITION = 'Ed. 01 · MMXXVI';
 
 export const DEADLINE = '2026-12-21T23:59:59-05:00';

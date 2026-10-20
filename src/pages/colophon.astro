@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { AUTHOR, PUBLISHER, SITE_URL } from '../config';
+import { AUTHOR, PUBLISHER, PUBLISHER_DESCRIPTOR, SITE_URL } from '../config';
 ---
 <Base title="Colophon" description="Production notes for Knowware.">
   <section class="kw-section">
@@ -14,7 +14,7 @@ import { AUTHOR, PUBLISHER, SITE_URL } from '../config';
       <em>Knowware: Systems of Intelligence for the 21st Century</em> is a book in the form of a structured intelligence synthesis. Nine chapters. 81 voices. One argument: that coordination, not computation, is the defining problem of our moment.
     </p>
     <p class="kw-body" style="margin-top:16px">
-      Written and constructed by {AUTHOR}. Published by {PUBLISHER}.
+      Written and constructed by {AUTHOR}. Published by {PUBLISHER}, {PUBLISHER_DESCRIPTOR}.
     </p>
     <p class="kw-body" style="margin-top:16px">
       Followed an older address to this book, such as <em>systemsofintelligence.com</em>? See <a href="/old-link" style="color: var(--signal-ink);border-bottom: 1px solid var(--signal-ink)">If you followed an old link</a>.
