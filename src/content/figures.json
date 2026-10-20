@@ -59,6 +59,36 @@
       "caption": "The book's operational template. Every successful coordination follows the same cycle: identify the bodies → design the coordination space → enable emergence → adapt continuously.",
       "alt": "Causal diagram. The book's operational template. Every successful coordination follows the same cycle: identify the bodies → design the coordination space → enable emergence → adapt continuously. Nodes: Identify Bodies, Design Space, Enable Emergence, Adapt. Links: Identify Bodies raises Design Space; Design Space raises Enable Emergence; Enable Emergence raises Adapt; Adapt raises Identify Bodies. Loops: R1 — Coordination learning cycle.",
       "after": "4. Adapt continuously (How does coordination improve over time? How do the eleme"
+    },
+    {
+      "label": "1.7",
+      "src": "/figures/01/12-governance-gap.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Meta-crisis: capability outruns governance",
+      "caption": "Capabilities grow exponentially; governance evolves linearly. The space between the curves is the catastrophe corridor. A new coordination architecture capable of governing exponential technology is what narrows it.",
+      "alt": "Causal diagram. Capabilities grow exponentially; governance evolves linearly. The space between the curves is the catastrophe corridor. A new coordination architecture capable of governing exponential technology is what narrows it. Nodes: Capability Growth, Governance Capacity, Coordination Architecture, Civilizational Risk, Catastrophe Corridor. Links: Capability Growth raises Catastrophe Corridor; Governance Capacity reduces Catastrophe Corridor; Catastrophe Corridor raises Civilizational Risk; Coordination Architecture raises Governance Capacity; Coordination Architecture reduces Civilizational Risk.",
+      "after": "Daniel Schmachtenberger, co-founder of the Consilience Project and the Civilizat"
+    },
+    {
+      "label": "1.8",
+      "src": "/figures/01/11-multipolar-trap.svg",
+      "width": 755,
+      "height": 649,
+      "title": "Multipolar trap: capability race without coordination",
+      "caption": "Every lab, government and company makes a locally rational choice: if we slow down, a competitor will not. Each choice raises the pressure on the others, and the collective result is capability racing ahead of safety and governance. Individual virtue cannot beat these incentives; only a coordination architecture that makes cooperation rational for every actor can.",
+      "alt": "Causal diagram. Every lab, government and company makes a locally rational choice: if we slow down, a competitor will not. Each choice raises the pressure on the others, and the collective result is capability racing ahead of safety and governance. Individual virtue cannot beat these incentives; only a coordination architecture that makes cooperation rational for every actor can. Nodes: Competitive Pressure, Locally Rational Choice, Catastrophe Corridor, Capability Race. Missing from the system: Coordination Architecture. Links: Competitive Pressure raises Locally Rational Choice; Locally Rational Choice raises Capability Race; Capability Race raises Competitive Pressure; Capability Race raises Catastrophe Corridor. Loops: R1 — Multipolar trap.",
+      "after": "The mechanism is what he terms the multipolar trap---a generalized prisoner's di"
+    },
+    {
+      "label": "1.9",
+      "src": "/figures/01/13-three-attractors.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Three attractors: chaos, lock-in, coordination",
+      "caption": "On the current trajectory the capability race ends in one of two catastrophic attractors: multipolar chaos, where the arms race produces civilisational harm, or totalitarian lock-in, where one actor wins and establishes permanent control. The third attractor is a coordination architecture that governs exponential technology while preserving human agency and diversity.",
+      "alt": "Causal diagram. On the current trajectory the capability race ends in one of two catastrophic attractors: multipolar chaos, where the arms race produces civilisational harm, or totalitarian lock-in, where one actor wins and establishes permanent control. The third attractor is a coordination architecture that governs exponential technology while preserving human agency and diversity. Nodes: Capability Race, Multipolar Chaos, Coordination Architecture, Civilizational Outcome, Totalitarian Lock-in. Links: Capability Race raises Multipolar Chaos; Capability Race raises Totalitarian Lock-in; Multipolar Chaos reduces Civilizational Outcome; Totalitarian Lock-in reduces Civilizational Outcome; Coordination Architecture reduces Multipolar Chaos; Coordination Architecture reduces Totalitarian Lock-in; Coordination Architecture raises Civilizational Outcome.",
+      "after": "Schmachtenberger sees two catastrophic attractors on our current trajectory---mu"
     }
   ],
   "02": [
@@ -84,6 +114,26 @@
     },
     {
       "label": "2.3",
+      "src": "/figures/02/07-shannon-channel-coordination.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Shannon: sender, channel, receiver",
+      "caption": "Communication is a three-body system, not a pipe: noise is a property of the channel, so sender and receiver must encode and decode around it. Structured redundancy (error-correcting codes shaped to the channel) is the coordination architecture that lets communication survive noise, up to the channel's capacity.",
+      "alt": "Causal diagram. Communication is a three-body system, not a pipe: noise is a property of the channel, so sender and receiver must encode and decode around it. Structured redundancy (error-correcting codes shaped to the channel) is the coordination architecture that lets communication survive noise, up to the channel's capacity. Nodes: Sender Encoding, Channel Noise, Reliable Communication, Receiver Decoding, Structured Redundancy. Links: Sender Encoding raises Structured Redundancy; Receiver Decoding raises Structured Redundancy; Channel Noise raises Structured Redundancy; Channel Noise reduces Reliable Communication; Structured Redundancy raises Reliable Communication.",
+      "after": "This reframing transforms how we understand redundancy. In the binary view, redu"
+    },
+    {
+      "label": "2.4",
+      "src": "/figures/02/06-oculus-timing-coordination.svg",
+      "width": 721,
+      "height": 610,
+      "title": "Oculus VR: timing coordination, not specs",
+      "caption": "VR made people sick not because displays were low-resolution but because display latency, head tracking and rendering were out of sync, producing a sensory conflict. Oculus coordinated the three timings until the latency was imperceptible.",
+      "alt": "Causal diagram. VR made people sick not because displays were low-resolution but because display latency, head tracking and rendering were out of sync, producing a sensory conflict. Oculus coordinated the three timings until the latency was imperceptible. Nodes: Display Latency, Head Tracking Lag, Sensory Conflict, Rendering Time, Motion Sickness. Missing from the system: Timing Coordination. Links: Display Latency raises Sensory Conflict; Head Tracking Lag raises Sensory Conflict; Rendering Time raises Sensory Conflict; Sensory Conflict raises Motion Sickness.",
+      "after": "Through his work on VR and autonomous systems, Luckey's position is clear: VR is"
+    },
+    {
+      "label": "2.5",
       "src": "/figures/02/05-hft-market-coordination.svg",
       "width": 631,
       "height": 601,
@@ -106,6 +156,16 @@
     },
     {
       "label": "3.2",
+      "src": "/figures/03/07-mcgilchrist-three-part-loop.svg",
+      "width": 751,
+      "height": 649,
+      "title": "McGilchrist: the loop that checks the map",
+      "caption": "Right-hemisphere experience is re-presented by the left hemisphere in a form that can be used, then must be returned to the right hemisphere to be checked against reality. When that loop breaks, confident models go unchecked and the Emissary usurps the Master: confabulation in split-brain patients, hallucination in AI.",
+      "alt": "Causal diagram. Right-hemisphere experience is re-presented by the left hemisphere in a form that can be used, then must be returned to the right hemisphere to be checked against reality. When that loop breaks, confident models go unchecked and the Emissary usurps the Master: confabulation in split-brain patients, hallucination in AI. Nodes: Direct Experience, Reality Check, Confident Confabulation, Abstract Representation. Missing from the system: Contextual Sensitivity. Links: Direct Experience raises Abstract Representation; Abstract Representation raises Reality Check; Reality Check raises Direct Experience; Abstract Representation raises Confident Confabulation; Reality Check reduces Confident Confabulation. Loops: R1 — Experience-representation-reintegration.",
+      "after": "McGilchrist argues this is structurally identical to AI hallucination—a massivel"
+    },
+    {
+      "label": "3.3",
       "src": "/figures/03/02-constitutional-ai-rlaif.svg",
       "width": 624,
       "height": 601,
@@ -115,7 +175,7 @@
       "after": "Constitutional AI works by giving the AI a \"constitution\"—a set of principles (b"
     },
     {
-      "label": "3.3",
+      "label": "3.4",
       "src": "/figures/03/03-jepa-coordination.svg",
       "width": 626,
       "height": 601,
@@ -125,7 +185,7 @@
       "after": "LeCun's Joint-Embedding Predictive Architecture (JEPA) takes this further: inste"
     },
     {
-      "label": "3.4",
+      "label": "3.5",
       "src": "/figures/03/04-alphago-three-networks.svg",
       "width": 624,
       "height": 601,
@@ -135,7 +195,7 @@
       "after": "The genius wasn't any single component. It was the coordination architecture. Th"
     },
     {
-      "label": "3.5",
+      "label": "3.6",
       "src": "/figures/03/05-alphafold-coordination.svg",
       "width": 627,
       "height": 601,
@@ -145,7 +205,7 @@
       "after": "Traditional approaches optimized either evolutionary data OR physical constraint"
     },
     {
-      "label": "3.6",
+      "label": "3.7",
       "src": "/figures/03/06-two-body-brittleness.svg",
       "width": 717,
       "height": 610,
@@ -153,6 +213,16 @@
       "caption": "The chapter's negative case: without a third coordinating body (context, feedback, or meta-learner), a two-body system — rules/data, robot/program, data/model, policy/execution — cannot adapt to novelty and degrades when conditions shift.",
       "alt": "Causal diagram. The chapter's negative case: without a third coordinating body (context, feedback, or meta-learner), a two-body system — rules/data, robot/program, data/model, policy/execution — cannot adapt to novelty and degrades when conditions shift. Nodes: Fixed Rules, Input Data, System Output, Novel Conditions, Brittleness. Missing from the system: Missing Third Body. Links: Fixed Rules raises System Output; Input Data raises System Output; Novel Conditions raises Brittleness; System Output raises Brittleness.",
       "after": "In each case, the absence of a third coordinating element prevents adaptability,"
+    },
+    {
+      "label": "3.8",
+      "src": "/figures/03/08-kurzweil-singularity-merger.svg",
+      "width": 764,
+      "height": 649,
+      "title": "Kurzweil: transcendence through coordination",
+      "caption": "Biological intelligence (consciousness, creativity, values), artificial intelligence (scale, speed, memory, logical consistency) and neural integration (the interfaces that let them coordinate seamlessly) form a three-body system. Coordinated, the merger expands human capability while preserving consciousness, values and identity; whether it serves human flourishing depends on the coordination architecture we build around it.",
+      "alt": "Causal diagram. Biological intelligence (consciousness, creativity, values), artificial intelligence (scale, speed, memory, logical consistency) and neural integration (the interfaces that let them coordinate seamlessly) form a three-body system. Coordinated, the merger expands human capability while preserving consciousness, values and identity; whether it serves human flourishing depends on the coordination architecture we build around it. Nodes: Biological Intelligence, Artificial Intelligence, Neural Integration, Transcendence. Missing from the system: Coordination Architecture. Links: Biological Intelligence raises Neural Integration; Artificial Intelligence raises Neural Integration; Neural Integration raises Transcendence.",
+      "after": "Kurzweil's vision of the Singularity reframes the most consequential technology "
     }
   ],
   "04": [
@@ -168,6 +238,16 @@
     },
     {
       "label": "4.2",
+      "src": "/figures/04/07-sidewalk-labs-death-spiral.svg",
+      "width": 750,
+      "height": 649,
+      "title": "Sidewalk Labs: coordination death spiral",
+      "caption": "Fear travels at internet speed; trust builds at relationship speed. When one body (government, private sector or civil society) retreated, it raised fear and eroded trust among the others, accelerating their retreat. The Quayside project collapsed in 2020: coordination is a living system that has to survive politics, fear and time.",
+      "alt": "Causal diagram. Fear travels at internet speed; trust builds at relationship speed. When one body (government, private sector or civil society) retreated, it raised fear and eroded trust among the others, accelerating their retreat. The Quayside project collapsed in 2020: coordination is a living system that has to survive politics, fear and time. Nodes: Public Fear, Body Retreat, Project Collapse, Civic Trust. Missing from the system: Turbulence-Proof Design. Links: Public Fear raises Body Retreat; Body Retreat reduces Civic Trust; Civic Trust reduces Public Fear; Body Retreat raises Project Collapse. Loops: R1 — Coordination death spiral.",
+      "after": "The project collapsed in 2020. \"It was beautiful on paper. It collapsed because "
+    },
+    {
+      "label": "4.3",
       "src": "/figures/04/02-copenhagen-wheel-coordination.svg",
       "width": 624,
       "height": 601,
@@ -177,7 +257,7 @@
       "after": "In contrast, cities like Amsterdam or Barcelona have successfully integrated \"sm"
     },
     {
-      "label": "4.3",
+      "label": "4.4",
       "src": "/figures/04/03-medical-ai-three-body.svg",
       "width": 725,
       "height": 610,
@@ -187,7 +267,7 @@
       "after": "Another Example: AI in Radiology: Another powerful example is AI in radiology. E"
     },
     {
-      "label": "4.4",
+      "label": "4.5",
       "src": "/figures/04/05-adaptive-markets-2008-collapse.svg",
       "width": 624,
       "height": 601,
@@ -197,7 +277,7 @@
       "after": "These three elements didn't just coexist; they coordinated in a destructive feed"
     },
     {
-      "label": "4.5",
+      "label": "4.6",
       "src": "/figures/04/06-pni-healing-coordination.svg",
       "width": 635,
       "height": 601,
@@ -272,6 +352,16 @@
     },
     {
       "label": "6.2",
+      "src": "/figures/06/06-wiener-anti-aircraft-feedback.svg",
+      "width": 649,
+      "height": 649,
+      "title": "Wiener's predictor: feedback is the third body",
+      "caption": "A gun fired at where the plane was misses again and again. Add feedback, observe the error, adjust, fire again, and the system coordinates with a moving, purposeful target without controlling it. The Uber system lacked exactly this arc closing through awareness.",
+      "alt": "Causal diagram. A gun fired at where the plane was misses again and again. Add feedback, observe the error, adjust, fire again, and the system coordinates with a moving, purposeful target without controlling it. The Uber system lacked exactly this arc closing through awareness. Nodes: Target Maneuver, Aim Error, Feedback Correction, Gun Aim. Links: Target Maneuver raises Aim Error; Aim Error raises Feedback Correction; Feedback Correction raises Gun Aim; Gun Aim reduces Aim Error. Loops: B1 — Cybernetic correction.",
+      "after": "Wiener's solution was feedback—the third body that turns blind shooting into ada"
+    },
+    {
+      "label": "6.3",
       "src": "/figures/06/02-russell-alignment-loop.svg",
       "width": 716,
       "height": 649,
@@ -281,7 +371,7 @@
       "after": "Russell's solution through Inverse Reinforcement Learning—AI that infers human v"
     },
     {
-      "label": "6.3",
+      "label": "6.4",
       "src": "/figures/06/03-gebru-injustice-amplification.svg",
       "width": 739,
       "height": 649,
@@ -291,7 +381,7 @@
       "after": "Gebru's framework insists that the solution is not better algorithms. It is coor"
     },
     {
-      "label": "6.4",
+      "label": "6.5",
       "src": "/figures/06/04-crawford-material-stack.svg",
       "width": 734,
       "height": 610,
@@ -301,7 +391,7 @@
       "after": "Crawford's framework forces us to see AI not as a disembodied brain but as an ex"
     },
     {
-      "label": "6.5",
+      "label": "6.6",
       "src": "/figures/06/05-consciousness-coordination.svg",
       "width": 656,
       "height": 649,
@@ -324,6 +414,16 @@
     },
     {
       "label": "7.2",
+      "src": "/figures/07/07-mapreduce-failure-handling.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Dean's MapReduce: coordinate with failure",
+      "caption": "In a cluster of a thousand machines something is always failing. Instead of preventing every failure, MapReduce coordinates with it: the master re-assigns a crashed machine's task to a healthy node, so the whole web can be processed on unreliable parts.",
+      "alt": "Causal diagram. In a cluster of a thousand machines something is always failing. Instead of preventing every failure, MapReduce coordinates with it: the master re-assigns a crashed machine's task to a healthy node, so the whole web can be processed on unreliable parts. Nodes: Distribution Scale, Machine Failure, Failed Tasks, Task Reassignment, Web-Scale Processing. Links: Distribution Scale raises Machine Failure; Machine Failure raises Failed Tasks; Failed Tasks raises Task Reassignment; Task Reassignment reduces Failed Tasks; Distribution Scale raises Web-Scale Processing; Failed Tasks reduces Web-Scale Processing. Loops: B1 — Failure absorbed.",
+      "after": "First, Computation—what we are trying to do. Second, Distribution—spreading that"
+    },
+    {
+      "label": "7.3",
       "src": "/figures/07/02-oxman-silk-pavilion.svg",
       "width": 656,
       "height": 649,
@@ -333,7 +433,7 @@
       "after": "Oxman argues that traditional design fails by separating these elements, optimiz"
     },
     {
-      "label": "7.3",
+      "label": "7.4",
       "src": "/figures/07/03-vqe-hybrid-loop.svg",
       "width": 626,
       "height": 601,
@@ -343,7 +443,17 @@
       "after": "This is three-body computational intelligence: classical stability coordinating "
     },
     {
-      "label": "7.4",
+      "label": "7.5",
+      "src": "/figures/07/06-mlops-feedback-loop.svg",
+      "width": 649,
+      "height": 649,
+      "title": "MLOps: model, system, continuous improvement",
+      "caption": "Machine learning in production is a three-body problem: model performance, system reliability and continuous improvement. 'Train, deploy, hope' is the two-body version; feedback loops and retraining close the loop so the model keeps getting better against real use.",
+      "alt": "Causal diagram. Machine learning in production is a three-body problem: model performance, system reliability and continuous improvement. 'Train, deploy, hope' is the two-body version; feedback loops and retraining close the loop so the model keeps getting better against real use. Nodes: Model Performance, System Reliability, Production Intelligence, Continuous Improvement. Links: Model Performance raises Production Intelligence; System Reliability raises Production Intelligence; Production Intelligence raises Continuous Improvement; Continuous Improvement raises Model Performance. Loops: R1 — Learning loop.",
+      "after": "MLOps: Coordinate model with infrastructure with continuous learning (three-body"
+    },
+    {
+      "label": "7.6",
       "src": "/figures/07/05-mlops-production-gap.svg",
       "width": 732,
       "height": 649,
@@ -438,6 +548,16 @@
     },
     {
       "label": "9.3",
+      "src": "/figures/09/08-senge-shifting-the-burden.svg",
+      "width": 650,
+      "height": 649,
+      "title": "Senge: shifting the burden",
+      "caption": "A problem produces symptoms; a quick fix relieves the pressure but not the cause, so the motivation to pursue the real solution fades and the capacity to implement it atrophies. Every content filter, alignment patch and guardrail added after deployment follows this pattern.",
+      "alt": "Causal diagram. A problem produces symptoms; a quick fix relieves the pressure but not the cause, so the motivation to pursue the real solution fades and the capacity to implement it atrophies. Every content filter, alignment patch and guardrail added after deployment follows this pattern. Nodes: Problem Symptom, Quick Fix, Solution Capacity, Fundamental Solution. Links: Problem Symptom raises Quick Fix; Quick Fix reduces Problem Symptom; Problem Symptom raises Fundamental Solution; Fundamental Solution reduces Problem Symptom; Quick Fix reduces Solution Capacity; Solution Capacity raises Fundamental Solution. Loops: B1 — Quick fix; B2 — Fundamental solution; R3 — Shifting the burden.",
+      "after": "Senge identified recurring structural patterns—systems archetypes—that appear ac"
+    },
+    {
+      "label": "9.4",
       "src": "/figures/09/03-yang-automation-distribution.svg",
       "width": 750,
       "height": 649,
@@ -447,7 +567,7 @@
       "after": "The technology works. The economy breaks."
     },
     {
-      "label": "9.4",
+      "label": "9.5",
       "src": "/figures/09/05-raworth-doughnut-overshoot.svg",
       "width": 752,
       "height": 649,
@@ -457,7 +577,27 @@
       "after": "Raworth sees AI as an opportunity to enable coordination at scale—optimizing res"
     },
     {
-      "label": "9.5",
+      "label": "9.6",
+      "src": "/figures/09/09-autor-atm-paradox.svg",
+      "width": 624,
+      "height": 601,
+      "title": "Autor: why ATMs raised teller employment",
+      "caption": "ATMs automated the routine part of a teller's day, which freed tellers for advice and relationships and cut the cost of a branch, so banks opened many more branches. Tellers per branch fell but total tellers rose from about 300,000 to 500,000. If a job is almost entirely routine there is no residual human task and it is eliminated.",
+      "alt": "Causal diagram. ATMs automated the routine part of a teller's day, which freed tellers for advice and relationships and cut the cost of a branch, so banks opened many more branches. Tellers per branch fell but total tellers rose from about 300,000 to 500,000. If a job is almost entirely routine there is no residual human task and it is eliminated. Nodes: Routine Task Automation, Branch Operating Cost, Branch Count, Teller Employment, Residual Human Tasks. Links: Routine Task Automation reduces Branch Operating Cost; Branch Operating Cost reduces Branch Count; Branch Count raises Teller Employment; Routine Task Automation reduces Teller Employment; Routine Task Automation raises Residual Human Tasks; Residual Human Tasks raises Teller Employment.",
+      "after": "When all three coordinate, work evolves: technology automates the routine, human"
+    },
+    {
+      "label": "9.7",
+      "src": "/figures/09/07-eisenstein-gift-or-market.svg",
+      "width": 750,
+      "height": 649,
+      "title": "Eisenstein: AI as gift economy or market logic",
+      "caption": "The same matching technology can enable a gift economy at scale (matching needs with gifts, tracking reciprocity) or amplify market logic (monetising everything and destroying the remaining gift relationships). The resolution is to coordinate markets with the gift economy, not replace one with the other.",
+      "alt": "Causal diagram. The same matching technology can enable a gift economy at scale (matching needs with gifts, tracking reciprocity) or amplify market logic (monetising everything and destroying the remaining gift relationships). The resolution is to coordinate markets with the gift economy, not replace one with the other. Nodes: AI Matching, Market Logic, Gift Reciprocity, Community Connection. Missing from the system: Market-Gift Coordination. Links: AI Matching raises Gift Reciprocity; AI Matching raises Market Logic; Market Logic reduces Gift Reciprocity; Gift Reciprocity raises Community Connection.",
+      "after": "Eisenstein saw AI as an opportunity to enable a gift economy at scale—matching n"
+    },
+    {
+      "label": "9.8",
       "src": "/figures/09/04-turkle-conversation-erosion.svg",
       "width": 723,
       "height": 649,
@@ -470,6 +610,16 @@
   "x": [
     {
       "label": "X.1",
+      "src": "/figures/x/chX-08-three-triads.svg",
+      "width": 657,
+      "height": 649,
+      "title": "The book as a coordination system",
+      "caption": "Foundation provides the physics, Application provides the proof, Transcendence provides the stakes. Remove any triad and the book collapses; together they produce a way of seeing that changes how you act, which is the claim the book itself makes about coordination.",
+      "alt": "Causal diagram. Foundation provides the physics, Application provides the proof, Transcendence provides the stakes. Remove any triad and the book collapses; together they produce a way of seeing that changes how you act, which is the claim the book itself makes about coordination. Nodes: Foundation Triad, Application Triad, Transcendence Triad, Coordination Consciousness. Links: Foundation Triad raises Coordination Consciousness; Application Triad raises Coordination Consciousness; Transcendence Triad raises Coordination Consciousness; Foundation Triad raises Application Triad; Application Triad raises Transcendence Triad.",
+      "after": "Together, the three triads produce something none could produce alone: a way of "
+    },
+    {
+      "label": "X.2",
       "src": "/figures/x/chX-01-three-ware-resolution.svg",
       "width": 649,
       "height": 649,
@@ -477,6 +627,16 @@
       "caption": "Hardware (substrate) and software (pattern) coordinate consciously; what emerges is knowware, not a third thing added to the first two but the awareness that arises when hardware running software reflects on its own coordination. That awareness feeds back into both.",
       "alt": "Causal diagram. Hardware (substrate) and software (pattern) coordinate consciously; what emerges is knowware, not a third thing added to the first two but the awareness that arises when hardware running software reflects on its own coordination. That awareness feeds back into both. Nodes: Hardware Substrate, Software Patterns, Conscious Coordination, Emergent Knowware. Links: Hardware Substrate raises Conscious Coordination; Software Patterns raises Conscious Coordination; Conscious Coordination raises Emergent Knowware; Emergent Knowware raises Software Patterns; Emergent Knowware raises Hardware Substrate. Loops: R1 — Knowware self-lift; R2 — Pattern evolution.",
       "after": "At every scale, the same architecture. At every scale, the same resolution: not "
+    },
+    {
+      "label": "X.3",
+      "src": "/figures/x/chX-07-worked-example-context-panel.svg",
+      "width": 750,
+      "height": 649,
+      "title": "Worked example: the missing context panel",
+      "caption": "An excellent AI tool stalled at 11% adoption: the tool spoke, the user decided, and context was invisible to both. A context panel showing what information was available, what was missing and how confident the tool was made the third body legible. Adoption on that team reached 74% in three weeks; nothing about the tool or the users changed.",
+      "alt": "Causal diagram. An excellent AI tool stalled at 11% adoption: the tool spoke, the user decided, and context was invisible to both. A context panel showing what information was available, what was missing and how confident the tool was made the third body legible. Adoption on that team reached 74% in three weeks; nothing about the tool or the users changed. Nodes: AI Tool Output, Shared Context Interface, Adoption, User Judgment. Missing from the system: Contextual Coordination. Links: AI Tool Output raises Shared Context Interface; User Judgment raises Shared Context Interface; Shared Context Interface raises Adoption.",
+      "after": "They ran it for three weeks. Adoption on that team hit 74 percent. Nothing about"
     }
   ]
 }
