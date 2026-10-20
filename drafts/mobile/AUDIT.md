@@ -144,7 +144,7 @@ JetBrains Mono, hairline rules, bar field).
 
 ## Results after the fixes
 
-All fix PRs (#32, #34–#38, #41, #42) merged into one scratch branch (not pushed, not for merging), built, and run
+All fix PRs (#32, #34–#38, #41, #42, #62) merged into one scratch branch (not pushed, not for merging), built, and run
 through the same tool: 20 pages × 7 devices = 140 runs, axe in light/dark/warm at 375, reader pages signed out,
 `/read/01/full` signed in.
 
@@ -157,7 +157,7 @@ through the same tool: 20 pages × 7 devices = 140 runs, axe in light/dark/warm 
 | Pages failing any check except axe | 0 / 20 | 0 / 20 | 0 / 20 | 0 / 20 | 0 / 20 | 0 / 20 | 0 / 20 |
 | axe violations (rules, all themes) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-**140 runs, 0 failures.** What the tool still lists as warnings (none fail the run): inline links under 44px inside
+**140 runs, 0 failures** (re-run on the newest `main` with the new `/old-link` and `/systems-of-intelligence` pages: 154 runs, 0 failures once #62 is in; without it, two new links fail: the footer's *Systems of Intelligence* link at 33px and the source URLs at 22px). What the tool still lists as warnings (none fail the run): inline links under 44px inside
 running text (exempt under WCAG 2.2 target size), the marquee strip clipping its own scrolling items on purpose, the
 cast role column ellipsis on wide screens, and the 11px labels drawn on the graph canvas. "Pages failing" is zero
 because the check is the pass criterion: overflow, 44px targets, 16px text fields, dock bar clearance and controls,
