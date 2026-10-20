@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Field from '../components/Field.astro';
-import { SITE_URL, SITE_NAME, SITE_TAGLINE, AUTHOR, PUBLISHER, EDITION, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
+import { SITE_URL, SITE_NAME, BOOK_TITLE, AUTHOR, PUBLISHER, EDITION, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../config';
 import { ENDPOINTS, PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS, TERMS_VERSION, CONTENT_SIGNAL } from '../lib/agents';
 
 const DESCRIPTION =
@@ -14,7 +14,7 @@ const CAPABILITIES = [
   { what: 'Buy the book', human: 'Yes: a person completes payment', status: CHECKOUT_OPEN ? 'Test mode' : 'Not open', where: 'Checkout link', href: '#buying' },
 ];
 const RECORD = [
-  ['Title', `${SITE_NAME}: ${SITE_TAGLINE}`],
+  ['Title', BOOK_TITLE],
   ['Author', AUTHOR],
   ['Publisher', PUBLISHER],
   ['Edition', EDITION],
