@@ -101,7 +101,7 @@ function getSym(name: string): string {
   </div>
 
   <!-- Legend + view toggle -->
-  <div class="cast-legend">
+  <div class="cast-legend" id="cast-legend">
     <span class="cast-legend-item">
       <span class="cast-dot cast-dot--alive" style="background:var(--status-alive)" aria-hidden="true"></span> With us
     </span>
@@ -111,7 +111,7 @@ function getSym(name: string): string {
     <span class="cast-legend-item">
       <span class="cast-dot cast-dot--anon" style="background:var(--status-anon)" aria-hidden="true"></span> Composite
     </span>
-    <span aria-hidden="true" style="margin-left:16px; color:var(--rule-strong)">·</span>
+    <span class="cast-legend-sep" aria-hidden="true">·</span>
     <span class="cast-legend-item">
       <span class="kw-tier kw-tier--A">A</span> Academic
     </span>
@@ -121,7 +121,7 @@ function getSym(name: string): string {
     <span class="cast-legend-item">
       <span class="kw-tier kw-tier--V">V</span> Visionary
     </span>
-    <span aria-hidden="true" style="margin-left:16px; color:var(--rule-strong)">·</span>
+    <span class="cast-legend-sep" aria-hidden="true">·</span>
     <span class="cast-legend-item">
       <span class="cast-badge">LEGACY</span> established corpus
     </span>
@@ -130,7 +130,7 @@ function getSym(name: string): string {
     </span>
 
     <!-- View toggle (right-aligned) -->
-    <span class="cast-view-toggle" style="margin-left:auto" role="group" aria-label="View">
+    <span class="cast-view-toggle" role="group" aria-label="View">
       <button type="button" class="cast-vtab is-active" id="btn-cast" data-view="cast" aria-pressed="true">CAST</button>
       <button type="button" class="cast-vtab" id="btn-elements" data-view="elements" aria-pressed="false">ELEMENTS</button>
       <button type="button" class="cast-vtab" id="btn-graph" data-view="graph" aria-pressed="false">GRAPH</button>
@@ -182,6 +182,7 @@ function getSym(name: string): string {
       <div class="elements-grid">
         {chapterData.map((ch) => (
           <div class="elements-col">
+            <div class="elements-col-hd mono"><span class="elements-ch-num">CH·{String(ch.n).padStart(2,'0')}</span> <span class="elements-col-title">{ch.title}</span></div>
             {ch.voices.map((v) => {
               const sym = getSym(v.name);
               const bg  = TIER_COLOR[v.tier]  ?? 'var(--accent-soft)';
@@ -239,13 +240,20 @@ function getSym(name: string): string {
         <span class="graph-find-lbl">Find a voice</span>
         <input type="text" id="graph-find" list="graph-voices" placeholder="Type a name" autocomplete="off" />
       </label>
-      <span id="graph-hint" style="margin-left:auto;color:var(--sub)">Click nodes to select · build connections</span>
+      <span id="graph-hint" class="graph-hint">Click nodes to select · build connections</span>
+    </div>
+
+    <!-- Selection strip (phones): stays on screen while the canvas is, since the sidebar sits far below it -->
+    <div class="graph-strip" id="graph-strip" hidden>
+      <span class="graph-strip-text"><span class="mono graph-strip-n" id="graph-strip-n"></span> <strong id="graph-strip-name"></strong> <span class="mono graph-strip-role" id="graph-strip-role"></span></span>
+      <a class="graph-strip-open" id="graph-strip-open" href="/the-81">Open dossier →</a>
+      <button type="button" class="graph-strip-clear" id="graph-strip-clear">Clear <span id="graph-strip-count"></span></button>
     </div>
 
     <!-- Canvas + sidebar -->
     <div class="graph-layout">
       <div class="graph-canvas-wrap" id="graph-container">
-        <canvas id="graph-canvas" style="width:100%;height:auto;display:block;touch-action:none" tabindex="0" role="application" aria-label="Voice network. Left and right arrows move between voices, Enter selects, Escape clears."></canvas>
+        <canvas id="graph-canvas" tabindex="0" role="application" aria-label="Voice network. Left and right arrows move between voices, Enter selects, Escape clears."></canvas>
         <p class="sr-only" id="graph-live" aria-live="polite"></p>
         <datalist id="graph-voices">
           {sortedVoices.map(v => <option value={v.data.name} />)}
@@ -280,7 +288,7 @@ function getSym(name: string): string {
 
 </Base>
 
-<style>
+<style is:global>
 /* ── View toggle ──────────────────────────────── */
 .cast-view-toggle { display: flex; gap: 1px; }
 .cast-vtab {
@@ -454,6 +462,74 @@ function getSym(name: string): string {
   .graph-canvas-wrap { border-right: none; border-bottom: 1px solid var(--rule); }
   .graph-sidebar { min-height: 0; max-height: 260px; }
 }
+
+/* ── Phones and tablets (≤900px) ─────────────────────────────
+   Touch needs: 44px targets, no nested scrollers, nothing that traps the page scroll. */
+.cast-view-toggle { display: flex; gap: 1px; margin-left: auto; }
+.cast-legend-sep { margin-left: 16px; color: var(--rule-strong); }
+.graph-hint { margin-left: auto; color: var(--sub); }
+.elements-col-hd { display: none; }
+#graph-canvas { width: 100%; height: auto; display: block; touch-action: pan-y pinch-zoom; -webkit-tap-highlight-color: transparent; }
+.graph-strip { display: none; }
+
+@media (max-width: 900px) {
+  /* View tabs first, as three equal 48px buttons; the legend follows. */
+  .cast-legend { gap: 6px 16px; }
+  .cast-view-toggle { order: -1; flex: 1 0 100%; margin: 0 0 8px; gap: 0; }
+  .cast-vtab { flex: 1; min-height: 48px; font-size: 12px; border-left-width: 0; }
+  .cast-vtab:first-child { border-left-width: 1px; }
+  .cast-legend-sep { display: none; }
+  .cast-legend { font-size: 12px; }
+  .cast-legend-item { min-height: 24px; }
+
+  /* ELEMENTS: nine 130px columns that you had to swipe sideways become one block per
+     chapter, a 3-up grid of tiles under its own heading, read straight down the page. */
+  .elements-view { padding: 16px 16px 24px; }
+  .elements-scroll { overflow: visible; }
+  .elements-ch-headers { display: none; }
+  .elements-grid { display: block; min-width: 0; }
+  .elements-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 28px; }
+  .elements-col-hd {
+    display: block; grid-column: 1 / -1; padding: 6px 0 8px; border-bottom: 2px solid var(--rule);
+    font-size: 12px; line-height: 1.3; color: var(--sub);
+  }
+  .elements-col-hd .elements-ch-num { font-size: 12px; margin-right: 6px; }
+  .el-top-row { font-size: 12px; }
+  .el-bottom { font-size: 12px; }
+  .el-cell { min-height: 112px; }
+  .el-cell:hover { transform: none; box-shadow: none; }
+  .elements-legend { flex-wrap: wrap; }
+  .elements-legend-item { min-height: 32px; display: inline-flex; align-items: center; }
+  .elements-legend-item .mono { font-size: 12px !important; }
+
+  /* GRAPH */
+  .graph-view { padding: 12px 16px 24px; }
+  .graph-legend { font-size: 12px; gap: 8px 16px; }
+  .graph-find { flex: 1 0 100%; }
+  .graph-find-lbl { font-size: 12px; }
+  .graph-find input { flex: 1; font-size: 16px; min-height: 44px; min-width: 0; padding: 10px 12px; } /* 16px: no iOS zoom on focus */
+  .graph-hint { margin-left: 0; flex: 1 0 100%; }
+  .graph-sidebar { max-height: none; }
+  .graph-sb-section { overflow: visible; }
+  .graph-sb-voice { padding: 12px 0; min-height: 44px; }
+  .graph-sb-vname { font-size: 15px; }
+  .graph-sb-vnum, .graph-sb-vrole, .graph-sb-empty, .graph-sb-label { font-size: 12px; }
+  .graph-strip {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+    position: sticky; top: 0; z-index: 20;
+    margin: 0 0 8px; padding: 8px 12px; background: var(--ink); color: var(--paper);
+    font-size: 14px; line-height: 1.3;
+  }
+  .graph-strip[hidden] { display: none; }
+  .graph-strip-text { flex: 1 1 100%; min-width: 0; }
+  .graph-strip-n, .graph-strip-role { font-size: 12px; opacity: .8; }
+  .graph-strip-open, .graph-strip-clear {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+    font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em;
+    border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; text-decoration: none;
+  }
+  .graph-strip-open { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+}
 </style>
 
 <script>
@@ -538,7 +614,9 @@ function getSym(name: string): string {
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const esc = (t: string) => t.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]!));
-    const R = 13;
+    // Phones: smaller nodes on a taller canvas (81 nodes cannot fit 26px circles into 343x224), labels only for the focused voice.
+    const compact = window.matchMedia('(max-width: 900px)').matches;
+    const R = compact ? 10 : 13;
     type Node = { n: number; v: typeof voices[0]; x: number; y: number; vx: number; vy: number; phase: number };
     let nodes: Node[] = [];
     let posById: Record<number, Node> = {};
@@ -552,7 +630,7 @@ function getSym(name: string): string {
 
     const ro = new ResizeObserver(entries => {
       w = entries[0].contentRect.width;
-      h = Math.round(w * 0.65);
+      h = Math.round(w * (w < 640 ? 1.5 : 0.65));
       if (!simReady) {
         simReady = true;
         nodes = voices.map((v, i) => ({
@@ -708,7 +786,7 @@ function getSym(name: string): string {
         ctx.setLineDash([]);
         ctx.globalAlpha = 1;
 
-        if (!isDim) {
+        if (!isDim && (!compact || isPinned || isHovered || isNbr)) {
           const label = nd.v.name.split(' ').pop()!;
           ctx.globalAlpha = (isPinned || isHovered) ? 1 : 0.75;
           ctx.fillStyle = (isPinned || isHovered) ? 'rgb(180,20,20)' : ink;
@@ -732,14 +810,32 @@ function getSym(name: string): string {
       const my = ('clientY' in e ? e.clientY : (e as Touch).clientY) - rect.top;
       const scaleX = w / rect.width, scaleY = h / rect.height;
       const px = mx * scaleX, py = my * scaleY;
-      const HIT_R = 20;
-      let hit: number | null = null;
+      // The nearest node within a 22px radius (a 44px target), not whichever was drawn last.
+      const HIT_R = 22;
+      let hit: number | null = null, best = HIT_R * HIT_R;
       nodes.forEach(nd => {
-        const dx = nd.x - px, dy = nd.y - py;
-        if (dx*dx + dy*dy < HIT_R*HIT_R) hit = nd.n;
+        const dx = nd.x - px, dy = nd.y - py, d2 = dx*dx + dy*dy;
+        if (d2 < best) { best = d2; hit = nd.n; }
       });
       return hit;
     }
+
+    // The phone selection strip shows the most recent pick; the sidebar below has the full list.
+    let lastPick: number | null = null;
+    function updateStrip() {
+      const strip = document.getElementById('graph-strip');
+      if (!strip) return;
+      if (lastPick !== null && !pinnedSet.has(lastPick)) lastPick = [...pinnedSet].pop() ?? null;
+      const v = lastPick === null ? null : voices.find(vv => vv.n === lastPick);
+      strip.hidden = !v;
+      if (!v) return;
+      (document.getElementById('graph-strip-n') as HTMLElement).textContent = String(v.n).padStart(3, '0') + ' · ' + v.tier;
+      (document.getElementById('graph-strip-name') as HTMLElement).textContent = v.name;
+      (document.getElementById('graph-strip-role') as HTMLElement).textContent = v.role;
+      (document.getElementById('graph-strip-open') as HTMLAnchorElement).href = '/voices/' + v.slug;
+      (document.getElementById('graph-strip-count') as HTMLElement).textContent = pinnedSet.size > 1 ? '(' + pinnedSet.size + ')' : '';
+    }
+    document.getElementById('graph-strip-clear')?.addEventListener('click', () => { pinnedSet.clear(); lastPick = null; updateSidebar(); });
 
     function updateSidebar() {
       const selCount = document.getElementById('graph-sel-count');
@@ -754,9 +850,11 @@ function getSym(name: string): string {
       pinnedSet.forEach(fn => { (adjMap[fn] || []).forEach(n => { if (!pinnedSet.has(n)) connectedNs.add(n); }); });
 
       selCount.textContent = String(pinnedSet.size);
+      const verb = window.matchMedia('(hover: none)').matches ? 'Tap' : 'Click';
       if (hint) hint.textContent = pinnedSet.size > 0
-        ? `${pinnedSet.size} selected · ${connectedNs.size} connections · click to add/remove`
-        : 'Click nodes to select · build connections';
+        ? `${pinnedSet.size} selected · ${connectedNs.size} connections · ${verb.toLowerCase()} to add/remove`
+        : `${verb} nodes to select · build connections`;
+      updateStrip();
 
       if (pinnedSet.size === 0) {
         sbSel.innerHTML = '<p class="graph-sb-empty">Click any node in the graph to select it.</p>';
@@ -792,7 +890,7 @@ function getSym(name: string): string {
       live.textContent = v ? `${v.name}, ${v.role || 'voice'}${pinnedSet.has(v.n) ? ', selected' : ''}` : '';
     };
     const togglePin = (n: number) => {
-      if (pinnedSet.has(n)) pinnedSet.delete(n); else pinnedSet.add(n);
+      if (pinnedSet.has(n)) pinnedSet.delete(n); else { pinnedSet.add(n); lastPick = n; }
       updateSidebar();
       announce(n);
     };
@@ -818,7 +916,7 @@ function getSym(name: string): string {
       const v = voices.find(vv => vv.name.toLowerCase() === q)
         ?? voices.find(vv => vv.name.toLowerCase().includes(q));
       if (v && q) {
-        pinnedSet.add(v.n); hoveredN = v.n;
+        pinnedSet.add(v.n); hoveredN = v.n; lastPick = v.n;
         updateSidebar(); announce(v.n);
         findInput.value = '';
       }
@@ -829,24 +927,11 @@ function getSym(name: string): string {
       canvas.style.cursor = hoveredN !== null ? 'pointer' : 'default';
     });
     canvas.addEventListener('mouseleave', () => { hoveredN = null; });
+    // One handler for mouse and touch: a tap is a click. The old touchmove handler called
+    // preventDefault, which trapped the page scroll whenever a swipe began on the (full-width) canvas.
     canvas.addEventListener('click', e => {
       const hit = hitTest(e);
-      if (hit !== null) {
-        if (pinnedSet.has(hit)) pinnedSet.delete(hit); else pinnedSet.add(hit);
-        updateSidebar();
-      }
+      if (hit !== null) togglePin(hit);
     });
-    canvas.addEventListener('touchmove', e => {
-      e.preventDefault();
-      hoveredN = hitTest(e.touches[0]);
-    }, { passive: false });
-    canvas.addEventListener('touchend', e => {
-      e.preventDefault();
-      const hit = hitTest(e.changedTouches[0]);
-      if (hit !== null) {
-        if (pinnedSet.has(hit)) pinnedSet.delete(hit); else pinnedSet.add(hit);
-        updateSidebar();
-      }
-    }, { passive: false });
   }
 </script>

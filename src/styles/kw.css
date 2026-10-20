@@ -882,8 +882,8 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   display: flex; gap: 12px; align-items: center;
   padding: 10px 48px 10px 16px;
   background: var(--band-bg); color: var(--band-ink);
-  position: sticky; top: 52px; z-index: 10;
-  font: 400 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  position: sticky; top: 0; z-index: 10; /* the nav is not sticky, so 0 (it was 52px: a hole above the header) */
+  font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: .04em;
 }
 .cast-ch-num {
@@ -952,10 +952,15 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
 }
 
 @media (max-width: 680px) {
-  .cast-ch-head { padding: 10px 16px; top: 52px; }
+  .cast-ch-head { padding: 10px 16px; }
   .cast-row { grid-template-columns: 8px 20px 1fr auto; }
   .cast-role { display: none; }
-  .cast-tier-lbl { padding: 0 8px; }
+  .cast-tier-lbl { padding: 0 12px 0 8px; }
+  /* 11px mono labels are 12px on phones */
+  .cast-ch-count, .cast-num, .cast-tier-lbl, .cast-badge, .cast-stat-l { font-size: 12px; }
+  /* long names wrap instead of being cut with an ellipsis ('Thich Nhat Hanh Foundation') */
+  .cast-name { white-space: normal; overflow: visible; font-size: 14px; line-height: 1.25; }
+  .cast-name-col { flex-wrap: wrap; row-gap: 4px; }
 }
 
 /* ============================================================
