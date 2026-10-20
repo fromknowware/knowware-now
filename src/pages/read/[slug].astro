@@ -83,7 +83,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
             {v.data.coldOpen && (
               <div class="voice-cold-open">
                 <p class="voice-cold-open-text">{v.data.coldOpen}<sup class="kw-ast" aria-hidden="true">*</sup></p>
-                <SynthesisNote name={v.data.name} anon={v.data.status === 'anon'} link={false} />
+                <SynthesisNote name={v.data.name} anon={v.data.status === 'anon'} />
               </div>
             )}
           </div>

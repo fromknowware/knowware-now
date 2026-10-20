@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+
+const CORRECTIONS_EMAIL = 'someone@knowware.vc';
+---
+<Base title="Corrections and removal" description="How to report an error, or ask for a change to how a person appears in Knowware.">
+  <section class="kw-section">
+    <p class="kw-label">Corrections</p>
+    <h1 class="kw-h2">Report an error. Ask for a change.</h1>
+  </section>
+
+  <section class="kw-section rules-body" style="max-width: 680px">
+    <p class="kw-body">
+      The 81 voices in Knowware are texts written for the book from each person's published work.
+      They are not interviews. The people did not say or review them, and they do not endorse the book.
+      Biographical details are summarized from public sources and can be wrong or out of date.
+    </p>
+    <h2 class="kw-h3" style="margin-top:32px">If you are named here, or act for someone who is</h2>
+    <p class="kw-body">
+      Write to <a href={`mailto:${CORRECTIONS_EMAIL}`}>{CORRECTIONS_EMAIL}</a>. You can ask us to correct a fact,
+      change or remove the synthesized text, or remove a name entirely. Please include the page address,
+      the sentence in question, what is wrong, and what you would like done. If you write for someone else,
+      tell us who you are so we can confirm before we act.
+    </p>
+    <!-- COUNSEL: confirm the timing commitments below before relying on them. -->
+    <p class="kw-body">
+      We will acknowledge your message within three business days and tell you what we have done or will do
+      within ten.
+    </p>
+    <h2 class="kw-h3" style="margin-top:32px">Everyone else</h2>
+    <p class="kw-body">
+      Readers can report errors at the same address. We correct factual errors as soon as we can verify them.
+    </p>
+  </section>
+</Base>

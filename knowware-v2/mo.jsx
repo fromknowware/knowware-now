@@ -390,8 +390,7 @@ const MO_CLASSIFIERS = {
     "Power vs. force distinction",
     "Sacred Contracts framework",
     "Neuroeconomics",
-    "Happiness equation",
-    "Loss of son Aly"
+    "Happiness equation"
   ],
   "Cosmology, SETI & Astrobiology": [
     "Dark Forest theory",
