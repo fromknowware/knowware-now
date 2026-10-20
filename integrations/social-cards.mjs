@@ -27,6 +27,7 @@ const KICKERS = {
   '/method': 'METHOD',
   '/rules': 'RULES',
   '/colophon': 'COLOPHON',
+  '/license': 'LICENSE',
   '/contribute': 'CONTRIBUTE',
   '/order': 'PRE-ORDER',
   '/read': 'READ',

@@ -599,6 +599,8 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
   color: var(--sub2);
 }
 .kw-foot-colophon span { grid-column: span 3; }
+.kw-foot-license { margin: 14px 0 0; font: 400 12px/1.4 "JetBrains Mono", ui-monospace, monospace; color: var(--sub2); }
+.kw-foot-license a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 680px) {
   .kw-foot-main { grid-template-columns: 1fr; }
   .kw-foot-letter-col { grid-column: 1; }
