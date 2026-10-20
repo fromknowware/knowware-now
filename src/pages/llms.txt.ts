@@ -40,6 +40,7 @@ export const GET: APIRoute = async () => {
     '## About the book',
     '',
     link('/definition', 'what "knowware" means, with sources'),
+    link('/systems-of-intelligence', 'the phrase "systems of intelligence": its enterprise-software sense versus the book\'s coordination sense, with sources'),
     link('/method', 'how the 81 voices are synthesized'),
     link('/rules', 'the editorial rules'),
     link('/colophon', 'how the site is made; no analytics, no tracking'),
