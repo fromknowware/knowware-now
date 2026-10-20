@@ -160,6 +160,8 @@ const mail = `mailto:?subject=${q(title)}&body=${q(`${summary}\n\n${url}`)}`;
   }
   .st-share-pause[hidden] { display: none; }
   .st-share-card figcaption a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  /* 44px targets for the pause button and the two save links (they were 18px tall text lines) */
+  .st-share-pause, .st-share-card figcaption a { display: inline-flex; align-items: center; min-height: 44px; }
   .st-share-text {
     max-width: 60ch; margin: 0 0 16px; padding: 14px 16px;
     border: 1px solid var(--rule); background: var(--paper);
