@@ -97,7 +97,7 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
   <nav class="kw-section chapter-nav" aria-label="Chapter navigation">
     {prev ? (
       <a href={`/read/${prev.id}`} class="chapter-nav-link">
-        <span class="mono" style="font-size:11px;color:var(--sub)">← Ch. {chapterNum(prev.data.n)}</span>
+        <span class="mono" style="font-size:12px;color:var(--sub)">← Ch. {chapterNum(prev.data.n)}</span>
         <span>{prev.data.opener}</span>
       </a>
     ) : <span />}
