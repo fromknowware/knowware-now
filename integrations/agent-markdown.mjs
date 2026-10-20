@@ -110,7 +110,7 @@ export default function agentMarkdown() {
           const slug = f.match(/([^/]+)\.md$/)[1];
           sections.push({ title: `Chapter ${slug.toUpperCase()} preview`, url: `${SITE}/read/${slug}`, body: raw.replace(/^---[\s\S]*?---\n/, '').trim() });
         }
-        const order = ['/definition', '/systems-of-intelligence', '/method', '/rules', '/colophon', '/stories', ...storyDirs.map((d) => `/stories/${d}`), '/agents'];
+        const order = ['/definition', '/systems-of-intelligence', '/old-link', '/method', '/rules', '/colophon', '/stories', ...storyDirs.map((d) => `/stories/${d}`), '/agents'];
         const parts = [
           '# Knowware: full public text',
           '',
