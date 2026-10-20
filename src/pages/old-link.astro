@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_URL, BOOK_TITLE, AUTHOR, PUBLISHER, CONTACT_EMAIL, ORDER_HREF, CHECKOUT_OPEN } from '../config';
+import { bookNode, BOOK_ID } from '../lib/book-jsonld';
+
+const PAGE_URL = `${SITE_URL}/old-link/`;
+const UPDATED = '2026-10-20';
+const OLD = 'systemsofintelligence.com';
+const HOST = SITE_URL.replace('https://', '');
+
+const DESCRIPTION = `${OLD} is not the book's website. The official home of ${BOOK_TITLE} is ${HOST}.`;
+
+// One source for the visible answers and the FAQ structured data, so the two never drift apart.
+const QA = [
+  {
+    q: `Is ${OLD} the website of ${BOOK_TITLE}?`,
+    a: `No. Earlier drafts of the book and its repository named ${OLD} as the book's website, but that address is no longer under the author's control and the book has no connection to whatever it shows now. The official website is ${HOST}.`,
+  },
+  {
+    q: `What is the official website of ${BOOK_TITLE}?`,
+    a: `${HOST}. The book is by ${AUTHOR}, published by ${PUBLISHER}. The first chapter can be read free on that site.`,
+  },
+  {
+    q: 'How do I contact the author?',
+    a: `Write to ${CONTACT_EMAIL}. Messages sent to an address at ${OLD} do not reach the author; please send them again to ${CONTACT_EMAIL}.`,
+  },
+  {
+    q: `Is it safe to enter details on ${OLD}?`,
+    a: `Do not enter personal details or payment information on ${OLD}, and ignore any offer there to claim, join or buy anything related to the book. ${CHECKOUT_OPEN ? `Orders are placed only at ${HOST}.` : `Nothing can be bought yet; the only pre-order list is the one at ${HOST}.`}`,
+  },
+  {
+    q: `Is this book the same as the "systems of intelligence" framework in enterprise software?`,
+    a: `No. In startup and venture circles the phrase usually means AI applications built on a company's systems of record. This book uses it for coordination between people, machines and context, and it is not part of that framework.`,
+  },
+  {
+    q: 'When is the book out?',
+    a: `The book is planned for December 21, 2026. ${CHECKOUT_OPEN ? 'Pre-orders are open at ' + HOST + '.' : 'Pre-orders are not open yet; people can join the pre-order list.'}`,
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    bookNode(),
+    {
+      '@type': ['WebPage', 'FAQPage'],
+      '@id': `${PAGE_URL}#webpage`,
+      url: PAGE_URL,
+      name: 'If you followed an old link',
+      description: DESCRIPTION,
+      inLanguage: 'en',
+      dateModified: UPDATED,
+      isPartOf: { '@id': `${SITE_URL}/#website` },
+      about: { '@id': BOOK_ID },
+      author: { '@type': 'Person', name: AUTHOR },
+      mainEntity: QA.map((x) => ({
+        '@type': 'Question',
+        name: x.q,
+        acceptedAnswer: { '@type': 'Answer', text: x.a },
+      })),
+    },
+  ],
+};
+---
+<Base
+  title="If you followed an old link"
+  description={DESCRIPTION}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="kw-section" aria-labelledby="ol-h">
+    <p class="kw-label">Old address</p>
+    <h1 class="kw-h2" id="ol-h">If you followed an old link</h1>
+    <p class="ol-lead"><strong>{OLD}</strong> is not the website of <em>{BOOK_TITLE}</em>. The official home of the book is <strong>{HOST}</strong>.</p>
+  </section>
+
+  <article class="kw-section kw-prose" data-kw-read>
+    {QA.map((x) => (
+      <>
+        <h2>{x.q}</h2>
+        <p>{x.a}</p>
+      </>
+    ))}
+
+    <h2>Where to go</h2>
+    <p class="ol-actions">
+      <a class="kw-btn kw-btn--filled" href="/read/01">Read Chapter 1 free →</a>
+      <a class="kw-btn" href="/definition">What "knowware" means →</a>
+      <a class="kw-btn" href="/systems-of-intelligence">"Systems of intelligence": two meanings →</a>
+      <a class="kw-btn" href={ORDER_HREF}>Pre-order list →</a>
+    </p>
+    <p class="ol-updated">Last updated <time datetime={UPDATED}>October 20, 2026</time>.</p>
+  </article>
+</Base>
+
+<style>
+  .ol-lead { max-width: 52ch; margin: 12px 0 0; font-size: clamp(18px, 2.2vw, 24px); line-height: 1.35; color: var(--ink); }
+  .ol-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1em; max-width: none; }
+  .ol-actions .kw-btn { text-decoration: none; }
+  .ol-actions .kw-btn--filled { color: #EDEEE4; }
+  .ol-actions .kw-btn:not(.kw-btn--filled) { color: var(--ink); }
+  .ol-actions .kw-btn:not(.kw-btn--filled):hover { color: var(--bg); }
+  .ol-updated { margin-top: 2em; font-size: 14px; color: var(--sub); }
+</style>

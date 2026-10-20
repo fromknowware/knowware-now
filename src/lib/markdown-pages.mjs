@@ -6,6 +6,7 @@ export const MARKDOWN_PAGES = [
   { path: '/',           file: 'index.md',      label: 'Home',                  voices: true  },
   { path: '/definition', file: 'definition.md', label: 'Definition of knowware', voices: false },
   { path: '/systems-of-intelligence', file: 'systems-of-intelligence.md', label: 'Systems of intelligence: two meanings', voices: false },
+  { path: '/old-link', file: 'old-link.md', label: 'If you followed an old link', voices: false },
   { path: '/method',     file: 'method.md',     label: 'Method',                voices: true  },
   { path: '/rules',      file: 'rules.md',      label: 'Editorial rules',       voices: true  },
   { path: '/colophon',   file: 'colophon.md',   label: 'Colophon',              voices: false },
