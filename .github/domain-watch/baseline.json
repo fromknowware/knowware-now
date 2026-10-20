@@ -1,0 +1,73 @@
+{
+  "systemsofintelligence.com": {
+    "registered": true,
+    "registrar": "NameCheap, Inc.",
+    "status": [
+      "client transfer prohibited"
+    ],
+    "nameservers": [
+      "ns5.afternic.com",
+      "ns6.afternic.com"
+    ],
+    "registration": "2024-08-08T19:15:43Z",
+    "expiration": "2027-08-08T19:15:43Z",
+    "mx": [
+      "0 ."
+    ]
+  },
+  "knowware.systems": {
+    "registered": true,
+    "registrar": "NameCheap, Inc.",
+    "status": [
+      "add period",
+      "client transfer prohibited"
+    ],
+    "nameservers": [
+      "sid.ns.cloudflare.com",
+      "tessa.ns.cloudflare.com"
+    ],
+    "registration": "2026-10-17T22:44:40.573Z",
+    "expiration": "2027-10-17T22:44:40.573Z",
+    "mx": [
+      "32 route2.mx.cloudflare.net",
+      "88 route3.mx.cloudflare.net",
+      "89 route1.mx.cloudflare.net"
+    ]
+  },
+  "knowware.press": {
+    "registered": true,
+    "registrar": "NameCheap, Inc.",
+    "status": [
+      "client transfer prohibited"
+    ],
+    "nameservers": [
+      "bart.ns.cloudflare.com",
+      "khloe.ns.cloudflare.com"
+    ],
+    "registration": "2026-05-07T21:56:21.113Z",
+    "expiration": "2027-05-07T21:56:21.113Z",
+    "mx": [
+      "10 eforward1.registrar-servers.com",
+      "10 eforward2.registrar-servers.com",
+      "10 eforward3.registrar-servers.com",
+      "15 eforward4.registrar-servers.com",
+      "20 eforward5.registrar-servers.com"
+    ]
+  },
+  "knowware.institute": {
+    "registered": true,
+    "registrar": "NameCheap, Inc.",
+    "status": [
+      "client transfer prohibited"
+    ],
+    "nameservers": [
+      "dns1.registrar-servers.com",
+      "dns2.registrar-servers.com"
+    ],
+    "registration": "2026-01-17T19:21:36.252Z",
+    "expiration": "2027-01-17T19:21:36.252Z",
+    "mx": [
+      "1 smtp.google.com"
+    ]
+  }
+}
