@@ -4,7 +4,7 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection, getEntry } from 'astro:content';
 import { chapterNum } from '../../lib/chapters';
 import { SITE_URL, AUTHOR } from '../../config';
-import { SYNTHESIS_DISCLOSURE, TERMS_URL, disclosureBlock, frontMatter } from '../../lib/agents';
+import { SYNTHESIS_DISCLOSURE, TERMS_URL, LICENSES, disclosureBlock, frontMatter } from '../../lib/agents';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const chapters = await getCollection('chapters');
@@ -27,6 +27,8 @@ export const GET: APIRoute = async ({ params }) => {
     synthesized: true,
     disclosure: SYNTHESIS_DISCLOSURE,
     untrusted_third_party_text: true,
+    license: LICENSES.book,
+    license_url: LICENSES.bookUrl,
     terms: TERMS_URL,
     full_text: `Full chapter requires a signed-up human reader; see ${SITE_URL}/agents`,
   });
