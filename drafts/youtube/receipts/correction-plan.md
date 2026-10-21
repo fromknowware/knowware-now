@@ -126,3 +126,13 @@ Three plan files now sit in this folder, written by different sessions. They ove
 - **R15 (Challenger):** confirmed that CAIB p. 196 (elevated to 1, then demoted to 1-R) and Rogers Vol. I Ch. VI (1R, then 1 with a March 1983 waiver, with documents still saying 1-R) disagree. Any script should use one and say which.
 - **Parks (R6):** "ten days" now has a court-filed source (an ACLU-NJ amicus brief); the licence-photo point stands.
 - **Burkhart:** IEEE Spectrum puts the Guitar Hero session in 2015; the book's 2020 is unsupported.
+
+---
+
+## Update 2026-10-21: what the third receipts sweep changes here
+
+`receipts-sourcing.md` and `receipts-open-items.md` (another session; AI-read, not human-checked) touch only two of this file's items. None of the ten audited claims is affected.
+
+- **R12 (Challenger, "nobody coordinated"): soften the correction.** That sweep read the Rogers findings (Vol. I Ch. VI p. 148 and Ch. VII p. 161): Thiokol engineers and some Marshall people raised the cold-temperature concern, but Levels I and II were not told of it or of the launch constraint, and neither organisation ever did the flight-history analysis that "would have revealed the correlation of O-ring damage and low temperature" (the report's wording). So the book's line is wrong that nobody knew, but right that the knowledge was never put together and carried upward. Suggested wording for the author: the engineers had the link, management reversed their recommendation, and the organisation never analysed the pattern. See `receipts-sourcing.md` §6.
+- **R6 (Parks, "ten days"): no change.** Complaint pages 16–19, 22, 25 and 29 were viewed and none states the number of days. The ACLU-NJ amicus brief (see `perplexity-answers.md`) does say ten days. Pages 20, 21, 23, 24 and 26–28 of the complaint are still unviewed.
+- **Still unobtained after that sweep:** the Missouri Hyatt decision, JAMA's page and supplement, Epic's own statement.

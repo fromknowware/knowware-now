@@ -99,3 +99,7 @@ Each source was re-fetched from the URL in the receipts file and searched, excep
 | R15 | **Partly.** Rogers Vol. I Ch. VI confirms Criticality 1R and the March 1983 waiver. The CAIB p. 196 side of the disagreement was **not** checked. |
 
 **Not re-checked at all:** the Beede numbers (R1), CAIB p. 196 (R15), and the Parks "ten days" wording (R6).
+
+## Note 2026-10-21 (not a human check)
+
+The third receipts sweep (`receipts-sourcing.md`) changes two rows' wording, not their pass/fail: **R12** should now read "engineers raised it; management reversed; the organisation never analysed the pattern and Levels I and II were not told" (Rogers pp. 148 and 161), and **R6** has no "ten days" on complaint pages 16–19, 22, 25 and 29 viewed so far. All other rows are unchanged.
