@@ -63,7 +63,7 @@ const current = NAV.find((n) => isActive(n.href));
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
   {noindex && <meta name="robots" content="noindex" />}
-  <meta name="tdm-reservation" content={path.startsWith('/stories') ? '0' : '1'} />
+  <meta name="tdm-reservation" content={path.endsWith('/full') ? '1' : '0'} />
   {markdownHref && <link rel="alternate" type="text/markdown" href={markdownHref} />}
   <link rel="describedby" type="text/plain" href="/llms.txt" />
   <link rel="alternate" type="application/atom+xml" title={`${SITE_NAME} Stories`} href={`${SITE_URL}/feed.xml`} />

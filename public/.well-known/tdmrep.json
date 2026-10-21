@@ -1,4 +1,4 @@
 [
-  { "location": "/stories/*", "tdm-reservation": 0 },
-  { "location": "/*", "tdm-reservation": 1 }
+  { "location": "/read/*/full", "tdm-reservation": 1 },
+  { "location": "/*", "tdm-reservation": 0 }
 ]
