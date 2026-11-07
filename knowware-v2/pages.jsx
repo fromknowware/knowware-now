@@ -132,7 +132,7 @@ function MobileSpine({ setPage }) {
     <div ref={ref}>
       <div style={{ border: '1px solid var(--rule)', background: 'var(--paper)' }}>
         {window.SECTIONS.map((s, i) => (
-          <a key={s.n} href={`#read/ch/${s.n}`} style={{
+          <a key={s.n} href="#read" style={{
             width: '100%', background: 'none', border: 'none',
             borderBottom: '1px solid var(--rule)',
             padding: '10px 14px', cursor: 'pointer',
@@ -350,7 +350,7 @@ function Cover({ setPage }) {
                 {window.SECTIONS.map((s, i) => {
                   const h = 45 + ((i * 37) % 55);
                   return (
-                    <a key={s.n} href={`#read/ch/${s.n}`}
+                    <a key={s.n} href="#read"
                       style={{
                         background: 'var(--ink)', border: 'none', cursor: 'pointer',
                         height: `${h}%`, display: 'flex', flexDirection: 'column',
@@ -1171,8 +1171,10 @@ function GraphView({ onOpenDossier }) {
         setPinnedSet(new Set(next));
       }
     } else {
-      hoveredRef.current = hit;
-      setHoveredN(hit);
+      if (hoveredRef.current !== hit) {
+        hoveredRef.current = hit;
+        setHoveredN(hit);
+      }
     }
     if (canvas) canvas.style.cursor = hit ? 'pointer' : 'default';
   }, []);
@@ -1665,7 +1667,7 @@ function VoiceStrip({ v }) {
         lineHeight: 0.9, color: 'var(--ink)' }}>{v.sym}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
         <div className="mono" style={{ fontSize: 10, opacity: 0.85 }}>
-          № {String(v.n).padStart(2, '0')} · Tier {v.tier} · {v.minutes}m
+          № {String(v.n).padStart(2, '0')} · Tier {v.tier}
         </div>
         <div style={{ fontSize: mob ? 14 : 18, fontWeight: 500, letterSpacing: '-0.015em',
           color: 'var(--ink)', lineHeight: 1.15,
@@ -1749,13 +1751,12 @@ function VoiceCard({ v }) {
       <div className="mono" style={{ fontSize: 10, display: 'flex',
         justifyContent: 'space-between', opacity: 0.8 }}>
         <span>№ {String(v.n).padStart(2, '0')}</span>
-        <span>{v.group.key} · {v.year}</span>
+        <span>{v.group.key}</span>
       </div>
       <div style={{ fontSize: 64, fontWeight: 500, letterSpacing: '-0.05em',
         lineHeight: 0.9, color: 'var(--ink)' }}>{v.sym}</div>
       <div style={{ fontSize: 13, lineHeight: 1.45, color: 'var(--ink)' }}>
-        A {v.group.name.toLowerCase().replace(/s$/, '')} based in <strong style={{ fontWeight: 500 }}>{v.city}</strong>.
-        Spoke with us for {v.minutes} minutes on {v.themes.join(', ')}.
+        A {v.group.name.toLowerCase().replace(/s$/, '')} voice on {v.themes.join(', ')}.
       </div>
       <div style={{ borderTop: `1px solid var(${v.group.ink})`, paddingTop: 10,
         fontSize: 12, lineHeight: 1.5, color: `var(${v.group.ink})` }}>
@@ -1835,7 +1836,7 @@ const SCENE_META = {
 // ─── Read (v2) ─────────────────────────────────────────
 // Two-column with live section rail, running page number, inline footnotes,
 // marginal citations pulling from the 81.
-function Read({ onOpenReader }) {
+function Read() {
   const bp = useBP();
   const mob = bp === 'mobile';
   const tab = bp === 'tablet';
@@ -1976,7 +1977,6 @@ function Read({ onOpenReader }) {
             cited={cited[0]}
             openNote={openNote}
             setOpenNote={setOpenNote}
-            onOpenReader={onOpenReader}
           />
         </article>
 
@@ -2123,7 +2123,7 @@ function Read({ onOpenReader }) {
 // Chapter teaser — editorial style drawn from the reference designs.
 // Ghost chapter number · serif italic pull quote · "coordinates" dark section
 // · three-tier voice columns · closing quote · CTA.
-function ChapterTeaser({ chapter, section, cited, openNote, setOpenNote, onOpenReader }) {
+function ChapterTeaser({ chapter, section, cited, openNote, setOpenNote }) {
   const mob = useBP() === 'mobile';
   const tab = useBP() === 'tablet';
   const t = (window.TEASERS && window.TEASERS[chapter]) || null;
@@ -3289,7 +3289,7 @@ function MethodPage({ setPage }) {
             letterSpacing: '-0.02em',
             fontStyle: 'italic',
           }}>
-            "No human interviewer sat across from Stuart Russell, Melanie Mitchell,
+            "No human questioner sat across from Stuart Russell, Melanie Mitchell,
             or Judea Pearl. Instead, their published thinking — decades of papers,
             lectures, debates, and books — was coordinated through an AI system that
             found emergent patterns none of them articulated alone."
@@ -3308,6 +3308,12 @@ function MethodPage({ setPage }) {
               This book is not about Knowware. This book IS Knowware.
             </span>
           </p>
+          <div className="mono" style={{
+            margin: '36px 0 0', fontSize: 11,
+            color: 'oklch(0.75 0.04 250)', letterSpacing: '-0.005em',
+          }}>
+            The full transcripts are kept by the author and are not published.
+          </div>
         </div>
       </div>
 
