@@ -38,13 +38,16 @@ function Shell({ page, setPage, children }) {
             <a key={k} href={`#${k}`} style={{
               background: page === k ? 'var(--ink)' : 'transparent',
               color: page === k ? 'var(--paper)' : 'var(--ink)',
-              border: 'none', padding: mob ? '6px 8px' : '7px 12px', cursor: 'pointer',
+              border: 'none', padding: mob ? '6px 6px' : '7px 12px', cursor: 'pointer',
               fontFamily: 'inherit', fontSize: mob ? 11 : 15, letterSpacing: '-0.01em',
               display: 'flex', flexDirection: mob ? 'column' : 'row',
-              gap: mob ? 2 : 8, alignItems: mob ? 'center' : 'baseline',
+              gap: mob ? 1 : 8, alignItems: mob ? 'center' : 'baseline',
+              minWidth: mob ? 0 : undefined,
             }}>
-              <span className="mono" style={{ fontSize: mob ? 9 : 11, opacity: 0.6 }}>{n}</span>
-              <span style={{ fontSize: mob ? 9 : 'inherit' }}>{l}</span>
+              <span className="mono" style={{ fontSize: mob ? 8 : 11, opacity: 0.6 }}>{n}</span>
+              <span style={{ fontSize: mob ? 10 : 'inherit', letterSpacing: mob ? '-0.02em' : undefined,
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                maxWidth: mob ? 52 : undefined }}>{l}</span>
             </a>
           ))}
         </nav>
@@ -427,8 +430,8 @@ function Cover({ setPage }) {
                 display: 'flex', flexDirection: 'column', gap: 10,
                 minWidth: 0, overflow: 'hidden',
               }}>
-                <span style={{ fontSize: 'clamp(40px, 4.4vw, 64px)', fontWeight: 500,
-                  letterSpacing: '-0.045em', lineHeight: 0.9 }}>{n}</span>
+                <span style={{ fontSize: mob ? 'clamp(28px, 8vw, 48px)' : 'clamp(28px, 2.6vw, 64px)', fontWeight: 500,
+                  letterSpacing: '-0.045em', lineHeight: 0.9, whiteSpace: 'nowrap' }}>{n}</span>
                 <span className="mono" style={{ fontSize: 10,
                   color: 'var(--sub)', textTransform: 'uppercase',
                   letterSpacing: '0.05em' }}>{l}</span>
