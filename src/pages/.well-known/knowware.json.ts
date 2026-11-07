@@ -2,7 +2,7 @@
 // offers, where, on what terms, and who has to be in the room.
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { SITE_URL, SITE_NAME, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL } from '../../config';
+import { SITE_URL, SITE_NAME, AUTHOR, CHECKOUT_OPEN, AGENT_TOKENS_OPEN, CONTACT_EMAIL, PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL, PREORDER_OPEN } from '../../config';
 import { CONTENT_SIGNAL, ENDPOINTS, LICENSES, PRINCIPAL_RULE, SYNTHESIS_DISCLOSURE, TERMS, TERMS_URL, TERMS_VERSION } from '../../lib/agents';
 
 export const GET: APIRoute = async () => {
@@ -55,7 +55,7 @@ export const GET: APIRoute = async () => {
       status: CHECKOUT_OPEN ? 'open' : 'not_open',
       note: CHECKOUT_OPEN
         ? 'Agents may request a checkout link; a human completes payment.'
-        : 'The pre-order checkout is not open yet. Nothing can be bought, by a person or an agent.',
+        : 'Pre-orders open on the solstice; see preorder_opens. Until then this is a waiting list. Nothing can be bought, by a person or an agent.',
       autonomous_payment: 'only_with_a_human_pay_mandate_on_testnet_when_switched_on',
       waiting_list: { url: `${SITE_URL}/order#waitlist`, note: 'For a person to join themselves. Agents must not sign anyone up.' },
       human_completes_payment: 'for stripe_checkout; for x402 the person authorized one capped purchase in advance',
@@ -86,7 +86,7 @@ export const GET: APIRoute = async () => {
         recorded_per_order: ['principal (the human)', 'agent (name and operator)', 'context note'],
       },
       prices: { preorder: PRICE_PREORDER, print_after_launch: PRICE_PRINT, digital: PRICE_DIGITAL, currency: 'USD' },
-      ships: '2026-12-21',
+      preorder_opens: PREORDER_OPEN,
     },
   };
   return new Response(JSON.stringify(manifest, null, 2) + '\n', {
