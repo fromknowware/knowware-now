@@ -1,36 +1,69 @@
 ---
 import { chapterNum } from '../lib/chapters';
+
+interface VoiceRef {
+  id: string;
+  name: string;
+  alias?: string;
+  tier: 'A' | 'P' | 'V';
+  coldOpen: string;
+}
+
 interface Props {
   slug: string;
   n: number;
   previewWords: number;
   totalWords: number;
   readMinutes: number;
+  voices: VoiceRef[];
 }
-const { slug, n, previewWords, totalWords, readMinutes } = Astro.props;
+
+const { slug, n, previewWords, totalWords, readMinutes, voices } = Astro.props;
 const nn = chapterNum(n);
 const remaining = Math.max(0, totalWords - previewWords);
 const fmt = (x: number) => x.toLocaleString('en-US');
 const fullHref = `/read/${slug}/full`;
+const isFirstChapter = slug === '01';
+
+// Deterministically pick one Academic, one Practitioner and one Visionary for
+// this chapter. Order the three in a stable way so re-renders don't shuffle.
+const byTier = (t: 'A' | 'P' | 'V') => voices.filter((v) => v.tier === t);
+const pickByChapter = (pool: VoiceRef[]) => (pool.length === 0 ? null : pool[(n + pool.length) % pool.length]);
+const suggested = (['A', 'P', 'V'] as const)
+  .map((t) => pickByChapter(byTier(t)))
+  .filter((v): v is VoiceRef => v !== null);
+
+const TIER_LABEL: Record<string, string> = { A: 'Academic', P: 'Practitioner', V: 'Visionary' };
+const PLATFORMS = [
+  { id: 'x', label: 'X' },
+  { id: 'linkedin', label: 'LinkedIn' },
+  { id: 'instagram', label: 'Instagram' },
+  { id: 'tiktok', label: 'TikTok' },
+];
 ---
-<section class="kw-gate kw-band" id="unlock" aria-labelledby="gate-h" data-full-href={fullHref} data-chapter={slug}>
+<section class="kw-gate kw-band" id="unlock" aria-labelledby="gate-h" data-full-href={fullHref} data-chapter={slug} data-first-chapter={isFirstChapter ? '1' : '0'}>
   <div class="kw-gate-inner">
     <div class="kw-gate-copy">
       <p class="kw-gate-eyebrow mono">Chapter {nn} · {fmt(remaining)} words left · about {readMinutes} min in full</p>
-      <h2 class="kw-gate-h" id="gate-h">Keep reading. It's free.</h2>
+      <h2 class="kw-gate-h" id="gate-h">
+        {isFirstChapter ? "Keep reading. It's free." : 'Share a voice to continue.'}
+      </h2>
       <p class="kw-gate-body">
-        One email unlocks every chapter in full, including the capstone. Enter the same email on any other
-        device to keep reading there. No paywall, no tracking.
+        {isFirstChapter
+          ? 'One email opens Chapter 1. Every chapter after that opens when you share one of its voices — on Instagram, LinkedIn, X or TikTok — and paste the post back here. No paywall. No tracking.'
+          : "Pick a voice from this chapter, post it on the platform of your choice, and paste the post URL below. Chapter opens instantly."}
       </p>
     </div>
 
     <div class="kw-gate-action">
+      <!-- (a) Already unlocked on this device -->
       <div class="kw-gate-unlocked" hidden>
-        <p class="kw-gate-ok">You're signed up on this device.</p>
+        <p class="kw-gate-ok">Chapter {nn} is open on this device.</p>
         <a class="kw-btn kw-btn--filled" href={`${fullHref}#continue`}>Continue reading Chapter {nn} →</a>
       </div>
 
-      <form class="kw-gate-form" method="post" action="/api/reader" novalidate aria-describedby="gate-h">
+      <!-- (b) Chapter 1 or unsigned reader: email form -->
+      <form class="kw-gate-form" method="post" action="/api/reader" novalidate aria-describedby="gate-h" hidden={!isFirstChapter}>
         <input type="hidden" name="chapter" value={slug} />
         <div class="kw-gate-field">
           <label for={`gate-email-${nn}`} class="kw-gate-label">Email</label>
@@ -56,86 +89,215 @@ const fullHref = `/read/${slug}/full`;
           <label for={`gate-company-${nn}`}>Company</label>
           <input type="text" id={`gate-company-${nn}`} name="company" tabindex="-1" autocomplete="off" />
         </div>
-        <button type="submit" class="kw-btn kw-btn--filled kw-gate-submit">Unlock the full chapter →</button>
+        <button type="submit" class="kw-btn kw-btn--filled kw-gate-submit">Unlock Chapter 1 →</button>
         <p class="kw-gate-status" role="status" aria-live="polite"></p>
         <p class="kw-gate-fine">
           {fmt(totalWords)} words in Chapter {nn}. Your email stays with the author and is never sold or shared.
         </p>
       </form>
+
+      <!-- (c) Signed-up reader on 02–09 / x: share pane -->
+      {!isFirstChapter && (
+        <div class="kw-share" hidden>
+          <div class="kw-share-voices" role="radiogroup" aria-labelledby="share-voice-h">
+            <p class="kw-gate-label" id="share-voice-h">Pick a voice</p>
+            {suggested.map((v, i) => (
+              <label class="kw-voice-opt">
+                <input type="radio" name="voice" value={v.id} checked={i === 0} />
+                <div class="kw-voice-card-mini">
+                  <p class="kw-voice-tier mono">{TIER_LABEL[v.tier]} · Voice {v.id}</p>
+                  <p class="kw-voice-name">{v.name}{v.alias && <span class="kw-voice-alias"> — {v.alias}</span>}</p>
+                  <p class="kw-voice-quote">&ldquo;{v.coldOpen.slice(0, 220)}{v.coldOpen.length > 220 ? '…' : ''}&rdquo;</p>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          <div class="kw-share-platforms" role="radiogroup" aria-label="Platform">
+            {PLATFORMS.map((p, i) => (
+              <label class="kw-platform">
+                <input type="radio" name="platform" value={p.id} checked={i === 0} />
+                <span>{p.label}</span>
+              </label>
+            ))}
+          </div>
+
+          <div class="kw-share-copy">
+            <p class="kw-gate-label">Quote with signature (copy and post)</p>
+            <textarea class="kw-share-text" readonly rows="5" aria-label="Quote to copy"></textarea>
+            <button type="button" class="kw-btn kw-share-copy-btn">Copy quote</button>
+          </div>
+
+          <form class="kw-share-form" novalidate>
+            <div class="kw-gate-field">
+              <label for={`share-url-${nn}`} class="kw-gate-label">Post URL</label>
+              <input
+                type="url"
+                id={`share-url-${nn}`}
+                name="url"
+                required
+                maxlength="2048"
+                autocomplete="off"
+                class="kw-gate-input"
+                placeholder="https://x.com/you/status/…"
+                aria-describedby={`share-url-${nn}-err`}
+              />
+              <p class="kw-gate-error" id={`share-url-${nn}-err`}></p>
+            </div>
+            <button type="submit" class="kw-btn kw-btn--filled kw-gate-submit">Unlock Chapter {nn} →</button>
+            <p class="kw-gate-status" role="status" aria-live="polite"></p>
+          </form>
+
+          <p class="kw-share-escape">
+            Rather not share? <a href="/order">Just get the book →</a>
+          </p>
+        </div>
+      )}
     </div>
   </div>
 </section>
 
-<script>
-  const READER_FLAG = 'kw_reader_ui=1';
+<script define:vars={{ isFirstChapter, slug, nn, suggested }}>
+  // Share-to-continue flow. Three states per visit:
+  //   signed out      → email form (only chapter 1 even shows it)
+  //   signed in, open → "continue reading"
+  //   signed in, gate → share pane (chapters 2–9, x)
+  const gate = document.querySelector('.kw-gate');
+  if (gate) {
+    const form = gate.querySelector('.kw-gate-form');
+    const share = gate.querySelector('.kw-share');
+    const unlocked = gate.querySelector('.kw-gate-unlocked');
+    const fullHref = gate.dataset.fullHref;
 
-  for (const gate of document.querySelectorAll<HTMLElement>('.kw-gate')) {
-    const form = gate.querySelector<HTMLFormElement>('.kw-gate-form');
-    const unlocked = gate.querySelector<HTMLElement>('.kw-gate-unlocked');
-    const status = gate.querySelector<HTMLElement>('.kw-gate-status');
-    const email = form?.querySelector<HTMLInputElement>('input[name=email]');
-    const err = email ? document.getElementById(`${email.id}-err`) : null;
-    const fullHref = gate.dataset.fullHref ?? '/read';
+    // Ask the server which chapters are open for this reader. Falls back to
+    // the old cookie-only flag if the endpoint is unavailable.
+    async function sync() {
+      let state = null;
+      try {
+        const res = await fetch('/api/reader/me', { headers: { 'Accept': 'application/json' } });
+        if (res.ok) state = await res.json();
+      } catch {}
+      const signedIn = state && state.signedIn;
+      const unlocks = (state && state.unlocks) || {};
+      const readerId = (state && state.readerId) || '';
+      const show = (el, on) => { if (el) el.hidden = !on; };
 
-    if (document.cookie.split('; ').includes(READER_FLAG)) {
-      if (form) form.hidden = true;
-      if (unlocked) unlocked.hidden = false;
-      continue;
+      if (unlocks[slug]) { show(unlocked, true); show(form, false); show(share, false); return readerId; }
+      if (isFirstChapter) { show(unlocked, false); show(form, true); show(share, false); return readerId; }
+      if (signedIn) { show(unlocked, false); show(form, false); show(share, true); return readerId; }
+      // Not signed in on 02+ — route to chapter 1 for the sign-up.
+      show(unlocked, false); show(form, false); show(share, false);
+      const copy = gate.querySelector('.kw-gate-copy p.kw-gate-body');
+      if (copy) copy.innerHTML = 'Open Chapter 1 first with your email — then come back here to share a voice. <a href="/read/01/#unlock">Go to Chapter 1 →</a>';
+      return readerId;
     }
 
-    const setError = (msg: string) => {
-      if (!email || !err) return;
-      err.textContent = msg;
-      if (msg) email.setAttribute('aria-invalid', 'true');
-      else email.removeAttribute('aria-invalid');
-    };
-
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!form || !email || !status) return;
-      email.value = email.value.trim();
-      if (!email.checkValidity()) {
-        setError('Enter a valid email address, like name@example.com.');
-        status.textContent = '';
-        email.focus();
-        return;
-      }
-      setError('');
-
-      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
-      btn.disabled = true;
-      btn.textContent = 'Unlocking…';
-      status.textContent = 'Unlocking the full chapter…';
-
-      try {
-        const fd = new FormData(form);
-        const res = await fetch('/api/reader', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: fd.get('email'),
-            updates: fd.get('updates') === 'yes',
-            company: fd.get('company'),
-            chapter: gate.dataset.chapter,
-          }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.ok) {
-          status.textContent = 'Unlocked. Opening the full chapter…';
-          window.location.assign(`${fullHref}#continue`);
-          return;
+    // Email form (chapter 1)
+    if (form) {
+      const email = form.querySelector('input[name=email]');
+      const errId = email ? `${email.id}-err` : '';
+      const err = errId ? document.getElementById(errId) : null;
+      const status = form.querySelector('.kw-gate-status');
+      const setError = (msg) => {
+        if (!email || !err) return;
+        err.textContent = msg;
+        if (msg) email.setAttribute('aria-invalid', 'true'); else email.removeAttribute('aria-invalid');
+      };
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        email.value = email.value.trim();
+        if (!email.checkValidity()) { setError('Enter a valid email address, like name@example.com.'); return; }
+        setError('');
+        const btn = form.querySelector('button[type=submit]');
+        btn.disabled = true; btn.textContent = 'Unlocking…';
+        status.textContent = 'Unlocking Chapter 1…';
+        try {
+          const fd = new FormData(form);
+          const res = await fetch('/api/reader', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: fd.get('email'), updates: fd.get('updates') === 'yes', company: fd.get('company'), chapter: '01' }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) { status.textContent = 'Unlocked. Opening Chapter 1…'; window.location.assign('/read/01/full#continue'); return; }
+          status.textContent = data.error || 'Could not unlock. Try again.';
+        } catch {
+          status.textContent = 'Connection failed. Try again in a moment.';
         }
-        if (Array.isArray(data.fields) && data.fields.includes('email')) {
-          setError(data.error ?? 'Enter a valid email address.');
-          email.focus();
-        }
-        status.textContent = data.error ?? 'The chapter did not unlock. Try again in a moment.';
-      } catch {
-        status.textContent = 'The chapter did not unlock because the connection failed. Check your connection and try again.';
+        btn.disabled = false; btn.textContent = 'Unlock Chapter 1 →';
+      });
+    }
+
+    // Share pane (chapters 2–9 and x)
+    if (share) {
+      const voiceRadios = share.querySelectorAll('input[name=voice]');
+      const platRadios = share.querySelectorAll('input[name=platform]');
+      const textarea = share.querySelector('.kw-share-text');
+      const copyBtn = share.querySelector('.kw-share-copy-btn');
+      const urlForm = share.querySelector('.kw-share-form');
+      const urlInput = urlForm.querySelector('input[name=url]');
+      const urlErr = document.getElementById(`${urlInput.id}-err`);
+      const urlStatus = urlForm.querySelector('.kw-gate-status');
+      let readerId = '';
+
+      function selectedVoice() {
+        for (const r of voiceRadios) if (r.checked) return suggested.find((v) => v.id === r.value);
+        return suggested[0];
       }
-      btn.disabled = false;
-      btn.textContent = 'Unlock the full chapter →';
-    });
+      function selectedPlatform() {
+        for (const r of platRadios) if (r.checked) return r.value;
+        return 'x';
+      }
+      function buildQuote() {
+        const v = selectedVoice();
+        if (!v) return '';
+        const signature = `#knowware-v${v.id}-r/${readerId}`;
+        const backlink = `https://knowware.systems/v/${v.id}?r=${readerId}`;
+        const plat = selectedPlatform();
+        // Per-platform tweak: X / Instagram / TikTok prefer the hashtag; LinkedIn prefers the link.
+        const tail = plat === 'linkedin' ? backlink : `${signature}  ${backlink}`;
+        return `"${v.coldOpen}"\n\n— ${v.name}\n${tail}`;
+      }
+      function refresh() { if (textarea) textarea.value = buildQuote(); }
+
+      voiceRadios.forEach((r) => r.addEventListener('change', refresh));
+      platRadios.forEach((r) => r.addEventListener('change', refresh));
+
+      if (copyBtn) copyBtn.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(textarea.value); copyBtn.textContent = 'Copied ✓'; setTimeout(() => (copyBtn.textContent = 'Copy quote'), 1500); }
+        catch { textarea.select(); document.execCommand('copy'); }
+      });
+
+      urlForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        urlInput.value = urlInput.value.trim();
+        const v = selectedVoice();
+        const plat = selectedPlatform();
+        if (!urlInput.value || !urlInput.checkValidity()) { if (urlErr) urlErr.textContent = 'Paste the full URL of your post.'; return; }
+        if (urlErr) urlErr.textContent = '';
+        const btn = urlForm.querySelector('button[type=submit]');
+        btn.disabled = true; btn.textContent = 'Checking…';
+        urlStatus.textContent = 'Recording your share…';
+        try {
+          const res = await fetch('/api/reader/claim', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chapter: slug, voice: Number(v.id), url: urlInput.value, platform: plat }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) { urlStatus.textContent = 'Unlocked. Opening the chapter…'; window.location.assign(`${fullHref}#continue`); return; }
+          urlStatus.textContent = data.error || 'Could not unlock. Check the URL and try again.';
+        } catch {
+          urlStatus.textContent = 'Connection failed. Try again in a moment.';
+        }
+        btn.disabled = false; btn.textContent = `Unlock Chapter ${nn} →`;
+      });
+
+      // Prime the quote once we know the readerId.
+      sync().then((id) => { readerId = id || 'anon'; refresh(); });
+    } else {
+      sync();
+    }
   }
 </script>
 
@@ -151,8 +313,8 @@ const fullHref = `/read/${slug}/full`;
     gap: 20px 32px;
     align-items: start;
   }
-  .kw-gate-copy { grid-column: 1 / span 6; }
-  .kw-gate-action { grid-column: 8 / span 5; }
+  .kw-gate-copy { grid-column: 1 / span 5; }
+  .kw-gate-action { grid-column: 7 / span 6; }
   .kw-gate-eyebrow {
     font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
     color: var(--band-accent); margin: 0 0 16px;
@@ -165,11 +327,14 @@ const fullHref = `/read/${slug}/full`;
     font-size: clamp(15px, 1.4vw, 17px); line-height: 1.6;
     color: var(--band-sub); margin: 0; max-width: 52ch;
   }
-  .kw-gate-form { display: flex; flex-direction: column; gap: 14px; }
+  .kw-gate-body a { color: var(--band-ink); text-decoration: underline; }
+  .kw-gate-form, .kw-share-form { display: flex; flex-direction: column; gap: 14px; }
+  .kw-gate-form[hidden], .kw-share[hidden] { display: none; }
   .kw-gate-field { display: flex; flex-direction: column; gap: 6px; }
   .kw-gate-label {
     font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace;
     letter-spacing: .08em; text-transform: uppercase; color: var(--band-sub);
+    margin: 0 0 6px;
   }
   .kw-gate-input {
     font: 400 16px/1.3 "JetBrains Mono", ui-monospace, monospace;
@@ -181,11 +346,7 @@ const fullHref = `/read/${slug}/full`;
   .kw-gate-input[aria-invalid="true"] { border: 2px solid #ff8a80; }
   .kw-gate-error { font-size: 13px; color: #ff8a80; margin: 0; }
   .kw-gate-error:empty { display: none; }
-  .kw-gate-error::before { content: "Error: "; font-weight: 700; }
-  .kw-gate-check {
-    display: flex; gap: 10px; align-items: flex-start;
-    font-size: 14px; line-height: 1.45; color: var(--band-sub); cursor: pointer;
-  }
+  .kw-gate-check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.45; color: var(--band-sub); cursor: pointer; }
   .kw-gate-check input { width: 18px; height: 18px; margin: 1px 0 0; flex-shrink: 0; accent-color: var(--signal); }
   .kw-gate-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
   .kw-gate-submit { align-self: flex-start; }
@@ -193,6 +354,31 @@ const fullHref = `/read/${slug}/full`;
   .kw-gate-status:empty { display: none; }
   .kw-gate-fine { font-size: 12px; line-height: 1.5; color: var(--band-sub); margin: 0; }
   .kw-gate-ok { font-size: 15px; color: var(--band-sub); margin: 0 0 14px; }
+
+  /* Share pane */
+  .kw-share { display: flex; flex-direction: column; gap: 20px; }
+  .kw-share-voices { display: flex; flex-direction: column; gap: 10px; }
+  .kw-voice-opt { display: block; cursor: pointer; }
+  .kw-voice-opt input { position: absolute; left: -9999px; }
+  .kw-voice-card-mini { padding: 14px 16px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); }
+  .kw-voice-opt input:checked + .kw-voice-card-mini { border-color: var(--band-ink); outline: 1px solid var(--band-ink); }
+  .kw-voice-tier { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--band-accent); margin: 0 0 4px; }
+  .kw-voice-name { font-size: 14px; font-weight: 600; margin: 0 0 6px; color: var(--band-ink); }
+  .kw-voice-alias { color: var(--band-sub); font-weight: 400; }
+  .kw-voice-quote { font-size: 13px; line-height: 1.5; color: var(--band-sub); margin: 0; font-style: italic; }
+
+  .kw-share-platforms { display: flex; gap: 8px; flex-wrap: wrap; }
+  .kw-platform { cursor: pointer; }
+  .kw-platform input { position: absolute; left: -9999px; }
+  .kw-platform span { display: inline-block; padding: 6px 12px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); font: 600 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em; color: var(--band-sub); }
+  .kw-platform input:checked + span { border-color: var(--band-ink); color: var(--band-ink); }
+
+  .kw-share-copy { display: flex; flex-direction: column; gap: 8px; }
+  .kw-share-text { font: 400 14px/1.4 "JetBrains Mono", ui-monospace, monospace; color: var(--band-ink); background: var(--band-node-bg); border: 1px solid var(--band-node-line); padding: 12px; resize: vertical; }
+  .kw-share-copy-btn { align-self: flex-start; }
+
+  .kw-share-escape { font-size: 13px; color: var(--band-sub); margin: 0; }
+  .kw-share-escape a { color: var(--band-ink); text-decoration: underline; }
 
   @media (max-width: 900px) {
     .kw-gate-inner { grid-template-columns: 1fr; gap: 28px; }
