@@ -424,7 +424,10 @@ function getSym(name: string): string {
 .graph-sb-empty {
   font-size: 12px; color: var(--sub); line-height: 1.6; margin: 0;
 }
-.graph-sb-voice {
+/* These rows are injected by client JS (innerHTML) with no data-astro-cid
+   attribute, so Astro's scoped CSS can't see them. Mark the rules global
+   so block layout and borders apply to the injected markup too. */
+:global(.graph-sb-voice) {
   padding: 10px 0;
   border-bottom: 1px solid var(--rule);
   cursor: pointer;
@@ -432,19 +435,19 @@ function getSym(name: string): string {
   display: block;
   color: inherit;
 }
-.graph-sb-voice:last-child { border-bottom: none; }
-.graph-sb-voice:hover .graph-sb-vname { color: var(--signal-ink); }
-.graph-sb-vnum {
+:global(.graph-sb-voice:last-child) { border-bottom: none; }
+:global(.graph-sb-voice:hover .graph-sb-vname) { color: var(--signal-ink); }
+:global(.graph-sb-vnum) {
   font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace;
   color: var(--sub); display: block; margin-bottom: 3px;
 }
-.graph-sb-vname {
+:global(.graph-sb-vname) {
   font: 600 13px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
   letter-spacing: -.01em; color: var(--ink);
   display: block; margin-bottom: 2px;
   transition: color .1s;
 }
-.graph-sb-vrole {
+:global(.graph-sb-vrole) {
   font-size: 11px; color: var(--sub); display: block;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
