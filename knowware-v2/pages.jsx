@@ -2785,7 +2785,7 @@ function Join() {
       }}>
         <span>SECTION / 04 · CONTRIBUTE</span>
         <span>VOLUME / I · READING ROOM OPEN</span>
-        <span>WINDOW / UNTIL SOLSTICE 26</span>
+        <span title="Dec 21 — the longest night. The first thing humans ever learned to count.">WINDOW / UNTIL SOLSTICE 26</span>
         <span style={{ textAlign: 'right' }}>REPLY WITHIN / 14d</span>
       </div>
 

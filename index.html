@@ -159,6 +159,24 @@
   }
   #kw-dock-cta:hover { background: #1e3fc0; }
   #kw-dock-sep { color: rgba(237,238,228,0.25); }
+  #kw-dock-solstice {
+    border-bottom: 1px dashed rgba(237,238,228,0.3);
+    cursor: help;
+    position: relative;
+  }
+  #kw-dock-solstice::after {
+    content: attr(data-tip);
+    position: absolute; bottom: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%);
+    background: #EDEEE4; color: #191938;
+    font-size: 10px; letter-spacing: 0.01em;
+    white-space: nowrap;
+    padding: 6px 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  #kw-dock-solstice:hover::after { opacity: 1; }
 
   /* Reading article overrides — applied inside <article data-kw-read> */
   article[data-kw-read] p,
@@ -259,7 +277,7 @@
 <script type="text/babel" src="knowware-v2/voices.jsx?v=5"></script>
 <script type="text/babel" src="knowware-v2/mo.jsx?v=4"></script>
 <script type="text/babel" src="knowware-v2/periodic.jsx?v=6"></script>
-<script type="text/babel" src="knowware-v2/pages.jsx?v=54"></script>
+<script type="text/babel" src="knowware-v2/pages.jsx?v=55"></script>
 <script type="text/babel" src="knowware-v2/dossier.jsx?v=9"></script>
 <script type="text/babel" src="knowware-v2/tweaks.jsx?v=4"></script>
 <script type="text/babel" src="knowware-v2/app.jsx?v=12"></script>
@@ -273,11 +291,15 @@
   var stripe   = (window.KW && window.KW.STRIPE)   || '#order';
   if (cta) cta.href = stripe;
 
+  var tip = 'Dec 21 — the longest night. The first thing humans ever learned to count.';
   function tick() {
     var diff = deadline - Date.now();
-    if (diff <= 0) { cd.textContent = 'SOLSTICE PASSED'; return; }
+    if (diff <= 0) {
+      cd.innerHTML = 'SOLSTICE PASSED';
+      return;
+    }
     var days = Math.floor(diff / 864e5);
-    cd.textContent = days + 'D TO SOLSTICE';
+    cd.innerHTML = days + 'D TO <span id="kw-dock-solstice" data-tip="' + tip + '">SOLSTICE</span>';
   }
   tick();
   setInterval(tick, 60000);
