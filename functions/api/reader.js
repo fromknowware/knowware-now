@@ -10,6 +10,7 @@ import {
 } from '../../lib/server/guard.js';
 import { CONTACT_EMAIL } from '../../lib/site-facts.mjs';
 import { logResend } from '../../lib/server/resend.js';
+import { ensureSubscriberShape, readerIdFromToken } from '../../lib/server/share.js';
 
 const ACCESS_TTL_S = 60 * 60 * 24 * 400;
 const CONSENT_TEXT = 'Also email me when new chapters and the print edition are ready.';
@@ -43,9 +44,13 @@ async function sendWelcome(env, email, link, nn) {
         from: env.READER_FROM || env.CLAIM_NOTIFY_FROM || 'Knowware <onboarding@resend.dev>',
         reply_to: CONTACT_EMAIL,
         to: [email],
-        subject: 'Your Knowware chapters are unlocked',
+        subject: 'Chapter 1 is open. Share a voice to continue.',
         text: [
-          'Every chapter of Knowware, including the capstone, is unlocked for you.',
+          `Chapter ${nn} of Knowware is open for you.`,
+          '',
+          'Each next chapter unlocks when you share one of its voices on',
+          'Instagram, LinkedIn, X or TikTok and paste the post back on the site.',
+          'That is how the book travels — one voice at a time.',
           '',
           `Continue Chapter ${nn}:`,
           link,
@@ -131,6 +136,9 @@ async function handlePost({ request, env }) {
   const token = newToken();
   await env.CLAIMS.put(`reader:${await sha256(token)}`, JSON.stringify({ email, createdAt: now }), { expirationTtl: ACCESS_TTL_S });
 
+  // Chapter 1 is open at sign-up; 02–09 and x need a share receipt each.
+  // The readerId is a short hash of the token used in signatures and backlinks.
+  const readerId = await readerIdFromToken(token);
   const subKey = `subscriber:${await sha256(email)}`;
   const existing = JSON.parse((await env.CLAIMS.get(subKey)) || 'null');
   const record = {
@@ -141,6 +149,8 @@ async function handlePost({ request, env }) {
     updates: updates || existing?.updates || false,
     consent: updates ? { text: CONSENT_TEXT, at: now } : existing?.consent || null,
     country: request.cf?.country || '',
+    readerId: existing?.readerId || readerId,
+    unlocks: { ...(existing?.unlocks || {}), '01': true },
   };
   await env.CLAIMS.put(subKey, JSON.stringify(record));
 
@@ -191,6 +201,8 @@ async function handleGet({ request, env }) {
     JSON.stringify({ email: record.email, createdAt: now, verifiedAt: record.verifiedAt, via: 'link' }),
     { expirationTtl: ACCESS_TTL_S },
   );
+  // Back-fill readerId and unlocks on old subscriber records.
+  await ensureSubscriberShape(env, `subscriber:${await sha256(record.email)}`, deviceToken, now);
   return redirect(next, accessCookies(deviceToken));
 }
 

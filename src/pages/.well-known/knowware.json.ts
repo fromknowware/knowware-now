@@ -30,6 +30,14 @@ export const GET: APIRoute = async () => {
         chapter_previews: chapters.map((c) => ({ slug: c.id, html: `${SITE_URL}/read/${c.id}`, markdown: `${SITE_URL}/read/${c.id}.md` })),
         pages: ['definition', 'method', 'rules', 'colophon'].map((p) => `${SITE_URL}/${p}.md`),
       },
+      gated: {
+        auth: 'cookie kw_reader, minted when a person signs up with their email at /read/01/#unlock',
+        chapter_01: 'opens with an email sign-up',
+        chapters_02_to_x: 'each opens after the person shares one of that chapter\'s voices on Instagram, LinkedIn, X or TikTok and pastes the post back at the chapter page',
+        claim_endpoint: `${SITE_URL}/api/reader/claim`,
+        state_endpoint: `${SITE_URL}/api/reader/me`,
+        agent_rule: 'An agent never shares for a person or signs anyone up. The share is the person\'s act.',
+      },
       authorized: {
         status: AGENT_TOKENS_OPEN ? 'live' : 'not_open',
         note: AGENT_TOKENS_OPEN ? undefined : 'Built and tested but switched off until confirmation emails are set up. GET /api/agent/status reports tokens: on|off at runtime.',
