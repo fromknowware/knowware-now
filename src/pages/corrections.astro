@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+
+const EMAIL = 'hello@knowware.press';
+const SUBJECT = 'Correction request';
+---
+<Base
+  title="Corrections and removals"
+  description="Named on Knowware and want something corrected, changed or removed? Write to us. We act within five business days."
+>
+  <section class="kw-section">
+    <p class="kw-label">Corrections and removals</p>
+    <h1 class="kw-h2">Named here? Tell us what to change.</h1>
+    <p class="kw-body">
+      Knowware contains 81 voices. Each is a synthesis written for the book from a person's published work, or, for the composite voices, from the public record of a role. They are not interviews and not quotes, and the site says so wherever they appear.
+    </p>
+  </section>
+
+  <section class="kw-section kw-prose cor-body" aria-labelledby="cor-h">
+    <h2 id="cor-h">If you are named on this site</h2>
+    <p>You may ask for any of the following. You do not need to give a reason, and there is no charge.</p>
+    <ul>
+      <li><strong>A correction</strong> to your biography, your affiliation, or the synthesized passage.</li>
+      <li><strong>A change</strong> to how you are described or credited.</li>
+      <li><strong>Removal</strong> of the synthesized passage, your biography, or your name from the site.</li>
+    </ul>
+
+    <h2>How to ask</h2>
+    <p>Write to <a href={`mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`}>{EMAIL}</a> with the subject line "{SUBJECT}". Include the page or pages in question. If you write on someone's behalf, say so.</p>
+
+    <h2>What happens next</h2>
+    <ol>
+      <li>We acknowledge your message within two business days.</li>
+      <li>We make the correction or removal within five business days of your request, and tell you when it is done.</li>
+      <li>If we need to ask a question first, we ask it in the acknowledgement.</li>
+    </ol>
+    <p>Removals cover the pages on knowware.press. If copies exist elsewhere that we control, we remove those too and say which.</p>
+
+    <h2>Anything else</h2>
+    <p>If something on the site is factually wrong about anyone or anything, not only about you, write to the same address. Corrections to published pages are made in place, and significant ones are noted.</p>
+
+    <p class="cor-links"><a href="/rules">Editorial rules</a> · <a href="/method">How the voices are made</a></p>
+  </section>
+</Base>
+
+<style>
+  .cor-body { max-width: 720px; }
+  .cor-body a { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
+  .cor-links { margin-top: 2.4em; font: 400 13px/1.5 "JetBrains Mono", ui-monospace, monospace; color: var(--sub); }
+</style>
