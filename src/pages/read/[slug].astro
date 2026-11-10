@@ -55,6 +55,12 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
     </div>
   </article>
 
+  {/*
+    Pick one voice per tier for the quote-share option. The reader never sees
+    the person the voice was written in — only the quote text and the tier.
+    Attribution on the posted text goes to "Knowware: Systems of Intelligence",
+    i.e. the book, which is the author of the synthesized voice text.
+  */}
   <ReaderGate
     slug={chapter.id}
     n={chapter.data.n}
@@ -63,6 +69,11 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
     readMinutes={preview.data.readMinutes}
     questions={chapter.data.questions ?? []}
     diagramTitle={chapter.data.diagram?.title ?? null}
+    quotes={(['A', 'P', 'V'] as const)
+      .map((t) => (chapterVoices.length > 0 ? chapterVoices : voices).filter((v) => v.data.tier === t))
+      .map((pool, i) => (pool.length === 0 ? null : pool[(chapter.data.n + i) % pool.length]))
+      .filter((v) => v !== null)
+      .map((v) => ({ id: v!.data.id, tier: v!.data.tier, text: v!.data.coldOpen }))}
   />
 
   <Field height="96px" sigTop="50%" />

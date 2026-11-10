@@ -122,6 +122,18 @@ test('claimShare ignores an unknown kind (defaults to no tag)', async () => {
   assert.equal(stored.question, undefined);
 });
 
+test('claimShare records a quote share with its voice id and kind=quote', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const r = await setupReader(env);
+  const res = await claimShare(env, { readerToken: r.token, subscriberKey: r.subKey, chapter: '04', voice: 42, url: 'https://x.com/you/status/42', platform: 'x', now: NOW, kind: 'quote' });
+  assert.equal(res.ok, true);
+  const key = [...env.CLAIMS.m.keys()].find((k) => k.startsWith('receipt:'));
+  const stored = JSON.parse(env.CLAIMS.m.get(key));
+  assert.equal(stored.kind, 'quote');
+  assert.equal(stored.voice, 42);
+  assert.equal(stored.question, undefined);
+});
+
 test('claimShare accepts voice=0 (chapter-level share, no person attributed)', async () => {
   const env = { CLAIMS: fakeKV() };
   const r = await setupReader(env);

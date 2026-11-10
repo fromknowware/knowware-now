@@ -1,6 +1,16 @@
 ---
 import { chapterNum } from '../lib/chapters';
 
+interface QuoteRef {
+  // Voice id is kept for the receipt only. The name is deliberately not
+  // passed into this component: the UI shows the quote text and the tier,
+  // never the real person the voice is written in. Attribution on the
+  // post goes to "Knowware: Systems of Intelligence" — the book.
+  id: string;
+  tier: 'A' | 'P' | 'V';
+  text: string;
+}
+
 interface Props {
   slug: string;
   n: number;
@@ -9,15 +19,18 @@ interface Props {
   readMinutes: number;
   questions?: string[];
   diagramTitle?: string | null;
+  quotes?: QuoteRef[];
 }
 
-const { slug, n, previewWords, totalWords, readMinutes, questions = [], diagramTitle = null } = Astro.props;
+const { slug, n, previewWords, totalWords, readMinutes, questions = [], diagramTitle = null, quotes = [] } = Astro.props;
 const nn = chapterNum(n);
 const remaining = Math.max(0, totalWords - previewWords);
 const fmt = (x: number) => x.toLocaleString('en-US');
 const fullHref = `/read/${slug}/full`;
 const isFirstChapter = slug === '01';
 const hasDiagram = Boolean(diagramTitle);
+const hasQuotes = quotes.length > 0;
+const TIER_LABEL: Record<string, string> = { A: 'Academic', P: 'Practitioner', V: 'Visionary' };
 
 const PLATFORMS = [
   { id: 'x', label: 'X' },
@@ -84,7 +97,7 @@ const PLATFORMS = [
       <!-- (c) Signed-up reader on 02–09 / x: share pane -->
       {!isFirstChapter && (
         <div class="kw-share" hidden>
-          {(questions.length > 0 || hasDiagram) && (
+          {(questions.length > 0 || hasDiagram || hasQuotes) && (
             <div class="kw-share-kinds" role="radiogroup" aria-label="What to share">
               {questions.length > 0 && (
                 <label class="kw-kind">
@@ -98,6 +111,12 @@ const PLATFORMS = [
                   <span>The diagram</span>
                 </label>
               )}
+              {hasQuotes && (
+                <label class="kw-kind">
+                  <input type="radio" name="kind" value="quote" checked={questions.length === 0 && !hasDiagram} />
+                  <span>A quote</span>
+                </label>
+              )}
             </div>
           )}
 
@@ -107,6 +126,21 @@ const PLATFORMS = [
                 <label class="kw-question">
                   <input type="radio" name="question" value={String(i)} checked={i === 0} />
                   <span class="kw-question-text">{q}</span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          {hasQuotes && (
+            <div class="kw-share-quotes" role="radiogroup" aria-label="Pick a quote" hidden>
+              {quotes.map((q, i) => (
+                <label class="kw-quote-opt">
+                  <input type="radio" name="quote" value={q.id} checked={i === 0} />
+                  <div class="kw-quote-card">
+                    <p class="kw-quote-tier mono">{TIER_LABEL[q.tier]}</p>
+                    <p class="kw-quote-text">&ldquo;{q.text}&rdquo;</p>
+                    <p class="kw-quote-byline mono">— Knowware: Systems of Intelligence</p>
+                  </div>
                 </label>
               ))}
             </div>
@@ -156,7 +190,7 @@ const PLATFORMS = [
   </div>
 </section>
 
-<script define:vars={{ isFirstChapter, slug, nn, questions, hasDiagram }}>
+<script define:vars={{ isFirstChapter, slug, nn, questions, hasDiagram, quotes }}>
   // Share-to-continue flow. Three states per visit:
   //   signed out      → email form (only chapter 1 even shows it)
   //   signed in, open → "continue reading"
@@ -234,6 +268,7 @@ const PLATFORMS = [
       const platRadios = share.querySelectorAll('input[name=platform]');
       const kindRadios = share.querySelectorAll('input[name=kind]');
       const qRadios = share.querySelectorAll('input[name=question]');
+      const quoteRadios = share.querySelectorAll('input[name=quote]');
       const textarea = share.querySelector('.kw-share-text');
       const copyBtn = share.querySelector('.kw-share-copy-btn');
       const urlForm = share.querySelector('.kw-share-form');
@@ -241,6 +276,7 @@ const PLATFORMS = [
       const urlErr = document.getElementById(`${urlInput.id}-err`);
       const urlStatus = urlForm.querySelector('.kw-gate-status');
       const qListEl = share.querySelector('.kw-share-questions');
+      const quoteListEl = share.querySelector('.kw-share-quotes');
       let readerId = '';
 
       function selectedPlatform() {
@@ -249,11 +285,17 @@ const PLATFORMS = [
       }
       function selectedKind() {
         for (const r of kindRadios) if (r.checked) return r.value;
-        return questions.length > 0 ? 'question' : 'diagram';
+        if (questions.length > 0) return 'question';
+        if (hasDiagram) return 'diagram';
+        return 'quote';
       }
       function selectedQuestionIndex() {
         for (const r of qRadios) if (r.checked) return Number(r.value);
         return 0;
+      }
+      function selectedQuote() {
+        for (const r of quoteRadios) if (r.checked) return quotes.find((q) => q.id === r.value);
+        return quotes[0];
       }
       function buildPost() {
         const signature = `#knowware-c${slug}-r/${readerId}`;
@@ -269,17 +311,24 @@ const PLATFORMS = [
           const img = `https://knowware.systems/c/${slug}.svg`;
           return `The chapter in one diagram.\n\nKnowware · Chapter ${nn}\n${img}\n\n${tail}`;
         }
-        // Fallback (no questions, no diagram — shouldn't happen in production).
+        if (kind === 'quote' && quotes.length > 0) {
+          const q = selectedQuote() || quotes[0];
+          return `"${q.text}"\n\n— Knowware: Systems of Intelligence · Chapter ${nn}\n\n${tail}`;
+        }
+        // Fallback.
         return `Reading Knowware · Chapter ${nn}.\n\n${tail}`;
       }
       function refresh() {
         if (textarea) textarea.value = buildPost();
-        if (qListEl) qListEl.hidden = selectedKind() !== 'question';
+        const kind = selectedKind();
+        if (qListEl) qListEl.hidden = kind !== 'question';
+        if (quoteListEl) quoteListEl.hidden = kind !== 'quote';
       }
 
       platRadios.forEach((r) => r.addEventListener('change', refresh));
       kindRadios.forEach((r) => r.addEventListener('change', refresh));
       qRadios.forEach((r) => r.addEventListener('change', refresh));
+      quoteRadios.forEach((r) => r.addEventListener('change', refresh));
 
       if (copyBtn) copyBtn.addEventListener('click', async () => {
         try { await navigator.clipboard.writeText(textarea.value); copyBtn.textContent = 'Copied ✓'; setTimeout(() => (copyBtn.textContent = 'Copy post'), 1500); }
@@ -296,19 +345,23 @@ const PLATFORMS = [
         btn.disabled = true; btn.textContent = 'Checking…';
         urlStatus.textContent = 'Recording your share…';
         try {
-          // voice=0 is the chapter-level share (no person attributed). kind
-          // and question index record which book-authored artifact the reader
-          // shared, for the public /receipts counts.
+          // Receipt body:
+          //   voice=0 when sharing a question or the diagram
+          //   voice=N (1..81) when sharing a quote; records which voice the
+          //     book-authored quote came from (never surfaced on the post)
+          //   kind + question index as tags for /receipts counts
+          const kind = selectedKind();
+          const voice = kind === 'quote' ? Number((selectedQuote() || {}).id || 0) : 0;
           const res = await fetch('/api/reader/claim', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               chapter: slug,
-              voice: 0,
+              voice,
               url: urlInput.value,
               platform: plat,
-              kind: selectedKind(),
-              question: selectedKind() === 'question' ? selectedQuestionIndex() : null,
+              kind,
+              question: kind === 'question' ? selectedQuestionIndex() : null,
             }),
           });
           const data = await res.json().catch(() => ({}));
@@ -402,6 +455,16 @@ const PLATFORMS = [
   .kw-question input { position: absolute; left: -9999px; }
   .kw-question-text { display: block; padding: 14px 16px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); font-size: 14px; line-height: 1.5; color: var(--band-sub); }
   .kw-question input:checked + .kw-question-text { border-color: var(--band-ink); outline: 1px solid var(--band-ink); color: var(--band-ink); }
+
+  .kw-share-quotes { display: flex; flex-direction: column; gap: 10px; }
+  .kw-share-quotes[hidden] { display: none; }
+  .kw-quote-opt { display: block; cursor: pointer; }
+  .kw-quote-opt input { position: absolute; left: -9999px; }
+  .kw-quote-card { padding: 14px 16px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); }
+  .kw-quote-opt input:checked + .kw-quote-card { border-color: var(--band-ink); outline: 1px solid var(--band-ink); }
+  .kw-quote-tier { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--band-accent); margin: 0 0 6px; }
+  .kw-quote-text { font-size: 14px; line-height: 1.55; font-style: italic; color: var(--band-sub); margin: 0 0 8px; }
+  .kw-quote-byline { font-size: 11px; letter-spacing: .04em; color: var(--band-accent); margin: 0; }
 
   .kw-share-copy { display: flex; flex-direction: column; gap: 8px; }
   .kw-share-text { font: 400 14px/1.4 "JetBrains Mono", ui-monospace, monospace; color: var(--band-ink); background: var(--band-node-bg); border: 1px solid var(--band-node-line); padding: 12px; resize: vertical; }
