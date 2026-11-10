@@ -98,6 +98,37 @@ test('claimShare refuses chapter 01 (it opens with email, not a share)', async (
   assert.equal(res.code, 'chapter');
 });
 
+test('claimShare records kind and question when provided (for /receipts counts)', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const r = await setupReader(env);
+  const res = await claimShare(env, { readerToken: r.token, subscriberKey: r.subKey, chapter: '03', voice: 0, url: 'https://x.com/you/status/7', platform: 'x', now: NOW, kind: 'question', question: 2 });
+  assert.equal(res.ok, true);
+  // Find the stored receipt and check its kind/question fields survived.
+  const key = [...env.CLAIMS.m.keys()].find((k) => k.startsWith('receipt:'));
+  const stored = JSON.parse(env.CLAIMS.m.get(key));
+  assert.equal(stored.kind, 'question');
+  assert.equal(stored.question, 2);
+  assert.equal(stored.voice, 0);
+});
+
+test('claimShare ignores an unknown kind (defaults to no tag)', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const r = await setupReader(env);
+  const res = await claimShare(env, { readerToken: r.token, subscriberKey: r.subKey, chapter: '03', voice: 0, url: 'https://x.com/you/status/9', platform: 'x', now: NOW, kind: 'anecdote', question: 0 });
+  assert.equal(res.ok, true);
+  const key = [...env.CLAIMS.m.keys()].find((k) => k.startsWith('receipt:'));
+  const stored = JSON.parse(env.CLAIMS.m.get(key));
+  assert.equal(stored.kind, undefined);
+  assert.equal(stored.question, undefined);
+});
+
+test('claimShare accepts voice=0 (chapter-level share, no person attributed)', async () => {
+  const env = { CLAIMS: fakeKV() };
+  const r = await setupReader(env);
+  const res = await claimShare(env, { readerToken: r.token, subscriberKey: r.subKey, chapter: '04', voice: 0, url: 'https://x.com/you/status/14', platform: 'x', now: NOW });
+  assert.equal(res.ok, true);
+});
+
 test('ensureSubscriberShape back-fills readerId and unlocks[01] for legacy records', async () => {
   const env = { CLAIMS: fakeKV() };
   const subKey = 'subscriber:legacy';

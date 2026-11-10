@@ -1,39 +1,24 @@
 ---
 import { chapterNum } from '../lib/chapters';
 
-interface VoiceRef {
-  id: string;
-  name: string;
-  alias?: string;
-  tier: 'A' | 'P' | 'V';
-  coldOpen: string;
-}
-
 interface Props {
   slug: string;
   n: number;
   previewWords: number;
   totalWords: number;
   readMinutes: number;
-  voices: VoiceRef[];
+  questions?: string[];
+  diagramTitle?: string | null;
 }
 
-const { slug, n, previewWords, totalWords, readMinutes, voices } = Astro.props;
+const { slug, n, previewWords, totalWords, readMinutes, questions = [], diagramTitle = null } = Astro.props;
 const nn = chapterNum(n);
 const remaining = Math.max(0, totalWords - previewWords);
 const fmt = (x: number) => x.toLocaleString('en-US');
 const fullHref = `/read/${slug}/full`;
 const isFirstChapter = slug === '01';
+const hasDiagram = Boolean(diagramTitle);
 
-// Deterministically pick one Academic, one Practitioner and one Visionary for
-// this chapter. Order the three in a stable way so re-renders don't shuffle.
-const byTier = (t: 'A' | 'P' | 'V') => voices.filter((v) => v.tier === t);
-const pickByChapter = (pool: VoiceRef[]) => (pool.length === 0 ? null : pool[(n + pool.length) % pool.length]);
-const suggested = (['A', 'P', 'V'] as const)
-  .map((t) => pickByChapter(byTier(t)))
-  .filter((v): v is VoiceRef => v !== null);
-
-const TIER_LABEL: Record<string, string> = { A: 'Academic', P: 'Practitioner', V: 'Visionary' };
 const PLATFORMS = [
   { id: 'x', label: 'X' },
   { id: 'linkedin', label: 'LinkedIn' },
@@ -99,6 +84,34 @@ const PLATFORMS = [
       <!-- (c) Signed-up reader on 02–09 / x: share pane -->
       {!isFirstChapter && (
         <div class="kw-share" hidden>
+          {(questions.length > 0 || hasDiagram) && (
+            <div class="kw-share-kinds" role="radiogroup" aria-label="What to share">
+              {questions.length > 0 && (
+                <label class="kw-kind">
+                  <input type="radio" name="kind" value="question" checked />
+                  <span>A question</span>
+                </label>
+              )}
+              {hasDiagram && (
+                <label class="kw-kind">
+                  <input type="radio" name="kind" value="diagram" checked={questions.length === 0} />
+                  <span>The diagram</span>
+                </label>
+              )}
+            </div>
+          )}
+
+          {questions.length > 0 && (
+            <div class="kw-share-questions" role="radiogroup" aria-label="Pick a question">
+              {questions.map((q, i) => (
+                <label class="kw-question">
+                  <input type="radio" name="question" value={String(i)} checked={i === 0} />
+                  <span class="kw-question-text">{q}</span>
+                </label>
+              ))}
+            </div>
+          )}
+
           <div class="kw-share-platforms" role="radiogroup" aria-label="Platform">
             {PLATFORMS.map((p, i) => (
               <label class="kw-platform">
@@ -110,7 +123,7 @@ const PLATFORMS = [
 
           <div class="kw-share-copy">
             <p class="kw-gate-label">Share Chapter {nn} (copy and post)</p>
-            <textarea class="kw-share-text" readonly rows="4" aria-label="Post text to copy"></textarea>
+            <textarea class="kw-share-text" readonly rows="5" aria-label="Post text to copy"></textarea>
             <button type="button" class="kw-btn kw-share-copy-btn">Copy post</button>
           </div>
 
@@ -143,7 +156,7 @@ const PLATFORMS = [
   </div>
 </section>
 
-<script define:vars={{ isFirstChapter, slug, nn }}>
+<script define:vars={{ isFirstChapter, slug, nn, questions, hasDiagram }}>
   // Share-to-continue flow. Three states per visit:
   //   signed out      → email form (only chapter 1 even shows it)
   //   signed in, open → "continue reading"
@@ -214,34 +227,59 @@ const PLATFORMS = [
       });
     }
 
-    // Share pane (chapters 2–9 and x)
-    // Hotfix 2026-11-10: the posted text is the BOOK's words, never a voice
-    // attributed to a real person. The 81 voices are synthesized text; the
-    // previous version let them be posted with the person's name on them.
+    // Share pane (chapters 2–9 and x). The posted text is always the BOOK's
+    // words — either a chapter question or the diagram caption — never one
+    // of the 81 voices (synthesized text attributed to real people).
     if (share) {
       const platRadios = share.querySelectorAll('input[name=platform]');
+      const kindRadios = share.querySelectorAll('input[name=kind]');
+      const qRadios = share.querySelectorAll('input[name=question]');
       const textarea = share.querySelector('.kw-share-text');
       const copyBtn = share.querySelector('.kw-share-copy-btn');
       const urlForm = share.querySelector('.kw-share-form');
       const urlInput = urlForm.querySelector('input[name=url]');
       const urlErr = document.getElementById(`${urlInput.id}-err`);
       const urlStatus = urlForm.querySelector('.kw-gate-status');
+      const qListEl = share.querySelector('.kw-share-questions');
       let readerId = '';
 
       function selectedPlatform() {
         for (const r of platRadios) if (r.checked) return r.value;
         return 'x';
       }
+      function selectedKind() {
+        for (const r of kindRadios) if (r.checked) return r.value;
+        return questions.length > 0 ? 'question' : 'diagram';
+      }
+      function selectedQuestionIndex() {
+        for (const r of qRadios) if (r.checked) return Number(r.value);
+        return 0;
+      }
       function buildPost() {
         const signature = `#knowware-c${slug}-r/${readerId}`;
         const backlink = `https://knowware.systems/r/${readerId}?c=${slug}`;
         const plat = selectedPlatform();
         const tail = plat === 'linkedin' ? backlink : `${signature}  ${backlink}`;
-        return `Reading Knowware · Chapter ${nn}.\n\nA field guide for coordination between people, machines and context.\n\n${tail}`;
+        const kind = selectedKind();
+        if (kind === 'question' && questions.length > 0) {
+          const q = questions[selectedQuestionIndex()] || questions[0];
+          return `Knowware · Chapter ${nn} asks:\n\n${q}\n\n${tail}`;
+        }
+        if (kind === 'diagram' && hasDiagram) {
+          const img = `https://knowware.systems/c/${slug}.svg`;
+          return `The chapter in one diagram.\n\nKnowware · Chapter ${nn}\n${img}\n\n${tail}`;
+        }
+        // Fallback (no questions, no diagram — shouldn't happen in production).
+        return `Reading Knowware · Chapter ${nn}.\n\n${tail}`;
       }
-      function refresh() { if (textarea) textarea.value = buildPost(); }
+      function refresh() {
+        if (textarea) textarea.value = buildPost();
+        if (qListEl) qListEl.hidden = selectedKind() !== 'question';
+      }
 
       platRadios.forEach((r) => r.addEventListener('change', refresh));
+      kindRadios.forEach((r) => r.addEventListener('change', refresh));
+      qRadios.forEach((r) => r.addEventListener('change', refresh));
 
       if (copyBtn) copyBtn.addEventListener('click', async () => {
         try { await navigator.clipboard.writeText(textarea.value); copyBtn.textContent = 'Copied ✓'; setTimeout(() => (copyBtn.textContent = 'Copy post'), 1500); }
@@ -258,12 +296,20 @@ const PLATFORMS = [
         btn.disabled = true; btn.textContent = 'Checking…';
         urlStatus.textContent = 'Recording your share…';
         try {
-          // voice=0 is the chapter-level share: no person attributed. The
-          // backend accepts this and skips voice-specific bookkeeping.
+          // voice=0 is the chapter-level share (no person attributed). kind
+          // and question index record which book-authored artifact the reader
+          // shared, for the public /receipts counts.
           const res = await fetch('/api/reader/claim', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chapter: slug, voice: 0, url: urlInput.value, platform: plat }),
+            body: JSON.stringify({
+              chapter: slug,
+              voice: 0,
+              url: urlInput.value,
+              platform: plat,
+              kind: selectedKind(),
+              question: selectedKind() === 'question' ? selectedQuestionIndex() : null,
+            }),
           });
           const data = await res.json().catch(() => ({}));
           if (res.ok && data.ok) { urlStatus.textContent = 'Unlocked. Opening the chapter…'; window.location.assign(`${fullHref}#continue`); return; }
@@ -343,6 +389,19 @@ const PLATFORMS = [
   .kw-platform input { position: absolute; left: -9999px; }
   .kw-platform span { display: inline-block; padding: 6px 12px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); font: 600 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em; color: var(--band-sub); }
   .kw-platform input:checked + span { border-color: var(--band-ink); color: var(--band-ink); }
+
+  .kw-share-kinds { display: flex; gap: 8px; }
+  .kw-kind { cursor: pointer; }
+  .kw-kind input { position: absolute; left: -9999px; }
+  .kw-kind span { display: inline-block; padding: 8px 14px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); font: 500 13px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--band-sub); }
+  .kw-kind input:checked + span { border-color: var(--band-ink); color: var(--band-ink); font-weight: 600; }
+
+  .kw-share-questions { display: flex; flex-direction: column; gap: 10px; }
+  .kw-share-questions[hidden] { display: none; }
+  .kw-question { display: block; cursor: pointer; }
+  .kw-question input { position: absolute; left: -9999px; }
+  .kw-question-text { display: block; padding: 14px 16px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); font-size: 14px; line-height: 1.5; color: var(--band-sub); }
+  .kw-question input:checked + .kw-question-text { border-color: var(--band-ink); outline: 1px solid var(--band-ink); color: var(--band-ink); }
 
   .kw-share-copy { display: flex; flex-direction: column; gap: 8px; }
   .kw-share-text { font: 400 14px/1.4 "JetBrains Mono", ui-monospace, monospace; color: var(--band-ink); background: var(--band-node-bg); border: 1px solid var(--band-node-line); padding: 12px; resize: vertical; }

@@ -61,13 +61,8 @@ const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
     previewWords={preview.data.words}
     totalWords={preview.data.totalWords}
     readMinutes={preview.data.readMinutes}
-    voices={(chapterVoices.length > 0 ? chapterVoices : voices).map((v) => ({
-      id: v.data.id,
-      name: v.data.name,
-      alias: v.data.alias,
-      tier: v.data.tier,
-      coldOpen: v.data.coldOpen,
-    }))}
+    questions={chapter.data.questions ?? []}
+    diagramTitle={chapter.data.diagram?.title ?? null}
   />
 
   <Field height="96px" sigTop="50%" />

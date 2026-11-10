@@ -33,6 +33,8 @@ export async function onRequestPost({ request, env }) {
     voice: parsed.data.voice,
     url: parsed.data.url,
     platform: parsed.data.platform,
+    kind: parsed.data.kind,
+    question: parsed.data.question,
     now,
   });
 

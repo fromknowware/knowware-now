@@ -42,8 +42,16 @@ export default function readerGate() {
           throw new Error(`reader-gate: expected 10 Markdown chapters, found ${Object.keys(md).length}`);
         }
         await writeFile(join(generated, 'chapters-md.js'), `export default ${JSON.stringify(md)};\n`);
+        // Chapter metadata (title, diagram, share questions) for the share
+        // card renderer at /c/:slug.svg. Produced by chapter-meta.json.ts.
+        const meta = JSON.parse(await readFile(join(gatedDir, 'chapter-meta.json'), 'utf8'));
+        if (Object.keys(meta).length !== 10) {
+          throw new Error(`reader-gate: expected 10 chapter-meta entries, found ${Object.keys(meta).length}`);
+        }
+        await writeFile(join(generated, 'chapter-meta.js'), `export default ${JSON.stringify(meta)};\n`);
         await rm(gatedDir, { recursive: true, force: true });
         logger.info('10 full chapters (Markdown) moved behind /api/agent/chapters');
+        logger.info('10 chapter meta entries moved behind /c/:slug.svg');
       },
     },
   };

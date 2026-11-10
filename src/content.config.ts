@@ -25,6 +25,9 @@ const chapterCollection = defineCollection({
         kind: z.enum(['latent']).optional(),
       })),
     }).optional(),
+    // Three shareable questions per chapter — the chapter's own voice,
+    // never attributed to one of the 81 voices. Author-editable.
+    questions: z.array(z.string()).length(3).optional(),
   }),
 });
 
