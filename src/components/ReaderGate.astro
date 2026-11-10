@@ -46,12 +46,12 @@ const PLATFORMS = [
     <div class="kw-gate-copy">
       <p class="kw-gate-eyebrow mono">Chapter {nn} · {fmt(remaining)} words left · about {readMinutes} min in full</p>
       <h2 class="kw-gate-h" id="gate-h">
-        {isFirstChapter ? "Keep reading. It's free." : 'Share a voice to continue.'}
+        {isFirstChapter ? "Keep reading. It's free." : `Share Chapter ${nn} to continue.`}
       </h2>
       <p class="kw-gate-body">
         {isFirstChapter
-          ? 'One email opens Chapter 1. Every chapter after that opens when you share one of its voices — on Instagram, LinkedIn, X or TikTok — and paste the post back here. No paywall. No tracking.'
-          : "Pick a voice from this chapter, post it on the platform of your choice, and paste the post URL below. Chapter opens instantly."}
+          ? 'One email opens Chapter 1. Every chapter after that opens when you post about it on Instagram, LinkedIn, X or TikTok and paste the post back here. No paywall. No tracking.'
+          : `Copy the chapter share below, post it on the platform of your choice, and paste the post URL back. Chapter opens instantly.`}
       </p>
     </div>
 
@@ -99,20 +99,6 @@ const PLATFORMS = [
       <!-- (c) Signed-up reader on 02–09 / x: share pane -->
       {!isFirstChapter && (
         <div class="kw-share" hidden>
-          <div class="kw-share-voices" role="radiogroup" aria-labelledby="share-voice-h">
-            <p class="kw-gate-label" id="share-voice-h">Pick a voice</p>
-            {suggested.map((v, i) => (
-              <label class="kw-voice-opt">
-                <input type="radio" name="voice" value={v.id} checked={i === 0} />
-                <div class="kw-voice-card-mini">
-                  <p class="kw-voice-tier mono">{TIER_LABEL[v.tier]} · Voice {v.id}</p>
-                  <p class="kw-voice-name">{v.name}{v.alias && <span class="kw-voice-alias"> — {v.alias}</span>}</p>
-                  <p class="kw-voice-quote">&ldquo;{v.coldOpen.slice(0, 220)}{v.coldOpen.length > 220 ? '…' : ''}&rdquo;</p>
-                </div>
-              </label>
-            ))}
-          </div>
-
           <div class="kw-share-platforms" role="radiogroup" aria-label="Platform">
             {PLATFORMS.map((p, i) => (
               <label class="kw-platform">
@@ -123,9 +109,9 @@ const PLATFORMS = [
           </div>
 
           <div class="kw-share-copy">
-            <p class="kw-gate-label">Quote with signature (copy and post)</p>
-            <textarea class="kw-share-text" readonly rows="5" aria-label="Quote to copy"></textarea>
-            <button type="button" class="kw-btn kw-share-copy-btn">Copy quote</button>
+            <p class="kw-gate-label">Share Chapter {nn} (copy and post)</p>
+            <textarea class="kw-share-text" readonly rows="4" aria-label="Post text to copy"></textarea>
+            <button type="button" class="kw-btn kw-share-copy-btn">Copy post</button>
           </div>
 
           <form class="kw-share-form" novalidate>
@@ -157,7 +143,7 @@ const PLATFORMS = [
   </div>
 </section>
 
-<script define:vars={{ isFirstChapter, slug, nn, suggested }}>
+<script define:vars={{ isFirstChapter, slug, nn }}>
   // Share-to-continue flow. Three states per visit:
   //   signed out      → email form (only chapter 1 even shows it)
   //   signed in, open → "continue reading"
@@ -188,7 +174,7 @@ const PLATFORMS = [
       // Not signed in on 02+ — route to chapter 1 for the sign-up.
       show(unlocked, false); show(form, false); show(share, false);
       const copy = gate.querySelector('.kw-gate-copy p.kw-gate-body');
-      if (copy) copy.innerHTML = 'Open Chapter 1 first with your email — then come back here to share a voice. <a href="/read/01/#unlock">Go to Chapter 1 →</a>';
+      if (copy) copy.innerHTML = 'Open Chapter 1 first with your email — then come back here to share this chapter. <a href="/read/01/#unlock">Go to Chapter 1 →</a>';
       return readerId;
     }
 
@@ -229,8 +215,10 @@ const PLATFORMS = [
     }
 
     // Share pane (chapters 2–9 and x)
+    // Hotfix 2026-11-10: the posted text is the BOOK's words, never a voice
+    // attributed to a real person. The 81 voices are synthesized text; the
+    // previous version let them be posted with the person's name on them.
     if (share) {
-      const voiceRadios = share.querySelectorAll('input[name=voice]');
       const platRadios = share.querySelectorAll('input[name=platform]');
       const textarea = share.querySelector('.kw-share-text');
       const copyBtn = share.querySelector('.kw-share-copy-btn');
@@ -240,38 +228,29 @@ const PLATFORMS = [
       const urlStatus = urlForm.querySelector('.kw-gate-status');
       let readerId = '';
 
-      function selectedVoice() {
-        for (const r of voiceRadios) if (r.checked) return suggested.find((v) => v.id === r.value);
-        return suggested[0];
-      }
       function selectedPlatform() {
         for (const r of platRadios) if (r.checked) return r.value;
         return 'x';
       }
-      function buildQuote() {
-        const v = selectedVoice();
-        if (!v) return '';
-        const signature = `#knowware-v${v.id}-r/${readerId}`;
-        const backlink = `https://knowware.systems/v/${v.id}?r=${readerId}`;
+      function buildPost() {
+        const signature = `#knowware-c${slug}-r/${readerId}`;
+        const backlink = `https://knowware.systems/r/${readerId}?c=${slug}`;
         const plat = selectedPlatform();
-        // Per-platform tweak: X / Instagram / TikTok prefer the hashtag; LinkedIn prefers the link.
         const tail = plat === 'linkedin' ? backlink : `${signature}  ${backlink}`;
-        return `"${v.coldOpen}"\n\n— ${v.name}\n${tail}`;
+        return `Reading Knowware · Chapter ${nn}.\n\nA field guide for coordination between people, machines and context.\n\n${tail}`;
       }
-      function refresh() { if (textarea) textarea.value = buildQuote(); }
+      function refresh() { if (textarea) textarea.value = buildPost(); }
 
-      voiceRadios.forEach((r) => r.addEventListener('change', refresh));
       platRadios.forEach((r) => r.addEventListener('change', refresh));
 
       if (copyBtn) copyBtn.addEventListener('click', async () => {
-        try { await navigator.clipboard.writeText(textarea.value); copyBtn.textContent = 'Copied ✓'; setTimeout(() => (copyBtn.textContent = 'Copy quote'), 1500); }
+        try { await navigator.clipboard.writeText(textarea.value); copyBtn.textContent = 'Copied ✓'; setTimeout(() => (copyBtn.textContent = 'Copy post'), 1500); }
         catch { textarea.select(); document.execCommand('copy'); }
       });
 
       urlForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         urlInput.value = urlInput.value.trim();
-        const v = selectedVoice();
         const plat = selectedPlatform();
         if (!urlInput.value || !urlInput.checkValidity()) { if (urlErr) urlErr.textContent = 'Paste the full URL of your post.'; return; }
         if (urlErr) urlErr.textContent = '';
@@ -279,10 +258,12 @@ const PLATFORMS = [
         btn.disabled = true; btn.textContent = 'Checking…';
         urlStatus.textContent = 'Recording your share…';
         try {
+          // voice=0 is the chapter-level share: no person attributed. The
+          // backend accepts this and skips voice-specific bookkeeping.
           const res = await fetch('/api/reader/claim', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chapter: slug, voice: Number(v.id), url: urlInput.value, platform: plat }),
+            body: JSON.stringify({ chapter: slug, voice: 0, url: urlInput.value, platform: plat }),
           });
           const data = await res.json().catch(() => ({}));
           if (res.ok && data.ok) { urlStatus.textContent = 'Unlocked. Opening the chapter…'; window.location.assign(`${fullHref}#continue`); return; }
@@ -293,7 +274,7 @@ const PLATFORMS = [
         btn.disabled = false; btn.textContent = `Unlock Chapter ${nn} →`;
       });
 
-      // Prime the quote once we know the readerId.
+      // Prime the post once we know the readerId.
       sync().then((id) => { readerId = id || 'anon'; refresh(); });
     } else {
       sync();
@@ -357,16 +338,6 @@ const PLATFORMS = [
 
   /* Share pane */
   .kw-share { display: flex; flex-direction: column; gap: 20px; }
-  .kw-share-voices { display: flex; flex-direction: column; gap: 10px; }
-  .kw-voice-opt { display: block; cursor: pointer; }
-  .kw-voice-opt input { position: absolute; left: -9999px; }
-  .kw-voice-card-mini { padding: 14px 16px; border: 1px solid var(--band-node-line); background: var(--band-node-bg); }
-  .kw-voice-opt input:checked + .kw-voice-card-mini { border-color: var(--band-ink); outline: 1px solid var(--band-ink); }
-  .kw-voice-tier { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--band-accent); margin: 0 0 4px; }
-  .kw-voice-name { font-size: 14px; font-weight: 600; margin: 0 0 6px; color: var(--band-ink); }
-  .kw-voice-alias { color: var(--band-sub); font-weight: 400; }
-  .kw-voice-quote { font-size: 13px; line-height: 1.5; color: var(--band-sub); margin: 0; font-style: italic; }
-
   .kw-share-platforms { display: flex; gap: 8px; flex-wrap: wrap; }
   .kw-platform { cursor: pointer; }
   .kw-platform input { position: absolute; left: -9999px; }

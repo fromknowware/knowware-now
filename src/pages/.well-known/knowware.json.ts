@@ -33,7 +33,7 @@ export const GET: APIRoute = async () => {
       gated: {
         auth: 'cookie kw_reader, minted when a person signs up with their email at /read/01/#unlock',
         chapter_01: 'opens with an email sign-up',
-        chapters_02_to_x: 'each opens after the person shares one of that chapter\'s voices on Instagram, LinkedIn, X or TikTok and pastes the post back at the chapter page',
+        chapters_02_to_x: 'each opens after the person posts about that chapter on Instagram, LinkedIn, X or TikTok (the shared text is the book\'s own words, never attributed to one of the 81 synthesized voices) and pastes the post back at the chapter page',
         claim_endpoint: `${SITE_URL}/api/reader/claim`,
         state_endpoint: `${SITE_URL}/api/reader/me`,
         agent_rule: 'An agent never shares for a person or signs anyone up. The share is the person\'s act.',

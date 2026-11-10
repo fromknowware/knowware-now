@@ -48,9 +48,9 @@ async function sendWelcome(env, email, link, nn) {
         text: [
           `Chapter ${nn} of Knowware is open for you.`,
           '',
-          'Each next chapter unlocks when you share one of its voices on',
-          'Instagram, LinkedIn, X or TikTok and paste the post back on the site.',
-          'That is how the book travels — one voice at a time.',
+          'Each next chapter unlocks when you post about it on Instagram,',
+          'LinkedIn, X or TikTok and paste the post back on the site.',
+          'That is how the book travels — one chapter at a time.',
           '',
           `Continue Chapter ${nn}:`,
           link,
