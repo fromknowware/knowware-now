@@ -1,18 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 import Field from '../components/Field.astro';
-import { PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL, CHECKOUT_OPEN, CONTACT_EMAIL } from '../config';
+import { PRICE_PREORDER, PRICE_PRINT, PRICE_DIGITAL, CHECKOUT_OPEN, CONTACT_EMAIL, PREORDER_OPEN_HUMAN } from '../config';
 
 const DESCRIPTION = CHECKOUT_OPEN
-  ? `Pre-order Knowware: ${PRICE_PREORDER} before the solstice.`
-  : `Pre-orders for Knowware (${PRICE_PREORDER}, print and digital, ships December 21, 2026) are not open yet. Leave an email and we will write to you once, when they open.`;
+  ? `Pre-order Knowware: ${PRICE_PREORDER}, print and digital.`
+  : `Pre-orders for Knowware (${PRICE_PREORDER}, print and digital) open on the solstice, ${PREORDER_OPEN_HUMAN}. Leave an email and we will write to you once, the day they open.`;
 ---
 <Base title="Pre-order" description={DESCRIPTION}>
   <section class="kw-section" aria-labelledby="order-h">
     <p class="kw-label">Pre-order</p>
-    <h1 class="kw-h2" id="order-h">Pre-orders open soon.</h1>
+    <h1 class="kw-h2" id="order-h">Pre-orders open on the solstice.</h1>
     <p class="kw-body">
-      Knowware ships on the solstice: December 21, 2026. The pre-order is not open yet, so there is nothing to buy today. Leave your email and we will write to you once, the day it opens.
+      Pre-orders for Knowware open on {PREORDER_OPEN_HUMAN} — the solstice. There is nothing to buy today. Leave your email and we will write to you once, the day it opens.
     </p>
   </section>
 
@@ -47,7 +47,7 @@ const DESCRIPTION = CHECKOUT_OPEN
       <div class="pricing-card">
         <p class="kw-label">At Print</p>
         <p class="pricing-price">{PRICE_PRINT}</p>
-        <p class="pricing-desc kw-body">Full retail price after December 21.</p>
+        <p class="pricing-desc kw-body">Full retail price after launch.</p>
       </div>
       <div class="pricing-card">
         <p class="kw-label">Digital Only</p>

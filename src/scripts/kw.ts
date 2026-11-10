@@ -1,7 +1,7 @@
 // Knowware client runtime — countdown, dock, menu, theme
 // Runs once on DOMContentLoaded, no framework
 
-const DEADLINE_ISO = '2026-12-21T23:59:59-05:00';
+const PREORDER_OPEN_ISO = '2026-12-21T00:00:00-05:00';
 
 function initDock() {
   const dock = document.getElementById('kw-dock');
@@ -9,11 +9,11 @@ function initDock() {
   const cd   = document.getElementById('kw-dock-countdown');
   if (!dock || !cta || !cd) return;
 
-  const deadline = new Date(DEADLINE_ISO).getTime();
+  const open = new Date(PREORDER_OPEN_ISO).getTime();
 
   function tick() {
-    const diff = deadline - Date.now();
-    if (diff <= 0) { cd.textContent = 'SOLSTICE PASSED'; return; }
+    const diff = open - Date.now();
+    if (diff <= 0) { cd.textContent = 'PRE-ORDERS OPEN'; return; }
     const days = Math.floor(diff / 864e5);
     cd.textContent = days + 'D TO SOLSTICE';
   }

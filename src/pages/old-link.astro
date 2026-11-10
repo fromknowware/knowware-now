@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE_URL, BOOK_TITLE, AUTHOR, PUBLISHER, CONTACT_EMAIL, ORDER_HREF, CHECKOUT_OPEN } from '../config';
+import { SITE_URL, BOOK_TITLE, AUTHOR, PUBLISHER, CONTACT_EMAIL, ORDER_HREF, CHECKOUT_OPEN, PREORDER_OPEN_HUMAN } from '../config';
 import { bookNode, BOOK_ID } from '../lib/book-jsonld';
 
 const PAGE_URL = `${SITE_URL}/old-link/`;
@@ -34,7 +34,7 @@ const QA = [
   },
   {
     q: 'When is the book out?',
-    a: `The book is planned for December 21, 2026. ${CHECKOUT_OPEN ? 'Pre-orders are open at ' + HOST + '.' : 'Pre-orders are not open yet; people can join the pre-order list.'}`,
+    a: `Pre-orders open on ${PREORDER_OPEN_HUMAN} — the solstice. ${CHECKOUT_OPEN ? `Pre-orders are open at ${HOST}.` : `Until then it is a waiting list; people can join themselves at ${HOST}.`}`,
   },
 ];
 

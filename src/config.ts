@@ -9,8 +9,11 @@ export const PUBLISHER = 'Knowware Institute';
 export const PUBLISHER_DESCRIPTOR = 'Applied Research in Cybernetics';
 export const EDITION = 'Ed. 01 · MMXXVI';
 
-export const DEADLINE = '2026-12-21T23:59:59-05:00';
-export const DEADLINE_LABEL = 'Solstice';
+// The day pre-orders open: the solstice. Until then, the order page collects
+// a waiting list; CHECKOUT_OPEN still gates the live Stripe link separately.
+export const PREORDER_OPEN = '2026-12-21T00:00:00-05:00';
+export const PREORDER_OPEN_LABEL = 'Solstice';
+export const PREORDER_OPEN_HUMAN = 'December 21, 2026';
 
 export const PRICE_PREORDER = '$33';
 export const PRICE_PRINT = '$44.95';

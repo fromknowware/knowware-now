@@ -23,8 +23,8 @@ export function bookNode(ogImage: string = OG_IMAGE, description: string = BOOK_
     description,
     inLanguage: 'en',
     sameAs: SAME_AS,
-    // No datePublished: the book is not published until December 21, 2026, and
-    // schema.org's datePublished is the date of first publication.
+    // No datePublished: the book is not yet published, and schema.org's
+    // datePublished is the date of first publication.
     // No isbn: none has been assigned. When one exists it goes on a workExample
     // (bookFormat + isbn), not on the Book itself.
     // No Offer until a real checkout exists: a price marked available
