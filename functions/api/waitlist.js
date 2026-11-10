@@ -37,7 +37,9 @@ async function handle({ request, env }) {
     if (isForm) return redirect('/order#waitlist');
     return json({ ok: false, error: 'Too many sign-ups from this connection. Try again in an hour.' }, 429, { 'Retry-After': '3600' });
   }
-  await addToWaitlist(env, sub.email);
+  const origin = request.headers.get('Origin') || '';
+  const source = origin.includes('knowware.systems') ? 'knowware.systems' : 'order-page';
+  await addToWaitlist(env, sub.email, undefined, source);
   return isForm ? redirect('/order/listed') : json({ ok: true });
 }
 
