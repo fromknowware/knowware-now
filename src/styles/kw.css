@@ -1009,10 +1009,12 @@ html.kw-dock-off .kw-foot { padding-bottom: calc(clamp(24px,3vw,32px) + env(safe
 /* ── Book figures inside chapter text (src/loaders/manuscript.ts) ──
    Sized like a book figure: one fixed width centred in the column, no scrolling. Tapping opens the drawing full size.
    The drawings are black-on-white SVGs; multiply drops the white into the page colour so there is no white slab on the cream.
-   Dark theme keeps a white plate instead, because multiplying dark strokes into a dark page would hide them. */
+   Dark theme keeps a white plate instead, because multiplying dark strokes into a dark page would hide them.
+   The figure carries an explicit `--paper` background because mix-blend-mode needs a solid backdrop in the same stacking
+   context — with only transparent ancestors the browser has nothing local to blend the SVG's inner white rect into. */
 .kw-prose .kw-fig {
   margin: 2.2em auto; padding: 0; max-width: 520px;
-  background: transparent; border: 1px solid var(--rule);
+  background: var(--paper); border: 1px solid var(--rule);
 }
 .kw-fig-plate { display: block; cursor: zoom-in; }
 .kw-fig-plate:focus-visible { outline: 2px solid var(--signal-ink); outline-offset: -2px; }
